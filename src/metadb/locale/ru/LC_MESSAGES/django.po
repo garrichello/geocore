@@ -1,0 +1,156 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-11-13 13:20+0700\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
+"%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#: forms.py:13 views.py:18 views.py:29 views.py:41
+msgid "Collection label"
+msgstr "Метка коллекции"
+
+#: forms.py:14 views.py:23
+msgid "Collection URL"
+msgstr "URL коллекции"
+
+#: forms.py:23 views.py:21
+msgid "Organization"
+msgstr "Организация"
+
+#: forms.py:32 views.py:19
+msgid "Collection name"
+msgstr "Название коллекции"
+
+#: forms.py:33 views.py:20
+msgid "Collection description"
+msgstr "Описание коллекции"
+
+#: templates/metadb/includes/partial_collection_create.html:10
+msgid "Create a new collection"
+msgstr "Создать новую коллекцию"
+
+#: templates/metadb/includes/partial_collection_create.html:17
+#: templates/metadb/includes/partial_collection_delete.html:17
+#: templates/metadb/includes/partial_collection_update.html:17
+msgid "Close"
+msgstr "Закрыть"
+
+#: templates/metadb/includes/partial_collection_create.html:18
+msgid "Create collection"
+msgstr "Создать коллекцию"
+
+#: templates/metadb/includes/partial_collection_delete.html:10
+msgid "Confirm collection delete"
+msgstr "Подтвердите удаление коллекции"
+
+#: templates/metadb/includes/partial_collection_delete.html:13
+msgid "Are you sure you want to delete the collection"
+msgstr "Вы уверены, что хотите удалить коллекцию"
+
+#: templates/metadb/includes/partial_collection_delete.html:18
+msgid "Delete collection"
+msgstr "Удалить коллекцию"
+
+#: templates/metadb/includes/partial_collection_update.html:10
+#: templates/metadb/includes/partial_collection_update.html:18
+msgid "Update collection"
+msgstr "Изменить коллекцию"
+
+#: templates/metadb/main_view.html:22
+msgid "MetaDB administrative console"
+msgstr "Административная консоль базы метаданных"
+
+#: templates/metadb/main_view.html:26
+msgid "Collection"
+msgstr "Коллекция"
+
+#: templates/metadb/main_view.html:29
+msgid "Dataset"
+msgstr "Набор данных"
+
+#: templates/metadb/main_view.html:32
+msgid "Data"
+msgstr "Данные"
+
+#: templates/metadb/main_view.html:35
+msgid "Other"
+msgstr "Прочее"
+
+#: templates/metadb/main_view.html:43 templates/metadb/main_view.html:61
+msgid "Create"
+msgstr "Создать"
+
+#: views.py:22
+msgid "Organization URL"
+msgstr "URL организации"
+
+#: views.py:28
+msgid "Visible"
+msgstr "Видимость"
+
+#: views.py:30 views.py:42
+msgid "Scenario"
+msgstr "Сценарий"
+
+#: views.py:31 views.py:43
+msgid "Resolution"
+msgstr "Гориз. разреш."
+
+#: views.py:32
+msgid "Data kind"
+msgstr "Тип данных"
+
+#: views.py:33
+msgid "File type"
+msgstr "Тип файлов"
+
+#: views.py:34
+msgid "Time start"
+msgstr "Первый день"
+
+#: views.py:35
+msgid "Time end"
+msgstr "Последний день"
+
+#: views.py:36
+msgid "Dataset description"
+msgstr "Описание набора данных"
+
+#: views.py:44
+msgid "Time step"
+msgstr "Шаг по времени"
+
+#: views.py:45
+msgid "Variable name"
+msgstr "Имя переменной"
+
+#: views.py:46
+msgid "Parameter"
+msgstr "Имя метеопараметра"
+
+#: views.py:47
+msgid "Units"
+msgstr "Ед. изм."
+
+#: views.py:48
+msgid "Level values"
+msgstr "Значения верт. уровня"
+
+#: views.py:49
+msgid "Level description"
+msgstr "Описание верт. уровня"

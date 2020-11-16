@@ -1,0 +1,68 @@
+{% load i18n %}
+
+<form method="post" action="{% url 'metadb:data_create' %}" class="js-data-create-form" 
+      dataset-resolutions-url="{% url 'metadb:api_load_resolutions'%}" 
+      dataset-scenario-url="{% url 'metadb:api_load_scenarios'%}" novalidate>
+    {% csrf_token %}
+
+    <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <h3 class="modal-title">{% trans "Create a new data" %}</h3>
+
+    <div class="modal-body">
+        {% include 'metadb/includes/partial_data_form.html' %}
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Close" %}</button>
+        <button type="submit" class="btn btn-primary">{% trans "Create data" %}</button>
+    </div>
+</form>
+
+<script>
+    var loadScenarios = function() {
+        var form = $('.js-data-create-form');
+        var collectionId = $('#id_collection').val();
+        var resolutionId = $('#id_resolution').val();
+
+        $.ajax( {
+            url: form.attr('dataset-scenario-url'),
+            type: 'get',
+            data: {
+                'collectionId': collectionId,
+                'resolutionId': resolutionId,
+            },
+            success: function (data) {
+                $('#id_scenario').html(data);
+                if ($('#id_scenario option').length == 2) {
+                    $('#id_scenario').prop("selectedIndex", 1);
+                }
+            }
+        } );
+    };
+
+    var loadResolutions = function() {
+        var form = $('.js-data-create-form');
+        var collectionId = $('#id_collection').val();
+
+        $.ajax( {
+            url: form.attr('dataset-resolutions-url'),
+            type: 'get',
+            data: {
+                'collectionId': collectionId,
+            },
+            success: function (data) {
+                $('#id_resolution').html(data);
+                if ($('#id_resolution option').length == 2) {
+                    $('#id_resolution').prop("selectedIndex", 1);
+                }
+                $('#id_resolution').trigger('change');
+            }
+        } );
+    };
+
+    $('#id_collection').change( loadResolutions );
+    $('#id_resolution').change( loadScenarios );
+</script>

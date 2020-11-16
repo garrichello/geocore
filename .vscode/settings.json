@@ -1,0 +1,9 @@
+{
+    "python.pythonPath": "/home/garry/.local/share/virtualenvs/geocore-tAwTwB94/bin/python",
+    "files.associations": {
+        "**/*.html": "html",
+        "**/templates/**/*.html": "django-html",
+        "**/templates/**/*": "django-txt",
+        "**/requirements{/**,*}.{txt,in}": "pip-requirements"
+    },
+}

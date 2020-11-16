@@ -1,0 +1,115 @@
+{% load static i18n %}
+<html>
+<head>
+    <title>MetaDB administation</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.6.4/css/buttons.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'metadb/datatables.css'%}">
+
+    <script type="text/javascript" charset="urf8" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script type="text/javascript" charset="urf8" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.6.4/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" charset="urf8" src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="{% static 'metadb/main_view.js'%}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static 'metadb/collections.js'%}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static 'metadb/datasets.js'%}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static 'metadb/data.js'%}"></script>
+<body>
+    <div id="language" language={{ language }}></div>
+    <h1>{% trans "MetaDB administrative console" %}</h1>
+    <div style="margin-left: 10px; margin-right: 10px; ">
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="active">
+                <a href="#tab-collection" data-toggle="tab">{% trans "Collection" %}</a>
+            </li>
+            <li>
+                <a href="#tab-dataset" data-toggle="tab">{% trans "Dataset"%}</a>
+            </li>
+            <li>
+                <a href="#tab-data" data-toggle="tab">{% trans "Data" %}</a>
+            </li>
+            <li>
+                <a href="#tab-other" data-toggle="tab">{% trans "Other" %}</a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="tab-collection">
+                <button type="button" 
+                        class="btn btn-primary js-create-collection"
+                        data-url="{% url 'metadb:collection_create' %}">
+                    <span class="glyphicon glyphicon-plus"></span> {% trans "Create" %}
+                </button>
+                <table id='collection' class="table table-hover table-bordered" width="100%">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            {% for class, title in collection_headers %}
+                            <th class="{{ class }}">{{ title }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="tab-pane" id="tab-dataset">
+                <button type="button"
+                        class="btn btn-primary js-create-dataset"
+                        data-url="{% url 'metadb:dataset_create' %}">
+                    <span class="glyphicon glyphicon-plus"></span> {% trans "Create" %}
+                </button>
+                <table id='dataset' class="table table-hover table-bordered" width="100%">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            {% for class, title in dataset_headers %}
+                            <th class="{{ class }}">{{ title }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="tab-pane" id="tab-data">
+                <button type="button"
+                        class="btn btn-primary js-create-data"
+                        data-url="{% url 'metadb:data_create' %}">
+                    <span class="glyphicon glyphicon-plus"></span> {% trans "Create" %}
+                </button>
+                <table id='data' class="table table-hover table-bordered" width="200%">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            {% for class, title in data_headers %}
+                                <th class="{{ class }}">{{ title }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="tab-pane" id="tab-other">
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" tabindex="-1" role="dialog" id="modal-collection">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content"></div>
+        </div>
+    </div>
+    <div class="modal fade" tabindex="-1" role="dialog" id="modal-dataset">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content"></div>
+        </div>
+    </div>
+    <div class="modal fade" tabindex="-1" role="dialog" id="modal-data">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content"></div>
+        </div>
+    </div>
+ </body>
+</html>
