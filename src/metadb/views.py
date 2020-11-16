@@ -1,16 +1,16 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.template.loader import render_to_string
 from django.views import View
 from django.utils.translation import get_language, gettext_lazy as _
 from django.urls import reverse_lazy
 
 from .models import Language, Collection, CollectionI18N
-from .models import Dataset
-from .models import Data, Resolution, Scenario
+from .models import Dataset, SpecificParameter, UnitsI18N, LevelI18N, Level
+from .models import Data, Resolution, Scenario, ParameterI18N, TimeStepI18N, LevelsGroup
 from .forms import CollectionForm, CollectionI18NForm
 from .forms import DatasetForm, ScenarioForm, ResolutionForm, DataKindForm, FileTypeForm
-from .forms import DataForm, DatasetShortForm, SpecificParameterForm
+from .forms import DataForm, DatasetShortForm
 from bootstrap_modal_forms.generic import BSModalCreateView
 
 class MainView(View):
@@ -48,11 +48,11 @@ class MainView(View):
             ('head_select', _('Scenario')),
             ('head_select', _('Parameter')),
             ('head_select', _('Time step')),
+            ('head_text', _('Levels group')),
+            ('head_text', _('Levels names')),
+            ('head_none', _('Levels variable')),
             ('head_select', _('Variable name')),
             ('head_select', _('Units')),
-            ('head_text', _('Levels names')),
-            ('head_text', _('Levels group')),
-            ('head_none', _('Levels variable')),
             ('head_none', _('Propery label')),
             ('head_none', _('Property value')),
             ('head_text', _('Root directory')),
@@ -231,7 +231,7 @@ class DatasetDeleteView(DatasetBaseView):
 
 #======================================================================================================
 def load_dataset_resolutions(request):
-    template_name = 'metadb/hr/dataset_dropdown_list_options.html'
+    template_name = 'metadb/hr/dropdown_list_options.html'
     collection_id = request.GET.get('collectionId')
     resolutions = {}
     if collection_id:
@@ -241,7 +241,7 @@ def load_dataset_resolutions(request):
     return render(request, template_name, ctx)
 
 def load_dataset_scenarios(request):
-    template_name = 'metadb/hr/dataset_dropdown_list_options.html'
+    template_name = 'metadb/hr/dropdown_list_options.html'
     collection_id = request.GET.get('collectionId')
     resolution_id = request.GET.get('resolutionId')
     scenarios = {}
@@ -252,11 +252,45 @@ def load_dataset_scenarios(request):
     ctx = {'data': scenarios}
     return render(request, template_name, ctx)
 
+def load_parameter_timesteps(request):
+    template_name = 'metadb/hr/dropdown_list_options.html'
+    parameteri18n_id = request.GET.get('parameteri18nId')
+    timesteps = {}
+    if parameteri18n_id:
+        parameter_id = ParameterI18N.objects.get(pk=parameteri18n_id).parameter_id
+        timesteps = TimeStepI18N.objects.filter(language__code=get_language(), time_step__in=
+            [sp.time_step for sp in SpecificParameter.objects.filter(parameter_id=parameter_id)])
+    ctx = {'data': timesteps}
+    return render(request, template_name, ctx)
+
+def load_parameter_lvsgroups(request):
+    template_name = 'metadb/hr/dropdown_list_options.html'
+    parameteri18n_id = request.GET.get('parameteri18nId')
+    timestepi18n_id = request.GET.get('timestepi18nId')
+    lvsgroups = {}
+    if parameteri18n_id and timestepi18n_id:
+        parameter_id = ParameterI18N.objects.get(pk=parameteri18n_id).parameter_id
+        time_step_id = TimeStepI18N.objects.get(pk=timestepi18n_id).time_step_id
+        lvsgroups = LevelsGroup.objects.filter(id__in=
+            [sp.levels_group.id for sp in SpecificParameter.objects.filter(
+                parameter_id=parameter_id, time_step_id=time_step_id)])
+    ctx = {'data': lvsgroups}
+    return render(request, template_name, ctx)
+
+def load_parameter_lvsnames(request):
+    lvsgroup_id = request.GET.get('lvsgroupId')
+    levels = ''
+    if lvsgroup_id:
+        units = UnitsI18N.objects.filter(language__code=get_language(), units_id=
+            LevelsGroup.objects.get(pk=lvsgroup_id).units_id).get().name
+        levels = '; '.join(['{} [{}]'.format(level.name, units) for level in LevelI18N.objects.filter(
+            language__code=get_language(), level__in=Level.objects.filter(
+                levels_group__id=lvsgroup_id))])
+    return HttpResponse(levels)
+
+
 class DataBaseView(View):
     form_class = DataForm
-    ds_form_class = DatasetShortForm
-    sp_form_class = SpecificParameterForm
-
     model = Data
 
     def save_form(self, request, form, template_name):
@@ -277,10 +311,8 @@ class DataCreateView(DataBaseView):
 
     def get(self, request):
         form = self.form_class()
-        ds_form = self.ds_form_class()
-        sp_form = self.sp_form_class()
 
-        ctx = {'form': form, 'ds_form': ds_form, 'sp_form': sp_form}
+        ctx = {'form': form}
         html_form = render_to_string(self.template_name, ctx, request)
         return JsonResponse({'html_form': html_form})
 

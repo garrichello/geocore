@@ -1,0 +1,8 @@
+<option value="">*</option>
+{% for e in data %}
+{% if e.name %}
+    <option value="{{ e.pk }}">{{ e.name }}</option>
+{% elif e.description %}
+    <option value="{{ e.pk }}">{{ e.description }}</option>
+{% endif %}
+{% endfor %}

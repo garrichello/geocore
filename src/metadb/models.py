@@ -294,7 +294,6 @@ class Language(models.Model):
 
 class Level(models.Model):
     label = models.CharField(unique=True, max_length=45)
-    language = models.ManyToManyField('Language', through='LevelI18N')
     levels_group = models.ManyToManyField("LevelsGroup", through='LevelsGroupHasLevel', related_name='levels_group')
 
     class Meta:
@@ -504,7 +503,7 @@ class Property(models.Model):
         db_table = 'property'
 
     def __str__(self):
-        return self.label
+        return self.label if self.label is not None else ''
 
 
 class PropertyValue(models.Model):
@@ -515,7 +514,7 @@ class PropertyValue(models.Model):
         db_table = 'property_value'
 
     def __str__(self):
-        return self.label
+        return self.label if self.label is not None else ''
 
 class Resolution(models.Model):
     name = models.CharField(unique=True, max_length=45)
@@ -561,9 +560,6 @@ class SpecificParameter(models.Model):
     class Meta:
         managed = False
         db_table = 'specific_parameter'
-
-    def __str__(self):
-        return self.parameter
 
 
 class TimePeriodType(models.Model):

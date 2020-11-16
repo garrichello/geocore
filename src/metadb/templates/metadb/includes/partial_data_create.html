@@ -1,8 +1,11 @@
 {% load i18n %}
 
 <form method="post" action="{% url 'metadb:data_create' %}" class="js-data-create-form" 
-      dataset-resolutions-url="{% url 'metadb:api_load_resolutions'%}" 
-      dataset-scenario-url="{% url 'metadb:api_load_scenarios'%}" novalidate>
+      dataset-resolutions-url="{% url 'metadb:api_load_resolutions'%}"
+      dataset-scenario-url="{% url 'metadb:api_load_scenarios'%}"
+      parameter-timesteps-url="{% url 'metadb:api_load_timesteps'%}"
+      parameter-lvsgroups-url="{% url 'metadb:api_load_lvsgroups'%}"
+      parameter-lvsnames-url="{% url 'metadb:api_load_lvsnames'%}" novalidate>
     {% csrf_token %}
 
     <div class="modal-header">
@@ -65,4 +68,68 @@
 
     $('#id_collection').change( loadResolutions );
     $('#id_resolution').change( loadScenarios );
+
+
+    var loadLvsGroups = function() {
+        var form = $('.js-data-create-form');
+        var parameteri18nId = $('#id_parameteri18n').val();
+        var timestepi18nId = $('#id_time_stepi18n').val();
+
+        $.ajax( {
+            url: form.attr('parameter-lvsgroups-url'),
+            type: 'get',
+            data: {
+                'parameteri18nId': parameteri18nId,
+                'timestepi18nId': timestepi18nId,
+            },
+            success: function (data) {
+                $('#id_levels_group').html(data);
+                if ($('#id_levels_group option').length == 2) {
+                    $('#id_levels_group').prop("selectedIndex", 1);
+                }
+                $('#id_levels_group').trigger('change');
+            }
+        } );
+    };
+
+    var loadTimeSteps = function() {
+        var form = $('.js-data-create-form');
+        var parameteri18nId = $('#id_parameteri18n').val();
+
+        $.ajax( {
+            url: form.attr('parameter-timesteps-url'),
+            type: 'get',
+            data: {
+                'parameteri18nId': parameteri18nId,
+            },
+            success: function (data) {
+                $('#id_time_stepi18n').html(data);
+                if ($('#id_time_stepi18n option').length == 2) {
+                    $('#id_time_stepi18n').prop("selectedIndex", 1);
+                }
+                $('#id_levels_group').trigger('change');
+            }
+        } );
+    };
+
+    var loadLvsNames = function() {
+        var form = $('.js-data-create-form');
+        var lvsgroupId = $('#id_levels_group').val();
+
+        $.ajax( { 
+            url: form.attr('parameter-lvsnames-url'),
+            type: 'get',
+            data: {
+                'lvsgroupId': lvsgroupId,
+            },
+            success: function (data) {
+                $('#id_levels_namesi18n').val(data);
+            }
+        } );
+    };
+
+    $('#id_parameteri18n').change( loadTimeSteps );
+    $('#id_time_stepi18n').change( loadLvsGroups );
+    $('#id_levels_group').change( loadLvsNames );
+
 </script>

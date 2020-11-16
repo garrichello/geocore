@@ -95,11 +95,11 @@ data_columns = [
     { 'data': 'scenario_name' },
     { 'data': 'parameter_name' },
     { 'data': 'time_step' },
+    { 'data': 'levels_group' },
+    { 'data': 'levels' },
+    { 'data': 'levels_variable' },
     { 'data': 'variable_name' },
     { 'data': 'units_name' },
-    { 'data': 'levels' },
-    { 'data': 'levels_group' },
-    { 'data': 'levels_variable' },
     { 'data': 'property_label' },
     { 'data': 'property_value' },
     { 'data': 'root_dir' },
@@ -120,17 +120,17 @@ data_columnsDefs = [
     { width: '5%', targets: 4, },   // Collection label
     { width: '5%', targets: 5 },    // Resolution
     { width: '5%', targets: 6 },    // Scenario
-    { width: '9%', targets: 7 },   // Parameter
+    { width: '9%', targets: 7 },    // Parameter
     { width: '4%', targets: 8 },    // Time step
-    { width: '4%', targets: 9 },    // Variable name
-    { width: '4%', targets: 10 },    // Units
-    { width: '12%', targets: 11 },    // Levels
-    { width: '5%', targets: 12 },   // Levels group
-    { width: '4%', targets: 13 },   // Levels variable
+    { width: '5%', targets: 9 },   // Levels group
+    { width: '12%', targets: 10 },  // Levels names
+    { width: '4%', targets: 11 },   // Levels variable
+    { width: '4%', targets: 12 },    // Variable name
+    { width: '4%', targets: 13 },   // Units
     { width: '4%', targets: 14 },   // Property label
     { width: '4%', targets: 15 },   // Property value
     { width: '5%', targets: 16 },   // Root dir
-    { width: '10%', targets: 17 },   // File pattern
+    { width: '10%', targets: 17 },  // File pattern
     { width: '3%', targets: 18 },   // Scale
     { width: '3%', targets: 19 },   // Offset
 ]

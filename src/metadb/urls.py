@@ -23,4 +23,7 @@ urlpatterns = [
 
     path('data/api/load-resolutions/', views.load_dataset_resolutions, name='api_load_resolutions'),
     path('data/api/load-scenarios/', views.load_dataset_scenarios, name='api_load_scenarios'),
+    path('data/api/load-timesteps/', views.load_parameter_timesteps, name='api_load_timesteps'),
+    path('data/api/load-lvsgroups/', views.load_parameter_lvsgroups, name='api_load_lvsgroups'),
+    path('data/api/load-lvsnames/', views.load_parameter_lvsnames, name='api_load_lvsnames'),
 ]
