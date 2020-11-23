@@ -203,7 +203,7 @@ class Dataset(models.Model):
         db_table = 'dataset'
 
     def __str__(self):
-        return self.description
+        return self.description if self.description is not None else ''
 
 
 class Edge(models.Model):
@@ -324,6 +324,8 @@ class LevelsGroup(models.Model):
         managed = False
         db_table = 'levels_group'
 
+    def __str__(self):
+        return self.description
 
 class LevelsGroupHasLevel(models.Model):
     levels_group = models.ForeignKey('LevelsGroup', models.CASCADE)

@@ -10,7 +10,7 @@ from .models import Dataset, SpecificParameter, UnitsI18N, LevelI18N, Level
 from .models import Data, Resolution, Scenario, ParameterI18N, TimeStepI18N, LevelsGroup
 from .forms import CollectionForm, CollectionI18NForm
 from .forms import DatasetForm, ScenarioForm, ResolutionForm, DataKindForm, FileTypeForm
-from .forms import DataForm, DatasetShortForm
+from .forms import DataForm
 from bootstrap_modal_forms.generic import BSModalCreateView
 
 class MainView(View):
@@ -275,6 +275,7 @@ def load_parameter_lvsgroups(request):
             [sp.levels_group.id for sp in SpecificParameter.objects.filter(
                 parameter_id=parameter_id, time_step_id=time_step_id)])
     ctx = {'data': lvsgroups}
+    print(ctx)
     return render(request, template_name, ctx)
 
 def load_parameter_lvsnames(request):
@@ -296,7 +297,26 @@ class DataBaseView(View):
     def save_form(self, request, form, template_name):
         data = dict()
         if form.is_valid():
-            form.save()
+            data_obj = form.save(commit=False)  # Get data object
+            # Find and attach dataset object to the data object
+            dataset_obj = Dataset.objects.filter(
+                collection=form.cleaned_data['collection'],
+                resolution=form.cleaned_data['resolution'],
+                scenario=form.cleaned_data['scenario']
+            ).get()
+            data_obj.dataset = dataset_obj
+            # Find and attach specific parameter object to the data object
+            sp_obj = SpecificParameter.objects.filter(
+                parameter=form.cleaned_data['parameteri18n'].parameter,
+                time_step=form.cleaned_data['time_stepi18n'].time_step,
+                levels_group=form.cleaned_data['levels_group']
+            ).get()
+            data_obj.specific_parameter = sp_obj
+            # Get and sttach units object to the data object
+            data_obj.units = form.cleaned_data['unitsi18n'].units
+
+            data_obj.save()  # Save object
+            form.save_m2m()  # Save many-to-many relations
             data['form_is_valid'] = True
         else:
             data['form_is_valid'] = False
