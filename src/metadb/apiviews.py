@@ -96,7 +96,7 @@ class DataApiListView(APIView):
                     [ level.leveli18n_set.filter(language__code=language).get().name
                     for level in data.specific_parameter.levels_group.level.all() ]
                 ),
-                'levels_group': '{}, [{}]'.format(
+                'levels_group': '{} [{}]'.format(
                     data.specific_parameter.levels_group.description,
                     data.specific_parameter.levels_group.units.unitsi18n_set.filter(language__code=language).get().name
                 ),

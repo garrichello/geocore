@@ -21,3 +21,9 @@ table.dataTable thead .sorting_desc_disabled:after { position: unset; }
 .form-control { font-size: 12px; font-weight: normal; }
 .tab-content { margin-bottom: 10px; }
 form {margin-bottom: 0em;}
+/*table.dataTable tbody tr:nth-child(even):hover td{
+    background-color: #c0cdd8 !important;
+}
+table.dataTable tbody tr:nth-child(odd):hover td{
+    background-color: #c0cdd8 !important;
+}*/

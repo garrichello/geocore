@@ -9,7 +9,7 @@ from django.db import models
 
 
 class AccumulationMode(models.Model):
-    name = models.CharField(unique=True, max_length=45, blank=True, null=True)
+    name = models.CharField(unique=True, max_length=45, blank=True)
 
     class Meta:
         managed = False
@@ -20,7 +20,7 @@ class AccumulationMode(models.Model):
 
 
 class ArgumentType(models.Model):
-    label = models.CharField(max_length=45, blank=True, null=True)
+    label = models.CharField(max_length=45, blank=True)
 
     class Meta:
         managed = False
@@ -31,8 +31,8 @@ class ArgumentType(models.Model):
 
 
 class ArgumentsGroup(models.Model):
-    name = models.CharField(max_length=45, blank=True, null=True)
-    description = models.CharField(max_length=145, blank=True, null=True)
+    name = models.CharField(max_length=45, blank=True)
+    description = models.CharField(max_length=145, blank=True)
     argument_type = models.ForeignKey('ArgumentType', models.CASCADE)
     processor = models.ManyToManyField('Processor', through='ArgumentsGroupHasProcessor')
     specific_parameter = models.ManyToManyField('SpecificParameter', through='ArgumentsGroupHasSpecificParameter')
@@ -67,7 +67,7 @@ class ArgumentsGroupHasSpecificParameter(models.Model):
 
 class Collection(models.Model):
     label = models.CharField(unique=True, max_length=45)
-    url = models.CharField(max_length=255, blank=True, null=True)
+    url = models.CharField(max_length=255, blank=True)
     organization = models.ForeignKey('Organization', models.CASCADE)
     language = models.ManyToManyField('Language', through='CollectionI18N')
 
@@ -82,8 +82,8 @@ class Collection(models.Model):
 class CollectionI18N(models.Model):
     collection = models.ForeignKey('Collection', models.CASCADE)
     language = models.ForeignKey('Language', models.CASCADE)
-    name = models.CharField(max_length=155, blank=True, null=True)
-    description = models.CharField(max_length=255, blank=True, null=True)
+    name = models.CharField(max_length=155, blank=True)
+    description = models.CharField(max_length=255, blank=True)
 
     class Meta:
         managed = False
@@ -95,7 +95,7 @@ class CollectionI18N(models.Model):
 
 
 class ComputingModule(models.Model):
-    name = models.CharField(max_length=100, blank=True, null=True)
+    name = models.CharField(max_length=100, blank=True)
 
     class Meta:
         managed = False
@@ -153,7 +153,7 @@ class Data(models.Model):
     units = models.ForeignKey('Units', models.CASCADE)
     variable = models.ForeignKey('Variable', models.CASCADE, related_name='variable')
     file = models.ForeignKey('File', models.CASCADE)
-    levels_variable = models.ForeignKey('Variable', models.CASCADE, blank=True, null=True, related_name='levels_variable')
+    levels_variable = models.ForeignKey('Variable', models.CASCADE, related_name='levels_variable')
     root_dir = models.ForeignKey('RootDir', models.CASCADE)
     scale = models.FloatField()
     offset = models.FloatField()
@@ -164,7 +164,7 @@ class Data(models.Model):
 
 
 class DataKind(models.Model):
-    name = models.CharField(unique=True, max_length=45, blank=True, null=True)
+    name = models.CharField(unique=True, max_length=45, blank=True)
 
     class Meta:
         managed = False
@@ -175,8 +175,8 @@ class DataKind(models.Model):
 
 
 class DataVariable(models.Model):
-    label = models.CharField(max_length=45, blank=True, null=True)
-    description = models.CharField(max_length=45, blank=True, null=True)
+    label = models.CharField(max_length=45, blank=True)
+    description = models.CharField(max_length=45, blank=True)
     units = models.ForeignKey('Units', models.CASCADE)
 
     class Meta:
@@ -192,7 +192,7 @@ class Dataset(models.Model):
     resolution = models.ForeignKey('Resolution', models.CASCADE)
     scenario = models.ForeignKey('Scenario', models.CASCADE)
     data_kind = models.ForeignKey('DataKind', models.CASCADE)
-    description = models.CharField(unique=True, max_length=45, blank=True, null=True)
+    description = models.CharField(unique=True, max_length=45, blank=True)
     is_visible = models.BooleanField(default=True)
     time_start = models.CharField(max_length=10)
     time_end = models.CharField(max_length=10)
@@ -221,7 +221,7 @@ class Edge(models.Model):
 
 
 class File(models.Model):
-    name_pattern = models.CharField(unique=True, max_length=255, blank=True, null=True)
+    name_pattern = models.CharField(unique=True, max_length=255, blank=True)
 
     class Meta:
         managed = False
@@ -232,7 +232,7 @@ class File(models.Model):
 
 
 class FileType(models.Model):
-    name = models.CharField(unique=True, max_length=45, blank=True, null=True)
+    name = models.CharField(unique=True, max_length=45, blank=True)
 
     class Meta:
         managed = False
@@ -255,7 +255,7 @@ class Geoportal(models.Model):
 
 
 class GuiElement(models.Model):
-    name = models.CharField(max_length=45, blank=True, null=True)
+    name = models.CharField(max_length=45, blank=True)
     language = models.ManyToManyField('Language', through='GuiElementI18N')
 
     class Meta:
@@ -269,7 +269,7 @@ class GuiElement(models.Model):
 class GuiElementI18N(models.Model):
     gui_element = models.ForeignKey('GuiElement', models.CASCADE)
     language = models.ForeignKey('Language', models.CASCADE)
-    caption = models.CharField(unique=True, max_length=145, blank=True, null=True)
+    caption = models.CharField(unique=True, max_length=145, blank=True)
 
     class Meta:
         managed = False
@@ -304,7 +304,7 @@ class Level(models.Model):
 class LevelI18N(models.Model):
     level = models.ForeignKey('Level', models.CASCADE)
     language = models.ForeignKey('Language', models.CASCADE)
-    name = models.CharField(max_length=45, blank=True, null=True)
+    name = models.CharField(max_length=45, blank=True)
 
     class Meta:
         managed = False
@@ -317,7 +317,7 @@ class LevelI18N(models.Model):
 
 class LevelsGroup(models.Model):
     units = models.ForeignKey('Units', models.CASCADE)
-    description = models.CharField(max_length=145, blank=True, null=True)
+    description = models.CharField(max_length=145, blank=True)
     level = models.ManyToManyField('Level', through='LevelsGroupHasLevel')
 
     class Meta:
@@ -338,8 +338,8 @@ class LevelsGroupHasLevel(models.Model):
 
 
 class Option(models.Model):
-    gui_element = models.ForeignKey('GuiElement', models.CASCADE, blank=True, null=True)
-    label = models.CharField(max_length=45, blank=True, null=True)
+    gui_element = models.ForeignKey('GuiElement', models.CASCADE)
+    label = models.CharField(max_length=45, blank=True)
 
     class Meta:
         managed = False
@@ -350,7 +350,7 @@ class Option(models.Model):
 
 
 class OptionValue(models.Model):
-    label = models.CharField(max_length=145, blank=True, null=True)
+    label = models.CharField(max_length=145, blank=True)
     language = models.ManyToManyField('Language', through='OptionValueI18N')
 
     class Meta:
@@ -364,7 +364,7 @@ class OptionValue(models.Model):
 class OptionValueI18N(models.Model):
     option_value = models.ForeignKey('OptionValue', models.CASCADE)
     language = models.ForeignKey(Language, models.CASCADE)
-    name = models.CharField(max_length=45, blank=True, null=True)
+    name = models.CharField(max_length=45, blank=True)
 
     class Meta:
         managed = False
@@ -378,7 +378,7 @@ class OptionValueI18N(models.Model):
 class OptionsOverride(models.Model):
     arguments_group_has_processor = models.ForeignKey('ArgumentsGroupHasProcessor', models.CASCADE)
     option = models.ForeignKey('Option', models.CASCADE)
-    option_value = models.ForeignKey('OptionValue', models.CASCADE, blank=True, null=True)
+    option_value = models.ForeignKey('OptionValue', models.CASCADE)
 
     class Meta:
         managed = False
@@ -387,7 +387,7 @@ class OptionsOverride(models.Model):
 
 
 class Organization(models.Model):
-    url = models.CharField(max_length=45, blank=True, null=True)
+    url = models.CharField(max_length=45, blank=True)
     language = models.ManyToManyField('Language', through='OrganizationI18N')
 
     class Meta:
@@ -398,7 +398,7 @@ class Organization(models.Model):
 class OrganizationI18N(models.Model):
     organization = models.ForeignKey('Organization', models.CASCADE)
     language = models.ForeignKey('Language', models.CASCADE)
-    name = models.CharField(max_length=100, blank=True, null=True)
+    name = models.CharField(max_length=100, blank=True)
 
     class Meta:
         managed = False
@@ -411,7 +411,7 @@ class OrganizationI18N(models.Model):
 
 class Parameter(models.Model):
     accumulation_mode = models.ForeignKey('AccumulationMode', models.CASCADE)
-    is_visible = models.IntegerField(blank=True, null=True, default=1)
+    is_visible = models.IntegerField(default=1)
     language = models.ManyToManyField('Language', through='ParameterI18N')
 
     class Meta:
@@ -420,7 +420,7 @@ class Parameter(models.Model):
 
 
 class ParameterI18N(models.Model):
-    name = models.CharField(max_length=200, blank=True, null=False)
+    name = models.CharField(max_length=200, blank=True)
     language = models.ForeignKey('Language', models.CASCADE)
     parameter = models.ForeignKey('Parameter', models.CASCADE)
 
@@ -435,8 +435,8 @@ class ParameterI18N(models.Model):
 
 class Processor(models.Model):
     is_visible = models.IntegerField()
-    arguments_selected_by_user = models.IntegerField(blank=True, null=True)
-    conveyor = models.ForeignKey('Conveyor', models.CASCADE, blank=True, null=True)
+    arguments_selected_by_user = models.IntegerField(blank=True)
+    conveyor = models.ForeignKey('Conveyor', models.CASCADE)
     arguments_group = models.ManyToManyField('ArgumentsGroup', through='ProcessorHasArguments', related_name='arguments_group')
     language = models.ManyToManyField('Language', through='ProcessorI18N')
     option = models.ManyToManyField('Option', through='ProcessorHasOptions')
@@ -462,7 +462,7 @@ class ProcessorHasOptions(models.Model):
     processor = models.ForeignKey('Processor', models.CASCADE)
     option = models.ForeignKey('Option', models.CASCADE)
     option_value = models.ForeignKey('OptionValue', models.CASCADE)
-    condition = models.ForeignKey('self', models.CASCADE, blank=True, null=True)
+    condition = models.ForeignKey('self', models.CASCADE)
 
     class Meta:
         managed = False
@@ -483,7 +483,7 @@ class ProcessorHasTimePeriodType(models.Model):
 class ProcessorI18N(models.Model):
     processor = models.ForeignKey('Processor', models.CASCADE)
     language = models.ForeignKey('Language', models.CASCADE)
-    name = models.CharField(max_length=145, blank=True, null=True)
+    name = models.CharField(max_length=145, blank=True)
     description = models.CharField(max_length=1000, blank=True, null=True)
     reference = models.CharField(max_length=245, blank=True, null=True)
 
@@ -497,30 +497,30 @@ class ProcessorI18N(models.Model):
 
 
 class Property(models.Model):
-    label = models.CharField(max_length=145, blank=True, null=True)
-    gui_element = models.ForeignKey('GuiElement', models.CASCADE, blank=True, null=True)
+    label = models.CharField(max_length=145, blank=True)
+    gui_element = models.ForeignKey('GuiElement', models.CASCADE)
 
     class Meta:
         managed = False
         db_table = 'property'
 
     def __str__(self):
-        return self.label if self.label is not None else ''
+        return self.label
 
 
 class PropertyValue(models.Model):
-    label = models.CharField(max_length=145, blank=True, null=True)
+    label = models.CharField(max_length=145, blank=True)
 
     class Meta:
         managed = False
         db_table = 'property_value'
 
     def __str__(self):
-        return self.label if self.label is not None else ''
+        return self.label
 
 class Resolution(models.Model):
     name = models.CharField(unique=True, max_length=45)
-    subpath1 = models.CharField(max_length=45, blank=True, null=True)
+    subpath1 = models.CharField(max_length=45, blank=True)
 
     class Meta:
         managed = False
@@ -531,7 +531,7 @@ class Resolution(models.Model):
 
 
 class RootDir(models.Model):
-    name = models.CharField(unique=True, max_length=255, blank=True, null=True)
+    name = models.CharField(unique=True, max_length=255, blank=True)
 
     class Meta:
         managed = False
@@ -542,8 +542,8 @@ class RootDir(models.Model):
 
 
 class Scenario(models.Model):
-    name = models.CharField(unique=True, max_length=45, blank=True, null=True)
-    subpath0 = models.CharField(max_length=45, blank=True, null=True)
+    name = models.CharField(unique=True, max_length=45, blank=True)
+    subpath0 = models.CharField(max_length=45, blank=True)
 
     class Meta:
         managed = False
@@ -589,7 +589,7 @@ class TimePeriodTypeI18N(models.Model):
 
 class TimeStep(models.Model):
     label = models.CharField(unique=True, max_length=45)
-    subpath2 = models.CharField(max_length=45, blank=True, null=True)
+    subpath2 = models.CharField(max_length=45, blank=True)
     language = models.ManyToManyField('Language', through='TimeStepI18N')
 
     class Meta:
@@ -600,7 +600,7 @@ class TimeStep(models.Model):
 class TimeStepI18N(models.Model):
     time_step = models.ForeignKey('TimeStep', models.CASCADE)
     language = models.ForeignKey('Language', models.CASCADE)
-    name = models.CharField(max_length=45, blank=True, null=True)
+    name = models.CharField(max_length=45, blank=True)
 
     class Meta:
         managed = False
@@ -622,7 +622,7 @@ class Units(models.Model):
 class UnitsI18N(models.Model):
     units = models.ForeignKey('Units', models.CASCADE)
     language = models.ForeignKey('Language', models.CASCADE)
-    name = models.CharField(max_length=45, blank=True, null=True)
+    name = models.CharField(max_length=45, blank=True)
 
     class Meta:
         managed = False
@@ -645,8 +645,8 @@ class Variable(models.Model):
 
 class Vertex(models.Model):
     computing_module = models.ForeignKey('ComputingModule', models.CASCADE)
-    condition_option = models.ForeignKey('Option', models.CASCADE, blank=True, null=True)
-    condition_value = models.ForeignKey('OptionValue', models.CASCADE, blank=True, null=True)
+    condition_option = models.ForeignKey('Option', models.CASCADE)
+    condition_value = models.ForeignKey('OptionValue', models.CASCADE)
 
     class Meta:
         managed = False

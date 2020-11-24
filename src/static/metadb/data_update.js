@@ -1,5 +1,5 @@
 var loadScenarios = function() {
-    var form = $('.js-data-create-form');
+    var form = $('.js-data-update-form');
     var collectionId = $('#modal-data #id_collection').val();
     var resolutionId = $('#modal-data #id_resolution').val();
 
@@ -20,7 +20,7 @@ var loadScenarios = function() {
 };
 
 var loadResolutions = function() {
-    var form = $('.js-data-create-form');
+    var form = $('.js-data-update-form');
     var collectionId = $('#modal-data #id_collection').val();
 
     $.ajax( {
@@ -40,7 +40,7 @@ var loadResolutions = function() {
 };
 
 var loadLvsGroups = function() {
-    var form = $('.js-data-create-form');
+    var form = $('.js-data-update-form');
     var parameteri18nId = $('#modal-data #id_parameteri18n').val();
     var timestepi18nId = $('#modal-data #id_time_stepi18n').val();
 
@@ -62,7 +62,7 @@ var loadLvsGroups = function() {
 };
 
 var loadTimeSteps = function() {
-    var form = $('.js-data-create-form');
+    var form = $('.js-data-update-form');
     var parameteri18nId = $('#modal-data #id_parameteri18n').val();
 
     $.ajax( {
@@ -82,7 +82,7 @@ var loadTimeSteps = function() {
 };
 
 var loadLvsNames = function() {
-    var form = $('.js-data-create-form');
+    var form = $('.js-data-update-form');
     var lvsgroupId = $('#modal-data #id_levels_group').val();
 
     $.ajax( { 
@@ -97,30 +97,8 @@ var loadLvsNames = function() {
     } );
 };
 
-var switchLvsVariable = function() {
-    if ($(this).is(':checked')) {
-        $('#modal-data #id_levels_variable').prop('disabled', false);
-    }
-    else {
-        $('#modal-data #id_levels_variable').prop('disabled', true);
-    }
-}
-
-var switchProperty = function() {
-    if ($(this).is(':checked')) {
-        $('#modal-data #id_property').prop('disabled', false);
-        $('#modal-data #id_property_value').prop('disabled', false);
-    }
-    else {
-        $('#modal-data #id_property').prop('disabled', true);
-        $('#modal-data #id_property_value').prop('disabled', true);
-    }
-}
-
 $('#modal-data #id_collection').change( loadResolutions );
 $('#modal-data #id_resolution').change( loadScenarios );
 $('#modal-data #id_parameteri18n').change( loadTimeSteps );
 $('#modal-data #id_time_stepi18n').change( loadLvsGroups );
 $('#modal-data #id_levels_group').change( loadLvsNames );
-$('#modal-data #id_use_lvsvar').change ( switchLvsVariable )
-$('#modal-data #id_use_property').change ( switchProperty )

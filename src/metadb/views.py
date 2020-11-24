@@ -235,8 +235,7 @@ def load_dataset_resolutions(request):
     collection_id = request.GET.get('collectionId')
     resolutions = {}
     if collection_id:
-        resolutions = Resolution.objects.filter(id__in=
-            [dataset.resolution.id for dataset in Dataset.objects.filter(collection_id=collection_id)])
+        resolutions = Resolution.objects.filter(dataset__collection_id=collection_id).distinct()
     ctx = {'data': resolutions}
     return render(request, template_name, ctx)
 
@@ -246,9 +245,10 @@ def load_dataset_scenarios(request):
     resolution_id = request.GET.get('resolutionId')
     scenarios = {}
     if collection_id and resolution_id:
-        scenarios = Scenario.objects.filter(id__in=
-            [dataset.scenario.id for dataset in Dataset.objects.filter(
-                collection_id=collection_id, resolution_id=resolution_id)])
+        scenarios = Scenario.objects.filter(
+                        dataset__collection_id=collection_id,
+                        dataset__resolution_id=resolution_id
+                    )
     ctx = {'data': scenarios}
     return render(request, template_name, ctx)
 
@@ -258,8 +258,10 @@ def load_parameter_timesteps(request):
     timesteps = {}
     if parameteri18n_id:
         parameter_id = ParameterI18N.objects.get(pk=parameteri18n_id).parameter_id
-        timesteps = TimeStepI18N.objects.filter(language__code=get_language(), time_step__in=
-            [sp.time_step for sp in SpecificParameter.objects.filter(parameter_id=parameter_id)])
+        timesteps = TimeStepI18N.objects.filter(
+                        language__code=get_language(),
+                        time_step__specificparameter__parameter_id=parameter_id
+                    ).distinct()
     ctx = {'data': timesteps}
     return render(request, template_name, ctx)
 
@@ -271,22 +273,26 @@ def load_parameter_lvsgroups(request):
     if parameteri18n_id and timestepi18n_id:
         parameter_id = ParameterI18N.objects.get(pk=parameteri18n_id).parameter_id
         time_step_id = TimeStepI18N.objects.get(pk=timestepi18n_id).time_step_id
-        lvsgroups = LevelsGroup.objects.filter(id__in=
-            [sp.levels_group.id for sp in SpecificParameter.objects.filter(
-                parameter_id=parameter_id, time_step_id=time_step_id)])
+        lvsgroups = LevelsGroup.objects.filter(
+                        specificparameter__parameter_id=parameter_id,
+                        specificparameter__time_step_id=time_step_id
+                    )
     ctx = {'data': lvsgroups}
-    print(ctx)
     return render(request, template_name, ctx)
 
 def load_parameter_lvsnames(request):
     lvsgroup_id = request.GET.get('lvsgroupId')
     levels = ''
     if lvsgroup_id:
-        units = UnitsI18N.objects.filter(language__code=get_language(), units_id=
-            LevelsGroup.objects.get(pk=lvsgroup_id).units_id).get().name
-        levels = '; '.join(['{} [{}]'.format(level.name, units) for level in LevelI18N.objects.filter(
-            language__code=get_language(), level__in=Level.objects.filter(
-                levels_group__id=lvsgroup_id))])
+        units = UnitsI18N.objects.filter(
+            language__code=get_language(), 
+            units__levelsgroup__id=lvsgroup_id).get().name
+        levels = '; '.join(['{} [{}]'.format(level.name, units) for level in 
+                                LevelI18N.objects.filter(
+                                    language__code=get_language(),
+                                    level__levels_group__id=lvsgroup_id
+                                )
+                           ])
     return HttpResponse(levels)
 
 
