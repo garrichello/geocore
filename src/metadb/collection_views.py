@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404
 
 from .collection_forms import CollectionForm, CollectionI18NForm
 
-from .models import Collection
+from .models import Collection, Language
 
 class CollectionBaseView(View):
     form_class = CollectionForm

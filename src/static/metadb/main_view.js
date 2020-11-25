@@ -233,45 +233,6 @@ function add_filters(that) {
     } );
 }
 
-function addCollectionButtonHandlers() {
-    // Add handlers to 'update' and 'delete' buttons for Collection rows.
-    // Buttons should exist at the moment of execution!
-
-    // Update collection
-    $('.js-update-collection').click(load_collection_form);
-    $('#modal-collection').on('submit', '.js-collection-update-form', save_collection_form);  
-
-    // Delete collection
-    $('.js-delete-collection').click(load_collection_form);
-    $('#modal-collection').on('submit', '.js-collection-delete-form', save_collection_form);
-};
-
-function addDatasetButtonHandlers() {
-    // Add handlers to 'update' and 'delete' buttons for Dataset rows.
-    // Buttons should exist at the moment of execution!
-
-    // Update dataset
-    $('.js-update-dataset').click(load_dataset_form);
-    $('#modal-dataset').on('submit', '.js-dataset-update-form', save_dataset_form);  
-
-    // Delete dataset
-    $('.js-delete-dataset').click(load_dataset_form);
-    $('#modal-dataset').on('submit', '.js-dataset-delete-form', save_dataset_form);
-};
-
-function addDataButtonHandlers() {
-    // Add handlers to 'update' and 'delete' buttons for Data rows.
-    // Buttons should exist at the moment of execution!
-
-    // Update data
-    $('.js-update-data').click(load_data_form);
-    $('#modal-data').on('submit', '.js-data-update-form', save_data_form);  
-
-    // Delete data
-    $('.js-delete-data').click(load_data_form);
-    $('#modal-data').on('submit', '.js-data-delete-form', save_data_form);
-};
-
 function postInit() {  
     // Called after a data table was initialized. Executed for each table!
     add_filters(this);  // Add add search filters into the table header.

@@ -15,10 +15,7 @@
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.6.4/js/dataTables.buttons.min.js"></script>
     <script type="text/javascript" charset="urf8" src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap.min.js"></script>
-    <script type="text/javascript" charset="utf8" src="{% static 'metadb/main_view.js'%}"></script>
-    <script type="text/javascript" charset="utf8" src="{% static 'metadb/collections.js'%}"></script>
-    <script type="text/javascript" charset="utf8" src="{% static 'metadb/datasets.js'%}"></script>
-    <script type="text/javascript" charset="utf8" src="{% static 'metadb/data.js'%}"></script>
+</head>
 <body>
     <div id="language" language={{ language }}></div>
     <h1>{% trans "MetaDB administrative console" %}</h1>
@@ -111,5 +108,8 @@
             <div class="modal-content"></div>
         </div>
     </div>
+
+    <script type="text/javascript" charset="utf8" src="{% static 'metadb/main_forms.js'%}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static 'metadb/main_view.js'%}"></script>
  </body>
 </html>
