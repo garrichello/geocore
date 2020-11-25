@@ -110,11 +110,7 @@ class DataForm(ModelForm):
                           'levels_variable', 'variable', 'use_property', 'property', 'property_value'])        
 
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        self.set_fields()
-
+    def fill_fields(self):
         # The following is needed for passing validation by the form.
         # Collection, resolution and scenario fields are connected.
         # User selects collection, then resolution, and finally scenario.
@@ -210,3 +206,10 @@ class DataForm(ModelForm):
             self.fields['unitsi18n'].initial = self.instance.units.unitsi18n_set.filter(
                 language__code=get_language()
             ).get().id
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.set_fields()
+
+        self.fill_fields()
