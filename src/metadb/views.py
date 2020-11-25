@@ -5,6 +5,7 @@ class MainView(View):
 
     def get(self, request):
 
+        # Datatable Collection headers
         collection_headers = [
             ('head_none', 'Id'),
             ('head_select', _('Collection label')),
@@ -15,6 +16,7 @@ class MainView(View):
             ('head_text', _('Collection URL'))
         ]
 
+        # Datatable Dataset headers
         dataset_headers = [
             ('head_none', 'Id'),
             ('head_none', _('Visible')),
@@ -28,6 +30,7 @@ class MainView(View):
             ('head_text', _('Dataset description')),
         ]
 
+        # Datatable Data headers
         data_headers = [
             ('head_none', 'Id'),
             ('head_none', _('Visible')),

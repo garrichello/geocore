@@ -11,6 +11,7 @@ from .models import (Data, Dataset, LevelI18N, LevelsGroup, ParameterI18N, Resol
 
 
 def load_dataset_resolutions(request):
+    ''' Get a list of resolutions for a given collection '''
     template_name = 'metadb/hr/dropdown_list_options.html'
     collection_id = request.GET.get('collectionId')
     resolutions = {}
@@ -20,6 +21,7 @@ def load_dataset_resolutions(request):
     return render(request, template_name, ctx)
 
 def load_dataset_scenarios(request):
+    ''' Get a list of scenarios for a given collection and a resolution '''
     template_name = 'metadb/hr/dropdown_list_options.html'
     collection_id = request.GET.get('collectionId')
     resolution_id = request.GET.get('resolutionId')
@@ -33,6 +35,7 @@ def load_dataset_scenarios(request):
     return render(request, template_name, ctx)
 
 def load_parameter_timesteps(request):
+    ''' Get a list of time steps for a given parameter '''
     template_name = 'metadb/hr/dropdown_list_options.html'
     parameteri18n_id = request.GET.get('parameteri18nId')
     timesteps = {}
@@ -46,6 +49,7 @@ def load_parameter_timesteps(request):
     return render(request, template_name, ctx)
 
 def load_parameter_lvsgroups(request):
+    ''' Get a list of levels groups for a given parameter and a time step '''
     template_name = 'metadb/hr/dropdown_list_options.html'
     parameteri18n_id = request.GET.get('parameteri18nId')
     timestepi18n_id = request.GET.get('timestepi18nId')
@@ -61,6 +65,7 @@ def load_parameter_lvsgroups(request):
     return render(request, template_name, ctx)
 
 def load_parameter_lvsnames(request):
+    ''' Get a list of levels in a given levels group '''
     lvsgroup_id = request.GET.get('lvsgroupId')
     levels = ''
     if lvsgroup_id:
@@ -81,6 +86,7 @@ class DataBaseView(View):
     model = Data
 
     def save_form(self, request, form, template_name):
+        ''' Saves the form '''
         data = dict()
         if form.is_valid():
             data_obj = form.save(commit=False)  # Get data object

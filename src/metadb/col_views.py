@@ -13,7 +13,10 @@ class CollectionBaseView(View):
     formi18n_class = CollectionI18NForm
     model = Collection
 
-    def save_collection_form(self, request, col_form, coli18n_form, template_name, create=False):
+    def save_form(self, request, col_form, coli18n_form, template_name, create=False):
+        ''' Saves the form
+        create -- True if creating, False if updating.
+        '''
         data = dict()
         if col_form.is_valid() and coli18n_form.is_valid():
             # Get collection object, link it with existing organization and save.
@@ -22,12 +25,14 @@ class CollectionBaseView(View):
             col.save()
             coli18n = coli18n_form.save(commit=False)  # Get i18n collection object
             coli18n.collection = col  # Link it with the new collection
+            # To save DB consistency we create a new record for all languages.
+            # User can update/translate to every other language lately and separately.
             if create:
                 for db_lang in Language.objects.all():  # Iterate over all languages in DB
                     coli18n.language = db_lang  # Link it with an existing language
                     coli18n.pk = None  # Clear PK to save data into a new record
                     coli18n.save()  # Save
-            else:
+            else:  # Just update the existing record.
                 coli18n.save()
 
             col_form.save_m2m()  # Save form and many-to-many relations
@@ -41,6 +46,7 @@ class CollectionBaseView(View):
         return JsonResponse(data)
 
     def get_models(self, pk):
+        ''' Just get additional model objects for a given PK '''
         language = get_language()
         col_model = get_object_or_404(self.model, pk=pk)
         coli18n_model = col_model.collectioni18n_set.filter(language__code=language).get()
@@ -62,7 +68,7 @@ class CollectionCreateView(CollectionBaseView):
     def post(self, request):
         col_form = self.form_class(request.POST)
         coli18n_form = self.formi18n_class(request.POST)
-        return self.save_collection_form(request, col_form, coli18n_form, self.template_name, create=True)
+        return self.save_form(request, col_form, coli18n_form, self.template_name, create=True)
 
 
 class CollectionUpdateView(CollectionBaseView):
@@ -82,7 +88,7 @@ class CollectionUpdateView(CollectionBaseView):
         col_model_old, coli18n_model_old, _ = self.get_models(pk)
         col_form = self.form_class(request.POST, instance=col_model_old)
         coli18n_form = self.formi18n_class(request.POST, instance=coli18n_model_old)
-        return self.save_collection_form(request, col_form, coli18n_form, self.template_name)
+        return self.save_form(request, col_form, coli18n_form, self.template_name)
 
 class CollectionDeleteView(CollectionBaseView):
     template_name = 'metadb/includes/collection_delete_form.html'

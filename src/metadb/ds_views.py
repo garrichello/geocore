@@ -12,6 +12,7 @@ class DatasetBaseView(View):
     model = Dataset
 
     def save_form(self, request, form, template_name):
+        ''' Saves the form '''
         data = dict()
         if form.is_valid():
             form.save()
