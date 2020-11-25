@@ -4,7 +4,7 @@ from django.http import HttpResponse, JsonResponse
 from django.utils.translation import get_language
 from django.shortcuts import get_object_or_404, render
 
-from .forms import DataForm
+from .data_forms import DataForm
 
 from .models import (Data, Dataset, LevelI18N, LevelsGroup, ParameterI18N, Resolution,
                      Scenario, SpecificParameter, TimeStepI18N, UnitsI18N)

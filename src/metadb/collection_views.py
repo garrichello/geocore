@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from django.utils.translation import get_language
 from django.shortcuts import get_object_or_404
 
-from .forms import CollectionForm, CollectionI18NForm
+from .collection_forms import CollectionForm, CollectionI18NForm
 
 from .models import Collection
 

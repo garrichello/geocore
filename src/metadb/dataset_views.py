@@ -3,7 +3,7 @@ from django.template.loader import render_to_string
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 
-from .forms import DatasetForm
+from .dataset_forms import DatasetForm
 
 from .models import Dataset
 
