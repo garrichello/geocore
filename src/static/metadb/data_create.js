@@ -76,7 +76,7 @@ var loadTimeSteps = function() {
             if ($('#modal-data #id_time_stepi18n option').length == 2) {
                 $('#modal-data #id_time_stepi18n').prop("selectedIndex", 1);
             }
-            $('#modal-data #id_levels_group').trigger('change');
+            $('#modal-data #id_time_stepi18n').trigger('change');
         }
     } );
 };
