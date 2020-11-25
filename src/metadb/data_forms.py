@@ -7,6 +7,32 @@ from django.forms import (BooleanField, CharField, ModelChoiceField,
 from .models import (Collection, Data, LevelI18N, LevelsGroup, ParameterI18N, Resolution, 
                      Scenario, TimeStepI18N, UnitsI18N)
 
+
+def get_resolutions(collection_id):
+    return Resolution.objects.filter(dataset__collection_id=collection_id).distinct()
+
+def get_scenarios(collection_id, resolution_id):
+    return Scenario.objects.filter(dataset__collection_id=collection_id, dataset__resolution_id=resolution_id)
+
+def get_timesteps(parameter_id):
+    return TimeStepI18N.objects.filter(
+        language__code=get_language(), time_step__specificparameter__parameter_id=parameter_id).distinct()
+
+def get_levelsgroups(parameter_id, time_step_id):
+    return LevelsGroup.objects.filter(
+        specificparameter__parameter_id=parameter_id, specificparameter__time_step_id=time_step_id)
+
+def get_levels(lvsgroup_id):
+    units = UnitsI18N.objects.filter(
+        language__code=get_language(), 
+        units__levelsgroup__id=lvsgroup_id).get().name
+    levels = '; '.join(['{} [{}]'.format(level.name, units) for level in 
+        LevelI18N.objects.filter(
+            language__code=get_language(),
+            level__levels_group__id=lvsgroup_id)])
+    return levels
+
+
 class DataForm(ModelForm):
 
     empty_label = '*'
@@ -83,60 +109,62 @@ class DataForm(ModelForm):
                           'use_lvsvar', 'levels_variable', 'variable', 'unitsi18n',
                           'levels_variable', 'variable', 'use_property', 'property', 'property_value'])        
 
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.set_fields()
 
-        # Fill the Resolution field based on the Collection field
-        if 'collection' in self.data:  # When Create data record
+        # The following is needed for passing validation by the form.
+        # Collection, resolution and scenario fields are connected.
+        # User selects collection, then resolution, and finally scenario.
+        
+        # Get resolutions for a selected collection.
+        if 'collection' in self.data:  # To Create a new record
             try:
                 collection_id = self.data.get('collection')
                 if collection_id:
-                    self.fields['resolution'].queryset = Resolution.objects.filter(
-                        dataset__collection_id=collection_id).distinct()
+                    self.fields['resolution'].queryset = get_resolutions(collection_id)
             except:
                 pass
-        elif self.instance.pk:  # When Update data record
-            self.fields['resolution'].queryset = Resolution.objects.filter(
-                dataset__collection=self.instance.dataset.collection).distinct()
+        elif self.instance.pk:  # To Update an existing record
+            self.fields['resolution'].queryset = get_resolutions(self.instance.dataset.collection.id)
+
             self.fields['collection'].initial = self.instance.dataset.collection.id
             self.fields['resolution'].initial = self.instance.dataset.resolution.id
 
-        # Fill the Scenario field based on the Collection and the Resolution fields
+        # Get scenarios for a selected collection and a resolution.
         if 'collection' in self.data and 'resolution' in self.data:
             try:
                 collection_id = self.data.get('collection')
                 resolution_id = self.data.get('resolution')
                 if collection_id and resolution_id:
-                    self.fields['scenario'].queryset = Scenario.objects.filter(
-                        dataset__collection_id=collection_id,
-                        dataset__resolution_id=resolution_id
-                    )
+                    self.fields['scenario'].queryset = get_scenarios(collection_id, resolution_id)
             except:
                 pass
         elif self.instance.pk:
-            self.fields['scenario'].queryset = Scenario.objects.filter(
-                dataset__collection=self.instance.dataset.collection,
-                dataset__resolution=self.instance.dataset.resolution)
+            self.fields['scenario'].queryset = get_scenarios(
+                self.instance.dataset.collection.id, 
+                self.instance.dataset.resolution.id)
+
             self.fields['scenario'].initial = self.instance.dataset.scenario.id
 
-        # Fill the Time step field based on the Parameter field
-        if 'parameteri18n' in self.data:
+        # The following is needed for passing validation by the form.
+        # Parameter, time step and levels group fields are connected.
+        # User selects parameter, then time step, and finally levels group.
+
+        # Get time steps for a selected parameter (localized name of a parameter).
+        if 'parameteri18n' in self.data:  # To create a new record.
             try:
                 parameteri18n_id = self.data.get('parameteri18n')
                 parameter_id = ParameterI18N.objects.get(pk=parameteri18n_id).parameter_id
                 if parameter_id:
-                    self.fields['time_stepi18n'].queryset = TimeStepI18N.objects.filter(
-                        language__code=get_language(),
-                        time_step__specificparameter__parameter_id=parameter_id
-                    ).distinct()
+                    self.fields['time_stepi18n'].queryset = get_timesteps(parameter_id)
             except:
                 pass
-        elif self.instance.pk:
-            self.fields['time_stepi18n'].queryset = TimeStepI18N.objects.filter(
-                time_step__specificparameter__parameter=self.instance.specific_parameter.parameter,
-                language__code=get_language())
+        elif self.instance.pk:  # To update an existing record.
+            self.fields['time_stepi18n'].queryset = get_timesteps(self.instance.specific_parameter.parameter.id)
+
             self.fields['parameteri18n'].initial = \
                 self.instance.specific_parameter.parameter.parameteri18n_set.filter(
                     language__code=get_language()).get().id
@@ -144,7 +172,7 @@ class DataForm(ModelForm):
                 self.instance.specific_parameter.time_step.timestepi18n_set.filter(
                     language__code=get_language()).get().id
 
-        # Fill the Levels group field based on the Parameter and the Time step fields
+        # Get levels groups for a selected parameter and a time step.
         if 'parameteri18n' in self.data and 'time_stepi18n' in self.data:
             try:
                 parameteri18n_id = self.data.get('parameteri18n')
@@ -152,44 +180,29 @@ class DataForm(ModelForm):
                 timestepi18n_id = self.data.get('time_stepi18n')
                 time_step_id = TimeStepI18N.objects.get(pk=timestepi18n_id).time_step_id
                 if parameter_id and time_step_id:
-                    self.fields['levels_group'].queryset = LevelsGroup.objects.filter(
-                        specificparameter__parameter_id=parameter_id,
-                        specificparameter__time_step_id=time_step_id
-                    )
+                    self.fields['levels_group'].queryset = get_levelsgroups(parameter_id, time_step_id)
             except:
                 pass
         elif self.instance.pk:
-            self.fields['levels_group'].queryset = LevelsGroup.objects.filter(
-                specificparameter__parameter=self.instance.specific_parameter.parameter,
-                specificparameter__time_step=self.instance.specific_parameter.time_step
-            )
+            self.fields['levels_group'].queryset = get_levelsgroups(
+                self.instance.specific_parameter.parameter.id,
+                self.instance.specific_parameter.time_step.id)
+
             self.fields['levels_group'].initial = self.instance.specific_parameter.levels_group.id
 
-        # Fill the Levels names field based on the Levels group field
+        # Fill the Levels names text field based on the Levels group field
         if 'levels_group' in self.data:  # When Create data record
             try:
                 lvsgroup_id = self.data.get('levels_group')
                 if lvsgroup_id:
-                    units = UnitsI18N.objects.filter(
-                        language__code=get_language(), 
-                        units__levelsgroup__id=lvsgroup_id).get().name
-                    levels = '; '.join(['{} [{}]'.format(level.name, units) for level in 
-                        LevelI18N.objects.filter(
-                            language__code=get_language(),
-                            level__levels_group__id=lvsgroup_id)])
-                    self.fields['levels_namesi18n'].initial = levels
+                    self.fields['levels_namesi18n'].initial = get_levels(lvsgroup_id)
             except:
                 pass
         elif self.instance.pk:  # When Update data record
-            units = self.instance.specific_parameter.levels_group.units.unitsi18n_set.filter(
-                language__code=get_language()).get().name
-            levels = '; '.join(['{} [{}]'.format(level.name, units) for level in 
-                LevelI18N.objects.filter(
-                    language__code=get_language(),
-                    level__levels_group=self.instance.specific_parameter.levels_group).all()])
-            self.fields['levels_namesi18n'].initial = levels
+            self.fields['levels_namesi18n'].initial = get_levels(self.instance.specific_parameter.levels_group.id)
 
-        # Fill the Units field
+        # The following is needed for passing validation by the form.
+        # Fill the Units field.
         if self.instance.pk:
             self.fields['unitsi18n'].queryset = UnitsI18N.objects.filter(
                 language__code=get_language()

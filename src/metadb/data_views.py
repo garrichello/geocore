@@ -4,7 +4,8 @@ from django.http import HttpResponse, JsonResponse
 from django.utils.translation import get_language
 from django.shortcuts import get_object_or_404, render
 
-from .data_forms import DataForm
+from .data_forms import (DataForm, get_resolutions, get_scenarios,
+                         get_timesteps, get_levelsgroups, get_levels)
 
 from .models import (Data, Dataset, LevelI18N, LevelsGroup, ParameterI18N, Resolution,
                      Scenario, SpecificParameter, TimeStepI18N, UnitsI18N)
@@ -16,7 +17,7 @@ def load_dataset_resolutions(request):
     collection_id = request.GET.get('collectionId')
     resolutions = {}
     if collection_id:
-        resolutions = Resolution.objects.filter(dataset__collection_id=collection_id).distinct()
+        resolutions = get_resolutions(collection_id)
     ctx = {'data': resolutions}
     return render(request, template_name, ctx)
 
@@ -27,10 +28,7 @@ def load_dataset_scenarios(request):
     resolution_id = request.GET.get('resolutionId')
     scenarios = {}
     if collection_id and resolution_id:
-        scenarios = Scenario.objects.filter(
-                        dataset__collection_id=collection_id,
-                        dataset__resolution_id=resolution_id
-                    )
+        scenarios = get_scenarios(collection_id, resolution_id)
     ctx = {'data': scenarios}
     return render(request, template_name, ctx)
 
@@ -41,10 +39,7 @@ def load_parameter_timesteps(request):
     timesteps = {}
     if parameteri18n_id:
         parameter_id = ParameterI18N.objects.get(pk=parameteri18n_id).parameter_id
-        timesteps = TimeStepI18N.objects.filter(
-                        language__code=get_language(),
-                        time_step__specificparameter__parameter_id=parameter_id
-                    ).distinct()
+        timesteps = get_timesteps(parameter_id)
     ctx = {'data': timesteps}
     return render(request, template_name, ctx)
 
@@ -57,10 +52,7 @@ def load_parameter_lvsgroups(request):
     if parameteri18n_id and timestepi18n_id:
         parameter_id = ParameterI18N.objects.get(pk=parameteri18n_id).parameter_id
         time_step_id = TimeStepI18N.objects.get(pk=timestepi18n_id).time_step_id
-        lvsgroups = LevelsGroup.objects.filter(
-                        specificparameter__parameter_id=parameter_id,
-                        specificparameter__time_step_id=time_step_id
-                    )
+        lvsgroups = get_levelsgroups(parameter_id, time_step_id)
     ctx = {'data': lvsgroups}
     return render(request, template_name, ctx)
 
@@ -69,15 +61,7 @@ def load_parameter_lvsnames(request):
     lvsgroup_id = request.GET.get('lvsgroupId')
     levels = ''
     if lvsgroup_id:
-        units = UnitsI18N.objects.filter(
-            language__code=get_language(), 
-            units__levelsgroup__id=lvsgroup_id).get().name
-        levels = '; '.join(['{} [{}]'.format(level.name, units) for level in 
-                                LevelI18N.objects.filter(
-                                    language__code=get_language(),
-                                    level__levels_group__id=lvsgroup_id
-                                )
-                           ])
+        levels = get_levels(lvsgroup_id)
     return HttpResponse(levels)
 
 
