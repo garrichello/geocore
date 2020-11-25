@@ -1,5 +1,5 @@
-var loadScenarios = function() {
-    var form = $('.js-data-create-form');
+var loadScenarios = function(form_name) {
+    var form = $(form_name);
     var collectionId = $('#modal-data #id_collection').val();
     var resolutionId = $('#modal-data #id_resolution').val();
 
@@ -19,8 +19,8 @@ var loadScenarios = function() {
     } );
 };
 
-var loadResolutions = function() {
-    var form = $('.js-data-create-form');
+var loadResolutions = function(form_name) {
+    var form = $(form_name);
     var collectionId = $('#modal-data #id_collection').val();
 
     $.ajax( {
@@ -39,8 +39,8 @@ var loadResolutions = function() {
     } );
 };
 
-var loadLvsGroups = function() {
-    var form = $('.js-data-create-form');
+var loadLvsGroups = function(form_name) {
+    var form = $(form_name);
     var parameteri18nId = $('#modal-data #id_parameteri18n').val();
     var timestepi18nId = $('#modal-data #id_time_stepi18n').val();
 
@@ -61,8 +61,8 @@ var loadLvsGroups = function() {
     } );
 };
 
-var loadTimeSteps = function() {
-    var form = $('.js-data-create-form');
+var loadTimeSteps = function(form_name) {
+    var form = $(form_name);
     var parameteri18nId = $('#modal-data #id_parameteri18n').val();
 
     $.ajax( {
@@ -81,8 +81,8 @@ var loadTimeSteps = function() {
     } );
 };
 
-var loadLvsNames = function() {
-    var form = $('.js-data-create-form');
+var loadLvsNames = function(form_name) {
+    var form = $(form_name);
     var lvsgroupId = $('#modal-data #id_levels_group').val();
 
     $.ajax( { 
@@ -117,10 +117,11 @@ var switchProperty = function() {
     }
 }
 
-$('#modal-data #id_collection').change( loadResolutions );
-$('#modal-data #id_resolution').change( loadScenarios );
-$('#modal-data #id_parameteri18n').change( loadTimeSteps );
-$('#modal-data #id_time_stepi18n').change( loadLvsGroups );
-$('#modal-data #id_levels_group').change( loadLvsNames );
+var form_class_name = '.'+JSON.parse($('#form-class-name')[0].textContent);
+$('#modal-data #id_collection').change( function() { loadResolutions(form_class_name); } );
+$('#modal-data #id_resolution').change( function() { loadScenarios(form_class_name); } );
+$('#modal-data #id_parameteri18n').change( function() { loadTimeSteps(form_class_name); } );
+$('#modal-data #id_time_stepi18n').change( function() { loadLvsGroups(form_class_name); } );
+$('#modal-data #id_levels_group').change( function() { loadLvsNames(form_class_name); } );
 $('#modal-data #id_use_lvsvar').change ( switchLvsVariable )
 $('#modal-data #id_use_property').change ( switchProperty )

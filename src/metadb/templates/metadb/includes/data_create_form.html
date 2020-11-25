@@ -1,6 +1,6 @@
 {% load static i18n %}
 
-<form method="post" action="{% url 'metadb:data_create' %}" class="js-data-create-form" 
+<form method="post" action="{% url 'metadb:data_create' %}" class="{{ form_class }}" 
       dataset-resolutions-url="{% url 'metadb:form_load_resolutions'%}"
       dataset-scenario-url="{% url 'metadb:form_load_scenarios'%}"
       parameter-timesteps-url="{% url 'metadb:form_load_timesteps'%}"
@@ -24,4 +24,5 @@
     </div>
 </form>
 
-<script type="text/javascript" charset="utf-8" src={% static 'metadb/data_create.js' %}></script>
+{{ form_class|json_script:"form-class-name" }}
+<script type="text/javascript" charset="utf-8" src={% static 'metadb/data_form.js' %}></script>
