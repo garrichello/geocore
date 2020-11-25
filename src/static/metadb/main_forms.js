@@ -112,7 +112,7 @@ $(function() {
         });
     };
 
-    // Create collection
+    // Create collection button
     var modal_name = '#modal-collection';
     $('.js-create-collection').click(function() { 
         load_form.call(this, modal_name);
@@ -121,7 +121,7 @@ $(function() {
         save_form.call(this, e, modal_name);
     });
 
-    // Create dataset
+    // Create dataset button
     var modal_name = '#modal-dataset';
     $('.js-create-dataset').click(function() { 
         load_form.call(this, modal_name);
@@ -130,7 +130,7 @@ $(function() {
         save_form.call(this, e, modal_name);
     });
     
-    // Create data
+    // Create data button
     var modal_name = '#modal-data';
     $('.js-create-data').click(function() { 
         load_form.call(this, modal_name);
