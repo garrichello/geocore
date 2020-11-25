@@ -13,6 +13,7 @@ django-rest-framework = "*"
 python-gettext = "*"
 django-bootstrap-modal-forms = "*"
 django-widget-tweaks = "*"
+pylint = "*"
 
 [requires]
 python_version = "3.8"
