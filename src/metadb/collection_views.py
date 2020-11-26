@@ -61,7 +61,7 @@ class CollectionCreateView(CollectionBaseView):
         col_form = self.form_class()
         coli18n_form = self.formi18n_class()
 
-        ctx = {'col_form': col_form, 'coli18n_form': coli18n_form}
+        ctx = {'forms': [col_form, coli18n_form]}
         html_form = render_to_string(self.template_name, ctx, request)
         return JsonResponse({'html_form': html_form})
 
@@ -80,7 +80,7 @@ class CollectionUpdateView(CollectionBaseView):
         col_form = self.form_class(instance=col_model, orgi18n_pk=orgi18n_model.pk)
         coli18n_form = self.formi18n_class(instance=coli18n_model)
 
-        ctx = {'col_form': col_form, 'coli18n_form': coli18n_form}
+        ctx = {'forms': [col_form, coli18n_form], 'pk': col_form.instance.pk}
         html_form = render_to_string(self.template_name, ctx, request)
         return JsonResponse({'html_form': html_form})
 

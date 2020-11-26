@@ -97,7 +97,7 @@ class DataBaseView(View):
         else:
             data['form_is_valid'] = False
 
-        ctx = {'form': form}
+        ctx = {'forms': [form]}
         data['html_form'] = render_to_string(template_name, ctx, request)
         return JsonResponse(data)
 
@@ -108,7 +108,7 @@ class DataCreateView(DataBaseView):
     def get(self, request):
         form = self.form_class()
 
-        ctx = {'form': form, 'form_class': 'js-data-create-form'}
+        ctx = {'forms': [form], 'form_class': 'js-data-create-form'}
         html_form = render_to_string(self.template_name, ctx, request)
         return JsonResponse({'html_form': html_form})
 
@@ -125,7 +125,7 @@ class DataUpdateView(DataBaseView):
         obj = get_object_or_404(self.model, pk=pk)
         form = self.form_class(instance=obj)
 
-        ctx = {'form': form, 'form_class': 'js-data-update-form'}
+        ctx = {'forms': [form], 'form_class': 'js-data-update-form', 'pk': form.instance.pk}
         html_form = render_to_string(self.template_name, ctx, request)
         return JsonResponse({'html_form': html_form})
 
