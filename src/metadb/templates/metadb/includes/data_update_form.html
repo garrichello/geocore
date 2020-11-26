@@ -1,6 +1,6 @@
 {% load static i18n %}
 
-<form method="post" action="{% url 'metadb:data_update' form.instance.pk %}" class="js-data-update-form"
+<form method="post" action="{% url 'metadb:data_update' pk %}" class="js-data-update-form"
       dataset-resolutions-url="{% url 'metadb:form_load_resolutions'%}"
       dataset-scenario-url="{% url 'metadb:form_load_scenarios'%}"
       parameter-timesteps-url="{% url 'metadb:form_load_timesteps'%}"
@@ -15,7 +15,7 @@
     <h3 class="modal-title">{% trans "Update data" %}</h3>
 
     <div class="modal-body">
-        {% include 'metadb/includes/data_form_body.html' %}
+        {% include 'metadb/includes/form_body.html' %}
     </div>
 
     <div class="modal-footer">
