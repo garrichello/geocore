@@ -1,0 +1,30 @@
+{% load widget_tweaks i18n %}
+
+{% for form in forms %}
+    {% for field in form %}
+    {% if field.widget_type == 'checkbox'%}
+    <div class="form-check {% if field.errors %}has-error{% endif %}">
+        {% render_field field class="form-check-input" %}
+        <label class="form-check-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {% for error in field.errors %}
+            <p class="help-block">{{ error }}</p>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="form-group {% if field.errors %}has-error{% endif %}">
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        <div class="form-inline">
+            {% render_field field class="form-control" style="width: 91%" %}
+            {% if field.widget_type == 'select' %}
+            <button type="button" class="btn btn-primary js-add-{{ field.name }}">
+                <span class="glyphicon glyphicon-plus"></span>
+            </button>
+            {% endif %}
+        </div>
+        {% for error in field.errors %}
+            <p class="help-block">{{ error }}</p>
+        {% endfor %}
+    </div>
+    {% endif%}
+    {% endfor %}
+{% endfor %}
