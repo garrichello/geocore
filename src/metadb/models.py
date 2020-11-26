@@ -398,7 +398,7 @@ class Organization(models.Model):
 class OrganizationI18N(models.Model):
     organization = models.ForeignKey('Organization', models.CASCADE)
     language = models.ForeignKey('Language', models.CASCADE)
-    name = models.CharField(max_length=100, blank=True)
+    name = models.CharField(max_length=100)
 
     class Meta:
         managed = False
