@@ -4,5 +4,7 @@
     <option value="{{ e.pk }}">{{ e.name }}</option>
 {% elif e.description %}
     <option value="{{ e.pk }}">{{ e.description }}</option>
+{% elif e.label %}
+    <option value="{{ e.pk }}">{{ e.label }}</option>
 {% endif %}
 {% endfor %}
