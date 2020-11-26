@@ -7,7 +7,8 @@ from .apiviews import (CollectionApiListView, DatasetApiListView, DataApiListVie
 from .collection_views import (CollectionCreateView, CollectionDeleteView,
                                CollectionUpdateView, load_organizations)
 from .dataset_views import (DatasetCreateView, DatasetDeleteView,
-                            DatasetUpdateView)
+                            DatasetUpdateView, load_collections, load_resolutions,
+                            load_scenarios, load_datakinds, load_filetypes)
 from .data_views import (DataCreateView, DataDeleteView, DataUpdateView,
                          load_dataset_resolutions, load_dataset_scenarios,
                          load_parameter_lvsgroups, load_parameter_lvsnames,
@@ -30,6 +31,11 @@ urlpatterns = [
     path('datasets/<int:pk>/update/', DatasetUpdateView.as_view(), name='dataset_update'),
     path('datasets/<int:pk>/delete/', DatasetDeleteView.as_view(), name='dataset_delete'),
     path('datasets/api/', DatasetApiListView.as_view(), name='datasets_api'),
+    path('datasets/form/load-collections/', load_collections, name='form_load_collections'),
+    path('datasets/form/load-resolutions/', load_resolutions, name='form_load_resolutions'),
+    path('datasets/form/load-scenarios/', load_scenarios, name='form_load_scenarios'),
+    path('datasets/form/load-datakinds/', load_datakinds, name='form_load_datakinds'),
+    path('datasets/form/load-filetypes/', load_filetypes, name='form_load_filetypes'),
 
     path('data/create/', DataCreateView.as_view(), name='data_create'),
     path('data/<int:pk>/update/', DataUpdateView.as_view(), name='data_update'),

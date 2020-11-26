@@ -1,11 +1,52 @@
 from django.views import View
 from django.template.loader import render_to_string
 from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
+from time import sleep
 
 from .dataset_forms import DatasetForm
 
-from .models import Dataset
+from .models import Dataset, Collection, Resolution, Scenario, DataKind, FileType
+
+def load_collections(request):
+    template_name = 'metadb/hr/dropdown_list_options.html'
+    sleep(0.1)  # Have to wait for DB to arrange things.
+    collections = Collection.objects.order_by('label').all()
+    ctx = {'data': collections}
+    return render(request, template_name, ctx)
+
+
+def load_resolutions(request):
+    template_name = 'metadb/hr/dropdown_list_options.html'
+    sleep(0.1)  # Have to wait for DB to arrange things.
+    resolutions = Resolution.objects.order_by('name').all()
+    ctx = {'data': resolutions}
+    return render(request, template_name, ctx)
+
+
+def load_scenarios(request):
+    template_name = 'metadb/hr/dropdown_list_options.html'
+    sleep(0.1)  # Have to wait for DB to arrange things.
+    scenarios = Scenario.objects.order_by('name').all()
+    ctx = {'data': scenarios}
+    return render(request, template_name, ctx)
+
+
+def load_datakinds(request):
+    template_name = 'metadb/hr/dropdown_list_options.html'
+    sleep(0.1)  # Have to wait for DB to arrange things.
+    datakinds = DataKind.objects.order_by('name').all()
+    ctx = {'data': datakinds}
+    return render(request, template_name, ctx)
+
+
+def load_filetypes(request):
+    template_name = 'metadb/hr/dropdown_list_options.html'
+    sleep(0.1)  # Have to wait for DB to arrange things.
+    filetypes = FileType.objects.order_by('name').all()
+    ctx = {'data': filetypes}
+    return render(request, template_name, ctx)
+
 
 class DatasetBaseView(View):
     form_class = DatasetForm
