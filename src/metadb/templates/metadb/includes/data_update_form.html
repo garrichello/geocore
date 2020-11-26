@@ -1,6 +1,6 @@
 {% load static i18n %}
 
-<form method="post" action="{% url 'metadb:data_update' pk %}" class="js-data-update-form"
+<form method="post" action="{% url 'metadb:data_update' pk %}" class="{{ form_class }}"
       dataset-resolutions-url="{% url 'metadb:form_load_resolutions'%}"
       dataset-scenario-url="{% url 'metadb:form_load_scenarios'%}"
       parameter-timesteps-url="{% url 'metadb:form_load_timesteps'%}"
