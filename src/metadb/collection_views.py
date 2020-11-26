@@ -2,11 +2,21 @@ from django.views import View
 from django.template.loader import render_to_string
 from django.http import JsonResponse
 from django.utils.translation import get_language
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
+from time import sleep
 
 from .collection_forms import CollectionForm, CollectionI18NForm
 
-from .models import Collection, Language
+from .models import Collection, Language, OrganizationI18N
+
+def load_organizations(request):
+    template_name = 'metadb/hr/dropdown_list_options.html'
+    sleep(0.1)  # Have to wait for DB to arrange things.
+    organizations = OrganizationI18N.objects.filter(
+        language__code=get_language()
+    ).order_by('name').all()
+    ctx = {'data': organizations}
+    return render(request, template_name, ctx)
 
 class CollectionBaseView(View):
     form_class = CollectionForm
@@ -41,7 +51,7 @@ class CollectionBaseView(View):
         else:
             data['form_is_valid'] = False
 
-        ctx = {'col_form': col_form, 'coli18n_form': coli18n_form}
+        ctx = {'forms': [col_form, coli18n_form], 'pk': col_form.instance.pk}
         data['html_form'] = render_to_string(template_name, ctx, request)
         return JsonResponse(data)
 
@@ -61,7 +71,7 @@ class CollectionCreateView(CollectionBaseView):
         col_form = self.form_class()
         coli18n_form = self.formi18n_class()
 
-        ctx = {'forms': [col_form, coli18n_form]}
+        ctx = {'forms': [col_form, coli18n_form], 'form_class': 'js-collection-create-form'}
         html_form = render_to_string(self.template_name, ctx, request)
         return JsonResponse({'html_form': html_form})
 
@@ -80,7 +90,8 @@ class CollectionUpdateView(CollectionBaseView):
         col_form = self.form_class(instance=col_model, orgi18n_pk=orgi18n_model.pk)
         coli18n_form = self.formi18n_class(instance=coli18n_model)
 
-        ctx = {'forms': [col_form, coli18n_form], 'pk': col_form.instance.pk}
+        ctx = {'forms': [col_form, coli18n_form], 
+               'form_class': 'js-collection-update-form', 'pk': col_form.instance.pk}
         html_form = render_to_string(self.template_name, ctx, request)
         return JsonResponse({'html_form': html_form})
 
