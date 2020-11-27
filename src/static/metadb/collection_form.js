@@ -18,12 +18,10 @@ var loadOrganizations = function(form_name, organization_name='') {
     } );
 };
 
-$('body').on('submit', '.js-organization-create-form', function(e) {
+var organization_form_class = '.js-organization-create-form';
+$('body').on('submit', organization_form_class, function(e) {
     saveForm2.call(this, e);  // Save new organization
-    var form_data = $('.js-organization-create-form').serializeArray().reduce(function(obj, item) {
-        obj[item.name] = item.value;
-        return obj;
-    }, {});  // Get fields of the form as a map
+    form_data = mapFormData(organization_form_class);  // Get fields of the form as a map
     loadOrganizations.call(this, form_class_name, form_data['name']);
     return false; 
 });
