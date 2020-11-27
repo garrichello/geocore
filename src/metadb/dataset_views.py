@@ -72,7 +72,7 @@ class DatasetCreateView(DatasetBaseView):
     def get(self, request):
         form = self.form_class()
 
-        ctx = {'forms': [form]}
+        ctx = {'forms': [form], 'form_class': 'js-dataset-create-form'}
         html_form = render_to_string(self.template_name, ctx, request)
         return JsonResponse({'html_form': html_form})
 
@@ -89,7 +89,7 @@ class DatasetUpdateView(DatasetBaseView):
         obj = get_object_or_404(self.model, pk=pk)
         form = self.form_class(instance=obj)
 
-        ctx = {'forms': [form], 'pk': form.instance.pk}
+        ctx = {'forms': [form], 'form_class': 'js-dataset-update-form', 'pk': form.instance.pk}
         html_form = render_to_string(self.template_name, ctx, request)
         return JsonResponse({'html_form': html_form})
 
