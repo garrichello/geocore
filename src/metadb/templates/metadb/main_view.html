@@ -19,7 +19,7 @@
 <body>
     <div id="language" language={{ language }}></div>
     <h1>{% trans "MetaDB administrative console" %}</h1>
-    <div style="margin-left: 10px; margin-right: 10px; ">
+    <div id="main-view" style="margin-left: 10px; margin-right: 10px; ">
         <ul class="nav nav-tabs" role="tablist">
             <li class="active">
                 <a href="#tab-collection" data-toggle="tab">{% trans "Collection" %}</a>
@@ -35,7 +35,9 @@
             </li>
         </ul>
         <div class="tab-content">
-            <div class="tab-pane active" id="tab-collection">
+            <div class="tab-pane active" id="tab-collection"
+                 update-data-url="{% url 'metadb:collection_update' 99999 %}"
+                 delete-data-url="{% url 'metadb:collection_delete' 99999 %}">
                 <button type="button" 
                         class="btn btn-primary js-create-collection"
                         data-url="{% url 'metadb:collection_create' %}">
@@ -53,7 +55,9 @@
                     </thead>
                 </table>
             </div>
-            <div class="tab-pane" id="tab-dataset">
+            <div class="tab-pane" id="tab-dataset"
+                 update-data-url="{% url 'metadb:dataset_update' 99999 %}"
+                 delete-data-url="{% url 'metadb:dataset_delete' 99999 %}">
                 <button type="button"
                         class="btn btn-primary js-create-dataset"
                         data-url="{% url 'metadb:dataset_create' %}">
@@ -71,7 +75,9 @@
                     </thead>
                 </table>
             </div>
-            <div class="tab-pane" id="tab-data">
+            <div class="tab-pane" id="tab-data"
+                 update-data-url="{% url 'metadb:data_update' 99999 %}"
+                 delete-data-url="{% url 'metadb:data_delete' 99999 %}">
                 <button type="button"
                         class="btn btn-primary js-create-data"
                         data-url="{% url 'metadb:data_create' %}">
@@ -93,27 +99,7 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" tabindex="-1" role="dialog" id="modal-collection">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content"></div>
-        </div>
-    </div>
-    <div class="modal fade" tabindex="-1" role="dialog" id="modal-dataset">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content"></div>
-        </div>
-    </div>
-    <div class="modal fade" tabindex="-1" role="dialog" id="modal-data">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content"></div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="modal-over" data-backdrop="static">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content"></div>
-        </div>
-    </div>
+    <div id="modal-stables"></div>
 
     <script type="text/javascript" charset="utf8" src="{% static 'metadb/main_forms.js'%}"></script>
     <script type="text/javascript" charset="utf8" src="{% static 'metadb/main_view.js'%}"></script>
