@@ -2,14 +2,17 @@ all_columns_defs = [
     { className: ' dt-center', targets: '_all', }
 ]
 
+var collection_update_url = $('#tab-collection').attr('update-data-url').split('99999');
+var collection_delete_url = $('#tab-collection').attr('delete-data-url').split('99999');
+
 collection_columns = [
     { 'render': function() { return null; } },  // For checkboxes
     { 'render': function (data, type, row, meta) {
         return '<button type="button" class="btn btn-warning btn-sm js-update-collection"'
-               + `data-url="collections/${row.id}/update/">`
+               + `data-url="${collection_update_url[0]}${row.id}${collection_update_url[1]}">`
                + '<span class="glyphicon glyphicon-pencil"></span></button>&nbsp;'
                + '<button type="button" class="btn btn-danger btn-sm js-delete-collection"'
-               + `data-url="collections/${row.id}/delete/">`
+               + `data-url="${collection_delete_url[0]}${row.id}${collection_delete_url[1]}">`
                + '<span class="glyphicon glyphicon-trash"></span></button>';
     } },  // for buttons
     { 'data': 'id' },
@@ -37,14 +40,17 @@ collection_columnsDefs = [
     },
 ]
 
+var dataset_update_url = $('#tab-dataset').attr('update-data-url').split('99999');
+var dataset_delete_url = $('#tab-dataset').attr('delete-data-url').split('99999');
+
 dataset_columns = [
     { 'render': function() { return null; } }, // For checkboxes
     { 'render': function (data, type, row, meta) {
         return '<button type="button" class="btn btn-warning btn-sm js-update-dataset"'
-               + `data-url="datasets/${row.id}/update/">`
+               + `data-url="${dataset_update_url[0]}${row.id}${dataset_update_url[1]}">`
                + '<span class="glyphicon glyphicon-pencil"></span></button>&nbsp;'
                + '<button type="button" class="btn btn-danger btn-sm js-delete-dataset"'
-               + `data-url="datasets/${row.id}/delete/">`
+               + `data-url="${dataset_delete_url[0]}${row.id}${dataset_delete_url[1]}">`
                + '<span class="glyphicon glyphicon-trash"></span></button>';
     } },  // for buttons
     { 'data': 'id' },
@@ -78,14 +84,17 @@ dataset_columnsDefs = [
     { width: '15%', targets: 11 },  // Description
 ]
 
+var data_update_url = $('#tab-data').attr('update-data-url').split('99999');
+var data_delete_url = $('#tab-data').attr('delete-data-url').split('99999');
+
 data_columns = [
     { 'render': function() { return null; } }, // For checkboxes
     { 'render': function (data, type, row, meta) {
         return '<div><button type="button" class="btn btn-warning btn-sm js-update-data"'
-               + `data-url="data/${row.id}/update/">`
+               + `data-url="${data_update_url[0]}${row.id}${data_update_url[1]}">`
                + '<span class="glyphicon glyphicon-pencil"></span></button></div>&nbsp;'
                + '<div><button type="button" class="btn btn-danger btn-sm js-delete-data"'
-               + `data-url="data/${row.id}/delete/">`
+               + `data-url="${data_delete_url[0]}${row.id}${data_delete_url[1]}">`
                + '<span class="glyphicon glyphicon-trash"></span></button><div>';
     } },
     { 'data': 'id' },
