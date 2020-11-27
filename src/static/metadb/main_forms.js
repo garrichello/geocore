@@ -117,6 +117,14 @@ $(function() {
         });
     };
 
+    mapFormData = function(form_class) {
+        var form_data = $(form_class).serializeArray().reduce(function(obj, item) {
+            obj[item.name] = item.value;
+            return obj;
+        }, {});
+        return form_data;
+    };
+
     addCollectionButtonHandlers = function () {
         // Add handlers to 'update' and 'delete' buttons for Collection rows.
         // Buttons should exist at the moment of execution!
