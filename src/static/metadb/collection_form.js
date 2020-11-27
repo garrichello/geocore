@@ -1,4 +1,4 @@
-var form_class_name = '.'+JSON.parse($('#form-class-name')[0].textContent);
+var form_class_name = '.'+JSON.parse($('#collection-form-class-name')[0].textContent);
 
 var loadOrganizations = function(form_name, organization_name='') {
     var form = $(form_name);
