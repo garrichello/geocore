@@ -1,3 +1,5 @@
+var data_form_class_name = '.'+JSON.parse($('#data-form-class-name')[0].textContent);
+
 var loadScenarios = function(form_name) {
     var form = $(form_name);
     var collectionId = $('#modal-data #id_collection').val();
@@ -117,11 +119,15 @@ var switchProperty = function() {
     }
 }
 
-var form_class_name = '.'+JSON.parse($('#form-class-name')[0].textContent);
-$('#modal-data #id_collection').change( function() { loadResolutions(form_class_name); } );
-$('#modal-data #id_resolution').change( function() { loadScenarios(form_class_name); } );
-$('#modal-data #id_parameteri18n').change( function() { loadTimeSteps(form_class_name); } );
-$('#modal-data #id_time_stepi18n').change( function() { loadLvsGroups(form_class_name); } );
-$('#modal-data #id_levels_group').change( function() { loadLvsNames(form_class_name); } );
+$('#modal-data #id_collection').change( function() { loadResolutions(data_form_class_name); } );
+$('#modal-data #id_resolution').change( function() { loadScenarios(data_form_class_name); } );
+$('#modal-data #id_parameteri18n').change( function() { loadTimeSteps(data_form_class_name); } );
+$('#modal-data #id_time_stepi18n').change( function() { loadLvsGroups(data_form_class_name); } );
+$('#modal-data #id_levels_group').change( function() { loadLvsNames(data_form_class_name); } );
 $('#modal-data #id_use_lvsvar').change ( switchLvsVariable )
 $('#modal-data #id_use_property').change ( switchProperty )
+
+// Submit form
+$('body').on('submit', '.js-data-create-form', function(e) {
+    saveForm2.call(this, e); return false;
+});
