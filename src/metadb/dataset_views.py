@@ -61,7 +61,7 @@ class DatasetBaseView(View):
         else:
             data['form_is_valid'] = False
 
-        ctx = {'forms': [form]}
+        ctx = {'forms': [form], 'pk': form.instance.pk}
         data['html_form'] = render_to_string(template_name, ctx, request)
         return JsonResponse(data)
 
