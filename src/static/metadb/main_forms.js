@@ -56,9 +56,6 @@ $(function() {
             var modal_content = $('<div class="modal-content"></div>');
             modal_content.appendTo(modal_dialog);
             $('#modal-stables').before( modal );  // In main_view.html
-            modal.on('hidden.bs.modal', function() {
-                modal.remove();
-            })
         };
     };
 
@@ -87,6 +84,7 @@ $(function() {
                 console.log(xhr.status + ": " + xhr.responseText);
             }
         });
+        return modal_id;
     };
 
     saveForm2 = function(e) {
@@ -131,17 +129,23 @@ $(function() {
     
         // Update collection
         $('.js-update-collection').click(function() { 
-            loadForm2.call(this);
+            var modal_id = loadForm2.call(this);
+            $(modal_id).on('hidden.bs.modal', function() {
+                $(modal_id).remove();  // Keep DOM clean!
+            });  
         });
-        $('body,html').on('submit', '.js-collection-update-form', function(e) {
+        $('body').on('submit', '.js-collection-update-form', function(e) {
             saveForm2.call(this, e); return false;
         });
     
         // Delete collection
         $('.js-delete-collection').click(function() { 
-            loadForm2.call(this);
+            var modal_id = loadForm2.call(this);
+            $(modal_id).on('hidden.bs.modal', function() {
+                $(modal_id).remove();  // Keep DOM clean!
+            });  
         });
-        $('body,html').on('submit', '.js-collection-delete-form', function(e) {
+        $('body').on('submit', '.js-collection-delete-form', function(e) {
             saveForm2.call(this, e); return false;
         });
     };
@@ -152,17 +156,23 @@ $(function() {
       
         // Update dataset
         $('.js-update-dataset').click(function() { 
-            loadForm2.call(this);
+            var modal_id = loadForm2.call(this);
+            $(modal_id).on('hidden.bs.modal', function() {
+                $(modal_id).remove();  // Keep DOM clean!
+            });  
         });
-        $('body,html').on('submit', '.js-dataset-update-form', function(e) {
+        $('body').on('submit', '.js-dataset-update-form', function(e) {
             saveForm2.call(this, e); return false;
         });
     
         // Delete dataset
         $('.js-delete-dataset').click(function() { 
-            loadForm2.call(this);
+            var modal_id = loadForm2.call(this);
+            $(modal_id).on('hidden.bs.modal', function() {
+                $(modal_id).remove();  // Keep DOM clean!
+            });  
         });
-        $('body,html').on('submit', '.js-dataset-delete-form', function(e) {
+        $('body').on('submit', '.js-dataset-delete-form', function(e) {
             saveForm2.call(this, e); return false;
         });
     };
@@ -173,7 +183,10 @@ $(function() {
         
         // Update data
         $('.js-update-data').click(function() { 
-            loadForm2.call(this);
+            var modal_id = loadForm2.call(this);
+            $(modal_id).on('hidden.bs.modal', function() {
+                $(modal_id).remove();  // Keep DOM clean!
+            });  
         });
         $('body,html').on('submit', '.js-data-update-form', function(e) {
             saveForm2.call(this, e); return false;
@@ -181,39 +194,38 @@ $(function() {
     
         // Delete data
         $('.js-delete-data').click(function() { 
-            loadForm2.call(this);
+            var modal_id = loadForm2.call(this);
+            $(modal_id).on('hidden.bs.modal', function() {
+                $(modal_id).remove();  // Keep DOM clean!
+            });  
         });
         $('body,html').on('submit', '.js-data-delete-form', function(e) {
             saveForm2.call(this, e); return false;
         });
     };
 
-    // Create collection button
+    // Create collection
     $('.js-create-collection').click(function() { 
-        loadForm2.call(this);
-    });
-    $('body,html').on('submit', '.js-collection-create-form', function(e) {
-        saveForm2.call(this, e); return false; 
+        var modal_id = loadForm2.call(this);
+        $(modal_id).on('hidden.bs.modal', function() {
+            $(modal_id).remove();  // Keep DOM clean!
+        })
     });
 
-    // Create dataset button
+    // Create dataset
     $('.js-create-dataset').click(function() { 
-        loadForm2.call(this);
-    });
-    $('body,html').on('submit', '.js-dataset-create-form', function(e) {
-        saveForm2.call(this, e); return false;
+        var modal_id = loadForm2.call(this);
+        $(modal_id).on('hidden.bs.modal', function() {
+            $(modal_id).remove();  // Keep DOM clean!
+        })
     });
     
-    // Create data button
+    // Create data
     $('.js-create-data').click(function() { 
-        loadForm2.call(this, '#modal-data');
-    });
-    $('body,html').on('submit', '.js-data-create-form', function(e) {
-        saveForm2.call(this, e); return false;
+        var modal_id = loadForm2.call(this);
+        $(modal_id).on('hidden.bs.modal', function() {
+            $(modal_id).remove();  // Keep DOM clean!
+        })
     });
 
-    // Create another modal button
-    $('body,html').on('click', '.js-add-button', function() { 
-        loadForm2.call(this);
-    });
 });
