@@ -1,6 +1,11 @@
 {% load static i18n %}
 
-<form method="post" action="{% url 'metadb:dataset_update' pk %}" class="{{ form_class }}">
+<form method="post" action="{% url 'metadb:dataset_update' pk %}" class="{{ form_class }}"
+      collections-url="{% url 'metadb:form_load_collections' %}"
+      resolutions-url="{% url 'metadb:form_load_resolutions' %}"
+      scenarios-url="{% url 'metadb:form_load_scenarios' %}"
+      datakinds-url="{% url 'metadb:form_load_datakinds' %}"
+      filetypes-url="{% url 'metadb:form_load_filetypes' %}">
     {% csrf_token %}
 
     <div class="modal-header">
