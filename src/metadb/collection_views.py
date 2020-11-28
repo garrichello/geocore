@@ -2,21 +2,13 @@ from django.views import View
 from django.template.loader import render_to_string
 from django.http import JsonResponse
 from django.utils.translation import get_language
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404
 from time import sleep
 
 from .collection_forms import CollectionForm, CollectionI18NForm
 
 from .models import Collection, Language, OrganizationI18N
 
-def load_organizations(request):
-    template_name = 'metadb/hr/dropdown_list_options.html'
-    sleep(0.1)  # Have to wait for DB to arrange things.
-    organizations = OrganizationI18N.objects.filter(
-        language__code=get_language()
-    ).order_by('name').all()
-    ctx = {'data': organizations}
-    return render(request, template_name, ctx)
 
 class CollectionBaseView(View):
     form_class = CollectionForm

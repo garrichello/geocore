@@ -1,68 +1,11 @@
 from django.views import View
 from django.template.loader import render_to_string
-from django.http import HttpResponse, JsonResponse
-from django.utils.translation import get_language
-from django.shortcuts import get_object_or_404, render
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
 
-from .data_forms import (DataForm, get_resolutions, get_scenarios,
-                         get_timesteps, get_levelsgroups, get_levels)
+from .data_forms import DataForm
 
-from .models import (Data, Dataset, LevelI18N, LevelsGroup, ParameterI18N, Resolution,
-                     Scenario, SpecificParameter, TimeStepI18N, UnitsI18N)
-
-
-def load_dataset_resolutions(request):
-    ''' Get a list of resolutions for a given collection '''
-    template_name = 'metadb/hr/dropdown_list_options.html'
-    collection_id = request.GET.get('collectionId')
-    resolutions = {}
-    if collection_id:
-        resolutions = get_resolutions(collection_id)
-    ctx = {'data': resolutions}
-    return render(request, template_name, ctx)
-
-def load_dataset_scenarios(request):
-    ''' Get a list of scenarios for a given collection and a resolution '''
-    template_name = 'metadb/hr/dropdown_list_options.html'
-    collection_id = request.GET.get('collectionId')
-    resolution_id = request.GET.get('resolutionId')
-    scenarios = {}
-    if collection_id and resolution_id:
-        scenarios = get_scenarios(collection_id, resolution_id)
-    ctx = {'data': scenarios}
-    return render(request, template_name, ctx)
-
-def load_parameter_timesteps(request):
-    ''' Get a list of time steps for a given parameter '''
-    template_name = 'metadb/hr/dropdown_list_options.html'
-    parameteri18n_id = request.GET.get('parameteri18nId')
-    timesteps = {}
-    if parameteri18n_id:
-        parameter_id = ParameterI18N.objects.get(pk=parameteri18n_id).parameter_id
-        timesteps = get_timesteps(parameter_id)
-    ctx = {'data': timesteps}
-    return render(request, template_name, ctx)
-
-def load_parameter_lvsgroups(request):
-    ''' Get a list of levels groups for a given parameter and a time step '''
-    template_name = 'metadb/hr/dropdown_list_options.html'
-    parameteri18n_id = request.GET.get('parameteri18nId')
-    timestepi18n_id = request.GET.get('timestepi18nId')
-    lvsgroups = {}
-    if parameteri18n_id and timestepi18n_id:
-        parameter_id = ParameterI18N.objects.get(pk=parameteri18n_id).parameter_id
-        time_step_id = TimeStepI18N.objects.get(pk=timestepi18n_id).time_step_id
-        lvsgroups = get_levelsgroups(parameter_id, time_step_id)
-    ctx = {'data': lvsgroups}
-    return render(request, template_name, ctx)
-
-def load_parameter_lvsnames(request):
-    ''' Get a list of levels in a given levels group '''
-    lvsgroup_id = request.GET.get('lvsgroupId')
-    levels = ''
-    if lvsgroup_id:
-        levels = get_levels(lvsgroup_id)
-    return HttpResponse(levels)
+from .models import (Data, Dataset, SpecificParameter)
 
 
 class DataBaseView(View):
