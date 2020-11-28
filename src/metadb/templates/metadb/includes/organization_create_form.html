@@ -18,3 +18,10 @@
         <button type="submit" class="btn btn-primary">{% trans "Create organization" %}</button>
     </div>
 </form>
+
+<script>
+    $('body').on('submit', '.js-organization-create-form', function(e) {
+        saveForm2.call(this, e);  // Save new organization
+        return false; 
+    });
+</script>
