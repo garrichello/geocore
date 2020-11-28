@@ -81,7 +81,7 @@ class OrganizationUpdateView(OrganizationBaseView):
         return JsonResponse({'html_form': html_form})
 
     def post(self, request, pk):
-        org_model_old, orgi18n_model_old, _ = self.get_models(pk)
+        org_model_old, orgi18n_model_old = self.get_models(pk)
         org_form = self.form_class(request.POST, instance=org_model_old)
         orgi18n_form = self.formi18n_class(request.POST, instance=orgi18n_model_old)
         return self.save_form(request, org_form, orgi18n_form, self.template_name)
