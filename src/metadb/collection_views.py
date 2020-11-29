@@ -3,7 +3,6 @@ from django.template.loader import render_to_string
 from django.http import JsonResponse
 from django.utils.translation import get_language
 from django.shortcuts import get_object_or_404
-from time import sleep
 
 from .collection_forms import CollectionForm, CollectionI18NForm
 
