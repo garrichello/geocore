@@ -1,4 +1,5 @@
 import os
+from time import sleep
 import django
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
@@ -7,7 +8,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException
-from time import sleep
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'geocore.settings.development')
 django.setup()
@@ -43,7 +43,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
         create_btn = self.browser.find_element_by_class_name('js-create-collection')
 
         # There is a table in the tab Collection.
-        table = self.browser.find_element_by_xpath('//table[@id="collection"]')
+        _ = self.browser.find_element_by_xpath('//table[@id="collection"]')
 
         # Collection tab is active.
         self.assertTrue('active' in self.browser.find_element_by_id('tab-collection').get_attribute('class'))
