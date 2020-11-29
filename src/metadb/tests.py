@@ -1,3 +1,15 @@
-from django.test import TestCase
 
-# Create your tests here.
+import os
+import django
+from django.urls import resolve
+from django.test import TestCase
+from metadb.views import MainView
+
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'geocore.settings.development')
+django.setup()
+
+class HomePageTest(TestCase):
+
+    def test_root_url_resolves_to_home_page_view(self):
+        found = resolve('/en-us/metadb/')
+        self.assertEqual(found.func.view_class, MainView)
