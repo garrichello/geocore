@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404
 
 from .collection_forms import CollectionForm, CollectionI18NForm
 
-from .models import Collection, Language, OrganizationI18N
+from .models import Collection, Language
 
 
 class CollectionBaseView(View):
@@ -76,7 +76,6 @@ class CollectionUpdateView(CollectionBaseView):
     template_name = 'metadb/includes/collection_update_form.html'
 
     def get(self, request, pk):
-        language = get_language()
         col_model, coli18n_model, orgi18n_model = self.get_models(pk)
         col_form = self.form_class(instance=col_model, orgi18n_pk=orgi18n_model.pk)
         coli18n_form = self.formi18n_class(instance=coli18n_model)
