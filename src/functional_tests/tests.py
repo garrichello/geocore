@@ -3,7 +3,7 @@ from time import sleep
 import django
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
-from selenium.webdriver.support.ui import Select
+#from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -20,6 +20,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
 
     def tearDown(self):
         self.browser.quit()
+        pass
 
     def test_can_add_a_collection_and_retrieve_it(self):
         # John is a new admin of the CLIMATE system.
@@ -82,12 +83,29 @@ class NewVisitorTest(StaticLiveServerTestCase):
         self.browser.find_element_by_id('id_name').send_keys("John's collection")
         #  'This is a collection created by John' into textfield Collection description
         self.browser.find_element_by_id('id_description').send_keys('This is a collection created by John')
-        # and selects 'ECMWF, UK' in a dropdown list Organization.
-        Select(self.browser.find_element_by_id('id_organizationi18n')).select_by_visible_text('ECMWF, UK')
+        # and decides to add a new Organization.
+        # He clicks + button next to the Organization dropdown list
+        plus_btn = self.browser.find_element_by_xpath('//button[@data-url="/en/metadb/organizations/create/"]')
+        plus_btn.click()
+        # Another modal opens inviting to fill a simple form
+        form = self.browser.find_element_by_xpath('//form[@class="js-organization-create-form"]')
+        # He types 'John Brown research, USA' into a textbox Organization name
+        form.find_element_by_id('id_name').send_keys('John Brown research, USA')
+        # and  'http://johnbrownresearch.org/' into a textbox Organization URL
+        form.find_element_by_id('id_url').send_keys('http://johnbrownresearch.org/')
+        # Whe he clicks Create organization the modal fades away revealing previous form
+        form.submit()
+        sleep(1)
+        # and in the drowpdown list Organization the new organization's name is shown
+        opts = self.browser.find_elements_by_xpath('//select[@id="id_organizationi18n"]/option')
+        selected_opts = [opt.get_attribute('selected') for opt in opts]
+        self.assertEqual(opts[selected_opts.index('true')].text, 'John Brown research, USA')
+
+        #Select(self.browser.find_element_by_id('id_organizationi18n')).select_by_visible_text('ECMWF, UK')
 
         # When he clicks Create collection modal window closes and Collection table updates.
         self.browser.find_element_by_class_name('js-collection-create-form').submit()
-        sleep(1)
+        sleep(2)
         with self.assertRaises(NoSuchElementException):
             self.browser.find_element_by_xpath('//div[starts-with(@id, "modal-dynamic")]')
 
@@ -101,6 +119,8 @@ class NewVisitorTest(StaticLiveServerTestCase):
         #  column Collection description contains 'This is a collection created by John',
         self.assertEqual(col_data[5], 'This is a collection created by John')
         #  column Organization contains 'ECMWF, UK',
-        self.assertEqual(col_data[6], 'ECMWF, UK')
+        self.assertEqual(col_data[6], 'John Brown research, USA')
+        #  column Organization URL contains 'http://johnbrownresearch.org/',
+        self.assertEqual(col_data[7], 'http://johnbrownresearch.org/')
         #  column Collection URL contains 'http://mycollection.url'.
         self.assertEqual(col_data[8], 'http://mycollection.url')
