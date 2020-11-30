@@ -11,9 +11,10 @@ $(function() {
             type: 'get',
             success: function (data) {
                 $(modal_id+' #id_collection').html(data);
-                $(modal_id+` #id_collection option:contains("${collection_label}")`).attr(
-                    'selected', true);  // Select new collection in the select
-                console.log(modal_id+` #id_collection option:contains("${collection_label}")`);
+                if (collection_label.length) {
+                    $(modal_id+` #id_collection option:contains("${collection_label}")`).attr(
+                        'selected', true);  // Select new collection in the select
+                }
                 if ($(modal_id+' #id_collection option').length == 2) {
                     $(modal_id+' #id_collection').prop("selectedIndex", 1);
                 }
@@ -30,8 +31,10 @@ $(function() {
             type: 'get',
             success: function (data) {
                 $(modal_id+' #id_resolution').html(data);
-                $(modal_id+` #id_resolution option:contains("${resolution_name}")`).attr(
-                    'selected', true);  // Select new collection in the select
+                if (resolution_name.length) {
+                    $(modal_id+` #id_resolution option:contains("${resolution_name}")`).attr(
+                        'selected', true);  // Select new collection in the select
+                }
                 if ($(modal_id+' #id_resolution option').length == 2) {
                     $(modal_id+' #id_resolution').prop("selectedIndex", 1);
                 }
