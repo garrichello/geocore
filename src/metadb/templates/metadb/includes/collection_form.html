@@ -1,6 +1,6 @@
 {% load static i18n %}
 
-<form method="post" action="{% url 'metadb:collection_create' %}" class="{{ form_class }}"
+<form method="post" action="{{ action }}" class="{{ form_class }}"
       organizations-url="{% url 'metadb:form_load_organizations' %}">
     {% csrf_token %}
 
@@ -8,7 +8,7 @@
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
     </button>
-    <h3 class="modal-title">{% trans "Create a new collection" %}</h3>
+    <h3 class="modal-title">{{ title }}</h3>
 
     <div class="modal-body">
         {% include 'metadb/includes/form_body.html' %}
@@ -16,7 +16,7 @@
 
     <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Close" %}</button>
-        <button type="submit" class="btn btn-primary">{% trans "Create collection" %}</button>
+        <button type="submit" class="btn btn-primary">{{ submit_name }}</button>
     </div>
 </form>
 

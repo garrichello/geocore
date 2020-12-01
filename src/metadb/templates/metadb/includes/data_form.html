@@ -1,6 +1,6 @@
 {% load static i18n %}
 
-<form method="post" action="{% url 'metadb:data_create' %}" class="{{ form_class }}" 
+<form method="post" action="{{ action }}" class="{{ form_class }}" 
       dataset-resolutions-url="{% url 'metadb:form_load_dataset_resolutions'%}"
       dataset-scenario-url="{% url 'metadb:form_load_dataset_scenarios'%}"
       parameter-timesteps-url="{% url 'metadb:form_load_parameter_timesteps'%}"
@@ -12,7 +12,7 @@
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
     </button>
-    <h3 class="modal-title">{% trans "Create a new data" %}</h3>
+    <h3 class="modal-title">{{ title }}</h3>
 
     <div class="modal-body">
         {% include 'metadb/includes/form_body.html' %}
@@ -20,7 +20,7 @@
 
     <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Close" %}</button>
-        <button type="submit" class="btn btn-primary">{% trans "Create data" %}</button>
+        <button type="submit" class="btn btn-primary">{{ submit_name }}</button>
     </div>
 </form>
 
