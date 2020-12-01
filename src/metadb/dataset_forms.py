@@ -27,7 +27,7 @@ class DatasetForm(ModelForm):
         self.fields['resolution'].queryset = Resolution.objects.order_by('name')
         self.fields['resolution'].data_url = reverse('metadb:resolution_create')
         self.fields['scenario'].queryset = Scenario.objects.order_by('name')
-#        self.fields['scenario'].data_url = reverse('metadb:scenario_create')
+        self.fields['scenario'].data_url = reverse('metadb:scenario_create')
         self.fields['data_kind'].queryset = DataKind.objects.order_by('name')
 #        self.fields['data_kind'].data_url = reverse('metadb:datakind_create')
         self.fields['file_type'].queryset = FileType.objects.order_by('name')
