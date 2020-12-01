@@ -25,6 +25,12 @@ class NewVisitorTest(unittest.TestCase):
         qs = metadb.models.Organization.objects.filter(url='http://johnbrownresearch.org/')
         if len(qs) > 0:
             qs.get().delete()
+        qs = metadb.models.Resolution.objects.filter(name='0.13x0.13')
+        if len(qs) > 0:
+            qs.get().delete()
+        qs = metadb.models.Scenario.objects.filter(name='Specific')
+        if len(qs) > 0:
+            qs.get().delete()
         pass
 
 
@@ -141,14 +147,16 @@ class NewVisitorTest(unittest.TestCase):
         )
         dataset_form = self.browser.find_element_by_class_name('js-dataset-create-form')
 
-        # John wants to select a collection, but realizes that the one he needs is absent
+        # John wants to select a collection, but realizes that the one he needs is absent.
         # So he decides to add it and clicks '+' button next to the Collection dropdown list.
-        sleep(1)
         plus_btn = self.browser.find_element_by_xpath(
             '//form[@class="js-dataset-create-form"]//button[@data-url="/en/metadb/collections/create/"]')
         plus_btn.click()
 
         # Another modal opens inviting to create a new collection
+        WebDriverWait(self.browser, 10).until(
+            EC.presence_of_element_located((By.CLASS_NAME, 'js-collection-create-form'))
+        )
         collection_form = self.browser.find_element_by_class_name('js-collection-create-form')
         # Then John types:
         #  'JohnCol' into a textbox Collection label,
@@ -159,10 +167,28 @@ class NewVisitorTest(unittest.TestCase):
         collection_form.find_element_by_id('id_name').send_keys("John's collection")
         #  'This is a collection created by John' into textfield Collection description
         collection_form.find_element_by_id('id_description').send_keys('This is a collection created by John')
-        # John selects organization 'John Brown research, USA' in the dropdown list
-        Select(collection_form.find_element_by_id(
-            'id_organizationi18n')).select_by_visible_text('John Brown research, USA')
-        # And finally clicks Create collection
+        # John wants to select an organization, butrealizes that the one he needs is absent.
+        # So he decides to add it and clicks '+' button next to the Organization dropdown list
+        plus_btn = collection_form.find_element_by_xpath('//button[@data-url="/en/metadb/organizations/create/"]')
+        plus_btn.click()
+
+        # Another modal opens inviting to create a new organization
+        WebDriverWait(self.browser, 10).until(
+            EC.presence_of_element_located((By.CLASS_NAME, 'js-organization-create-form'))
+        )
+        organization_form = self.browser.find_element_by_class_name('js-organization-create-form')
+        # He types 'John Brown research, USA' into a textbox Organization name
+        organization_form.find_element_by_id('id_name').send_keys('John Brown research, USA')
+        # and  'http://johnbrownresearch.org/' into a textbox Organization URL
+        organization_form.find_element_by_id('id_url').send_keys('http://johnbrownresearch.org/')
+        # Whe he clicks Create organization the modal fades away revealing previous form
+        organization_form.submit()
+        sleep(3)
+        # and in the drowpdown list Organization the new organization's name is shown.
+        opts = collection_form.find_elements_by_xpath('//select[@id="id_organizationi18n"]/option')
+        selected_opts = [opt.get_attribute('selected') for opt in opts]
+        self.assertEqual(opts[selected_opts.index('true')].text, 'John Brown research, USA')
+        # And finally John clicks Create collection
         collection_form.submit()
         sleep(3)
         # Modal fades away revealing previous form 'Create a new dataset'
@@ -170,14 +196,16 @@ class NewVisitorTest(unittest.TestCase):
         opts = dataset_form.find_elements_by_xpath('//select[@id="id_collection"]/option')
         selected_opts = [opt.get_attribute('selected') for opt in opts]
         self.assertEqual(opts[selected_opts.index('true')].text, 'JohnCol')
-        return
+
         # John wants to select a resolution, but realizes that the needed one is absent
         # So he decides to add it and clicks '+' button next to the Resolution dropdown list.
-        sleep(3)
         plus_btn = self.browser.find_element_by_xpath(
             '//form[@class="js-dataset-create-form"]//button[@data-url="/en/metadb/resolutions/create/"]')
         plus_btn.click()
         # Another modal opens inviting to create a new resolution
+        WebDriverWait(self.browser, 10).until(
+            EC.presence_of_element_located((By.CLASS_NAME, 'js-resolution-create-form'))
+        )
         resolution_form = self.browser.find_element_by_class_name('js-resolution-create-form')
         # Then John types:
         #  '0.13x0.13' into a textbox Resolution name,
@@ -195,11 +223,13 @@ class NewVisitorTest(unittest.TestCase):
 
         # John wants to select a scenario, but realizes that the needed one is absent
         # So he decides to add it and clicks '+' button next to the Scenario dropdown list.
-        sleep(3)
         plus_btn = self.browser.find_element_by_xpath(
             '//form[@class="js-dataset-create-form"]//button[@data-url="/en/metadb/scenarios/create/"]')
         plus_btn.click()
         # Another modal opens inviting to create a new scenario
+        WebDriverWait(self.browser, 10).until(
+            EC.presence_of_element_located((By.CLASS_NAME, 'js-scenario-create-form'))
+        )
         scenario_form = self.browser.find_element_by_class_name('js-scenario-create-form')
         # Then John types:
         #  'Specific' into a textbox Scenario name,
@@ -217,11 +247,13 @@ class NewVisitorTest(unittest.TestCase):
 
         # John wants to select a data kind, but realizes that the needed one is absent
         # So he decides to add it and clicks '+' button next to the Data kind dropdown list.
-        sleep(3)
         plus_btn = self.browser.find_element_by_xpath(
             '//form[@class="js-dataset-create-form"]//button[@data-url="/en/metadb/datakinds/create/"]')
         plus_btn.click()
         # Another modal opens inviting to create a new data kind
+        WebDriverWait(self.browser, 10).until(
+            EC.presence_of_element_located((By.CLASS_NAME, 'js-datakind-create-form'))
+        )
         datakind_form = self.browser.find_element_by_class_name('js-datakind-create-form')
         # Then John types:
         #  'fractal' into a textbox Data kind name,
@@ -244,11 +276,13 @@ class NewVisitorTest(unittest.TestCase):
 
         # John wants to select a file type, but realizes that the needed one is absent
         # So he decides to add it and clicks '+' button next to the File type dropdown list.
-        sleep(3)
         plus_btn = self.browser.find_element_by_xpath(
             '//form[@class="js-dataset-create-form"]//button[@data-url="/en/metadb/filetypes/create/"]')
         plus_btn.click()
         # Another modal opens inviting to create a new file type
+        WebDriverWait(self.browser, 10).until(
+            EC.presence_of_element_located((By.CLASS_NAME, 'js-filetype-create-form'))
+        )
         filetype_form = self.browser.find_element_by_class_name('js-filetype-create-form')
         # Then John types:
         #  'hdf5' into a textbox Data kind name,
@@ -265,8 +299,6 @@ class NewVisitorTest(unittest.TestCase):
         # When he clicks Create dataset modal window closes and Dataset table updates.
         dataset_form.submit()
         sleep(3)
-        with self.assertRaises(NoSuchElementException):
-            self.browser.find_element_by_xpath('//div[starts-with(@id, "modal-dynamic")]')
 
         # Now table contains a new record describing his dataset as follows:
         tr = self.browser.find_elements_by_xpath('//table[@id="dataset"]/tbody/tr')[-1]  # last row
