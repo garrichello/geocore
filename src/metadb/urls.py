@@ -19,6 +19,10 @@ from .resolution_views import (ResolutionCreateView, ResolutionUpdateView,
 from .scenario_views import (ScenarioCreateView, ScenarioUpdateView,
                                ScenarioDeleteView)
 
+from .datakind_views import (DataKindCreateView, DataKindUpdateView,
+                               DataKindDeleteView)
+
+
 from .form_loads import (load_organizations, load_collections, load_resolutions,
                          load_scenarios, load_datakinds, load_filetypes, 
                          load_dataset_resolutions, load_dataset_scenarios,
@@ -67,5 +71,9 @@ urlpatterns = [
     path('scenarios/create/', ScenarioCreateView.as_view(), name='scenario_create'),
     path('scenarios/<int:pk>/update/', ScenarioUpdateView.as_view(), name='scenario_update'),
     path('scenarios/<int:pk>/delete/', ScenarioDeleteView.as_view(), name='scenario_delete'),
+
+    path('datakinds/create/', DataKindCreateView.as_view(), name='datakind_create'),
+    path('datakinds/<int:pk>/update/', DataKindUpdateView.as_view(), name='datakind_update'),
+    path('datakinds/<int:pk>/delete/', DataKindDeleteView.as_view(), name='datakind_delete'),
 
 ]
