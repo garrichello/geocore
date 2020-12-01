@@ -22,6 +22,8 @@ from .scenario_views import (ScenarioCreateView, ScenarioUpdateView,
 from .datakind_views import (DataKindCreateView, DataKindUpdateView,
                                DataKindDeleteView)
 
+from .filetype_views import (FileTypeCreateView, FileTypeUpdateView,
+                               FileTypeDeleteView)
 
 from .form_loads import (load_organizations, load_collections, load_resolutions,
                          load_scenarios, load_datakinds, load_filetypes, 
@@ -75,5 +77,9 @@ urlpatterns = [
     path('datakinds/create/', DataKindCreateView.as_view(), name='datakind_create'),
     path('datakinds/<int:pk>/update/', DataKindUpdateView.as_view(), name='datakind_update'),
     path('datakinds/<int:pk>/delete/', DataKindDeleteView.as_view(), name='datakind_delete'),
+
+    path('filetypes/create/', FileTypeCreateView.as_view(), name='filetype_create'),
+    path('filetypes/<int:pk>/update/', FileTypeUpdateView.as_view(), name='filetype_update'),
+    path('filetypes/<int:pk>/delete/', FileTypeDeleteView.as_view(), name='filetype_delete'),
 
 ]
