@@ -4,11 +4,11 @@ import django
 #from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 import unittest
 from selenium import webdriver
-from selenium.webdriver.support.ui import Select
+#from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import NoSuchElementException
+#from selenium.common.exceptions import NoSuchElementException
 import metadb
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'geocore.settings.development')
@@ -29,6 +29,12 @@ class NewVisitorTest(unittest.TestCase):
         if len(qs) > 0:
             qs.get().delete()
         qs = metadb.models.Scenario.objects.filter(name='Specific')
+        if len(qs) > 0:
+            qs.get().delete()
+        qs = metadb.models.DataKind.objects.filter(name='fractal')
+        if len(qs) > 0:
+            qs.get().delete()
+        qs = metadb.models.FileType.objects.filter(name='hdf5')
         if len(qs) > 0:
             qs.get().delete()
         pass
@@ -64,45 +70,58 @@ class NewVisitorTest(unittest.TestCase):
         # inviting him to enter corresponding info.
         create_btn.click()
 
-        # John waits for the modal to appear (but no more than 10 sec!)
+# vvvvv Collection modal
+        # John waits for the form to appear (but no more than 10 sec!)
         WebDriverWait(self.browser, 10).until(
-            EC.presence_of_element_located((By.XPATH, '//div[starts-with(@id, "modal-dynamic")]'))
+            EC.presence_of_element_located((By.CLASS_NAME, 'js-collection-create-form'))
         )
-        # John waits for the modal to be fully loaded (but no more than 10 sec!)
-        WebDriverWait(self.browser, 10).until(
-            EC.presence_of_element_located((By.ID, 'id_label'))
-        )
+        collection_form = self.browser.find_element_by_class_name('js-collection-create-form')
 
         # Then John types:
         #  'JohnCol' into a textbox Collection label,
-        self.browser.find_element_by_id('id_label').send_keys('JohnCol')
+        collection_form.find_element_by_id('id_label').send_keys('JohnCol')
         #  'http://mycollection.url' into a textbox Collection URL,
-        self.browser.find_element_by_id('id_url').send_keys('http://mycollection.url')
+        collection_form.find_element_by_id('id_url').send_keys('http://mycollection.url')
         #  'John's collection' into a textbox name Collection name
-        self.browser.find_element_by_id('id_name').send_keys("John's collection")
+        collection_form.find_element_by_id('id_name').send_keys("John's collection")
         #  'This is a collection created by John' into textfield Collection description
-        self.browser.find_element_by_id('id_description').send_keys('This is a collection created by John')
+        collection_form.find_element_by_id('id_description').send_keys('This is a collection created by John')
         # and decides to add a new Organization.
         # He clicks + button next to the Organization dropdown list
         plus_btn = self.browser.find_element_by_xpath('//button[@data-url="/en/metadb/organizations/create/"]')
         plus_btn.click()
+
+# vvvvv Organization modal
         # Another modal opens inviting to fill a simple form
-        form = self.browser.find_element_by_xpath('//form[@class="js-organization-create-form"]')
+        organization_form = self.browser.find_element_by_xpath('//form[@class="js-organization-create-form"]')
         # He types 'John Brown research, USA' into a textbox Organization name
-        form.find_element_by_id('id_name').send_keys('John Brown research, USA')
+        organization_form.find_element_by_id('id_name').send_keys('John Brown research, USA')
         # and  'http://johnbrownresearch.org/' into a textbox Organization URL
-        form.find_element_by_id('id_url').send_keys('http://johnbrownresearch.org/')
+        organization_form.find_element_by_id('id_url').send_keys('http://johnbrownresearch.org/')
         # Whe he clicks Create organization the modal fades away revealing previous form
-        form.submit()
-        sleep(1)
+        organization_form.submit()
+        
+        # Modal fades away revealing previous form 'Create a new collection'
+        # John waits until the new organization name apperars in the dropdown list
+        WebDriverWait(self.browser, 10).until(
+            EC.presence_of_element_located((By.XPATH, 
+            '//select[@id="id_organizationi18n"]/option[contains(text(), "John Brown research, USA")]'))
+        )
         # and in the drowpdown list Organization the new organization's name is shown
         opts = self.browser.find_elements_by_xpath('//select[@id="id_organizationi18n"]/option')
         selected_opts = [opt.get_attribute('selected') for opt in opts]
         self.assertEqual(opts[selected_opts.index('true')].text, 'John Brown research, USA')
+# ^^^^^ Organization modal
 
         # When he clicks Create collection modal window closes and Collection table updates.
-        self.browser.find_element_by_class_name('js-collection-create-form').submit()
-        sleep(3)
+        collection_form.submit()
+# ^^^^^ Collection modal
+
+        # John waits until the all enterd data apperars in the data table
+        WebDriverWait(self.browser, 10).until(
+            EC.presence_of_element_located((By.XPATH, 
+            '//table[@id="collection"]/tbody/tr/td[contains(text(), "JohnCol")]'))
+        )
 
         # Now table contains a new record describing his collection as follows:
         tr = self.browser.find_elements_by_xpath('//table[@id="collection"]/tbody/tr')[-1]  # last row
@@ -120,6 +139,7 @@ class NewVisitorTest(unittest.TestCase):
         #  column Collection URL contains 'http://mycollection.url'.
         self.assertEqual(col_data[8], 'http://mycollection.url')
 
+#------------------------------------------------------------------------------------------------------
 
     def test_can_add_a_dataset_and_retrieve_it(self):
         # John decides to expoler the Dataset tab
@@ -252,7 +272,7 @@ class NewVisitorTest(unittest.TestCase):
             '//form[@class="js-dataset-create-form"]//button[@data-url="/en/metadb/scenarios/create/"]')
         plus_btn.click()
 
-# vvvvv Scenario modal        
+# vvvvv Scenario modal
         # Another modal opens inviting to create a new scenario
         WebDriverWait(self.browser, 10).until(
             EC.presence_of_element_located((By.CLASS_NAME, 'js-scenario-create-form'))
@@ -299,7 +319,7 @@ class NewVisitorTest(unittest.TestCase):
         # Modal fades away revealing previous form 'Create a new dataset'
         # John waits until the new data kind name apperars in the dropdown list
         WebDriverWait(self.browser, 10).until(
-            EC.presence_of_element_located((By.XPATH, 
+            EC.presence_of_element_located((By.XPATH,
             '//select[@id="id_data_kind"]/option[contains(text(), "fractal")]'))
         )
         # and in the drowpdown list Data kind the new data kind's name is shown
@@ -348,15 +368,19 @@ class NewVisitorTest(unittest.TestCase):
         # When he clicks Create dataset modal window closes and Dataset table updates.
         dataset_form.submit()
 # ^^^^^ Dataset modal
-        sleep(3)
 
+        # John waits until the all enterd data apperars in the data table
+        WebDriverWait(self.browser, 10).until(
+            EC.presence_of_element_located((By.XPATH, 
+            '//table[@id="dataset"]/tbody/tr/td[contains(text(), "JohnCol")]'))
+        )
         # Now table contains a new record describing his dataset as follows:
         tr = self.browser.find_elements_by_xpath('//table[@id="dataset"]/tbody/tr')[-1]  # last row
         col_data = [td.text for td in tr.find_elements_by_tag_name('td')]
         #  column Collection label contains 'JohnCol',
         self.assertEqual(col_data[4], 'JohnCol')
         #  column Resolution contains '0x13x0.13',
-        self.assertEqual(col_data[5], "0x13x0.13")
+        self.assertEqual(col_data[5], "0.13x0.13")
         #  column Scenario contains 'Specific',
         self.assertEqual(col_data[6], 'Specific')
         #  column Data kind contains 'db',
