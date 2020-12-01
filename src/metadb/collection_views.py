@@ -1,8 +1,9 @@
 from django.views import View
 from django.template.loader import render_to_string
 from django.http import JsonResponse
-from django.utils.translation import get_language
+from django.utils.translation import get_language, gettext_lazy as _
 from django.shortcuts import get_object_or_404
+from django.urls import reverse, reverse_lazy
 
 from .collection_forms import CollectionForm, CollectionI18NForm
 
@@ -14,11 +15,13 @@ class CollectionBaseView(View):
     formi18n_class = CollectionI18NForm
     model = Collection
 
-    def save_form(self, request, col_form, coli18n_form, template_name, create=False):
+    def save_form(self, request, template_name, ctx, create=False):
         ''' Saves the form
         create -- True if creating, False if updating.
         '''
         data = dict()
+        col_form = ctx['forms'][0]
+        coli18n_form = ctx['forms'][1]
         if col_form.is_valid() and coli18n_form.is_valid():
             # Get collection object, link it with existing organization and save.
             col = col_form.save(commit=False)
@@ -42,7 +45,6 @@ class CollectionBaseView(View):
         else:
             data['form_is_valid'] = False
 
-        ctx = {'forms': [col_form, coli18n_form], 'pk': col_form.instance.pk}
         data['html_form'] = render_to_string(template_name, ctx, request)
         return JsonResponse(data)
 
@@ -56,40 +58,54 @@ class CollectionBaseView(View):
 
 
 class CollectionCreateView(CollectionBaseView):
-    template_name = 'metadb/includes/collection_create_form.html'
+    template_name = 'metadb/includes/collection_form.html'
+    ctx = {
+        'form_class': 'js-collection-create-form',
+        'action': reverse_lazy('metadb:collection_create'),
+        'title': _("Create a new collection"),
+        'submit_name': _("Create collection"),
+    }
 
     def get(self, request):
         col_form = self.form_class()
         coli18n_form = self.formi18n_class()
 
-        ctx = {'forms': [col_form, coli18n_form], 'form_class': 'js-collection-create-form'}
-        html_form = render_to_string(self.template_name, ctx, request)
+        self.ctx['forms'] = [col_form, coli18n_form]
+        html_form = render_to_string(self.template_name, self.ctx, request)
         return JsonResponse({'html_form': html_form})
 
     def post(self, request):
         col_form = self.form_class(request.POST)
         coli18n_form = self.formi18n_class(request.POST)
-        return self.save_form(request, col_form, coli18n_form, self.template_name, create=True)
+        self.ctx['forms'] = [col_form, coli18n_form]
+        return self.save_form(request, self.template_name, self.ctx, create=True)
 
 
 class CollectionUpdateView(CollectionBaseView):
-    template_name = 'metadb/includes/collection_update_form.html'
+    template_name = 'metadb/includes/collection_form.html'
+    ctx = {
+        'form_class': 'js-collection-update-form',           
+        'title': _("Update collection"),
+        'submit_name': _("Update collection"),
+    }
 
     def get(self, request, pk):
         col_model, coli18n_model, orgi18n_model = self.get_models(pk)
         col_form = self.form_class(instance=col_model, orgi18n_pk=orgi18n_model.pk)
         coli18n_form = self.formi18n_class(instance=coli18n_model)
 
-        ctx = {'forms': [col_form, coli18n_form], 
-               'form_class': 'js-collection-update-form', 'pk': col_form.instance.pk}
-        html_form = render_to_string(self.template_name, ctx, request)
+        self.ctx['forms'] = [col_form, coli18n_form]
+        self.ctx['action'] = reverse('metadb:collection_update', kwargs={'pk': col_form.instance.pk})
+        html_form = render_to_string(self.template_name, self.ctx, request)
         return JsonResponse({'html_form': html_form})
 
     def post(self, request, pk):
         col_model_old, coli18n_model_old, _ = self.get_models(pk)
         col_form = self.form_class(request.POST, instance=col_model_old)
         coli18n_form = self.formi18n_class(request.POST, instance=coli18n_model_old)
-        return self.save_form(request, col_form, coli18n_form, self.template_name)
+        self.ctx['forms'] = [col_form, coli18n_form]
+        self.ctx['action'] = reverse('metadb:collection_update', kwargs={'pk': col_form.instance.pk})
+        return self.save_form(request, self.template_name, self.ctx)
 
 class CollectionDeleteView(CollectionBaseView):
     template_name = 'metadb/includes/collection_delete_form.html'
