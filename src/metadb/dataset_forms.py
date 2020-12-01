@@ -31,4 +31,4 @@ class DatasetForm(ModelForm):
         self.fields['data_kind'].queryset = DataKind.objects.order_by('name')
         self.fields['data_kind'].data_url = reverse('metadb:datakind_create')
         self.fields['file_type'].queryset = FileType.objects.order_by('name')
-#        self.fields['file_type'].data_url = reverse('metadb:filetype_create')
+        self.fields['file_type'].data_url = reverse('metadb:filetype_create')
