@@ -128,6 +128,11 @@ $(function() {
                 loadScenarios.call(this, dataset_form_class_name, form_data['name']);
                 console.log('In dataset modal, scenario form data: '+form_data['name']);
             };
+            if ($('.js-datakind-create-form').length) {
+                var form_data = mapFormData('.js-datakind-create-form');  // Get datakind fields
+                loadDatakinds.call(this, dataset_form_class_name, form_data['name']);
+                console.log('In dataset modal, datakind form data: '+form_data['name']);
+            };
             $(modal_id).remove();
         })
     });
