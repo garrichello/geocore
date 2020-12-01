@@ -133,24 +133,12 @@ $(function() {
                 loadDatakinds.call(this, dataset_form_class_name, form_data['name']);
                 console.log('In dataset modal, datakind form data: '+form_data['name']);
             };
+            if ($('.js-filetype-create-form').length) {
+                var form_data = mapFormData('.js-filetype-create-form');  // Get filetype fields
+                loadFiletypes.call(this, dataset_form_class_name, form_data['name']);
+                console.log('In dataset modal, filetype form data: '+form_data['name']);
+            };
             $(modal_id).remove();
         })
-    });
-
-
-    var datakind_form_class = '.js-datakind-create-form';
-    $('body').on('submit', datakind_form_class, function(e) {
-        saveForm2.call(this, e);
-        var form_data = mapFormData(datakind_form_class);  // Get fields of the form as a map
-        loadDatakinds.call(this, dataset_form_class_name, form_data['name']);
-        return false; 
-    });
-
-    var filetype_form_class = '.js-filetype-create-form';
-    $('body').on('submit', filetype_form_class, function(e) {
-        saveForm2.call(this, e);
-        var form_data = mapFormData(filetype_form_class);  // Get fields of the form as a map
-        loadFiletypes.call(this, dataset_form_class_name, form_data['name']);
-        return false; 
     });
 });
