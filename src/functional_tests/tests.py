@@ -9,6 +9,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException
+import metadb
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'geocore.settings.development')
 django.setup()
@@ -21,6 +22,9 @@ class NewVisitorTest(unittest.TestCase):
 
     def tearDown(self):
         self.browser.quit()
+        qs = metadb.models.Organization.objects.filter(url='http://johnbrownresearch.org/')
+        if len(qs) > 0:
+            qs.get().delete()
         pass
 
 
@@ -92,9 +96,7 @@ class NewVisitorTest(unittest.TestCase):
 
         # When he clicks Create collection modal window closes and Collection table updates.
         self.browser.find_element_by_class_name('js-collection-create-form').submit()
-        sleep(2)
-        with self.assertRaises(NoSuchElementException):
-            self.browser.find_element_by_xpath('//div[starts-with(@id, "modal-dynamic")]')
+        sleep(3)
 
         # Now table contains a new record describing his collection as follows:
         tr = self.browser.find_elements_by_xpath('//table[@id="collection"]/tbody/tr')[-1]  # last row
