@@ -16,6 +16,9 @@ from .organization_views import (OrganizationCreateView, OrganizationUpdateView,
 from .resolution_views import (ResolutionCreateView, ResolutionUpdateView,
                                ResolutionDeleteView)
 
+from .scenario_views import (ScenarioCreateView, ScenarioUpdateView,
+                               ScenarioDeleteView)
+
 from .form_loads import (load_organizations, load_collections, load_resolutions,
                          load_scenarios, load_datakinds, load_filetypes, 
                          load_dataset_resolutions, load_dataset_scenarios,
@@ -60,5 +63,9 @@ urlpatterns = [
     path('resolutions/create/', ResolutionCreateView.as_view(), name='resolution_create'),
     path('resolutions/<int:pk>/update/', ResolutionUpdateView.as_view(), name='resolution_update'),
     path('resolutions/<int:pk>/delete/', ResolutionDeleteView.as_view(), name='resolution_delete'),
+
+    path('scenarios/create/', ScenarioCreateView.as_view(), name='scenario_create'),
+    path('scenarios/<int:pk>/update/', ScenarioUpdateView.as_view(), name='scenario_update'),
+    path('scenarios/<int:pk>/delete/', ScenarioDeleteView.as_view(), name='scenario_delete'),
 
 ]
