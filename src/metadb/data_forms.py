@@ -48,32 +48,38 @@ class DataForm(ModelForm):
         self.fields['collection'].empty_label = self.empty_label
         self.fields['collection'].label = _('Collection label')
         self.fields['collection'].data_url = reverse('metadb:collection_create')
+        self.fields['collection'].no_add_btn = True
         # Horizontal resolution
         self.fields['resolution'] = ModelChoiceField(queryset=Resolution.objects.none())
         self.fields['resolution'].empty_label = self.empty_label
         self.fields['resolution'].label = _('Horizontal resolution')
         self.fields['resolution'].data_url = reverse('metadb:resolution_create')
+        self.fields['resolution'].no_add_btn = True
         # Scenario
         self.fields['scenario'] = ModelChoiceField(queryset=Scenario.objects.none())
         self.fields['scenario'].empty_label = self.empty_label
         self.fields['scenario'].label = _('Scenario')
         self.fields['scenario'].data_url = reverse('metadb:scenario_create')
+        self.fields['scenario'].no_add_btn = True
         # Parameter
         qset = ParameterI18N.objects.filter(language__code=get_language())
         self.fields['parameteri18n'] = ModelChoiceField(queryset=qset)
         self.fields['parameteri18n'].empty_label = self.empty_label
         self.fields['parameteri18n'].label = _('Parameter')
         #self.fields['parameteri18n'].data_url = reverse('metadb:parameter_create')
+        self.fields['parameteri18n'].no_add_btn = True
         # Time step
         self.fields['time_stepi18n'] = ModelChoiceField(queryset=TimeStepI18N.objects.none())
         self.fields['time_stepi18n'].empty_label = self.empty_label
         self.fields['time_stepi18n'].label = _('Time step')
         #self.fields['time_stepi18n'].data_url = reverse('metadb:timestep_create')
+        self.fields['time_stepi18n'].no_add_btn = True
         # Levels group
         self.fields['levels_group'] = ModelChoiceField(queryset=LevelsGroup.objects.none())
         self.fields['levels_group'].empty_label = self.empty_label
         self.fields['levels_group'].label = _('Levels group')
         #self.fields['levels_group'].data_url = reverse('metadb:levelsgroup_create')
+        self.fields['levels_group'].no_add_btn = True
         # Levels names
         self.fields['levels_namesi18n'] = CharField(widget=Textarea(attrs={'rows': 3}), disabled=True)
         self.fields['levels_namesi18n'].label = _('Levels names')
