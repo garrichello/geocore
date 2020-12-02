@@ -3,7 +3,7 @@ $(function() {
 
     var loadCollections = function(form_name, collection_label='') {
         var form = $(form_name);
-        var modal_id = '#'+getModalName(form.attr('action')); // Dataset modal!
+        var modal_id = '#'+getModalName(form.attr('action'));
         console.log('[loadCollections] modal_id: '+modal_id);
 
         if (collection_label.length) {
@@ -24,7 +24,7 @@ $(function() {
 
     var loadResolutions = function(form_name, resolution_name='') {
         var form = $(form_name);
-        var modal_id = '#'+getModalName(form.attr('action')); // Dataset modal!
+        var modal_id = '#'+getModalName(form.attr('action'));
 
         if (resolution_name.length) {
             $.ajax( {
@@ -33,7 +33,7 @@ $(function() {
                 success: function(data) {
                     $(modal_id+' #id_resolution').html(data);
                         $(modal_id+` #id_resolution option:contains("${resolution_name}")`).attr(
-                            'selected', true);  // Select new collection in the select
+                            'selected', true);  // Select new resolution in the select
                     if ($(modal_id+' #id_resolution option').length == 2) {
                         $(modal_id+' #id_resolution').prop("selectedIndex", 1);
                     }
@@ -44,7 +44,7 @@ $(function() {
 
     var loadScenarios = function(form_name, scenario_name='') {
         var form = $(form_name);
-        var modal_id = '#'+getModalName(form.attr('action')); // Dataset modal!
+        var modal_id = '#'+getModalName(form.attr('action'));
 
         if (scenario_name.length) {
             $.ajax( {
@@ -53,7 +53,7 @@ $(function() {
                 success: function (data) {
                     $(modal_id+' #id_scenario').html(data);
                     $(modal_id+` #id_scenario option:contains("${scenario_name}")`).attr(
-                        'selected', true);  // Select new collection in the select
+                        'selected', true);  // Select new scenario in the select
                     if ($(modal_id+' #id_scenario option').length == 2) {
                         $(modal_id+' #id_scenario').prop("selectedIndex", 1);
                     }
@@ -64,7 +64,7 @@ $(function() {
 
     var loadDatakinds = function(form_name, datakind_name='') {
         var form = $(form_name);
-        var modal_id = '#'+getModalName(form.attr('action')); // Dataset modal!
+        var modal_id = '#'+getModalName(form.attr('action'));
 
         if (datakind_name.length) {
             $.ajax( {
@@ -73,7 +73,7 @@ $(function() {
                 success: function (data) {
                     $(modal_id+' #id_data_kind').html(data);
                     $(modal_id+` #id_data_kind option:contains("${datakind_name}")`).attr(
-                        'selected', true);  // Select new collection in the select
+                        'selected', true);  // Select new datakind in the select
                     if ($(modal_id+' #id_data_kind option').length == 2) {
                         $(modal_id+' #id_data_kind').prop("selectedIndex", 1);
                     }
@@ -84,7 +84,7 @@ $(function() {
 
     var loadFiletypes = function(form_name, filetype_name='') {
         var form = $(form_name);
-        var modal_id = '#'+getModalName(form.attr('action')); // Dataset modal!
+        var modal_id = '#'+getModalName(form.attr('action'));
 
         if (filetype_name.length) {
             $.ajax( {
@@ -93,7 +93,7 @@ $(function() {
                 success: function (data) {
                     $(modal_id+' #id_file_type').html(data);
                     $(modal_id+` #id_file_type option:contains("${filetype_name}")`).attr(
-                        'selected', true);  // Select new collection in the select
+                        'selected', true);  // Select new filetype in the select
                     if ($(modal_id+' #id_file_type option').length == 2) {
                         $(modal_id+' #id_file_type').prop("selectedIndex", 1);
                     }
@@ -101,7 +101,7 @@ $(function() {
             } );
         }
     };
-
+    
     // Submit form
     $('body').on('submit', '.js-dataset-create-form', function(e) {
         saveForm2.call(this, e); return false;
