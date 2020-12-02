@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-16 19:35+0700\n"
+"POT-Creation-Date: 2020-12-02 16:35+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,226 +20,400 @@ msgstr ""
 "%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
 "%100>=11 && n%100<=14)? 2 : 3);\n"
 
-#: forms.py:15 forms.py:59 views.py:22 views.py:33 views.py:46
+#: collection_forms.py:18 data_forms.py:48 dataset_forms.py:17 views.py:12
+#: views.py:24 views.py:38
 msgid "Collection label"
 msgstr "Метка коллекции"
 
-#: forms.py:16 views.py:27
+#: collection_forms.py:19 views.py:17
 msgid "Collection URL"
 msgstr "URL коллекции"
 
-#: forms.py:25 views.py:25
+#: collection_forms.py:28 views.py:15
 msgid "Organization"
 msgstr "Организация"
 
-#: forms.py:34 views.py:23
+#: collection_forms.py:39 views.py:13
 msgid "Collection name"
 msgstr "Название коллекции"
 
-#: forms.py:35 views.py:24
+#: collection_forms.py:40 views.py:14
 msgid "Collection description"
 msgstr "Описание коллекции"
 
-#: forms.py:111 templates/metadb/main_view.html:28
-msgid "Collection"
-msgstr "Коллекция"
-
-#: forms.py:114
-msgid "Horizontal resolution"
-msgstr "Горизонтальное разрешение"
-
-#: forms.py:117 views.py:35 views.py:48
-msgid "Scenario"
-msgstr "Сценарий"
-
-#: forms.py:122 views.py:49
-msgid "Parameter"
-msgstr "Имя метеопараметра"
-
-#: forms.py:125 views.py:50
-msgid "Time step"
-msgstr "Шаг по времени"
-
-#: templates/metadb/includes/partial_collection_create.html:10
+#: collection_views.py:65
 msgid "Create a new collection"
 msgstr "Создать новую коллекцию"
 
-#: templates/metadb/includes/partial_collection_create.html:17
-#: templates/metadb/includes/partial_collection_delete.html:17
-#: templates/metadb/includes/partial_collection_update.html:17
-#: templates/metadb/includes/partial_data_create.html:19
-#: templates/metadb/includes/partial_data_delete.html:17
-#: templates/metadb/includes/partial_data_update.html:17
-#: templates/metadb/includes/partial_dataset_create.html:17
-#: templates/metadb/includes/partial_dataset_delete.html:17
-#: templates/metadb/includes/partial_dataset_update.html:17
-msgid "Close"
-msgstr "Закрыть"
-
-#: templates/metadb/includes/partial_collection_create.html:18
+#: collection_views.py:66
 msgid "Create collection"
 msgstr "Создать коллекцию"
 
-#: templates/metadb/includes/partial_collection_delete.html:10
-msgid "Confirm collection delete"
-msgstr "Подтвердите удаление коллекции"
-
-#: templates/metadb/includes/partial_collection_delete.html:13
-msgid "Are you sure you want to delete the collection"
-msgstr "Вы уверены, что хотите удалить коллекцию"
-
-#: templates/metadb/includes/partial_collection_delete.html:18
-msgid "Delete collection"
-msgstr "Удалить коллекцию"
-
-#: templates/metadb/includes/partial_collection_update.html:10
-#: templates/metadb/includes/partial_collection_update.html:18
+#: collection_views.py:88 collection_views.py:89
 msgid "Update collection"
 msgstr "Изменить коллекцию"
 
-#: templates/metadb/includes/partial_data_create.html:12
-msgid "Create a new data"
-msgstr "Создать новую запись данных"
+#: collection_views.py:114
+msgid "Confirm collection delete"
+msgstr "Подтвердите удаление коллекции"
 
-#: templates/metadb/includes/partial_data_create.html:20
-msgid "Create data"
-msgstr "Создать запись данных"
+#: collection_views.py:115
+msgid "Are you sure you want to delete the collection"
+msgstr "Вы уверены, что хотите удалить коллекцию"
 
-#: templates/metadb/includes/partial_data_delete.html:10
-msgid "Confirm data delete"
-msgstr "Подтвердите удаление записи данных"
+#: collection_views.py:116
+msgid "Delete collection"
+msgstr "Удалить коллекцию"
 
-#: templates/metadb/includes/partial_data_delete.html:13
-msgid "Are you sure you want to delete the data"
-msgstr "Вы уверены, что хотите удалить запись данных"
+#: data_forms.py:52 dataset_forms.py:22
+msgid "Horizontal resolution"
+msgstr "Горизонтальное разрешение"
 
-#: templates/metadb/includes/partial_data_delete.html:18
-msgid "Delete data"
-msgstr "Удалить запись данных"
+#: data_forms.py:56 dataset_forms.py:27 views.py:26 views.py:40
+msgid "Scenario"
+msgstr "Сценарий"
 
-#: templates/metadb/includes/partial_data_update.html:10
-#: templates/metadb/includes/partial_data_update.html:18
-msgid "Update data"
-msgstr "Обновить запись данных"
+#: data_forms.py:61 views.py:41
+msgid "Parameter"
+msgstr "Имя метеопараметра"
 
-#: templates/metadb/includes/partial_dataset_create.html:10
-msgid "Create a new dataset"
-msgstr "Создать новый набор данных"
+#: data_forms.py:65 views.py:42
+msgid "Time step"
+msgstr "Шаг по времени"
 
-#: templates/metadb/includes/partial_dataset_create.html:18
-msgid "Create dataset"
-msgstr "Создать набор данных"
-
-#: templates/metadb/includes/partial_dataset_delete.html:10
-msgid "Confirm dataset delete"
-msgstr "Подтвердите удаление набора данных"
-
-#: templates/metadb/includes/partial_dataset_delete.html:13
-msgid "Are you sure you want to delete the dataset"
-msgstr "Вы уверены, что хотите удалить набор данных"
-
-#: templates/metadb/includes/partial_dataset_delete.html:18
-msgid "Delete dataset"
-msgstr "Удалить набор данных"
-
-#: templates/metadb/includes/partial_dataset_update.html:10
-#: templates/metadb/includes/partial_dataset_update.html:18
-msgid "Update dataset"
-msgstr "Обновить набор данных"
-
-#: templates/metadb/main_view.html:24
-msgid "MetaDB administrative console"
-msgstr "Административная консоль базы метаданных"
-
-#: templates/metadb/main_view.html:31
-msgid "Dataset"
-msgstr "Набор данных"
-
-#: templates/metadb/main_view.html:34
-msgid "Data"
-msgstr "Данные"
-
-#: templates/metadb/main_view.html:37
-msgid "Other"
-msgstr "Прочее"
-
-#: templates/metadb/main_view.html:45 templates/metadb/main_view.html:63
-#: templates/metadb/main_view.html:81
-msgid "Create"
-msgstr "Создать"
-
-#: views.py:26
-msgid "Organization URL"
-msgstr "URL организации"
-
-#: views.py:32 views.py:45
-msgid "Visible"
-msgstr "Видимость"
-
-#: views.py:34 views.py:47
-msgid "Resolution"
-msgstr "Гориз. разреш."
-
-#: views.py:36
-msgid "Data kind"
-msgstr "Тип данных"
-
-#: views.py:37
-msgid "File type"
-msgstr "Тип файлов"
-
-#: views.py:38
-msgid "Time start"
-msgstr "Первый день"
-
-#: views.py:39
-msgid "Time end"
-msgstr "Последний день"
-
-#: views.py:40
-msgid "Dataset description"
-msgstr "Описание набора данных"
-
-#: views.py:51
-msgid "Variable name"
-msgstr "Имя переменной"
-
-#: views.py:52
-msgid "Units"
-msgstr "Ед. изм."
-
-#: views.py:53
-msgid "Levels names"
-msgstr "Имена верт. уровней"
-
-#: views.py:54
+#: data_forms.py:69 views.py:43
 msgid "Levels group"
-msgstr "Группа верт. уровней"
+msgstr "Группа вертикальных уровней"
 
-#: views.py:55
+#: data_forms.py:72 views.py:44
+msgid "Levels names"
+msgstr "Имена вертткальных уровней"
+
+#: data_forms.py:75
+msgid "Use levels variable"
+msgstr "Использовать переменную вертикального уровня"
+
+#: data_forms.py:80 views.py:45
 msgid "Levels variable"
-msgstr "Переменная верт. уровня"
+msgstr "Переменная вертикального уровня"
 
-#: views.py:56
-msgid "Propery label"
-msgstr "Имя свойства"
+#: data_forms.py:83
+msgid "Variable"
+msgstr "Переменная"
 
-#: views.py:57
+#: data_forms.py:88 views.py:47
+msgid "Units"
+msgstr "Единица измерения"
+
+#: data_forms.py:91
+msgid "Use property"
+msgstr "Использовать свойство"
+
+#: data_forms.py:96
+msgid "Property"
+msgstr "Свойство"
+
+#: data_forms.py:101 views.py:49
 msgid "Property value"
 msgstr "Значение свойства"
 
-#: views.py:58
-msgid "Root directory"
+#: data_forms.py:104
+msgid "Root diriectory"
 msgstr "Корневой каталог"
 
-#: views.py:59
+#: data_forms.py:107 views.py:51
 msgid "File name pattern"
 msgstr "Шаблон имени файла"
 
-#: views.py:60
+#: data_forms.py:110 views.py:52
 msgid "Scale"
 msgstr "Масштаб"
 
-#: views.py:61
+#: data_forms.py:113 views.py:53
 msgid "Offset"
 msgstr "Смещение"
+
+#: data_views.py:55
+msgid "Create a new data"
+msgstr "Создать новую запись данных"
+
+#: data_views.py:56
+msgid "Create data"
+msgstr "Создать запись данных"
+
+#: data_views.py:75 data_views.py:76
+msgid "Update data"
+msgstr "Обновить запись данных"
+
+#: data_views.py:99
+msgid "Confirm data delete"
+msgstr "Подтвердите удаление записи данных"
+
+#: data_views.py:100
+msgid "Are you sure you want to delete the data record"
+msgstr "Вы уверены, что хотите удалить запись данных"
+
+#: data_views.py:101
+msgid "Delete data"
+msgstr "Удалить запись данных"
+
+#: datakind_views.py:15
+msgid "Create a new datakind"
+msgstr "Создать новый тип данных"
+
+#: datakind_views.py:16
+msgid "Create datakind"
+msgstr "Создать тип данных"
+
+#: datakind_views.py:27 datakind_views.py:28
+msgid "Update datakind"
+msgstr "Обновить тип данных"
+
+#: datakind_views.py:38
+msgid "Confirm data kind delete"
+msgstr "Подтвердите удаление типа данных"
+
+#: datakind_views.py:39
+msgid "Are you sure you want to delete the data kind"
+msgstr "Вы уверены, что хотите удалить тип данных"
+
+#: datakind_views.py:40
+msgid "Delete data kind"
+msgstr "Удалить тип данных"
+
+#: dataset_forms.py:32 views.py:27
+msgid "Data kind"
+msgstr "Тип данных"
+
+#: dataset_forms.py:35
+msgid "Description"
+msgstr "Описание"
+
+#: dataset_forms.py:37 views.py:23 views.py:37
+msgid "Visible"
+msgstr "Видимость"
+
+#: dataset_forms.py:39
+msgid "Start date"
+msgstr "Начальная дата"
+
+#: dataset_forms.py:41
+msgid "End date"
+msgstr "Конечная дата"
+
+#: dataset_forms.py:46 views.py:28
+msgid "File type"
+msgstr "Тип файлов"
+
+#: dataset_views.py:15
+msgid "Create a new dataset"
+msgstr "Создать новый набор данных"
+
+#: dataset_views.py:16
+msgid "Create dataset"
+msgstr "Создать набор данных"
+
+#: dataset_views.py:27 dataset_views.py:28
+msgid "Update dataset"
+msgstr "Обновить набор данных"
+
+#: dataset_views.py:38
+msgid "Confirm dataset delete"
+msgstr "Подтвердите удаление набора данных"
+
+#: dataset_views.py:39
+msgid "Are you sure you want to delete the dataset"
+msgstr "Вы уверены, что хотите удалить набор данных"
+
+#: dataset_views.py:40
+msgid "Delete dataset"
+msgstr "Удалить набор данных"
+
+#: filetype_views.py:15
+msgid "Create a new filetype"
+msgstr "Создать новый тип файлов"
+
+#: filetype_views.py:16
+msgid "Create filetype"
+msgstr "Создать тип файлов"
+
+#: filetype_views.py:27 filetype_views.py:28
+msgid "Update filetype"
+msgstr "Изменить тип файлов"
+
+#: filetype_views.py:38
+msgid "Confirm file type delete"
+msgstr "Подтвердите удаление типа файлов"
+
+#: filetype_views.py:39
+msgid "Are you sure you want to delete the file type"
+msgstr "Вы уверены, что хотите удалить тип файлов"
+
+#: filetype_views.py:40
+msgid "Delete file type"
+msgstr "Удалить тип файлов"
+
+#: organization_views.py:59
+msgid "Create a new organization"
+msgstr "Создать новую организацию"
+
+#: organization_views.py:60
+msgid "Create organization"
+msgstr "Создать организацию"
+
+#: organization_views.py:82 organization_views.py:83
+msgid "Update organization"
+msgstr "Изменить организацию"
+
+#: organization_views.py:108
+msgid "Confirm organization delete"
+msgstr "Подтвердите удаление организации"
+
+#: organization_views.py:109
+msgid "Are you sure you want to delete the organization"
+msgstr "Вы уверены, что хотите удалить организацию"
+
+#: organization_views.py:110
+msgid "Delete organization"
+msgstr "Удалить организацию"
+
+#: resolution_views.py:15
+msgid "Create a new resolution"
+msgstr "Создать новое горизонтальное разрешение."
+
+#: resolution_views.py:16
+msgid "Create resolution"
+msgstr "Создать горизонтальное разрешение"
+
+#: resolution_views.py:27 resolution_views.py:28
+msgid "Update resolution"
+msgstr "Изменить горизонтальное разрешение"
+
+#: resolution_views.py:38
+msgid "Confirm resolution delete"
+msgstr "Подтвердите удаление горизонтального разрешения"
+
+#: resolution_views.py:39
+msgid "Are you sure you want to delete the resolution"
+msgstr "Вы уверены, что хотите удалить горизонтальное разрешение"
+
+#: resolution_views.py:40
+msgid "Delete resolution"
+msgstr "Удалить горизонтальное разрешение"
+
+#: scenario_views.py:15
+msgid "Create a new scenario"
+msgstr "Создать новый сценарий"
+
+#: scenario_views.py:16
+msgid "Create scenario"
+msgstr "Создать сценарий"
+
+#: scenario_views.py:27 scenario_views.py:28
+msgid "Update scenario"
+msgstr "Изменить сценарий"
+
+#: scenario_views.py:38
+msgid "Confirm scenario delete"
+msgstr "Подтвердите удаление сценария"
+
+#: scenario_views.py:39
+msgid "Are you sure you want to delete the scenario"
+msgstr "Вы уверены, что хотите удалить сценарий"
+
+#: scenario_views.py:40
+msgid "Delete scenario"
+msgstr "Удалить сценарий"
+
+#: simple_forms.py:14
+msgid "Data kind name"
+msgstr "Название типа данных"
+
+#: simple_forms.py:24
+msgid "File type name"
+msgstr "Название типа файлов"
+
+#: simple_forms.py:34 views.py:16
+msgid "Organization URL"
+msgstr "URL организации"
+
+#: simple_forms.py:44
+msgid "Organization name"
+msgstr "Название организации"
+
+#: simple_forms.py:54
+msgid "Resolution name"
+msgstr "Название горизонтального разрешения"
+
+#: simple_forms.py:55
+msgid "Resolution subpath"
+msgstr "Подпуть горизонтального разрешения"
+
+#: simple_forms.py:65
+msgid "Scenario name"
+msgstr "Название сценария"
+
+#: simple_forms.py:66
+msgid "Scenario subpath"
+msgstr "Подпуть сценария"
+
+#: templates/metadb/includes/collection_form.html:18
+#: templates/metadb/includes/data_form.html:22
+#: templates/metadb/includes/dataset_form.html:22
+#: templates/metadb/includes/simple_delete_form.html:17
+#: templates/metadb/includes/simple_form.html:17
+msgid "Close"
+msgstr "Закрыть"
+
+#: templates/metadb/main_view.html:22
+msgid "MetaDB administrative console"
+msgstr "Административная консоль базы метаданных"
+
+#: templates/metadb/main_view.html:26
+msgid "Collection"
+msgstr "Коллекция"
+
+#: templates/metadb/main_view.html:29
+msgid "Dataset"
+msgstr "Набор данных"
+
+#: templates/metadb/main_view.html:32
+msgid "Data"
+msgstr "Данные"
+
+#: templates/metadb/main_view.html:35
+msgid "Other"
+msgstr "Прочее"
+
+#: templates/metadb/main_view.html:45 templates/metadb/main_view.html:65
+#: templates/metadb/main_view.html:85
+msgid "Create"
+msgstr "Создать"
+
+#: views.py:25 views.py:39
+msgid "Resolution"
+msgstr "Гориз. разреш."
+
+#: views.py:29
+msgid "Time start"
+msgstr "Первый день"
+
+#: views.py:30
+msgid "Time end"
+msgstr "Последний день"
+
+#: views.py:31
+msgid "Dataset description"
+msgstr "Описание набора данных"
+
+#: views.py:46
+msgid "Variable name"
+msgstr "Имя переменной"
+
+#: views.py:48
+msgid "Propery label"
+msgstr "Имя свойства"
+
+#: views.py:50
+msgid "Root directory"
+msgstr "Корневой каталог"
