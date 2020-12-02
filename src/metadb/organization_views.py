@@ -5,7 +5,7 @@ from django.utils.translation import get_language, gettext_lazy as _
 from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
 
-from .organization_forms import OrganizationForm, OrganizationI18NForm
+from .simple_forms import OrganizationForm, OrganizationI18NForm
 
 from .models import Organization, Language
 
@@ -52,7 +52,7 @@ class OrganizationBaseView(View):
 
 
 class OrganizationCreateView(OrganizationBaseView):
-    template_name = 'metadb/includes/organization_form.html'
+    template_name = 'metadb/includes/simple_form.html'
     ctx = {
         'form_class': 'js-organization-create-form',
         'action': reverse_lazy('metadb:organization_create'),
@@ -76,7 +76,7 @@ class OrganizationCreateView(OrganizationBaseView):
 
 
 class OrganizationUpdateView(OrganizationBaseView):
-    template_name = 'metadb/includes/organization_form.html'
+    template_name = 'metadb/includes/simple_form.html'
     ctx = {
         'form_class': 'js-organization-update-form',
         'title': _("Update organization"),
@@ -89,7 +89,7 @@ class OrganizationUpdateView(OrganizationBaseView):
         orgi18n_form = self.formi18n_class(instance=orgi18n_model)
 
         self.ctx['forms'] = [orgi18n_form, org_form]
-        self.ctx['action'] = reverse('metadb:organization_create', kwargs={'pk': org_form.instance.pk}),
+        self.ctx['action'] = reverse('metadb:organization_update', kwargs={'pk': org_form.instance.pk}),
         html_form = render_to_string(self.template_name, self.ctx, request)
         return JsonResponse({'html_form': html_form})
 
@@ -98,17 +98,23 @@ class OrganizationUpdateView(OrganizationBaseView):
         org_form = self.form_class(request.POST, instance=org_model_old)
         orgi18n_form = self.formi18n_class(request.POST, instance=orgi18n_model_old)
         self.ctx['forms'] = [orgi18n_form, org_form]
-        self.ctx['action'] = reverse('metadb:organization_create', kwargs={'pk': org_form.instance.pk}),
+        self.ctx['action'] = reverse('metadb:organization_update', kwargs={'pk': org_form.instance.pk}),
         return self.save_form(request, self.template_name, self.ctx)
 
 class OrganizationDeleteView(OrganizationBaseView):
-    template_name = 'metadb/includes/organization_delete_form.html'
+    template_name = 'metadb/includes/simple_delete_form.html'
+    ctx = {
+        'form_class': 'js-organization-delete-form',
+        'title': _('Confirm organization delete'),
+        'text': _('Are you sure you want to delete the organization'),
+        'submit_name': _('Delete organization')
+    }
 
     def get(self, request, pk):
-        org_model = get_object_or_404(self.model, pk=pk)
-
-        ctx = {'organization': org_model}
-        html_form = render_to_string(self.template_name, ctx, request)
+        model_obj = get_object_or_404(self.model, pk=pk)
+        self.ctx['action'] = reverse('metadb:organization_delete', kwargs={'pk': pk})
+        self.ctx['label'] = model_obj.label
+        html_form = render_to_string(self.template_name, self.ctx, request)
         return JsonResponse({'html_form': html_form})
 
     def post(self, request, pk):

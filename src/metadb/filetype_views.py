@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse, reverse_lazy
 
-from .filetype_forms import FileTypeForm
+from .simple_forms import FileTypeForm
 
 from .models import FileType
 
@@ -29,7 +29,7 @@ class FileTypeBaseView(View):
 
 
 class FileTypeCreateView(FileTypeBaseView):
-    template_name = 'metadb/includes/filetype_form.html'
+    template_name = 'metadb/includes/simple_form.html'
     ctx = {
         'form_class': 'js-filetype-create-form',
         'action': reverse_lazy('metadb:filetype_create'),
@@ -51,7 +51,7 @@ class FileTypeCreateView(FileTypeBaseView):
 
 
 class FileTypeUpdateView(FileTypeBaseView):
-    template_name = 'metadb/includes/filetype_form.html'
+    template_name = 'metadb/includes/simple_form.html'
     ctx = {
         'form_class': 'js-filetype-update-form',
         'title': _("Update file type"),
@@ -63,7 +63,7 @@ class FileTypeUpdateView(FileTypeBaseView):
         form = self.form_class(instance=model_obj)
 
         self.ctx['forms'] = [form]
-        self.ctx['action'] = reverse('metadb:filetype_create', kwargs={'pk': form.instance.pk})
+        self.ctx['action'] = reverse('metadb:filetype_update', kwargs={'pk': form.instance.pk})
         html_form = render_to_string(self.template_name, self.ctx, request)
         return JsonResponse({'html_form': html_form})
 
@@ -71,17 +71,23 @@ class FileTypeUpdateView(FileTypeBaseView):
         model_obj = get_object_or_404(self.model, pk=pk)
         form = self.form_class(request.POST, instance=model_obj)
         self.ctx['forms'] = [form]
-        self.ctx['action'] = reverse('metadb:filetype_create', kwargs={'pk': form.instance.pk})
+        self.ctx['action'] = reverse('metadb:filetype_update', kwargs={'pk': form.instance.pk})
         return self.save_form(request, self.template_name, self.ctx)
 
 class FileTypeDeleteView(FileTypeBaseView):
-    template_name = 'metadb/includes/filetype_delete_form.html'
+    template_name = 'metadb/includes/simple_delete_form.html'
+    ctx = {
+        'form_class': 'js-filetype-delete-form',
+        'title': _('Confirm file type delete'),
+        'text': _('Are you sure you want to delete the file type'),
+        'submit_name': _('Delete file type')
+    }
 
     def get(self, request, pk):
         model_obj = get_object_or_404(self.model, pk=pk)
-
-        ctx = {'filetype': model_obj}
-        html_form = render_to_string(self.template_name, ctx, request)
+        self.ctx['action'] = reverse('metadb:filetype_delete', kwargs={'pk': pk})
+        self.ctx['label'] = model_obj.label
+        html_form = render_to_string(self.template_name, self.ctx, request)
         return JsonResponse({'html_form': html_form})
 
     def post(self, request, pk):

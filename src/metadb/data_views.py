@@ -93,16 +93,22 @@ class DataUpdateView(DataBaseView):
 
 
 class DataDeleteView(DataBaseView):
-    template_name = 'metadb/includes/data_delete_form.html'
+    template_name = 'metadb/includes/simple_delete_form.html'
+    ctx = {
+        'form_class': 'js-data-delete-form',
+        'title': _('Confirm data delete'),
+        'text': _('Are you sure you want to delete the data record'),
+        'submit_name': _('Delete data')
+    }
 
     def get(self, request, pk):
-        obj = get_object_or_404(self.model, pk=pk)
-
-        ctx = {'data': obj}
-        html_form = render_to_string(self.template_name, ctx, request)
+        model_obj = get_object_or_404(self.model, pk=pk)
+        self.ctx['action'] = reverse('metadb:data_delete', kwargs={'pk': pk})
+        self.ctx['label'] = model_obj.pk
+        html_form = render_to_string(self.template_name, self.ctx, request)
         return JsonResponse({'html_form': html_form})
 
     def post(self, request, pk):
-        obj = get_object_or_404(self.model, pk=pk)
-        obj.delete()
+        model_obj = get_object_or_404(self.model, pk=pk)
+        model_obj.delete()
         return JsonResponse({'html_form': None, 'form_is_valid': True})

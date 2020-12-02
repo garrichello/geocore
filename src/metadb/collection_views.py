@@ -108,16 +108,22 @@ class CollectionUpdateView(CollectionBaseView):
         return self.save_form(request, self.template_name, self.ctx)
 
 class CollectionDeleteView(CollectionBaseView):
-    template_name = 'metadb/includes/collection_delete_form.html'
+    template_name = 'metadb/includes/simple_delete_form.html'
+    ctx = {
+        'form_class': 'js-collection-delete-form',
+        'title': _('Confirm collection delete'),
+        'text': _('Are you sure you want to delete the collection'),
+        'submit_name': _('Delete collection')
+    }
 
     def get(self, request, pk):
-        col_model = get_object_or_404(self.model, pk=pk)
-
-        ctx = {'collection': col_model}
-        html_form = render_to_string(self.template_name, ctx, request)
+        model_obj = get_object_or_404(self.model, pk=pk)
+        self.ctx['action'] = reverse('metadb:collection_delete', kwargs={'pk': pk})
+        self.ctx['label'] = model_obj.label
+        html_form = render_to_string(self.template_name, self.ctx, request)
         return JsonResponse({'html_form': html_form})
 
     def post(self, request, pk):
-        col_model = get_object_or_404(self.model, pk=pk)
-        col_model.delete()
+        model_obj = get_object_or_404(self.model, pk=pk)
+        model_obj.delete()
         return JsonResponse({'html_form': None, 'form_is_valid': True})      

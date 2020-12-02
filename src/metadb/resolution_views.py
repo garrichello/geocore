@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse, reverse_lazy
 
-from .resolution_forms import ResolutionForm
+from .simple_forms import ResolutionForm
 
 from .models import Resolution
 
@@ -29,7 +29,7 @@ class ResolutionBaseView(View):
 
 
 class ResolutionCreateView(ResolutionBaseView):
-    template_name = 'metadb/includes/resolution_form.html'
+    template_name = 'metadb/includes/simple_form.html'
     ctx = {
         'form_class': 'js-resolution-create-form',
         'action': reverse_lazy('metadb:resolution_create'),
@@ -51,7 +51,7 @@ class ResolutionCreateView(ResolutionBaseView):
 
 
 class ResolutionUpdateView(ResolutionBaseView):
-    template_name = 'metadb/includes/resolution_form.html'
+    template_name = 'metadb/includes/simple_form.html'
     ctx = {
         'form_class': 'js-resolution-update-form',
         'title': _("Update resolution"),
@@ -63,7 +63,7 @@ class ResolutionUpdateView(ResolutionBaseView):
         form = self.form_class(instance=model_obj)
 
         self.ctx['forms'] = [form]
-        self.ctx['action'] = reverse('metadb:resolution_create', kwargs={'pk': form.instance.pk})
+        self.ctx['action'] = reverse('metadb:resolution_update', kwargs={'pk': form.instance.pk})
         html_form = render_to_string(self.template_name, self.ctx, request)
         return JsonResponse({'html_form': html_form})
 
@@ -71,17 +71,23 @@ class ResolutionUpdateView(ResolutionBaseView):
         model_obj = get_object_or_404(self.model, pk=pk)
         form = self.form_class(request.POST, instance=model_obj)
         self.ctx['forms'] = [form]
-        self.ctx['action'] = reverse('metadb:resolution_create', kwargs={'pk': form.instance.pk})
+        self.ctx['action'] = reverse('metadb:resolution_update', kwargs={'pk': form.instance.pk})
         return self.save_form(request, self.template_name, self.ctx)
 
 class ResolutionDeleteView(ResolutionBaseView):
-    template_name = 'metadb/includes/resolution_delete_form.html'
+    template_name = 'metadb/includes/simple_delete_form.html'
+    ctx = {
+        'form_class': 'js-resolution-delete-form',
+        'title': _('Confirm resolution delete'),
+        'text': _('Are you sure you want to delete the resolution'),
+        'submit_name': _('Delete resolution')
+    }
 
     def get(self, request, pk):
         model_obj = get_object_or_404(self.model, pk=pk)
-
-        ctx = {'resolution': model_obj}
-        html_form = render_to_string(self.template_name, ctx, request)
+        self.ctx['action'] = reverse('metadb:resolution_delete', kwargs={'pk': pk})
+        self.ctx['label'] = model_obj.label
+        html_form = render_to_string(self.template_name, self.ctx, request)
         return JsonResponse({'html_form': html_form})
 
     def post(self, request, pk):

@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse, reverse_lazy
 
-from .scenario_forms import ScenarioForm
+from .simple_forms import ScenarioForm
 
 from .models import Scenario
 
@@ -29,7 +29,7 @@ class ScenarioBaseView(View):
 
 
 class ScenarioCreateView(ScenarioBaseView):
-    template_name = 'metadb/includes/scenario_form.html'
+    template_name = 'metadb/includes/simple_form.html'
     ctx = {
         'form_class': 'js-scenario-create-form',
         'action': reverse_lazy('metadb:scenario_create'),
@@ -51,7 +51,7 @@ class ScenarioCreateView(ScenarioBaseView):
 
 
 class ScenarioUpdateView(ScenarioBaseView):
-    template_name = 'metadb/includes/scenario_form.html'
+    template_name = 'metadb/includes/simple_form.html'
     ctx = {
         'form_class': 'js-scenario-update-form',
         'title': _("Update scenario"),
@@ -63,7 +63,7 @@ class ScenarioUpdateView(ScenarioBaseView):
         form = self.form_class(instance=model_obj)
 
         self.ctx['forms'] = [form]
-        self.ctx['action'] = reverse('metadb:scenario_create', kwargs={'pk': form.instance.pk})
+        self.ctx['action'] = reverse('metadb:scenario_update', kwargs={'pk': form.instance.pk})
         html_form = render_to_string(self.template_name, self.ctx, request)
         return JsonResponse({'html_form': html_form})
 
@@ -71,17 +71,23 @@ class ScenarioUpdateView(ScenarioBaseView):
         model_obj = get_object_or_404(self.model, pk=pk)
         form = self.form_class(request.POST, instance=model_obj)
         self.ctx['forms'] = [form]
-        self.ctx['action'] = reverse('metadb:scenario_create', kwargs={'pk': form.instance.pk})
+        self.ctx['action'] = reverse('metadb:scenario_update', kwargs={'pk': form.instance.pk})
         return self.save_form(request, self.template_name, self.ctx)
 
 class ScenarioDeleteView(ScenarioBaseView):
-    template_name = 'metadb/includes/scenario_delete_form.html'
+    template_name = 'metadb/includes/simple_delete_form.html'
+    ctx = {
+        'form_class': 'js-scenario-delete-form',
+        'title': _('Confirm scenario delete'),
+        'text': _('Are you sure you want to delete the scenario'),
+        'submit_name': _('Delete scenario')
+    }
 
     def get(self, request, pk):
         model_obj = get_object_or_404(self.model, pk=pk)
-
-        ctx = {'scenario': model_obj}
-        html_form = render_to_string(self.template_name, ctx, request)
+        self.ctx['action'] = reverse('metadb:scenario_delete', kwargs={'pk': pk})
+        self.ctx['label'] = model_obj.label
+        html_form = render_to_string(self.template_name, self.ctx, request)
         return JsonResponse({'html_form': html_form})
 
     def post(self, request, pk):

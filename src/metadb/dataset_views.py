@@ -63,7 +63,7 @@ class DatasetUpdateView(DatasetBaseView):
 
         self.ctx['forms'] = [form]
         self.ctx['action'] = reverse('metadb:dataset_update', kwargs={'pk': form.instance.pk})
-        html_form = render_to_string(self.template_name, request, self.ctx)
+        html_form = render_to_string(self.template_name, self.ctx, request)
         return JsonResponse({'html_form': html_form})
 
     def post(self, request, pk):
@@ -75,16 +75,22 @@ class DatasetUpdateView(DatasetBaseView):
 
 
 class DatasetDeleteView(DatasetBaseView):
-    template_name = 'metadb/includes/dataset_delete_form.html'
+    template_name = 'metadb/includes/simple_delete_form.html'
+    ctx = {
+        'form_class': 'js-dataset-delete-form',
+        'title': _('Confirm dataset delete'),
+        'text': _('Are you sure you want to delete the dataset'),
+        'submit_name': _('Delete dataset')
+    }
 
     def get(self, request, pk):
-        obj = get_object_or_404(self.model, pk=pk)
-
-        ctx = {'dataset': obj}
-        html_form = render_to_string(self.template_name, ctx, request)
+        model_obj = get_object_or_404(self.model, pk=pk)
+        self.ctx['action'] = reverse('metadb:dataset_delete', kwargs={'pk': pk})
+        self.ctx['label'] = model_obj.pk
+        html_form = render_to_string(self.template_name, self.ctx, request)
         return JsonResponse({'html_form': html_form})
 
     def post(self, request, pk):
-        obj = get_object_or_404(self.model, pk=pk)
-        obj.delete()
+        model_obj = get_object_or_404(self.model, pk=pk)
+        model_obj.delete()
         return JsonResponse({'html_form': None, 'form_is_valid': True})
