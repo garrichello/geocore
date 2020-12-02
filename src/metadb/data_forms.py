@@ -66,7 +66,7 @@ class DataForm(ModelForm):
         # Levels group
         self.fields['levels_group'] = ModelChoiceField(queryset=LevelsGroup.objects.none())
         self.fields['levels_group'].empty_label = self.empty_label
-        self.fields['levels_group'].empty_label = self.empty_label
+        self.fields['levels_group'].label = _('Levels group')
         # Levels names
         self.fields['levels_namesi18n'] = CharField(widget=Textarea(attrs={'rows': 3}), disabled=True)
         self.fields['levels_namesi18n'].label = _('Levels names')
@@ -77,8 +77,10 @@ class DataForm(ModelForm):
         self.fields['levels_variable'].empty_label = self.empty_label
         self.fields['levels_variable'].disabled = True
         self.fields['levels_variable'].initial = 1
+        self.fields['levels_variable'].label = _('Levels variable')
         # Variable
         self.fields['variable'].empty_label = self.empty_label
+        self.fields['variable'].label = _('Variable')
         # Units
         qset = UnitsI18N.objects.filter(language__code=get_language())
         self.fields['unitsi18n'] = ModelChoiceField(queryset=qset)
@@ -91,18 +93,24 @@ class DataForm(ModelForm):
         self.fields['property'].empty_label = self.empty_label
         self.fields['property'].disabled = True
         self.fields['property'].initial = 1
+        self.fields['property'].label = _('Property')
         # Property value
         self.fields['property_value'].empty_label = self.empty_label
         self.fields['property_value'].disabled = True
         self.fields['property_value'].initial = 1
+        self.fields['property_value'].label = _('Property value')
         # Root dir
         self.fields['root_dir'].empty_label = self.empty_label
+        self.fields['root_dir'].label = _('Root diriectory')
         # File
         self.fields['file'].empty_label = self.empty_label
+        self.fields['file'].label = _('File name pattern')
         # Scale
         self.fields['scale'].initial = 1
+        self.fields['scale'].label = _('Scale')
         # Offset
         self.fields['offset'].initial = 0
+        self.fields['offset'].label = _('Offset')
 
         self.order_fields(['collection', 'resolution', 'scenario', 'parameteri18n', 
                           'time_stepi18n', 'levels_group', 'levels_namesi18n', 
