@@ -4,7 +4,6 @@ $(function() {
     var loadCollections = function(form_name, collection_label='') {
         var form = $(form_name);
         var modal_id = '#'+getModalName(form.attr('action'));
-        console.log('[loadCollections] modal_id: '+modal_id);
 
         if (collection_label.length) {
             $.ajax( {
@@ -107,36 +106,29 @@ $(function() {
         saveForm2.call(this, e); return false;
     });
 
-    // Create collection
+    // + buttons handling
     $(dataset_form_class_name).on('click', '.js-add-button', function() { 
         var modal_id = loadForm2.call(this);
-        console.log('[Dataset click] Form '+dataset_form_class_name+'; Modal ID: '+modal_id);
         $(modal_id).on('hidden.bs.modal', function() {
-            console.log('[Dataset hide] Form '+dataset_form_class_name+'; Modal ID: '+modal_id);
             if ($('.js-collection-create-form').length) {
                 var form_data = mapFormData('.js-collection-create-form');  // Get collection fields
                 loadCollections.call(this, dataset_form_class_name, form_data['label']);
-                console.log('In dataset modal, collection form data: '+form_data['label']);
             };
             if ($('.js-resolution-create-form').length) {
                 var form_data = mapFormData('.js-resolution-create-form');  // Get resolution fields
                 loadResolutions.call(this, dataset_form_class_name, form_data['name']);
-                console.log('In dataset modal, resolution form data: '+form_data['name']);
             };
             if ($('.js-scenario-create-form').length) {
                 var form_data = mapFormData('.js-scenario-create-form');  // Get scenario fields
                 loadScenarios.call(this, dataset_form_class_name, form_data['name']);
-                console.log('In dataset modal, scenario form data: '+form_data['name']);
             };
             if ($('.js-datakind-create-form').length) {
                 var form_data = mapFormData('.js-datakind-create-form');  // Get datakind fields
                 loadDatakinds.call(this, dataset_form_class_name, form_data['name']);
-                console.log('In dataset modal, datakind form data: '+form_data['name']);
             };
             if ($('.js-filetype-create-form').length) {
                 var form_data = mapFormData('.js-filetype-create-form');  // Get filetype fields
                 loadFiletypes.call(this, dataset_form_class_name, form_data['name']);
-                console.log('In dataset modal, filetype form data: '+form_data['name']);
             };
             $(modal_id).remove();
         })
