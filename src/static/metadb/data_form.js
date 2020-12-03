@@ -8,7 +8,7 @@ $(function () {
         var resolutionId = $(modal_id+' #id_resolution').val();
     
         $.ajax( {
-            url: form.attr('dataset-scenario-url'),
+            url: form.attr('data-scenario-url'),
             type: 'get',
             data: {
                 'collectionId': collectionId,
@@ -28,7 +28,7 @@ $(function () {
         var collectionId = $(modal_id+' #id_collection').val();
     
         $.ajax( {
-            url: form.attr('dataset-resolutions-url'),
+            url: form.attr('data-resolutions-url'),
             type: 'get',
             data: {
                 'collectionId': collectionId,
@@ -121,6 +121,26 @@ $(function () {
         }
     }
 
+    var loadOptions = function(form_name, select_name, data_url, option_name) {
+        var form = $(form_name);
+        var modal_id = '#'+getModalName(form.attr('action'));
+
+        if (option_name.length) {
+            $.ajax( {
+                url: form.attr(data_url),
+                type: 'get',
+                success: function (data) {
+                    $(`${modal_id} #${select_name}`).html(data);
+                    $(`${modal_id} #${select_name} option:contains("${option_name}")`).attr(
+                        'selected', true);  // Select given entry in the select
+                    if ($(`${modal_id} #${select_name} option`).length == 2) {
+                        $(`${modal_id} #${select_name}`).prop("selectedIndex", 1);
+                    }
+                }
+            } );
+        }
+    };
+
     // Submit form
     $('body').on('submit', '.js-data-create-form', function(e) {
         saveForm2.call(this, e); return false;
@@ -133,6 +153,70 @@ $(function () {
     $(modal_id+' #id_levels_group').change( function() { loadLvsNamesChain(data_form_class_name); } );
     $(modal_id+' #id_use_lvsvar').change ( switchLvsVariable )
     $(modal_id+' #id_use_property').change ( switchProperty )
+
+    // + buttons handling
+    $(data_form_class_name).on('click', '.js-add-button', function() { 
+        var modal_id = loadForm2.call(this);
+        console.log('[Data click] Form '+data_form_class_name+'; Modal ID: '+modal_id);
+        $(modal_id).on('hidden.bs.modal', function() {
+            console.log('[Data hide] Form '+data_form_class_name+'; Modal ID: '+modal_id);
+            if ($('.js-levels-variable-create-form').length) {
+                var form_data = mapFormData('.js-levels-variable-create-form');  // Get levels variable fields
+                loadOptions.call(this, data_form_class_name, 'id_levels_variable',
+                    'levels-variables-url', form_data['name']
+                );
+                console.log('In data modal, levels variable form data: '+form_data['name']);
+            };
+            if ($('.js-variable-create-form').length) {
+                var form_data = mapFormData('.js-variable-create-form');  // Get variable fields
+                loadOptions.call(this, data_form_class_name, 'id_variable',
+                    'variables-url', form_data['name']
+                );
+                console.log('In data modal, variable form data: '+form_data['name']);
+            };
+            if ($('.js-unit-create-form').length) {
+                var form_data = mapFormData('.js-unit-create-form');  // Get unit fields
+                loadOptions.call(this, data_form_class_name, 'id_unitsi18n',
+                    'units-url', form_data['name']
+                );
+                console.log('In data modal, unit form data: '+form_data['name']);
+            };
+            if ($('.js-property-create-form').length) {
+                var form_data = mapFormData('.js-property-create-form');  // Get property fields
+                loadOptions.call(this, data_form_class_name, 'id_property',
+                    'properties-url', form_data['label']
+                );
+                console.log('In data modal, property form data: '+form_data['label']);
+            };
+/*            if ($('.js-gui-element-create-form').length) {
+                var form_data = mapFormData('.js-gui-element-create-form');  // Get GUI element fields
+                loadOptions.call(this, data_form_class_name, 'gui-elements-url', form_data['caption']);
+                console.log('In data modal, GUI element form data: '+form_data['caption']);
+            };*/
+            if ($('.js-property-value-create-form').length) {
+                var form_data = mapFormData('.js-property-value-create-form');  // Get property value fields
+                loadOptions.call(this, data_form_class_name, 'id_property_value',
+                    'properties-values-url', form_data['label']
+                );
+                console.log('In data modal, property value form data: '+form_data['label']);
+            };
+            if ($('.js-root-dir-create-form').length) {
+                var form_data = mapFormData('.js-root-dir-create-form');  // Get root directory fields
+                loadOptions.call(this, data_form_class_name, 'id_root_dir',
+                    'root-dirs-url', form_data['name']
+                );
+                console.log('In data modal, root dir form data: '+form_data['name']);
+            };
+            if ($('.js-file-create-form').length) {
+                var form_data = mapFormData('.js-file-create-form');  // Get file name fields
+                loadOptions.call(this, data_form_class_name, 'id-file',
+                    'files-url', form_data['name']
+                );
+                console.log('In data modal, file form data: '+form_data['name']);
+            };
+            $(modal_id).remove();
+        })
+    });
 
 
 });
