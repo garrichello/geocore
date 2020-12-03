@@ -287,7 +287,7 @@ class Language(models.Model):
     class Meta:
         managed = False
         db_table = 'language'
-    
+
     def __str__(self):
         return self.name
 
