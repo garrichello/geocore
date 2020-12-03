@@ -5,7 +5,14 @@
       dataset-scenario-url="{% url 'metadb:form_load_dataset_scenarios'%}"
       parameter-timesteps-url="{% url 'metadb:form_load_parameter_timesteps'%}"
       parameter-lvsgroups-url="{% url 'metadb:form_load_parameter_lvsgroups'%}"
-      parameter-lvsnames-url="{% url 'metadb:form_load_parameter_lvsnames'%}" novalidate>
+      parameter-lvsnames-url="{% url 'metadb:form_load_parameter_lvsnames'%}"
+      levels-variables-url="{% url 'metadb:form_load_lvsvars'%}"
+      variables-url="{% url 'metadb:form_load_variables'%}"
+      units-url="{% url 'metadb:form_load_units'%}"
+      properties-url="{% url 'metadb:form_load_properties'%}"
+      properties-values-url="{% url 'metadb:form_load_propsvals'%}"
+      root-dirs-url="{% url 'metadb:form_load_rootdirs'%}"
+      files-url="{% url 'metadb:form_load_files'%}" novalidate>
     {% csrf_token %}
 
     <div class="modal-header">
