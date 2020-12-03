@@ -111,3 +111,24 @@ def load_parameter_lvsnames(request):
     if lvsgroup_id:
         levels = get_levels(lvsgroup_id)
     return HttpResponse(levels)
+
+def load_lvsvars(request):
+    pass
+
+def load_variables(request):
+    pass
+
+def load_units(request):
+    pass
+
+def load_properties(request):
+    pass
+
+def load_propsvals(request):
+    pass
+
+def load_rootdirs(request):
+    pass
+
+def load_files(request):
+    pass
