@@ -2,7 +2,7 @@ from django.urls import include, path
 
 from .views import MainView
 
-from .apiviews import (CollectionApiListView, DatasetApiListView, DataApiListView, 
+from .apiviews import (CollectionApiListView, DatasetApiListView, DataApiListView,
                        CollectionApiView)
 from .collection_views import (CollectionCreateView, CollectionDeleteView,
                                CollectionUpdateView)
@@ -25,11 +25,36 @@ from .datakind_views import (DataKindCreateView, DataKindUpdateView,
 from .filetype_views import (FileTypeCreateView, FileTypeUpdateView,
                                FileTypeDeleteView)
 
+from .levelsvariable_views import (LevelsVariableCreateView, LevelsVariableUpdateView,
+                                   LevelsVariableDeleteView)
+
+from .variable_views import (VariableCreateView, VariableUpdateView,
+                             VariableDeleteView)
+
+from .unit_views import (UnitCreateView, UnitUpdateView, UnitDeleteView)
+
+from .property_views import (PropertyCreateView, PropertyUpdateView,
+                             PropertyDeleteView)
+
+from .guielement_views import (GuiElementCreateView, GuiElementUpdateView,
+                               GuiElementDeleteView)
+
+from .propertyvalue_views import (PropertyValueCreateView, PropertyValueUpdateView,
+                                  PropertyValueDeleteView)
+
+from .rootdir_views import (RootDirCreateView, RootDirUpdateView,
+                            RootDirDeleteView)
+
+from .file_views import (FileCreateView, FileUpdateView, FileDeleteView)
+
+
 from .form_loads import (load_organizations, load_collections, load_resolutions,
-                         load_scenarios, load_datakinds, load_filetypes, 
+                         load_scenarios, load_datakinds, load_filetypes,
                          load_dataset_resolutions, load_dataset_scenarios,
                          load_parameter_lvsgroups, load_parameter_lvsnames,
-                         load_parameter_timesteps)
+                         load_parameter_timesteps, load_lvsvars, load_variables,
+                         load_units, load_properties, load_propsvals,
+                         load_rootdirs, load_files)
 
 app_name = 'metadb'
 urlpatterns = [
@@ -61,6 +86,13 @@ urlpatterns = [
     path('data/form/load-timesteps/', load_parameter_timesteps, name='form_load_parameter_timesteps'),
     path('data/form/load-lvsgroups/', load_parameter_lvsgroups, name='form_load_parameter_lvsgroups'),
     path('data/form/load-lvsnames/', load_parameter_lvsnames, name='form_load_parameter_lvsnames'),
+    path('data/form/load-lvsvars/', load_lvsvars, name='form_load_lvsvars'),
+    path('data/form/load-variables/', load_variables, name='form_load_variables'),
+    path('data/form/load-units/', load_units, name='form_load_units'),
+    path('data/form/load-properties/', load_properties, name='form_load_properties'),
+    path('data/form/load-propsvals/', load_propsvals, name='form_load_propsvals'),
+    path('data/form/load-rootdirs/', load_rootdirs, name='form_load_rootdirs'),
+    path('data/form/load-files/', load_files, name='form_load_files'),
 
     path('organizations/create/', OrganizationCreateView.as_view(), name='organization_create'),
     path('organizations/<int:pk>/update/', OrganizationUpdateView.as_view(), name='organization_update'),
@@ -81,5 +113,37 @@ urlpatterns = [
     path('filetypes/create/', FileTypeCreateView.as_view(), name='filetype_create'),
     path('filetypes/<int:pk>/update/', FileTypeUpdateView.as_view(), name='filetype_update'),
     path('filetypes/<int:pk>/delete/', FileTypeDeleteView.as_view(), name='filetype_delete'),
+
+    path('levelsvariables/create/', LevelsVariableCreateView.as_view(), name='levels_variable_create'),
+    path('levelsvariables/<int:pk>/update/', LevelsVariableUpdateView.as_view(), name='levels_variable_update'),
+    path('levelsvariables/<int:pk>/delete/', LevelsVariableDeleteView.as_view(), name='levels_variable_delete'),
+
+    path('variables/create/', VariableCreateView.as_view(), name='variable_create'),
+    path('variables/<int:pk>/update/', VariableUpdateView.as_view(), name='variable_update'),
+    path('variables/<int:pk>/delete/', VariableDeleteView.as_view(), name='variable_delete'),
+
+    path('units/create/', UnitCreateView.as_view(), name='unit_create'),
+    path('units/<int:pk>/update/', UnitUpdateView.as_view(), name='unit_update'),
+    path('units/<int:pk>/delete/', UnitDeleteView.as_view(), name='unit_delete'),
+
+    path('properties/create/', PropertyCreateView.as_view(), name='property_create'),
+    path('properties/<int:pk>/update/', PropertyUpdateView.as_view(), name='property_update'),
+    path('properties/<int:pk>/delete/', PropertyDeleteView.as_view(), name='property_delete'),
+
+    path('guielements/create/', GuiElementCreateView.as_view(), name='gui_element_create'),
+    path('guielements/<int:pk>/update/', GuiElementUpdateView.as_view(), name='gui_element_update'),
+    path('guielements/<int:pk>/delete/', GuiElementDeleteView.as_view(), name='gui_element_delete'),
+
+    path('propertyvalues/create/', PropertyValueCreateView.as_view(), name='property_value_create'),
+    path('propertyvalues/<int:pk>/update/', PropertyValueUpdateView.as_view(), name='property_value_update'),
+    path('propertyvalues/<int:pk>/delete/', PropertyValueDeleteView.as_view(), name='property_value_delete'),
+
+    path('rootdirs/create/', RootDirCreateView.as_view(), name='root_dir_create'),
+    path('rootdirs/<int:pk>/update/', RootDirUpdateView.as_view(), name='root_dir_update'),
+    path('rootdirs/<int:pk>/delete/', RootDirDeleteView.as_view(), name='root_dir_delete'),
+
+    path('filenames/create/', FileCreateView.as_view(), name='file_create'),
+    path('filenames/<int:pk>/update/', FileUpdateView.as_view(), name='file_update'),
+    path('filenames/<int:pk>/delete/', FileDeleteView.as_view(), name='file_delete'),
 
 ]
