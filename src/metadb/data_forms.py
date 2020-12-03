@@ -66,19 +66,16 @@ class DataForm(ModelForm):
         self.fields['parameteri18n'] = ModelChoiceField(queryset=qset)
         self.fields['parameteri18n'].empty_label = self.empty_label
         self.fields['parameteri18n'].label = _('Parameter')
-        #self.fields['parameteri18n'].data_url = reverse('metadb:parameter_create')
         self.fields['parameteri18n'].no_add_btn = True
         # Time step
         self.fields['time_stepi18n'] = ModelChoiceField(queryset=TimeStepI18N.objects.none())
         self.fields['time_stepi18n'].empty_label = self.empty_label
         self.fields['time_stepi18n'].label = _('Time step')
-        #self.fields['time_stepi18n'].data_url = reverse('metadb:timestep_create')
         self.fields['time_stepi18n'].no_add_btn = True
         # Levels group
         self.fields['levels_group'] = ModelChoiceField(queryset=LevelsGroup.objects.none())
         self.fields['levels_group'].empty_label = self.empty_label
         self.fields['levels_group'].label = _('Levels group')
-        #self.fields['levels_group'].data_url = reverse('metadb:levelsgroup_create')
         self.fields['levels_group'].no_add_btn = True
         # Levels names
         self.fields['levels_namesi18n'] = CharField(widget=Textarea(attrs={'rows': 3}), disabled=True)
@@ -91,17 +88,17 @@ class DataForm(ModelForm):
         self.fields['levels_variable'].disabled = True
         self.fields['levels_variable'].initial = 1
         self.fields['levels_variable'].label = _('Levels variable')
-        #self.fields['levels_variable'].data_url = reverse('metadb:variable_create')
+        self.fields['levels_variable'].data_url = reverse('metadb:levels_variable_create')
         # Variable
         self.fields['variable'].empty_label = self.empty_label
         self.fields['variable'].label = _('Variable')
-        #self.fields['variable'].data_url = reverse('metadb:variable_create')
+        self.fields['variable'].data_url = reverse('metadb:variable_create')
         # Units
         qset = UnitsI18N.objects.filter(language__code=get_language())
         self.fields['unitsi18n'] = ModelChoiceField(queryset=qset)
         self.fields['unitsi18n'].empty_label = '*'
-        self.fields['unitsi18n'].label = _('Units')
-        #self.fields['unitsi18n'].data_url = reverse('metadb:units_create')
+        self.fields['unitsi18n'].label = _('Unit of measurement')
+        self.fields['unitsi18n'].data_url = reverse('metadb:unit_create')
         # Property
         self.fields['use_property'] = BooleanField()
         self.fields['use_property'].label = _('Use property')
@@ -110,21 +107,21 @@ class DataForm(ModelForm):
         self.fields['property'].disabled = True
         self.fields['property'].initial = 1
         self.fields['property'].label = _('Property')
-        #self.fields['property'].data_url = reverse('metadb:propery_create')
+        self.fields['property'].data_url = reverse('metadb:property_create')
         # Property value
         self.fields['property_value'].empty_label = self.empty_label
         self.fields['property_value'].disabled = True
         self.fields['property_value'].initial = 1
         self.fields['property_value'].label = _('Property value')
-        #self.fields['property_value'].data_url = reverse('metadb:properyvalue_create')
+        self.fields['property_value'].data_url = reverse('metadb:property_value_create')
         # Root dir
         self.fields['root_dir'].empty_label = self.empty_label
         self.fields['root_dir'].label = _('Root diriectory')
-        #self.fields['root_dir'].data_url = reverse('metadb:rootdir_create')
+        self.fields['root_dir'].data_url = reverse('metadb:root_dir_create')
         # File
         self.fields['file'].empty_label = self.empty_label
         self.fields['file'].label = _('File name pattern')
-        #self.fields['file'].data_url = reverse('metadb:file_create')
+        self.fields['file'].data_url = reverse('metadb:file_create')
         # Scale
         self.fields['scale'].initial = 1
         self.fields['scale'].label = _('Scale')
