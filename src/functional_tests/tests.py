@@ -53,19 +53,29 @@ class NewVisitorTest(unittest.TestCase):
         selected_opts = [opt.get_attribute('selected') for opt in opts]
         self.assertEqual(opts[selected_opts.index('true')].text, f'{text}')
 
-
-    def add_organization(self):
-        # Another modal opens inviting to fill a simple form
+    def add_1_element(self, form_class, element_id, value):
+        # Another modal opens inviting to create a new record
         WebDriverWait(self.browser, 10).until(
-            EC.presence_of_element_located((By.CLASS_NAME, 'js-organization-create-form'))
+            EC.presence_of_element_located((By.CLASS_NAME, form_class))
         )
-        organization_form = self.browser.find_element_by_xpath('//form[@class="js-organization-create-form"]')
-        # He types 'John Brown research, USA' into a textbox Organization name
-        organization_form.find_element_by_id('id_name').send_keys('John Brown research, USA')
-        # and  'http://johnbrownresearch.org/' into a textbox Organization URL
-        organization_form.find_element_by_id('id_url').send_keys('http://johnbrownresearch.org/')
-        # When he clicks Create organization the modal fades away revealing previous form
-        organization_form.submit()
+        form = self.browser.find_element_by_class_name(form_class)
+        # Then John types value into a textbox element_id,
+        form.find_element_by_id(element_id).send_keys(value)
+        # And finally clicks Create
+        form.submit()
+
+    def add_2_elements(self, form_class, element1_id, value1, element2_id, value2):
+        # Another modal opens
+        WebDriverWait(self.browser, 10).until(
+            EC.presence_of_element_located((By.CLASS_NAME, form_class))
+        )
+        form = self.browser.find_element_by_class_name(form_class)
+        # Then John types value1 into a textbox element2_id,
+        form.find_element_by_id(element1_id).send_keys(value1)
+        #  value2 into a textbox element2_id,
+        form.find_element_by_id(element2_id).send_keys(value2)
+        # And finally clicks Create scenario
+        form.submit()
 
     def add_collection(self):
         # John waits for the form to appear (but no more than 10 sec!)
@@ -88,76 +98,13 @@ class NewVisitorTest(unittest.TestCase):
         plus_btn.click()
 
         # John adds a new organization
-        self.add_organization()
+        self.add_2_elements('js-organization-create-form', 'id_name', 'John Brown research, USA',
+                                                           'id_url', 'http://johnbrownresearch.org/')
         self.wait_and_assert_select_after_submit(collection_form, 'id_organizationi18n', 'John Brown research, USA')
 
         # And finally John clicks Create collection
         collection_form.submit()
 
-    def add_resolution(self):
-        # Another modal opens inviting to create a new resolution
-        WebDriverWait(self.browser, 10).until(
-            EC.presence_of_element_located((By.CLASS_NAME, 'js-resolution-create-form'))
-        )
-        resolution_form = self.browser.find_element_by_class_name('js-resolution-create-form')
-        # Then John types:
-        #  '0.13x0.13' into a textbox Resolution name,
-        resolution_form.find_element_by_id('id_name').send_keys('0.13x0.13')
-        #  '0.13x0.13/' into a textbox Resolution subpath,
-        resolution_form.find_element_by_id('id_subpath1').send_keys('0.13x0.13/')
-        # And finally clicks Create resolution
-        resolution_form.submit()
-
-    def add_scenario(self):
-        # Another modal opens inviting to create a new scenario
-        WebDriverWait(self.browser, 10).until(
-            EC.presence_of_element_located((By.CLASS_NAME, 'js-scenario-create-form'))
-        )
-        scenario_form = self.browser.find_element_by_class_name('js-scenario-create-form')
-        # Then John types:
-        #  'Specific' into a textbox Scenario name,
-        scenario_form.find_element_by_id('id_name').send_keys('Specific')
-        #  'specific/' into a textbox Resolution subpath,
-        scenario_form.find_element_by_id('id_subpath0').send_keys('specific/')
-        # And finally clicks Create scenario
-        scenario_form.submit()
-
-    def add_datakind(self):
-        # Another modal opens inviting to create a new data kind
-        WebDriverWait(self.browser, 10).until(
-            EC.presence_of_element_located((By.CLASS_NAME, 'js-datakind-create-form'))
-        )
-        datakind_form = self.browser.find_element_by_class_name('js-datakind-create-form')
-        # Then John types:
-        #  'fractal' into a textbox Data kind name,
-        datakind_form.find_element_by_id('id_name').send_keys('fractal')
-        # And finally clicks Create scenario
-        datakind_form.submit()
-
-    def add_filetype(self):
-        # Another modal opens inviting to create a new file type
-        WebDriverWait(self.browser, 10).until(
-            EC.presence_of_element_located((By.CLASS_NAME, 'js-filetype-create-form'))
-        )
-        filetype_form = self.browser.find_element_by_class_name('js-filetype-create-form')
-        # Then John types:
-        #  'hdf5' into a textbox Data kind name,
-        filetype_form.find_element_by_id('id_name').send_keys('hdf5')
-        # And finally clicks Create scenario
-        filetype_form.submit()
-
-    def add_variable(self):
-        # Another modal opens inviting to create a new variable
-        # (in fact, levels variable is just another variable)
-        WebDriverWait(self.browser, 10).until(
-            EC.presence_of_element_located((By.CLASS_NAME, 'js-variable-create-form'))
-        )
-        variable_form = self.browser.find_element_by_class_name('js-variable-create-form')
-        # Then John types:
-        #  'gamma_level' into a textbox Data kind name,
-        variable_form.find_element_by_id('id_name').send_keys('gamma_level')
-        # And finally clicks Create variable
-        variable_form.submit()
 
 #------------------------------------------------------------------------------------------------------
 
@@ -257,7 +204,7 @@ class NewVisitorTest(unittest.TestCase):
             '//form[@class="js-dataset-create-form"]//button[@data-url="/en/metadb/resolutions/create/"]')
         plus_btn.click()
 
-        self.add_resolution()
+        self.add_2_elements('js-resolution-create-form', 'id_name', '0.13x0.13', 'id_subpath1', '0.13x0.13/')
         self.wait_and_assert_select_after_submit(dataset_form, 'id_resolution', '0.13x0.13')
 
         # John wants to select a scenario, but realizes that the needed one is absent
@@ -266,7 +213,7 @@ class NewVisitorTest(unittest.TestCase):
             '//form[@class="js-dataset-create-form"]//button[@data-url="/en/metadb/scenarios/create/"]')
         plus_btn.click()
 
-        self.add_scenario()
+        self.add_2_elements('js-scenario-create-form', 'id_name', 'Specific', 'id_subpath0', 'specific/')
         self.wait_and_assert_select_after_submit(dataset_form, 'id_scenario', 'Specific')
 
         # John wants to select a data kind, but realizes that the needed one is absent
@@ -275,7 +222,7 @@ class NewVisitorTest(unittest.TestCase):
             '//form[@class="js-dataset-create-form"]//button[@data-url="/en/metadb/datakinds/create/"]')
         plus_btn.click()
 
-        self.add_datakind()
+        self.add_1_element('js-datakind-create-form', 'id_name', 'fractal')
         self.wait_and_assert_select_after_submit(dataset_form, 'id_data_kind', 'fractal')
 
         # John types 'JohnCol 0x13x0.13' into a textbox Description,
@@ -291,7 +238,7 @@ class NewVisitorTest(unittest.TestCase):
             '//form[@class="js-dataset-create-form"]//button[@data-url="/en/metadb/filetypes/create/"]')
         plus_btn.click()
 
-        self.add_filetype()
+        self.add_1_element('js-filetype-create-form', 'id_name', 'hdf5')
         self.wait_and_assert_select_after_submit(dataset_form, 'id_file_type', 'hdf5')
 
         # When he clicks Create dataset modal window closes and Dataset table updates.
@@ -364,7 +311,7 @@ class NewVisitorTest(unittest.TestCase):
 
         # And selects a scenario with index=1
         Select(data_form.find_element_by_id('id_scenario')).select_by_index(1)
-        
+
         # Next, John selects parameter with index=1
         Select(data_form.find_element_by_id('id_parameteri18n')).select_by_index(1)
         WebDriverWait(self.browser, 10).until(lambda x:
@@ -393,10 +340,29 @@ class NewVisitorTest(unittest.TestCase):
         # John wants to select a levels variable, but realizes that the needed one is absent
         # So he decides to add it and clicks '+' button next to the Levels variable dropdown list.
         plus_btn = data_form.find_element_by_xpath(
-            '//button[@data-url="/en/metadb/variable/create/"]')
+            '//button[@data-url="/en/metadb/lvs_variable/create/"]')
         plus_btn.click()
 
         # John adds a levels variable
-        self.add_variable()
+        self.add_1_element('js-variable-create-form', 'id_name', 'gamma_level')
         self.wait_and_assert_select_after_submit(data_form, 'id_levels_variable', 'gamma_level')
 
+        # John wants to select a variable, but realizes that the needed one is absent.
+        # So he decides to add it and clicks '+' button next to the Variable dropdown list.
+        plus_btn = data_form.find_element_by_xpath(
+            '//button[@data-url="/en/metadb/variable/create/"]')
+        plus_btn.click()
+
+        # John adds a variable
+        self.add_1_element('js-variable-create-form', 'id_name', 'spec3m')
+        self.wait_and_assert_select_after_submit(data_form, 'id_variable', 'spec3m')
+
+        # John wants to select a unit od measuremnt, but realizes that the needed one is absent.
+        # So he decides to add it and clicks '+' button next to the Unit dropdown list.
+        plus_btn = data_form.find_element_by_xpath(
+            '//button[@data-url="/en/metadb/unit/create/"]')
+        plus_btn.click()
+
+        # John adds a unit
+        self.add_1_element('js-unit-create-form', 'id_name', 'mRd/yr')
+        self.wait_and_assert_select_after_submit(data_form, 'id_units18n', 'mRd/yr')
