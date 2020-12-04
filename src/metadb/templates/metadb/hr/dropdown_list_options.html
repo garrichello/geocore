@@ -6,5 +6,7 @@
     <option value="{{ e.pk }}">{{ e.description }}</option>
 {% elif e.label %}
     <option value="{{ e.pk }}">{{ e.label }}</option>
+{% elif e.name_pattern %}
+    <option value="{{ e.pk }}">{{ e.name_pattern }}</option>
 {% endif %}
 {% endfor %}
