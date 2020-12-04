@@ -255,7 +255,7 @@ class Geoportal(models.Model):
 
 
 class GuiElement(models.Model):
-    name = models.CharField(max_length=45, blank=True)
+    name = models.CharField(max_length=45)
     language = models.ManyToManyField('Language', through='GuiElementI18N')
 
     class Meta:
@@ -269,7 +269,7 @@ class GuiElement(models.Model):
 class GuiElementI18N(models.Model):
     gui_element = models.ForeignKey('GuiElement', models.CASCADE)
     language = models.ForeignKey('Language', models.CASCADE)
-    caption = models.CharField(unique=True, max_length=145, blank=True)
+    caption = models.CharField(unique=True, max_length=145)
 
     class Meta:
         managed = False
@@ -497,7 +497,7 @@ class ProcessorI18N(models.Model):
 
 
 class Property(models.Model):
-    label = models.CharField(max_length=145, blank=True)
+    label = models.CharField(max_length=145)
     gui_element = models.ForeignKey('GuiElement', models.CASCADE)
 
     class Meta:
@@ -509,7 +509,7 @@ class Property(models.Model):
 
 
 class PropertyValue(models.Model):
-    label = models.CharField(max_length=145, blank=True)
+    label = models.CharField(max_length=145)
 
     class Meta:
         managed = False
