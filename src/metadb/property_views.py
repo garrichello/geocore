@@ -1,7 +1,7 @@
 from .simple_views import SimpleCreateView, SimpleUpdateView, SimpleDeleteView
 from django.utils.translation import gettext_lazy as _
-
 from .simple_forms import PropertyForm
+from django.urls import reverse_lazy
 
 from .models import Property
 
@@ -14,6 +14,11 @@ class PropertyCreateView(SimpleCreateView):
         'form_class': 'js-property-create-form',
         'title': _("Create a new property"),
         'submit_name': _("Create property"),
+        'script': 'metadb/property_form.js',
+        'attributes': [
+            {'name': 'gui-element-url', 
+             'value': reverse_lazy('metadb:form_load_guielements')},
+        ],
     }
     url_name = 'metadb:property_create'
 
@@ -26,6 +31,11 @@ class PropertyUpdateView(SimpleUpdateView):
         'form_class': 'js-property-update-form',
         'title': _("Update property"),
         'submit_name': _("Update property"),
+        'script': 'metadb/property_form.js',
+        'attributes': [
+            {'name': 'gui-element-url', 
+             'value': reverse_lazy('metadb:form_load_guielements')},
+        ],
     }
     url_name = 'metadb:property_update'
 
