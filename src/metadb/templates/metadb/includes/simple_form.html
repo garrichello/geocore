@@ -1,6 +1,10 @@
-{% load i18n %}
+{% load static i18n %}
 
-<form method="post" action="{{ action }}" class="{{ form_class }}">
+<form method="post" action="{{ action }}" class="{{ form_class }}" 
+    {% for attrib in attributes  %}
+        {{attrib.name}}={{attrib.value}}
+    {% endfor %}
+    novalidate>
     {% csrf_token %}
 
     <div class="modal-header">
@@ -19,9 +23,13 @@
     </div>
 </form>
 
+<!--{{ form_class|json_script:"simple-form-class-name" }}-->
 <script>
     $('body').on('submit', '.{{ form_class }}', function(e) {
         saveForm2.call(this, e);
         return false; 
     });
 </script>
+{% if script %}
+    <script type="text/javascript" charset="utf-8" src="{% static script %}"></script>
+{% endif %}
