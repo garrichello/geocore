@@ -188,7 +188,7 @@ $(function() {
                 $(modal_id).remove();  // Keep DOM clean!
             });  
         });
-        $('body,html').on('submit', '.js-data-update-form', function(e) {
+        $('body').on('submit', '.js-data-update-form', function(e) {
             saveForm2.call(this, e); return false;
         });
     
@@ -199,7 +199,7 @@ $(function() {
                 $(modal_id).remove();  // Keep DOM clean!
             });  
         });
-        $('body,html').on('submit', '.js-data-delete-form', function(e) {
+        $('body').on('submit', '.js-data-delete-form', function(e) {
             saveForm2.call(this, e); return false;
         });
     };
