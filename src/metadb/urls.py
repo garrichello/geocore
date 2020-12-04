@@ -53,8 +53,8 @@ from .form_loads import (load_organizations, load_collections, load_resolutions,
                          load_dataset_resolutions, load_dataset_scenarios,
                          load_parameter_lvsgroups, load_parameter_lvsnames,
                          load_parameter_timesteps, load_lvsvars, load_variables,
-                         load_units, load_properties, load_propsvals,
-                         load_rootdirs, load_files)
+                         load_units, load_properties, load_propvals,
+                         load_rootdirs, load_files, load_guielements)
 
 app_name = 'metadb'
 urlpatterns = [
@@ -90,9 +90,10 @@ urlpatterns = [
     path('data/form/load-variables/', load_variables, name='form_load_variables'),
     path('data/form/load-units/', load_units, name='form_load_units'),
     path('data/form/load-properties/', load_properties, name='form_load_properties'),
-    path('data/form/load-propsvals/', load_propsvals, name='form_load_propsvals'),
+    path('data/form/load-propvals/', load_propvals, name='form_load_propvals'),
     path('data/form/load-rootdirs/', load_rootdirs, name='form_load_rootdirs'),
     path('data/form/load-files/', load_files, name='form_load_files'),
+    path('data/form/load-guielements/', load_guielements, name='form_load_guielements'),
 
     path('organizations/create/', OrganizationCreateView.as_view(), name='organization_create'),
     path('organizations/<int:pk>/update/', OrganizationUpdateView.as_view(), name='organization_update'),
