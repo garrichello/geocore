@@ -9,7 +9,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 #from selenium.common.exceptions import NoSuchElementException
 import metadb
-
+from time import sleep
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'geocore.settings.development')
 django.setup()
 
@@ -23,19 +23,37 @@ class NewVisitorTest(unittest.TestCase):
         self.browser.quit()
         qs = metadb.models.Organization.objects.filter(url='http://johnbrownresearch.org/')
         if len(qs) > 0:
-            qs.get().delete()
+            qs.delete()
         qs = metadb.models.Resolution.objects.filter(name='0.13x0.13')
         if len(qs) > 0:
-            qs.get().delete()
+            qs.delete()
         qs = metadb.models.Scenario.objects.filter(name='Specific')
         if len(qs) > 0:
-            qs.get().delete()
+            qs.delete()
         qs = metadb.models.DataKind.objects.filter(name='fractal')
         if len(qs) > 0:
-            qs.get().delete()
+            qs.delete()
         qs = metadb.models.FileType.objects.filter(name='hdf5')
         if len(qs) > 0:
-            qs.get().delete()
+            qs.delete()
+        qs = metadb.models.Variable.objects.filter(name='gamma_level')
+        if len(qs) > 0:
+            qs.delete()
+        qs = metadb.models.FileType.objects.filter(name='soec3m')
+        if len(qs) > 0:
+            qs.delete()
+        qs = metadb.models.GuiElement.objects.filter(name='feature')
+        if len(qs) > 0:
+            qs.delete()
+        qs = metadb.models.Property.objects.filter(label='value')
+        if len(qs) > 0:
+            qs.delete()
+        qs = metadb.models.PropertyValue.objects.filter(label='low')
+        if len(qs) > 0:
+            qs.delete()
+        qs = metadb.models.Units.objects.filter(unitsi18n__name='mRd/yr')
+        if len(qs) > 0:
+            qs.delete()
 
 #------------------------------------------------------------------------------------------------------
 
@@ -43,9 +61,9 @@ class NewVisitorTest(unittest.TestCase):
         # Modal fades away revealing previous form 'Create a new dataset'
         # John waits until the new collection label apperars in the dropdown list
         WebDriverWait(self.browser, 10).until(
-            EC.presence_of_element_located((By.XPATH, 
-            f'//select[@id="{idd}"]/option[contains(text(), "{text}")]'))
-        )
+            lambda x: self.browser.find_element_by_xpath(
+                f'//select[@id="{idd}"]/option[contains(text(), "{text}")]').get_attribute(
+                    'selected'))
         # and in the drowpdown list Collection the new collections's label is shown
         opts = form.find_elements_by_xpath(f'//select[@id="{idd}"]/option')
         selected_opts = [opt.get_attribute('selected') for opt in opts]
@@ -115,13 +133,13 @@ class NewVisitorTest(unittest.TestCase):
 
         # John wants to select a GUI element, but finds out that the one he needs is absent.
         # So he decides to add it and clicks '+' button next to the GUI element dropdown list
-        plus_btn = collection_form.find_element_by_xpath('//button[@data-url="/en/metadb/gui_elements/create/"]')
+        plus_btn = collection_form.find_element_by_xpath('//button[@data-url="/en/metadb/guielements/create/"]')
         plus_btn.click()
 
         # John adds a new GUI element
         self.add_2_elements('js-gui-element-create-form', 'id_name', 'feature',
                                                          'id_caption', 'Feature')
-        self.wait_and_assert_select_after_submit(collection_form, 'id_guielementi18n', 'Feature')
+        self.wait_and_assert_select_after_submit(collection_form, 'id_gui_element', 'feature')
 
         # And finally John clicks Create collection
         collection_form.submit()
@@ -362,11 +380,11 @@ class NewVisitorTest(unittest.TestCase):
         # John wants to select a levels variable, but finds out that the needed one is absent
         # So he decides to add it and clicks '+' button next to the Levels variable dropdown list.
         plus_btn = data_form.find_element_by_xpath(
-            '//button[@data-url="/en/metadb/lvs_variables/create/"]')
+            '//button[@data-url="/en/metadb/levelsvariables/create/"]')
         plus_btn.click()
 
         # John adds a levels variable
-        self.add_1_element('js-variable-create-form', 'id_name', 'gamma_level')
+        self.add_1_element('js-levels-variable-create-form', 'id_name', 'gamma_level')
         self.wait_and_assert_select_after_submit(data_form, 'id_levels_variable', 'gamma_level')
 
         # John wants to select a variable, but finds out that the needed one is absent.
@@ -387,7 +405,7 @@ class NewVisitorTest(unittest.TestCase):
 
         # John adds a unit
         self.add_1_element('js-unit-create-form', 'id_name', 'mRd/yr')
-        self.wait_and_assert_select_after_submit(data_form, 'id_units18n', 'mRd/yr')
+        self.wait_and_assert_select_after_submit(data_form, 'id_unitsi18n', 'mRd/yr')
 
         # John decides to use Property/Property value and checks Use property checkbox
         data_form.find_element_by_id('id_use_property').click()
@@ -409,7 +427,7 @@ class NewVisitorTest(unittest.TestCase):
         # John wants to select a property value, but finds out that the needed one is absent.
         # So he decides to add it and clicks '+' button next to the Property value dropdown list.
         plus_btn = data_form.find_element_by_xpath(
-            '//button[@data-url="/en/metadb/property_values/create/"]')
+            '//button[@data-url="/en/metadb/propertyvalues/create/"]')
         plus_btn.click()
 
         # John adds a property value
@@ -419,7 +437,7 @@ class NewVisitorTest(unittest.TestCase):
         # John wants to select a root directory, but finds out that the needed one is absent.
         # So he decides to add it and clicks '+' button next to the Root directory dropdown list.
         plus_btn = data_form.find_element_by_xpath(
-            '//button[@data-url="/en/metadb/root_dirs/create/"]')
+            '//button[@data-url="/en/metadb/rootdirs/create/"]')
         plus_btn.click()
 
         # John adds a root directory
@@ -429,11 +447,11 @@ class NewVisitorTest(unittest.TestCase):
         # John wants to select a file name pattern, but finds out that the needed one is absent.
         # So he decides to add it and clicks '+' button next to the File name pattern dropdown list.
         plus_btn = data_form.find_element_by_xpath(
-            '//button[@data-url="/en/metadb/root_dirs/create/"]')
+            '//button[@data-url="/en/metadb/filenames/create/"]')
         plus_btn.click()
 
         # John adds a file name pattern
-        self.add_1_element('js-file-name-create-form', 'id_name_pattern', 'experiment/%mm%_%year%.nc')
+        self.add_1_element('js-file-create-form', 'id_name_pattern', 'experiment/%mm%_%year%.nc')
         self.wait_and_assert_select_after_submit(data_form, 'id_file', 'experiment/%mm%_%year%.nc')
 
         # John types '3.14' into a textbox Scale...
