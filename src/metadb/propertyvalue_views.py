@@ -11,7 +11,7 @@ class PropertyValueCreateView(SimpleCreateView):
     model = PropertyValue
     template_name = 'metadb/includes/simple_form.html'
     ctx = {
-        'form_class': 'js-propertyvalue-create-form',
+        'form_class': 'js-property-value-create-form',
         'title': _("Create a new property value"),
         'submit_name': _("Create property value"),
     }
@@ -23,7 +23,7 @@ class PropertyValueUpdateView(SimpleUpdateView):
     model = PropertyValue
     template_name = 'metadb/includes/simple_form.html'
     ctx = {
-        'form_class': 'js-propertyvalue-update-form',
+        'form_class': 'js-property-value-update-form',
         'title': _("Update property value"),
         'submit_name': _("Update property value"),
     }
@@ -34,7 +34,7 @@ class PropertyValueDeleteView(SimpleDeleteView):
     model = PropertyValue
     template_name = 'metadb/includes/simple_delete_form.html'
     ctx = {
-        'form_class': 'js-propertyvalue-delete-form',
+        'form_class': 'js-property-value-delete-form',
         'title': _('Confirm property value delete'),
         'text': _('Are you sure you want to delete the property value'),
         'submit_name': _('Delete property value')
