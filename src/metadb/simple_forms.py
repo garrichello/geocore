@@ -1,5 +1,6 @@
 from django.utils.translation import gettext_lazy as _
 from django.forms import ModelForm
+from django.urls import reverse
 
 from .models import ( DataKind, FileType, Organization,
     OrganizationI18N, Resolution, Scenario, Variable,
@@ -100,6 +101,7 @@ class UnitsI18NForm(ModelForm):
 
 
 class PropertyForm(ModelForm):
+    empty_label = '*'
 
     class Meta:
         model = Property
@@ -108,6 +110,13 @@ class PropertyForm(ModelForm):
             'label': _('Property label'),
             'gui_element': _('GUI element'),
         }
+
+    def __init__(self, *args, **kwargs):
+        super(PropertyForm, self).__init__(*args, **kwargs)
+
+        self.fields['gui_element'].empty_label = self.empty_label
+        self.fields['gui_element'].data_url = reverse('metadb:gui_element_create')
+
 
 class PropertyValueForm(ModelForm):
 
