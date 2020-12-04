@@ -19,8 +19,8 @@ class GuiElementBaseView(View):
         create -- True if creating, False if updating.
         '''
         data = dict()
-        guii18n_form = ctx['forms'][0]
-        gui_form = ctx['forms'][1]
+        gui_form = ctx['forms'][0]
+        guii18n_form = ctx['forms'][1]
         if gui_form.is_valid() and guii18n_form.is_valid():
             # Get GUI element object save.
             gui = gui_form.save()
@@ -64,14 +64,14 @@ class GuiElementCreateView(GuiElementBaseView):
         gui_form = self.form_class()
         guii18n_form = self.formi18n_class()
 
-        self.ctx['forms'] = [guii18n_form, gui_form]
+        self.ctx['forms'] = [gui_form, guii18n_form]
         html_form = render_to_string(self.template_name, self.ctx, request)
         return JsonResponse({'html_form': html_form})
 
     def post(self, request):
         gui_form = self.form_class(request.POST)
         guii18n_form = self.formi18n_class(request.POST)
-        self.ctx['forms'] = [guii18n_form, gui_form]
+        self.ctx['forms'] = [gui_form, guii18n_form]
         return self.save_form(request, self.template_name, self.ctx, create=True)
 
 
@@ -88,7 +88,7 @@ class GuiElementUpdateView(GuiElementBaseView):
         gui_form = self.form_class(instance=gui_model)
         guii18n_form = self.formi18n_class(instance=guii18n_model)
 
-        self.ctx['forms'] = [guii18n_form, gui_form]
+        self.ctx['forms'] = [gui_form, guii18n_form]
         self.ctx['action'] = reverse('metadb:gui_element_update', kwargs={'pk': gui_form.instance.pk}),
         html_form = render_to_string(self.template_name, self.ctx, request)
         return JsonResponse({'html_form': html_form})
@@ -97,7 +97,7 @@ class GuiElementUpdateView(GuiElementBaseView):
         gui_model_old, guii18n_model_old = self.get_models(pk)
         gui_form = self.form_class(request.POST, instance=gui_model_old)
         guii18n_form = self.formi18n_class(request.POST, instance=guii18n_model_old)
-        self.ctx['forms'] = [guii18n_form, gui_form]
+        self.ctx['forms'] = [gui_form, guii18n_form]
         self.ctx['action'] = reverse('metadb:gui_element_update', kwargs={'pk': gui_form.instance.pk}),
         return self.save_form(request, self.template_name, self.ctx)
 
