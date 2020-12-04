@@ -5,7 +5,9 @@ from django.http import HttpResponse
 from time import sleep
 
 from .models import (Collection, OrganizationI18N, Resolution, Scenario, 
-                     DataKind, FileType, ParameterI18N, TimeStepI18N)
+                     DataKind, FileType, ParameterI18N, TimeStepI18N,
+                     Variable, UnitsI18N, Property, PropertyValue,
+                     RootDir, File, GuiElement)
 from .data_forms import (get_resolutions, get_scenarios,
                          get_timesteps, get_levelsgroups, get_levels)
 
@@ -113,22 +115,59 @@ def load_parameter_lvsnames(request):
     return HttpResponse(levels)
 
 def load_lvsvars(request):
-    pass
+    template_name = 'metadb/hr/dropdown_list_options.html'
+    sleep(0.1)  # Have to wait for DB to arrange things.
+    data = Variable.objects.order_by('name').all()
+    ctx = {'data': data}
+    return render(request, template_name, ctx)
+
 
 def load_variables(request):
-    pass
+    template_name = 'metadb/hr/dropdown_list_options.html'
+    sleep(0.1)  # Have to wait for DB to arrange things.
+    data = Variable.objects.order_by('name').all()
+    ctx = {'data': data}
+    return render(request, template_name, ctx)
 
 def load_units(request):
-    pass
+    template_name = 'metadb/hr/dropdown_list_options.html'
+    sleep(0.1)  # Have to wait for DB to arrange things.
+    data = UnitsI18N.objects.filter(
+        language__code=get_language()).order_by('name').all()
+    ctx = {'data': data}
+    return render(request, template_name, ctx)
 
 def load_properties(request):
-    pass
+    template_name = 'metadb/hr/dropdown_list_options.html'
+    sleep(0.1)  # Have to wait for DB to arrange things.
+    data = Property.objects.order_by('label').all()
+    ctx = {'data': data}
+    return render(request, template_name, ctx)
 
-def load_propsvals(request):
-    pass
+def load_propvals(request):
+    template_name = 'metadb/hr/dropdown_list_options.html'
+    sleep(0.1)  # Have to wait for DB to arrange things.
+    data = PropertyValue.objects.order_by('label').all()
+    ctx = {'data': data}
+    return render(request, template_name, ctx)
 
 def load_rootdirs(request):
-    pass
+    template_name = 'metadb/hr/dropdown_list_options.html'
+    sleep(0.1)  # Have to wait for DB to arrange things.
+    data = RootDir.objects.order_by('name').all()
+    ctx = {'data': data}
+    return render(request, template_name, ctx)
 
 def load_files(request):
-    pass
+    template_name = 'metadb/hr/dropdown_list_options.html'
+    sleep(0.1)  # Have to wait for DB to arrange things.
+    data = File.objects.order_by('name_pattern').all()
+    ctx = {'data': data}
+    return render(request, template_name, ctx)
+
+def load_guielements(request):
+    template_name = 'metadb/hr/dropdown_list_options.html'
+    sleep(0.1)  # Have to wait for DB to arrange things.
+    data = GuiElement.objects.order_by('name').all()
+    ctx = {'data': data}
+    return render(request, template_name, ctx)
