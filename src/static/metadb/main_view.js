@@ -25,8 +25,8 @@ collection_columns = [
 ]
 
 collection_columnsDefs = [
-    { width: '3%', targets: 0, orderable: false, className: 'select-checkbox' }, // Select checkbox
-    { width: '5%', targets: 1, orderable: false, }, // Buttons
+    { width: '20px', targets: 0, orderable: false, className: 'select-checkbox' }, // Select checkbox
+    { width: '45px', targets: 1, orderable: false, }, // Buttons
     { width: '5%', targets: 2 },  // Id
     { width: '11%', targets: 3 },  // Label
     { width: '14%', targets: 4 },  // Name
@@ -66,10 +66,10 @@ dataset_columns = [
 ]
 
 dataset_columnsDefs = [
-    { width: '3%', targets: 0, orderable: false, className: 'select-checkbox' },  // Select checkbox
-    { width: '5%', targets: 1, orderable: false, },  // Buttons
+    { width: '20px', targets: 0, orderable: false, className: 'select-checkbox' },  // Select checkbox
+    { width: '45px', targets: 1, orderable: false, },  // Buttons
     { width: '5%', targets: 2 },  // Id
-    { width: '6%', targets: 3,   // Is visible
+    { width: '45px', targets: 3,   // Is visible
       render: (data) => {
           return data == 0 ? "" : '<span class="glyphicon glyphicon-ok"></span>';
       }, 
@@ -118,30 +118,30 @@ data_columns = [
 ]
 
 data_columnsDefs = [
-    { width: '3%', targets: 0, orderable: false, className: 'select-checkbox' },  // Select checkbox
-    { width: '5%', targets: 1, orderable: false, },  // Buttons
-    { width: '3%', targets: 2 },    // Id
-    { width: '3%', targets: 3,   // Is visible
+    { width: '20px', targets: 0, orderable: false, className: 'select-checkbox' },  // Select checkbox
+    { width: '45px', targets: 1, orderable: false, },  // Buttons
+    { width: '25px', targets: 2 },    // Id
+    { width: '45px', targets: 3,   // Is visible
       render: (data) => {
           return data == 0 ? "" : '<span class="glyphicon glyphicon-ok"></span>';
       }, 
     },
-    { width: '5%', targets: 4, },   // Collection label
-    { width: '5%', targets: 5 },    // Resolution
-    { width: '5%', targets: 6 },    // Scenario
-    { width: '9%', targets: 7 },    // Parameter
-    { width: '4%', targets: 8 },    // Time step
-    { width: '5%', targets: 9 },   // Levels group
-    { width: '12%', targets: 10 },  // Levels names
-    { width: '4%', targets: 11 },   // Levels variable
-    { width: '4%', targets: 12 },    // Variable name
-    { width: '4%', targets: 13 },   // Units
-    { width: '4%', targets: 14 },   // Property label
-    { width: '4%', targets: 15 },   // Property value
-    { width: '5%', targets: 16 },   // Root dir
-    { width: '10%', targets: 17 },  // File pattern
-    { width: '3%', targets: 18 },   // Scale
-    { width: '3%', targets: 19 },   // Offset
+    { width: '95px', targets: 4, },   // Collection label
+    { width: '75px', targets: 5 },    // Resolution
+    { width: '95px', targets: 6 },    // Scenario
+    { width: '95px', targets: 7 },    // Parameter
+    { width: '75px', targets: 8 },    // Time step
+    { width: '95px', targets: 9 },   // Levels group
+    { width: '175px', targets: 10 },  // Levels names
+    { width: '55px', targets: 11 },   // Levels variable
+    { width: '95px', targets: 12 },    // Variable name
+    { width: '55px', targets: 13 },   // Units
+    { width: '85px', targets: 14 },   // Property label
+    { width: '85px', targets: 15 },   // Property value
+    { width: '165px', targets: 16 },   // Root dir
+    { width: '165px', targets: 17 },  // File pattern
+    { width: '55px', targets: 18 },   // Scale
+    { width: '55px', targets: 19 },   // Offset
 ]
 
 commonOptions = {
@@ -154,6 +154,7 @@ commonOptions = {
     scrollX: true,
     scrollCollapse: true,
     order: [[ 2, 'asc' ]],
+    autoWidth: false,
 };
 
 function make_empty_row(table) {  
@@ -250,6 +251,7 @@ function postInit() {
 function columnsAdjust() {
     // Adjusts columns widths for all tables.
     $.fn.dataTable.tables( {visible: true, api: true} ).columns.adjust();
+    $.fn.dataTable.tables( {visible: true, api: true} ).draw();
 };
 
 $(document).ready( function () {
@@ -258,6 +260,7 @@ $(document).ready( function () {
     } );
     $(window).resize(function () { 
         columnsAdjust();
+        console.log('adjist columns');
     });
 
     // Create Collections table
