@@ -48,12 +48,39 @@ class DataBaseView(View):
 
 
 class DataCreateView(DataBaseView):
-    template_name = 'metadb/includes/data_form.html'
+    template_name = 'metadb/includes/simple_form.html'
     ctx = {
         'form_class': 'js-data-create-form',
         'action': reverse_lazy('metadb:data_create'),
         'title': _("Create a new data"),
         'submit_name': _("Create data"),
+        'script': 'metadb/data_form.js',
+        'attributes': [
+            {'name': 'dataset-resolutions-url',
+             'value': reverse_lazy('metadb:form_load_dataset_resolutions')},
+            {'name': 'dataset-scenario-url',
+             'value': reverse_lazy('metadb:form_load_dataset_scenarios')},
+            {'name': 'parameter-timesteps-url',
+             'value': reverse_lazy('metadb:form_load_parameter_timesteps')},
+            {'name': 'parameter-lvsgroups-url',
+             'value': reverse_lazy('metadb:form_load_parameter_lvsgroups')},
+            {'name': 'parameter-lvsnames-url',
+             'value': reverse_lazy('metadb:form_load_parameter_lvsnames')},
+            {'name': 'levels-variables-url',
+             'value': reverse_lazy('metadb:form_load_lvsvars')},
+            {'name': 'variables-url',
+             'value': reverse_lazy('metadb:form_load_variables')},
+            {'name': 'units-url',
+             'value': reverse_lazy('metadb:form_load_units')},
+            {'name': 'properties-url',
+             'value': reverse_lazy('metadb:form_load_properties')},
+            {'name': 'property-values-url',
+             'value': reverse_lazy('metadb:form_load_propvals')},
+            {'name': 'root-dirs-url',
+             'value': reverse_lazy('metadb:form_load_rootdirs')},
+            {'name': 'files-url',
+             'value': reverse_lazy('metadb:form_load_files')},
+        ]
     }
 
     def get(self, request):
@@ -69,11 +96,38 @@ class DataCreateView(DataBaseView):
 
 
 class DataUpdateView(DataBaseView):
-    template_name = 'metadb/includes/data_form.html'
+    template_name = 'metadb/includes/simple_form.html'
     ctx = {
         'form_class': 'js-data-update-form',
         'title': _("Update data"),
         'submit_name': _("Update data"),
+        'script': 'metadb/data_form.js',
+        'attributes': [
+            {'name': 'dataset-resolutions-url',
+             'value': reverse_lazy('metadb:form_load_dataset_resolutions')},
+            {'name': 'dataset-scenario-url',
+             'value': reverse_lazy('metadb:form_load_dataset_scenarios')},
+            {'name': 'parameter-timesteps-url',
+             'value': reverse_lazy('metadb:form_load_parameter_timesteps')},
+            {'name': 'parameter-lvsgroups-url',
+             'value': reverse_lazy('metadb:form_load_parameter_lvsgroups')},
+            {'name': 'parameter-lvsnames-url',
+             'value': reverse_lazy('metadb:form_load_parameter_lvsnames')},
+            {'name': 'levels-variables-url',
+             'value': reverse_lazy('metadb:form_load_lvsvars')},
+            {'name': 'variables-url',
+             'value': reverse_lazy('metadb:form_load_variables')},
+            {'name': 'units-url',
+             'value': reverse_lazy('metadb:form_load_units')},
+            {'name': 'properties-url',
+             'value': reverse_lazy('metadb:form_load_properties')},
+            {'name': 'property-values-url',
+             'value': reverse_lazy('metadb:form_load_propvals')},
+            {'name': 'root-dirs-url',
+             'value': reverse_lazy('metadb:form_load_rootdirs')},
+            {'name': 'files-url',
+             'value': reverse_lazy('metadb:form_load_files')},
+        ]
     }
 
     def get(self, request, pk):
@@ -93,7 +147,7 @@ class DataUpdateView(DataBaseView):
 
 
 class DataDeleteView(DataBaseView):
-    template_name = 'metadb/includes/simple_delete_form.html'
+    template_name = 'metadb/includes/delete_form.html'
     ctx = {
         'form_class': 'js-data-delete-form',
         'title': _('Confirm data delete'),

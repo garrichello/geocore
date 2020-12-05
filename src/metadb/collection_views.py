@@ -58,12 +58,17 @@ class CollectionBaseView(View):
 
 
 class CollectionCreateView(CollectionBaseView):
-    template_name = 'metadb/includes/collection_form.html'
+    template_name = 'metadb/includes/simple_form.html'
     ctx = {
         'form_class': 'js-collection-create-form',
         'action': reverse_lazy('metadb:collection_create'),
         'title': _("Create a new collection"),
         'submit_name': _("Create collection"),
+        'script': 'metadb/collection_form.js',
+        'attributes': [
+            {'name': 'organizations-url', 
+             'value': reverse_lazy('metadb:form_load_organizations')}
+        ]
     }
 
     def get(self, request):
@@ -82,11 +87,16 @@ class CollectionCreateView(CollectionBaseView):
 
 
 class CollectionUpdateView(CollectionBaseView):
-    template_name = 'metadb/includes/collection_form.html'
+    template_name = 'metadb/includes/simple_form.html'
     ctx = {
         'form_class': 'js-collection-update-form',           
         'title': _("Update collection"),
         'submit_name': _("Update collection"),
+        'script': 'metadb/collection_form.js',
+        'attributes': [
+            {'name': 'organizations-url', 
+             'value': reverse_lazy('metadb:form_load_organizations')}
+        ]
     }
 
     def get(self, request, pk):
@@ -108,7 +118,7 @@ class CollectionUpdateView(CollectionBaseView):
         return self.save_form(request, self.template_name, self.ctx)
 
 class CollectionDeleteView(CollectionBaseView):
-    template_name = 'metadb/includes/simple_delete_form.html'
+    template_name = 'metadb/includes/delete_form.html'
     ctx = {
         'form_class': 'js-collection-delete-form',
         'title': _('Confirm collection delete'),
