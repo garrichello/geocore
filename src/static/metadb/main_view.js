@@ -260,7 +260,6 @@ $(document).ready( function () {
     } );
     $(window).resize(function () { 
         columnsAdjust();
-        console.log('adjist columns');
     });
 
     // Create Collections table
