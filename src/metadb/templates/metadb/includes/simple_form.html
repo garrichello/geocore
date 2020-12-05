@@ -23,7 +23,7 @@
     </div>
 </form>
 
-<!--{{ form_class|json_script:"simple-form-class-name" }}-->
+{{ form_class|json_script:"simple-form-class-name" }}
 <script>
     $('body').on('submit', '.{{ form_class }}', function(e) {
         saveForm2.call(this, e);

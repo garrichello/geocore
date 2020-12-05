@@ -1,6 +1,5 @@
 $(function() {
-    var collection_form_class_name = '.'+JSON.parse($('#collection-form-class-name')[0].textContent);
-
+    var collection_form_class_name = '.js-collection-create-form';
     var loadOrganizations = function(form_name, organization_name='') {
         var form = $(form_name);
         var modal_id = '#'+getModalName(form.attr('action')); // Collection modal!
@@ -21,12 +20,8 @@ $(function() {
         }
     };
 
-    // Submit form
-    $('body').on('submit', '.js-collection-create-form', function(e) {
-        saveForm2.call(this, e); return false; 
-    });
-
     // Create organization modal
+    console.log('[Collection] Form: '+collection_form_class_name);
     $(collection_form_class_name).on('click', '.js-add-button', function() { 
         var modal_id = loadForm2.call(this);
         $(modal_id).on('hidden.bs.modal', function() {

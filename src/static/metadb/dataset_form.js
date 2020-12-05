@@ -1,6 +1,5 @@
 $(function() {
-    var dataset_form_class_name = '.'+JSON.parse($('#dataset-form-class-name')[0].textContent);
-
+    var dataset_form_class_name = '.js-dataset-create-form';
     var loadOptions = function(form_name, select_name, data_url, option_name) {
         var form = $(form_name);
         var modal_id = '#'+getModalName(form.attr('action'));
@@ -21,13 +20,9 @@ $(function() {
         }
     };
 
-    // Submit form
-    $('body').on('submit', '.js-dataset-create-form', function(e) {
-        saveForm2.call(this, e); return false;
-    });
-
     // + buttons handling
-    $(dataset_form_class_name).on('click', '.js-add-button', function() { 
+    console.log('[Dataset] Form: '+dataset_form_class_name);
+    $(dataset_form_class_name).on('click', '.js-add-button', function() {
         var modal_id = loadForm2.call(this);
         $(modal_id).on('hidden.bs.modal', function() {
             if ($('.js-collection-create-form').length) {

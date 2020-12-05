@@ -1,5 +1,5 @@
 $(function () {
-    var data_form_class_name = '.'+JSON.parse($('#data-form-class-name')[0].textContent);
+    var data_form_class_name = '.js-data-create-form';
     var modal_id = '#'+getModalName($(data_form_class_name).attr('action'));
 
     var loadScenariosChain = function(form_name) {
@@ -141,11 +141,6 @@ $(function () {
             } );
         }
     };
-
-    // Submit form
-    $('body').on('submit', data_form_class_name, function(e) {
-        saveForm2.call(this, e); return false;
-    });
     
     $(modal_id+' #id_collection').change( function() { loadResolutionsChain(data_form_class_name); } );
     $(modal_id+' #id_resolution').change( function() { loadScenariosChain(data_form_class_name); } );
@@ -158,61 +153,50 @@ $(function () {
     // + buttons handling
     $(data_form_class_name).on('click', '.js-add-button', function() { 
         var modal_id = loadForm2.call(this);
-        console.log('[Data click] Form '+data_form_class_name+'; Modal ID: '+modal_id);
         $(modal_id).on('hidden.bs.modal', function() {
-            console.log('[Data hide] Form '+data_form_class_name+'; Modal ID: '+modal_id);
             if ($('.js-levels-variable-create-form').length) {
                 var form_data = mapFormData('.js-levels-variable-create-form');  // Get levels variable fields
                 loadOptions.call(this, data_form_class_name, 'id_levels_variable',
                     'levels-variables-url', form_data['name']
                 );
-                console.log('In data modal, levels variable form data: '+form_data['name']);
             };
             if ($('.js-variable-create-form').length) {
                 var form_data = mapFormData('.js-variable-create-form');  // Get variable fields
                 loadOptions.call(this, data_form_class_name, 'id_variable',
                     'variables-url', form_data['name']
                 );
-                console.log('In data modal, variable form data: '+form_data['name']);
             };
             if ($('.js-unit-create-form').length) {
                 var form_data = mapFormData('.js-unit-create-form');  // Get unit fields
                 loadOptions.call(this, data_form_class_name, 'id_unitsi18n',
                     'units-url', form_data['name']
                 );
-                console.log('In data modal, unit form data: '+form_data['name']);
             };
             if ($('.js-property-create-form').length) {
                 var form_data = mapFormData('.js-property-create-form');  // Get property fields
                 loadOptions.call(this, data_form_class_name, 'id_property',
                     'properties-url', form_data['label']
                 );
-                console.log('In data modal, property form data: '+form_data['label']);
             };
             if ($('.js-property-value-create-form').length) {
                 var form_data = mapFormData('.js-property-value-create-form');  // Get property value fields
                 loadOptions.call(this, data_form_class_name, 'id_property_value',
                     'property-values-url', form_data['label']
                 );
-                console.log('In data modal, property value form data: '+form_data['label']);
             };
             if ($('.js-root-dir-create-form').length) {
                 var form_data = mapFormData('.js-root-dir-create-form');  // Get root directory fields
                 loadOptions.call(this, data_form_class_name, 'id_root_dir',
                     'root-dirs-url', form_data['name']
                 );
-                console.log('In data modal, root dir form data: '+form_data['name']);
             };
             if ($('.js-file-create-form').length) {
                 var form_data = mapFormData('.js-file-create-form');  // Get file name fields
                 loadOptions.call(this, data_form_class_name, 'id_file',
                     'files-url', form_data['name_pattern']
                 );
-                console.log('In data modal, file form data: '+form_data['name_pattern']);
             };
             $(modal_id).remove();
         })
     });
-
-
 });
