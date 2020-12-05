@@ -102,7 +102,7 @@ class GuiElementUpdateView(GuiElementBaseView):
         return self.save_form(request, self.template_name, self.ctx)
 
 class GuiElementDeleteView(GuiElementBaseView):
-    template_name = 'metadb/includes/simple_delete_form.html'
+    template_name = 'metadb/includes/delete_form.html'
     ctx = {
         'form_class': 'js-gui-element-delete-form',
         'title': _('Confirm GUI element delete'),

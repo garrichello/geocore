@@ -32,7 +32,7 @@ class DataKindUpdateView(SimpleUpdateView):
 class DataKindDeleteView(SimpleDeleteView):
     form_class = DataKindForm
     model = DataKind
-    template_name = 'metadb/includes/simple_delete_form.html'
+    template_name = 'metadb/includes/delete_form.html'
     ctx = {
         'form_class': 'js-datakind-delete-form',
         'title': _('Confirm data kind delete'),

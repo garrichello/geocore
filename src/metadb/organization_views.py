@@ -102,7 +102,7 @@ class OrganizationUpdateView(OrganizationBaseView):
         return self.save_form(request, self.template_name, self.ctx)
 
 class OrganizationDeleteView(OrganizationBaseView):
-    template_name = 'metadb/includes/simple_delete_form.html'
+    template_name = 'metadb/includes/delete_form.html'
     ctx = {
         'form_class': 'js-organization-delete-form',
         'title': _('Confirm organization delete'),

@@ -42,7 +42,7 @@ class PropertyUpdateView(SimpleUpdateView):
 class PropertyDeleteView(SimpleDeleteView):
     form_class = PropertyForm
     model = Property
-    template_name = 'metadb/includes/simple_delete_form.html'
+    template_name = 'metadb/includes/delete_form.html'
     ctx = {
         'form_class': 'js-property-delete-form',
         'title': _('Confirm property delete'),

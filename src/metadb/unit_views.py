@@ -92,7 +92,7 @@ class UnitUpdateView(UnitBaseView):
         return self.save_form(request, self.template_name, self.ctx)
 
 class UnitDeleteView(UnitBaseView):
-    template_name = 'metadb/includes/simple_delete_form.html'
+    template_name = 'metadb/includes/delete_form.html'
     ctx = {
         'form_class': 'js-unit-delete-form',
         'title': _('Confirm measurement unit delete'),

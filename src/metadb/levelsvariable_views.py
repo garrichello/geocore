@@ -32,7 +32,7 @@ class LevelsVariableUpdateView(SimpleUpdateView):
 class LevelsVariableDeleteView(SimpleDeleteView):
     form_class = LevelsVariableForm
     model = Variable
-    template_name = 'metadb/includes/simple_delete_form.html'
+    template_name = 'metadb/includes/delete_form.html'
     ctx = {
         'form_class': 'js-levels-variable-delete-form',
         'title': _('Confirm levels variable delete'),

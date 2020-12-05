@@ -32,7 +32,7 @@ class ResolutionUpdateView(SimpleUpdateView):
 class ResolutionDeleteView(SimpleDeleteView):
     form_class = ResolutionForm
     model = Resolution
-    template_name = 'metadb/includes/simple_delete_form.html'
+    template_name = 'metadb/includes/delete_form.html'
     ctx = {
         'form_class': 'js-resolution-delete-form',
         'title': _('Confirm resolution delete'),

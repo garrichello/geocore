@@ -32,7 +32,7 @@ class ScenarioUpdateView(SimpleUpdateView):
 class ScenarioDeleteView(SimpleDeleteView):
     form_class = ScenarioForm
     model = Scenario
-    template_name = 'metadb/includes/simple_delete_form.html'
+    template_name = 'metadb/includes/delete_form.html'
     ctx = {
         'form_class': 'js-scenario-delete-form',
         'title': _('Confirm scenario delete'),

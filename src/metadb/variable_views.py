@@ -32,7 +32,7 @@ class VariableUpdateView(SimpleUpdateView):
 class VariableDeleteView(SimpleDeleteView):
     form_class = VariableForm
     model = Variable
-    template_name = 'metadb/includes/simple_delete_form.html'
+    template_name = 'metadb/includes/delete_form.html'
     ctx = {
         'form_class': 'js-variable-delete-form',
         'title': _('Confirm variable delete'),

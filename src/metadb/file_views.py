@@ -32,7 +32,7 @@ class FileUpdateView(SimpleUpdateView):
 class FileDeleteView(SimpleDeleteView):
     form_class = FileForm
     model = File
-    template_name = 'metadb/includes/simple_delete_form.html'
+    template_name = 'metadb/includes/delete_form.html'
     ctx = {
         'form_class': 'js-file-delete-form',
         'title': _('Confirm file delete'),
