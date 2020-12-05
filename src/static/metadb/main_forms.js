@@ -49,13 +49,27 @@ $(function() {
 
     var addModal = function(modal_name) {
         if (!$('#'+modal_name).length) {
-            var modal = $('<div class="modal fade" role="dialog">');
+            var modal = $('<div class="modal fade" tabindex="-1" role="dialog">');
             modal.attr('id', modal_name);
             var modal_dialog = $('<div class="modal-dialog" role="document">');
             modal_dialog.appendTo(modal);
             var modal_content = $('<div class="modal-content"></div>');
             modal_content.appendTo(modal_dialog);
             $('#modal-stables').before( modal );  // In main_view.html
+
+            // To provide a correct z-ordering of nested modals
+            $(modal).on('show.bs.modal', function(event) {
+                var idx = $('.modal:visible').length;
+                $(this).css('z-index', 1040 + (10 * idx));
+            });
+            $(modal).on('shown.bs.modal', function(event) {
+                var idx = ($('.modal:visible').length) -1; // raise backdrop after animation.
+                $('.modal-backdrop').not('.stacked').css('z-index', 1039 + (10 * idx));
+                $('.modal-backdrop').not('.stacked').addClass('stacked');
+            });
+            $(modal).on('hidden.bs.modal', function() {
+                $('.modal:visible').length && $(document.body).addClass('modal-open'); // Make modal scrollable again!
+            });
         };
     };
 
@@ -227,5 +241,4 @@ $(function() {
             $(modal_id).remove();  // Keep DOM clean!
         })
     });
-
 });
