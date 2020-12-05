@@ -129,6 +129,9 @@ class NewVisitorTest(unittest.TestCase):
         )
         collection_form = self.browser.find_element_by_class_name('js-property-create-form')
         # Then John types label into a textbox Property label,
+        WebDriverWait(self.browser, 10).until(
+            EC.presence_of_element_located((By.ID, 'id_label'))
+        )
         collection_form.find_element_by_id('id_label').send_keys(label)
 
         # John wants to select a GUI element, but finds out that the one he needs is absent.
@@ -229,6 +232,7 @@ class NewVisitorTest(unittest.TestCase):
 
         # John wants to select a collection, but finds out that the one he needs is absent.
         # So he decides to add it and clicks '+' button next to the Collection dropdown list.
+        sleep(1)
         plus_btn = self.browser.find_element_by_xpath(
             '//form[@class="js-dataset-create-form"]//button[@data-url="/en/metadb/collections/create/"]')
         plus_btn.click()
