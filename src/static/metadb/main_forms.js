@@ -1,51 +1,4 @@
 $(function() {
-    loadForm = function (modal_name) {
-        var btn = $(this);
-        $.ajax({
-            type: "get",
-            url: btn.attr("data-url"),
-            dataType: 'json',
-            beforeSend: function() {
-                $(modal_name).modal('show');
-            },
-            success: function(data) {
-                $(modal_name+' .modal-content').html(data.html_form)
-            },
-            error: function(xhr, errmsg, err) {
-                console.error('Error occured when loading form data');
-//                $(modal_name+' .modal-content').html(xhr.responseText);
-//                console.log(xhr.status + ": " + xhr.responseText);
-            }
-        });
-    };
-
-    saveForm = function(e, modal_name) {
-        e.stopImmediatePropagation();
-        var form = $(this);
-        $.ajax({
-            type: form.attr('method'),
-            url: form.attr('action'),
-            data: form.serialize(),
-            dataType: 'json',
-            success: function(data) {
-                if (data.form_is_valid) {
-                    $.fn.dataTable.tables( {visible: false, api: true} ).ajax.reload();
-                }
-                else {
-                    $(modal_name+' .modal-content').html(data.html_form);
-                }
-            },
-            error: function(xhr, errmsg, err) {
-                console.error('Error occured when saving form data');
-//                $(modal_name+' .modal-content').html(xhr.responseText);
-//                console.log(xhr.status + ": " + xhr.responseText);
-            },
-            complete: function() {
-                $(modal_name).modal('hide');
-            }
-        });
-        return false;
-    };
 
     var addModal = function(modal_name) {
         if (!$('#'+modal_name).length) {
@@ -73,13 +26,15 @@ $(function() {
         };
     };
 
-    getModalName = function(url) {
-        return 'modal-dynamic-'+url.replaceAll('/', '');
+    getModalName = function(status) {
+        var idx = $('.modal:visible').length;
+        if (status == 'parent') idx = idx - 1;
+        return 'modal-dynamic-'+idx;
     };
 
     loadForm2 = function () {
         var btn = $(this);
-        var modal_name = getModalName(btn.attr("data-url"));
+        var modal_name = getModalName();
         addModal(modal_name);
         var modal_id = '#'+modal_name;
         $.ajax({
@@ -104,7 +59,8 @@ $(function() {
     saveForm2 = function(e) {
         e.stopImmediatePropagation();
         var form = $(this);
-        var modal_id = '#'+getModalName(form.attr('action'));
+        var modal_id = '#'+getModalName('parent');
+
         $.ajax({
             type: form.attr('method'),
             url: form.attr('action'),
@@ -113,6 +69,7 @@ $(function() {
             success: function(data) {
                 if (data.form_is_valid) {
                     $.fn.dataTable.tables( {visible: false, api: true} ).ajax.reload();
+                    $(modal_id).modal('hide');
                 }
                 else {
                     $(modal_id+' .modal-content').html(data.html_form);
@@ -123,10 +80,8 @@ $(function() {
 //                $(modal_name+' .modal-content').html(xhr.responseText);
 //                console.log(xhr.status + ": " + xhr.responseText);
             },
-            complete: function() {
-                $(modal_id).modal('hide');
-            }
         });
+        return false;
     };
 
     mapFormData = function(form_class) {
@@ -137,108 +92,60 @@ $(function() {
         return form_data;
     };
 
-    addCollectionButtonHandlers = function () {
-        // Add handlers to 'update' and 'delete' buttons for Collection rows.
-        // Buttons should exist at the moment of execution!
-    
-        // Update collection
-        $('.js-update-collection').click(function() { 
-            var modal_id = loadForm2.call(this);
-            $(modal_id).on('hidden.bs.modal', function() {
-                $(modal_id).remove();  // Keep DOM clean!
-            });  
-        });
-        $('body').on('submit', '.js-collection-update-form', function(e) {
-            saveForm2.call(this, e); return false;
-        });
-    
-        // Delete collection
-        $('.js-delete-collection').click(function() { 
-            var modal_id = loadForm2.call(this);
-            $(modal_id).on('hidden.bs.modal', function() {
-                $(modal_id).remove();  // Keep DOM clean!
-            });  
-        });
-        $('body').on('submit', '.js-collection-delete-form', function(e) {
-            saveForm2.call(this, e); return false;
-        });
+    loadOptions = function(form_name, select_name, data_url, option_name='') {
+        var form = $(form_name);
+        var modal_id = '#'+getModalName('parent');
+
+        if (option_name.length) {
+            $.ajax( {
+                url: form.attr(data_url),
+                type: 'get',
+                success: function (data) {
+                    $(`${modal_id} #${select_name}`).html(data);
+                    $(`${modal_id} #${select_name} option`).filter(function() {
+                        return $(this).text() === option_name;
+                    }).attr('selected', true);  // Select given entry in the select
+                    if ($(`${modal_id} #${select_name} option`).length == 2) {
+                        $(`${modal_id} #${select_name}`).prop("selectedIndex", 1);
+                    }
+                }
+            } );
+        }
     };
-    
-    addDatasetButtonHandlers = function () {
-        // Add handlers to 'update' and 'delete' buttons for Dataset rows.
+
+    addUpdDelButtonHandlers = function (tab_name) {
+        // Add handlers to 'update' and 'delete' buttons for DataTable rows.
         // Buttons should exist at the moment of execution!
-      
-        // Update dataset
-        $('.js-update-dataset').click(function() { 
+    
+        // Update button
+        $(`.js-update-${tab_name}`).click(function() { 
             var modal_id = loadForm2.call(this);
             $(modal_id).on('hidden.bs.modal', function() {
                 $(modal_id).remove();  // Keep DOM clean!
             });  
         });
-        $('body').on('submit', '.js-dataset-update-form', function(e) {
+        $('body').on('submit', `.js-${tab_name}-form`, function(e) {
             saveForm2.call(this, e); return false;
         });
     
-        // Delete dataset
-        $('.js-delete-dataset').click(function() { 
+        // Delete button
+        $(`.js-delete-${tab_name}`).click(function() { 
             var modal_id = loadForm2.call(this);
             $(modal_id).on('hidden.bs.modal', function() {
                 $(modal_id).remove();  // Keep DOM clean!
             });  
         });
-        $('body').on('submit', '.js-dataset-delete-form', function(e) {
-            saveForm2.call(this, e); return false;
-        });
-    };
-    
-    addDataButtonHandlers = function () {
-        // Add handlers to 'update' and 'delete' buttons for Data rows.
-        // Buttons should exist at the moment of execution!
-        
-        // Update data
-        $('.js-update-data').click(function() { 
-            var modal_id = loadForm2.call(this);
-            $(modal_id).on('hidden.bs.modal', function() {
-                $(modal_id).remove();  // Keep DOM clean!
-            });  
-        });
-        $('body').on('submit', '.js-data-update-form', function(e) {
-            saveForm2.call(this, e); return false;
-        });
-    
-        // Delete data
-        $('.js-delete-data').click(function() { 
-            var modal_id = loadForm2.call(this);
-            $(modal_id).on('hidden.bs.modal', function() {
-                $(modal_id).remove();  // Keep DOM clean!
-            });  
-        });
-        $('body').on('submit', '.js-data-delete-form', function(e) {
+        $('body').on('submit', `.js-${tab_name}-delete-form`, function(e) {
             saveForm2.call(this, e); return false;
         });
     };
 
-    // Create collection
-    $('.js-create-collection').click(function() { 
+    // Create button
+    $('.js-create').click(function() { 
         var modal_id = loadForm2.call(this);
         $(modal_id).on('hidden.bs.modal', function() {
             $(modal_id).remove();  // Keep DOM clean!
         })
     });
 
-    // Create dataset
-    $('.js-create-dataset').click(function() { 
-        var modal_id = loadForm2.call(this);
-        $(modal_id).on('hidden.bs.modal', function() {
-            $(modal_id).remove();  // Keep DOM clean!
-        })
-    });
-    
-    // Create data
-    $('.js-create-data').click(function() { 
-        var modal_id = loadForm2.call(this);
-        $(modal_id).on('hidden.bs.modal', function() {
-            $(modal_id).remove();  // Keep DOM clean!
-        })
-    });
 });
