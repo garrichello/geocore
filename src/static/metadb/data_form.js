@@ -1,6 +1,6 @@
 $(function () {
-    var data_form_class_name = '.js-data-create-form';
-    var modal_id = '#'+getModalName($(data_form_class_name).attr('action'));
+    var data_form_class_name = '.js-data-form';
+    var modal_id = '#'+getModalName('parent');
 
     var loadScenariosChain = function(form_name) {
         var form = $(form_name);
@@ -120,28 +120,7 @@ $(function () {
             $(modal_id+' #id_property_value').prop('disabled', true);
         }
     }
-
-    var loadOptions = function(form_name, select_name, data_url, option_name='') {
-        var form = $(form_name);
-        var modal_id = '#'+getModalName(form.attr('action'));
-
-        if (option_name.length) {
-            $.ajax( {
-                url: form.attr(data_url),
-                type: 'get',
-                success: function (data) {
-                    $(`${modal_id} #${select_name}`).html(data);
-                    $(`${modal_id} #${select_name} option`).filter(function() {
-                        return $(this).text() === option_name;
-                    }).attr('selected', true);  // Select given entry in the select
-                    if ($(`${modal_id} #${select_name} option`).length == 2) {
-                        $(`${modal_id} #${select_name}`).prop("selectedIndex", 1);
-                    }
-                }
-            } );
-        }
-    };
-    
+   
     $(modal_id+' #id_collection').change( function() { loadResolutionsChain(data_form_class_name); } );
     $(modal_id+' #id_resolution').change( function() { loadScenariosChain(data_form_class_name); } );
     $(modal_id+' #id_parameteri18n').change( function() { loadTimeStepsChain(data_form_class_name); } );
@@ -154,44 +133,44 @@ $(function () {
     $(data_form_class_name).on('click', '.js-add-button', function() { 
         var modal_id = loadForm2.call(this);
         $(modal_id).on('hidden.bs.modal', function() {
-            if ($('.js-levels-variable-create-form').length) {
-                var form_data = mapFormData('.js-levels-variable-create-form');  // Get levels variable fields
+            if ($('.js-levels-variable-form').length) {
+                var form_data = mapFormData('.js-levels-variable-form');  // Get levels variable fields
                 loadOptions.call(this, data_form_class_name, 'id_levels_variable',
                     'levels-variables-url', form_data['name']
                 );
             };
-            if ($('.js-variable-create-form').length) {
-                var form_data = mapFormData('.js-variable-create-form');  // Get variable fields
+            if ($('.js-variable-form').length) {
+                var form_data = mapFormData('.js-variable-form');  // Get variable fields
                 loadOptions.call(this, data_form_class_name, 'id_variable',
                     'variables-url', form_data['name']
                 );
             };
-            if ($('.js-unit-create-form').length) {
-                var form_data = mapFormData('.js-unit-create-form');  // Get unit fields
+            if ($('.js-unit-form').length) {
+                var form_data = mapFormData('.js-unit-form');  // Get unit fields
                 loadOptions.call(this, data_form_class_name, 'id_unitsi18n',
                     'units-url', form_data['name']
                 );
             };
-            if ($('.js-property-create-form').length) {
-                var form_data = mapFormData('.js-property-create-form');  // Get property fields
+            if ($('.js-property-form').length) {
+                var form_data = mapFormData('.js-property-form');  // Get property fields
                 loadOptions.call(this, data_form_class_name, 'id_property',
                     'properties-url', form_data['label']
                 );
             };
-            if ($('.js-property-value-create-form').length) {
-                var form_data = mapFormData('.js-property-value-create-form');  // Get property value fields
+            if ($('.js-property-value-form').length) {
+                var form_data = mapFormData('.js-property-value-form');  // Get property value fields
                 loadOptions.call(this, data_form_class_name, 'id_property_value',
                     'property-values-url', form_data['label']
                 );
             };
-            if ($('.js-root-dir-create-form').length) {
-                var form_data = mapFormData('.js-root-dir-create-form');  // Get root directory fields
+            if ($('.js-root-dir-form').length) {
+                var form_data = mapFormData('.js-root-dir-form');  // Get root directory fields
                 loadOptions.call(this, data_form_class_name, 'id_root_dir',
                     'root-dirs-url', form_data['name']
                 );
             };
-            if ($('.js-file-create-form').length) {
-                var form_data = mapFormData('.js-file-create-form');  // Get file name fields
+            if ($('.js-file-form').length) {
+                var form_data = mapFormData('.js-file-form');  // Get file name fields
                 loadOptions.call(this, data_form_class_name, 'id_file',
                     'files-url', form_data['name_pattern']
                 );

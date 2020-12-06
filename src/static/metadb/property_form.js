@@ -1,7 +1,7 @@
 $(function() {
     var loadOptions = function(form_name, select_name, data_url, option_name='') {
         var form = $(form_name);
-        var modal_id = '#'+getModalName(form.attr('action'));
+        var modal_id = '#'+getModalName('parent');
 
         if (option_name.length) {
             $.ajax( {
@@ -21,11 +21,11 @@ $(function() {
     };
 
     // Create organization modal
-    var simple_form_class_name = '.js-property-create-form';
+    var simple_form_class_name = '.js-property-form';
     $(simple_form_class_name).on('click', '.js-add-button', function() { 
         var modal_id = loadForm2.call(this);
         $(modal_id).on('hidden.bs.modal', function() {
-            var form_data = mapFormData('.js-gui-element-create-form');  // Get fields of the form as a map
+            var form_data = mapFormData('.js-gui-element-form');  // Get fields of the form as a map
             if ('name' in form_data) {
                 if (form_data['name'].length) {
                     loadOptions.call(this, simple_form_class_name, 'id_gui_element', 
