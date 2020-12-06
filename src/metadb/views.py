@@ -31,6 +31,20 @@ class MainView(View):
             ('head_text', _('Dataset description')),
         ]
 
+        # Datatable Specific parameter headers
+        specpar_headers = [
+            ('head_none', 'Id'),
+            ('head_none', _('Visible')),
+            ('head_select', _('Parameter')),
+            ('head_select', _('Accumulation mode')),
+            ('head_select', _('Time step')),
+            ('head_none', _('Time step label')),
+            ('head_none', _('Time step subpath')),
+            ('head_select', _('Levels group')),
+            ('head_text', _('Levels group description')),
+            ('head_text', _('Levels names')),
+        ]
+
         # Datatable Data headers
         data_headers = [
             ('head_none', 'Id'),
@@ -56,6 +70,7 @@ class MainView(View):
         ctx = {
             'collection_headers': collection_headers,
             'dataset_headers': dataset_headers,
+            'specpar_headers': specpar_headers,
             'data_headers': data_headers,
         }
         return render(request, 'metadb/main_view.html', context=ctx)
