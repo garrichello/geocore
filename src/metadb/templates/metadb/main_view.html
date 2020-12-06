@@ -29,6 +29,9 @@
                 <a href="#tab-dataset" data-toggle="tab">{% trans "Dataset"%}</a>
             </li>
             <li>
+                <a href="#tab-specpar" data-toggle="tab">{% trans "Parameter"%}</a>
+            </li>
+            <li>
                 <a href="#tab-data" data-toggle="tab">{% trans "Data" %}</a>
             </li>
             <li>
@@ -40,7 +43,7 @@
                  update-data-url="{% url 'metadb:collection_update' 99999 %}"
                  delete-data-url="{% url 'metadb:collection_delete' 99999 %}">
                 <button type="button" 
-                        class="btn btn-primary js-create-collection"
+                        class="btn btn-primary js-create"
                         data-url="{% url 'metadb:collection_create' %}">
                     <span class="glyphicon glyphicon-plus"></span> {% trans "Create" %}
                 </button>
@@ -60,7 +63,7 @@
                  update-data-url="{% url 'metadb:dataset_update' 99999 %}"
                  delete-data-url="{% url 'metadb:dataset_delete' 99999 %}">
                 <button type="button"
-                        class="btn btn-primary js-create-dataset"
+                        class="btn btn-primary js-create"
                         data-url="{% url 'metadb:dataset_create' %}">
                     <span class="glyphicon glyphicon-plus"></span> {% trans "Create" %}
                 </button>
@@ -76,11 +79,31 @@
                     </thead>
                 </table>
             </div>
+            <div class="tab-pane" id="tab-specpar"
+                 update-data-url="{% url 'metadb:specpar_update' 99999 %}"
+                 delete-data-url="{% url 'metadb:specpar_delete' 99999 %}">
+                <button type="button"
+                        class="btn btn-primary js-create"
+                        data-url="{% url 'metadb:specpar_create' %}">
+                    <span class="glyphicon glyphicon-plus"></span> {% trans "Create" %}
+                </button>
+                <table id='specpar' class="table table-hover table-bordered" width="200%">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            {% for class, title in specpar_headers %}
+                            <th class="{{ class }}">{{ title }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                </table>
+            </div>
             <div class="tab-pane" id="tab-data"
                  update-data-url="{% url 'metadb:data_update' 99999 %}"
                  delete-data-url="{% url 'metadb:data_delete' 99999 %}">
                 <button type="button"
-                        class="btn btn-primary js-create-data"
+                        class="btn btn-primary js-create"
                         data-url="{% url 'metadb:data_create' %}">
                     <span class="glyphicon glyphicon-plus"></span> {% trans "Create" %}
                 </button>
@@ -90,7 +113,7 @@
                             <th></th>
                             <th></th>
                             {% for class, title in data_headers %}
-                                <th class="{{ class }}">{{ title }}</th>
+                            <th class="{{ class }}">{{ title }}</th>
                             {% endfor %}
                         </tr>
                     </thead>

@@ -84,6 +84,50 @@ dataset_columnsDefs = [
     { width: '15%', targets: 11 },  // Description
 ]
 
+var specpar_update_url = $('#tab-specpar').attr('update-data-url').split('99999');
+var specpar_delete_url = $('#tab-specpar').attr('delete-data-url').split('99999');
+
+specpar_columns = [
+    { 'render': function() { return null; } }, // For checkboxes
+    { 'render': function (data, type, row, meta) {
+        return '<div><button type="button" class="btn btn-warning btn-sm js-update-dataset"'
+               + `data-url="${specpar_update_url[0]}${row.id}${specpar_update_url[1]}">`
+               + '<span class="glyphicon glyphicon-pencil"></span></button></div>&nbsp;'
+               + '<div><button type="button" class="btn btn-danger btn-sm js-delete-dataset"'
+               + `data-url="${specpar_delete_url[0]}${row.id}${specpar_delete_url[1]}">`
+               + '<span class="glyphicon glyphicon-trash"></span></button></div>';
+    } },  // for buttons
+    { 'data': 'id' },
+    { 'data': 'is_visible' },
+    { 'data': 'parameter_name' },
+    { 'data': 'acc_mode_name' },
+    { 'data': 'time_step_name' },
+    { 'data': 'time_step_label' },
+    { 'data': 'time_step_subpath' },
+    { 'data': 'levels_group' },
+    { 'data': 'levels_group_desc' },
+    { 'data': 'levels' },
+]
+
+specpar_columnsDefs = [
+    { width: '20px', targets: 0, orderable: false, className: 'select-checkbox' },  // Select checkbox
+    { width: '45px', targets: 1, orderable: false, },  // Buttons
+    { width: '5%', targets: 2 },  // Id
+    { width: '45px', targets: 3,   // Is visible
+      render: (data) => {
+          return data == 0 ? "" : '<span class="glyphicon glyphicon-ok"></span>';
+      }, 
+    },
+    { width: '11%', targets: 4 },  // Parameter name
+    { width: '10%', targets: 5 },  // Accumulation mode
+    { width: '15%', targets: 6 },  // Time step name
+    { width: '7%', targets: 7 },   // Time step label
+    { width: '7%', targets: 8 },   // Time step subpath
+    { width: '8%', targets: 9 },   // Levels group
+    { width: '8%', targets: 10 },  // Levels group description
+    { width: '25%', targets: 11 }, // Levels
+]
+
 var data_update_url = $('#tab-data').attr('update-data-url').split('99999');
 var data_delete_url = $('#tab-data').attr('delete-data-url').split('99999');
 
@@ -267,20 +311,35 @@ $(document).ready( function () {
     collectionOptions["columnDefs"] = collection_columnsDefs.concat(all_columns_defs);
     collectionOptions["columns"] = collection_columns;
     collectionOptions["ajax"] = { 'url': 'collections/api/', 'type': 'GET', 'dataSrc': '' };
-    $('#collection').DataTable( collectionOptions ).on('draw', addCollectionButtonHandlers);
+    $('#collection').DataTable( collectionOptions ).on('draw', function() {
+        addUpdDelButtonHandlers.call(this, 'collection');
+    });
 
     // Create Datasets table
     var datasetOptions = $.extend(true, {}, commonOptions);
     datasetOptions["columnDefs"] = dataset_columnsDefs.concat(all_columns_defs),
     datasetOptions["columns"] = dataset_columns;
     datasetOptions["ajax"] = { 'url': 'datasets/api/', 'type': 'GET', 'dataSrc': '' };
-    $('#dataset').DataTable( datasetOptions ).on('draw', addDatasetButtonHandlers);
+    $('#dataset').DataTable( datasetOptions ).on('draw', function() {
+        addUpdDelButtonHandlers.call(this, 'dataset');
+    });
+
+    // Create Specific parameter table
+    var specparOptions = $.extend(true, {}, commonOptions);
+    specparOptions["columnDefs"] = specpar_columnsDefs.concat(all_columns_defs),
+    specparOptions["columns"] = specpar_columns;
+    specparOptions["ajax"] = { 'url': 'specpars/api/', 'type': 'GET', 'dataSrc': '' };
+    $('#specpar').DataTable( specparOptions ).on('draw', function() {
+        addUpdDelButtonHandlers.call(this, 'specpar');
+    });
 
     // Create Data table
     var dataOptions = $.extend(true, {}, commonOptions);
     dataOptions["columnDefs"] = data_columnsDefs.concat(all_columns_defs),
     dataOptions["columns"] = data_columns;
     dataOptions["ajax"] = { 'url': 'data/api/', 'type': 'GET', 'dataSrc': '' };
-    $('#data').DataTable( dataOptions ).on('draw', addDataButtonHandlers);
+    $('#data').DataTable( dataOptions ).on('draw', function() {
+        addUpdDelButtonHandlers.call(this, 'data');
+    });
  
 } );

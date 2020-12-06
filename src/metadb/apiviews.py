@@ -1,6 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import Collection, Dataset, Data
+from .models import Collection, Dataset, Data, SpecificParameter
 from django.utils.translation import get_language
 
 class CollectionApiListView(APIView):
@@ -73,6 +73,42 @@ class DatasetApiListView(APIView):
         return Response(dataset_data)
 
 
+class SpecificParameterApiListView(APIView):
+    """
+    Returns datasets
+    """
+    def get(self, request):
+        language = get_language()
+
+        specpars = SpecificParameter.objects.all()
+        specpar_data = [
+            {
+                'id': specpar.id,
+                'is_visible': specpar.parameter.is_visible,
+                'parameter_name': specpar.parameter.parameteri18n_set.filter(
+                    language__code=language).get().name,
+                'acc_mode_name': specpar.parameter.accumulation_mode.name,
+                'time_step_name': specpar.time_step.timestepi18n_set.filter(
+                    language__code='en').get().name,
+                'time_step_label': specpar.time_step.label,
+                'time_step_subpath': specpar.time_step.subpath2,
+                'levels_group': '{} [{}]'.format(
+                    specpar.levels_group.description,
+                    specpar.levels_group.units.unitsi18n_set.filter(
+                        language__code=language).get().name
+                ),
+                'levels_group_desc': specpar.levels_group.description,
+                'levels': '; '.join(
+                    [ level.leveli18n_set.filter(language__code=language).get().name
+                        for level in specpar.levels_group.level.all() ]
+                    ),
+            }
+            for specpar in specpars
+        ]
+
+        return Response(specpar_data)
+
+
 class DataApiListView(APIView):
     """
     Returns datasets
@@ -113,4 +149,3 @@ class DataApiListView(APIView):
         ]
 
         return Response(data_data)
-

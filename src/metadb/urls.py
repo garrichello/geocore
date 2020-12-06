@@ -3,11 +3,13 @@ from django.urls import include, path
 from .views import MainView
 
 from .apiviews import (CollectionApiListView, DatasetApiListView, DataApiListView,
-                       CollectionApiView)
+                       CollectionApiView, SpecificParameterApiListView)
 from .collection_views import (CollectionCreateView, CollectionDeleteView,
                                CollectionUpdateView)
 from .dataset_views import (DatasetCreateView, DatasetDeleteView,
                             DatasetUpdateView)
+from .specpar_views import (SpecificParameterCreateView, SpecificParameterDeleteView,
+                            SpecificParameterUpdateView)
 from .data_views import (DataCreateView, DataDeleteView, DataUpdateView)
 
 from .organization_views import (OrganizationCreateView, OrganizationUpdateView,
@@ -75,6 +77,12 @@ urlpatterns = [
     path('datasets/form/load-scenarios/', load_scenarios, name='form_load_scenarios'),
     path('datasets/form/load-datakinds/', load_datakinds, name='form_load_datakinds'),
     path('datasets/form/load-filetypes/', load_filetypes, name='form_load_filetypes'),
+
+    path('specpars/create/', SpecificParameterCreateView.as_view(), name='specpar_create'),
+    path('specpars/<int:pk>/update/', SpecificParameterUpdateView.as_view(), name='specpar_update'),
+    path('specpars/<int:pk>/delete/', SpecificParameterDeleteView.as_view(), name='specpar_delete'),
+    path('specpars/api/', SpecificParameterApiListView.as_view(), name='specpars_api'),
+
 
     path('data/create/', DataCreateView.as_view(), name='data_create'),
     path('data/<int:pk>/update/', DataUpdateView.as_view(), name='data_update'),
