@@ -50,7 +50,7 @@ class DataBaseView(View):
 class DataCreateView(DataBaseView):
     template_name = 'metadb/includes/simple_form.html'
     ctx = {
-        'form_class': 'js-data-create-form',
+        'form_class': 'js-data-form',
         'action': reverse_lazy('metadb:data_create'),
         'title': _("Create a new data"),
         'submit_name': _("Create data"),
@@ -98,7 +98,7 @@ class DataCreateView(DataBaseView):
 class DataUpdateView(DataBaseView):
     template_name = 'metadb/includes/simple_form.html'
     ctx = {
-        'form_class': 'js-data-update-form',
+        'form_class': 'js-data-form',
         'title': _("Update data"),
         'submit_name': _("Update data"),
         'script': 'metadb/data_form.js',

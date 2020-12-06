@@ -11,7 +11,7 @@ class LevelsVariableCreateView(SimpleCreateView):
     model = Variable
     template_name = 'metadb/includes/simple_form.html'
     ctx = {
-        'form_class': 'js-levels-variable-create-form',
+        'form_class': 'js-levels-variable-form',
         'title': _("Create a new levels variable"),
         'submit_name': _("Create levels variable"),
     }
@@ -23,7 +23,7 @@ class LevelsVariableUpdateView(SimpleUpdateView):
     model = Variable
     template_name = 'metadb/includes/simple_form.html'
     ctx = {
-        'form_class': 'js-levels-variable-update-form',
+        'form_class': 'js-levels-variable-form',
         'title': _("Update levels variable"),
         'submit_name': _("Update levels variable"),
     }

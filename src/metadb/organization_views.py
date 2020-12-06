@@ -54,7 +54,7 @@ class OrganizationBaseView(View):
 class OrganizationCreateView(OrganizationBaseView):
     template_name = 'metadb/includes/simple_form.html'
     ctx = {
-        'form_class': 'js-organization-create-form',
+        'form_class': 'js-organization-form',
         'action': reverse_lazy('metadb:organization_create'),
         'title': _("Create a new organization"),
         'submit_name': _("Create organization"),
@@ -78,7 +78,7 @@ class OrganizationCreateView(OrganizationBaseView):
 class OrganizationUpdateView(OrganizationBaseView):
     template_name = 'metadb/includes/simple_form.html'
     ctx = {
-        'form_class': 'js-organization-update-form',
+        'form_class': 'js-organization-form',
         'title': _("Update organization"),
         'submit_name': _("Update organization"),
     }

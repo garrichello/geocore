@@ -11,7 +11,7 @@ class FileCreateView(SimpleCreateView):
     model = File
     template_name = 'metadb/includes/simple_form.html'
     ctx = {
-        'form_class': 'js-file-create-form',
+        'form_class': 'js-file-form',
         'title': _("Create a new file"),
         'submit_name': _("Create file"),
     }
@@ -23,7 +23,7 @@ class FileUpdateView(SimpleUpdateView):
     model = File
     template_name = 'metadb/includes/simple_form.html'
     ctx = {
-        'form_class': 'js-file-update-form',
+        'form_class': 'js-file-form',
         'title': _("Update file"),
         'submit_name': _("Update file"),
     }

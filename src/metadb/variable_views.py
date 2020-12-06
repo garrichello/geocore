@@ -11,7 +11,7 @@ class VariableCreateView(SimpleCreateView):
     model = Variable
     template_name = 'metadb/includes/simple_form.html'
     ctx = {
-        'form_class': 'js-variable-create-form',
+        'form_class': 'js-variable-form',
         'title': _("Create a new variable"),
         'submit_name': _("Create variable"),
     }
@@ -23,7 +23,7 @@ class VariableUpdateView(SimpleUpdateView):
     model = Variable
     template_name = 'metadb/includes/simple_form.html'
     ctx = {
-        'form_class': 'js-variable-update-form',
+        'form_class': 'js-variable-form',
         'title': _("Update variable"),
         'submit_name': _("Update variable"),
     }

@@ -11,7 +11,7 @@ class ResolutionCreateView(SimpleCreateView):
     model = Resolution
     template_name = 'metadb/includes/simple_form.html'
     ctx = {
-        'form_class': 'js-resolution-create-form',
+        'form_class': 'js-resolution-form',
         'title': _("Create a new resolution"),
         'submit_name': _("Create resolution"),
     }
@@ -23,7 +23,7 @@ class ResolutionUpdateView(SimpleUpdateView):
     model = Resolution
     template_name = 'metadb/includes/simple_form.html'
     ctx = {
-        'form_class': 'js-resolution-update-form',
+        'form_class': 'js-resolution-form',
         'title': _("Update resolution"),
         'submit_name': _("Update resolution"),
     }

@@ -11,7 +11,7 @@ class FileTypeCreateView(SimpleCreateView):
     model = FileType
     template_name = 'metadb/includes/simple_form.html'
     ctx = {
-        'form_class': 'js-filetype-create-form',
+        'form_class': 'js-filetype-form',
         'title': _("Create a new filetype"),
         'submit_name': _("Create filetype"),
     }
@@ -23,7 +23,7 @@ class FileTypeUpdateView(SimpleUpdateView):
     model = FileType
     template_name = 'metadb/includes/simple_form.html'
     ctx = {
-        'form_class': 'js-filetype-update-form',
+        'form_class': 'js-filetype-form',
         'title': _("Update filetype"),
         'submit_name': _("Update filetype"),
     }

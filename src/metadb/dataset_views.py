@@ -12,7 +12,7 @@ class DatasetCreateView(SimpleCreateView):
     model = Dataset
     template_name = 'metadb/includes/simple_form.html'
     ctx = {
-        'form_class': 'js-dataset-create-form',
+        'form_class': 'js-dataset-form',
         'title': _("Create a new dataset"),
         'submit_name': _("Create dataset"),
         'script': 'metadb/dataset_form.js',
@@ -35,9 +35,9 @@ class DatasetCreateView(SimpleCreateView):
 class DatasetUpdateView(SimpleUpdateView):
     form_class = DatasetForm
     model = Dataset
-    template_name = 'metadb/includes/dataset_form.html'
+    template_name = 'metadb/includes/simple_form.html'
     ctx = {
-        'form_class': 'js-dataset-update-form',
+        'form_class': 'js-dataset-form',
         'title': _("Update dataset"),
         'submit_name': _("Update dataset"),
         'script': 'metadb/dataset_form.js',

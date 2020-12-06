@@ -54,7 +54,7 @@ class GuiElementBaseView(View):
 class GuiElementCreateView(GuiElementBaseView):
     template_name = 'metadb/includes/simple_form.html'
     ctx = {
-        'form_class': 'js-gui-element-create-form',
+        'form_class': 'js-gui-element-form',
         'action': reverse_lazy('metadb:gui_element_create'),
         'title': _("Create a new GUI element"),
         'submit_name': _("Create GUI element"),
@@ -78,7 +78,7 @@ class GuiElementCreateView(GuiElementBaseView):
 class GuiElementUpdateView(GuiElementBaseView):
     template_name = 'metadb/includes/simple_form.html'
     ctx = {
-        'form_class': 'js-gui-element-update-form',
+        'form_class': 'js-gui-element-form',
         'title': _("Update GUI element"),
         'submit_name': _("Update GUI element"),
     }

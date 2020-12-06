@@ -60,7 +60,7 @@ class CollectionBaseView(View):
 class CollectionCreateView(CollectionBaseView):
     template_name = 'metadb/includes/simple_form.html'
     ctx = {
-        'form_class': 'js-collection-create-form',
+        'form_class': 'js-collection-form',
         'action': reverse_lazy('metadb:collection_create'),
         'title': _("Create a new collection"),
         'submit_name': _("Create collection"),
@@ -89,7 +89,7 @@ class CollectionCreateView(CollectionBaseView):
 class CollectionUpdateView(CollectionBaseView):
     template_name = 'metadb/includes/simple_form.html'
     ctx = {
-        'form_class': 'js-collection-update-form',           
+        'form_class': 'js-collection-form',           
         'title': _("Update collection"),
         'submit_name': _("Update collection"),
         'script': 'metadb/collection_form.js',

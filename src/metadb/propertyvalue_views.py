@@ -11,7 +11,7 @@ class PropertyValueCreateView(SimpleCreateView):
     model = PropertyValue
     template_name = 'metadb/includes/simple_form.html'
     ctx = {
-        'form_class': 'js-property-value-create-form',
+        'form_class': 'js-property-value-form',
         'title': _("Create a new property value"),
         'submit_name': _("Create property value"),
     }
@@ -23,7 +23,7 @@ class PropertyValueUpdateView(SimpleUpdateView):
     model = PropertyValue
     template_name = 'metadb/includes/simple_form.html'
     ctx = {
-        'form_class': 'js-property-value-update-form',
+        'form_class': 'js-property-value-form',
         'title': _("Update property value"),
         'submit_name': _("Update property value"),
     }

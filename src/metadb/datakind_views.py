@@ -11,7 +11,7 @@ class DataKindCreateView(SimpleCreateView):
     model = DataKind
     template_name = 'metadb/includes/simple_form.html'
     ctx = {
-        'form_class': 'js-datakind-create-form',
+        'form_class': 'js-datakind-form',
         'title': _("Create a new datakind"),
         'submit_name': _("Create datakind"),
     }
@@ -23,7 +23,7 @@ class DataKindUpdateView(SimpleUpdateView):
     model = DataKind
     template_name = 'metadb/includes/simple_form.html'
     ctx = {
-        'form_class': 'js-datakind-update-form',
+        'form_class': 'js-datakind-form',
         'title': _("Update datakind"),
         'submit_name': _("Update datakind"),
     }

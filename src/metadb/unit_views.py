@@ -47,7 +47,7 @@ class UnitBaseView(View):
 class UnitCreateView(UnitBaseView):
     template_name = 'metadb/includes/simple_form.html'
     ctx = {
-        'form_class': 'js-unit-create-form',
+        'form_class': 'js-unit-form',
         'action': reverse_lazy('metadb:unit_create'),
         'title': _("Create a new measurement unit"),
         'submit_name': _("Create unit"),
@@ -69,7 +69,7 @@ class UnitCreateView(UnitBaseView):
 class UnitUpdateView(UnitBaseView):
     template_name = 'metadb/includes/simple_form.html'
     ctx = {
-        'form_class': 'js-unit-update-form',
+        'form_class': 'js-unit-form',
         'title': _("Update measurement unit"),
         'submit_name': _("Update units"),
     }

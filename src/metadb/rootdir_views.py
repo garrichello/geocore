@@ -11,7 +11,7 @@ class RootDirCreateView(SimpleCreateView):
     model = RootDir
     template_name = 'metadb/includes/simple_form.html'
     ctx = {
-        'form_class': 'js-root-dir-create-form',
+        'form_class': 'js-root-dir-form',
         'title': _("Create a new root directory"),
         'submit_name': _("Create root directory"),
     }
@@ -23,7 +23,7 @@ class RootDirUpdateView(SimpleUpdateView):
     model = RootDir
     template_name = 'metadb/includes/simple_form.html'
     ctx = {
-        'form_class': 'js-root-dir-update-form',
+        'form_class': 'js-root-dir-form',
         'title': _("Update root directory"),
         'submit_name': _("Update root directory"),
     }

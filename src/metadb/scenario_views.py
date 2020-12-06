@@ -11,7 +11,7 @@ class ScenarioCreateView(SimpleCreateView):
     model = Scenario
     template_name = 'metadb/includes/simple_form.html'
     ctx = {
-        'form_class': 'js-scenario-create-form',
+        'form_class': 'js-scenario-form',
         'title': _("Create a new scenario"),
         'submit_name': _("Create scenario"),
     }
@@ -23,7 +23,7 @@ class ScenarioUpdateView(SimpleUpdateView):
     model = Scenario
     template_name = 'metadb/includes/simple_form.html'
     ctx = {
-        'form_class': 'js-scenario-update-form',
+        'form_class': 'js-scenario-form',
         'title': _("Update scenario"),
         'submit_name': _("Update scenario"),
     }
