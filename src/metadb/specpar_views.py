@@ -1,69 +1,89 @@
 from .simple_views import SimpleCreateView, SimpleUpdateView, SimpleDeleteView
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse_lazy
+from django.template.loader import render_to_string
+from django.http import JsonResponse
 
-from .dataset_forms import DatasetForm
+from .specpar_forms import SpecificParameterForm
 
-from .models import Dataset
+from .models import SpecificParameter, ParameterI18N, TimeStepI18N
 
 
-class SpecificParameterCreateView(SimpleCreateView):
-    form_class = DatasetForm
-    model = Dataset
+class SpecificParameterMixin():
+    form_class = SpecificParameterForm
+    model = SpecificParameter
     template_name = 'metadb/includes/simple_form.html'
+
+    def save_form(self, request, template_name, ctx):
+        ''' Saves the form '''
+        data = dict()
+        form = ctx['forms'][0]
+        if form.is_valid():
+            sp_obj = form.save(commit=False)  # Get data object
+            sp_obj.parameter = form.cleaned_data['parameteri18n'].parameter
+            sp_obj.time_step = form.cleaned_data['time_stepi18n'].time_step
+            sp_obj.save()  # Save object
+            form.save_m2m()  # Save many-to-many relations
+            data['form_is_valid'] = True
+        else:
+            data['form_is_valid'] = False
+
+        data['html_form'] = render_to_string(template_name, ctx, request)
+        return JsonResponse(data)
+
+
+class SpecificParameterCreateView(SpecificParameterMixin, SimpleCreateView):
     ctx = {
-        'form_class': 'js-dataset-form',
-        'title': _("Create a new dataset"),
-        'submit_name': _("Create dataset"),
-        'script': 'metadb/dataset_form.js',
+        'form_class': 'js-specpar-form',
+        'title': _("Create a new specific parameter"),
+        'submit_name': _("Create specific parameter"),
+        'script': 'metadb/specpar_form.js',
         'attributes': [
-            {'name': 'collections-url', 
-             'value': reverse_lazy('metadb:form_load_collections')},
-            {'name': 'resolutions-url', 
-             'value': reverse_lazy('metadb:form_load_resolutions')},
-            {'name': 'scenarios-url', 
-             'value': reverse_lazy('metadb:form_load_scenarios')},
-            {'name': 'datakinds-url', 
-             'value': reverse_lazy('metadb:form_load_datakinds')},
-            {'name': 'filetypes-url', 
-             'value': reverse_lazy('metadb:form_load_filetypes')},
+            {'name': 'parameter-url',
+             'value': reverse_lazy('metadb:form_load_parameters')},
+            {'name': 'time-step-url',
+             'value': reverse_lazy('metadb:form_load_timesteps')},
+            {'name': 'levels-group-url',
+             'value': reverse_lazy('metadb:form_load_lvsgroups')},
+            {'name': 'lvsgroup-lvsnames-url',
+             'value': reverse_lazy('metadb:sp_form_load_lvsgroup_lvsnames')},
         ]
     }
-    url_name = 'metadb:dataset_create'
+    url_name = 'metadb:specpar_create'
+
+    def post(self, request):
+        form = self.form_class(request.POST)
+        self.ctx['forms'] = [form]
+        return self.save_form(request, self.template_name, self.ctx)
 
 
-class SpecificParameterUpdateView(SimpleUpdateView):
-    form_class = DatasetForm
-    model = Dataset
-    template_name = 'metadb/includes/simple_form.html'
+class SpecificParameterUpdateView(SpecificParameterMixin, SimpleUpdateView):
     ctx = {
-        'form_class': 'js-dataset-update-form',
-        'title': _("Update dataset"),
-        'submit_name': _("Update dataset"),
-        'script': 'metadb/dataset_form.js',
+        'form_class': 'js-specpar-update-form',
+        'title': _("Update specific parameter"),
+        'submit_name': _("Update specific parameter"),
+        'script': 'metadb/specpar_form.js',
         'attributes': [
-            {'name': 'collections-url', 
-             'value': reverse_lazy('metadb:form_load_collections')},
-            {'name': 'resolutions-url', 
-             'value': reverse_lazy('metadb:form_load_resolutions')},
-            {'name': 'scenarios-url', 
-             'value': reverse_lazy('metadb:form_load_scenarios')},
-            {'name': 'datakinds-url', 
-             'value': reverse_lazy('metadb:form_load_datakinds')},
-            {'name': 'filetypes-url', 
-             'value': reverse_lazy('metadb:form_load_filetypes')},
+            {'name': 'parameter-url',
+             'value': reverse_lazy('metadb:form_load_parameters')},
+            {'name': 'time-step-url',
+             'value': reverse_lazy('metadb:form_load_timesteps')},
+            {'name': 'levels-group-url',
+             'value': reverse_lazy('metadb:form_load_lvsgroups')},
+            {'name': 'lvsgroup-lvsnames-url',
+             'value': reverse_lazy('metadb:sp_form_load_lvsgroup_lvsnames')},
         ]
     }
-    url_name = 'metadb:dataset_update'
+    url_name = 'metadb:specpar_update'
 
 class SpecificParameterDeleteView(SimpleDeleteView):
-    form_class = DatasetForm
-    model = Dataset
+    form_class = SpecificParameterForm
+    model = SpecificParameter
     template_name = 'metadb/includes/delete_form.html'
     ctx = {
-        'form_class': 'js-dataset-delete-form',
-        'title': _('Confirm dataset delete'),
-        'text': _('Are you sure you want to delete the dataset'),
-        'submit_name': _('Delete dataset')
+        'form_class': 'js-specpar-delete-form',
+        'title': _('Confirm specific parameter delete'),
+        'text': _('Are you sure you want to delete the specific parameter'),
+        'submit_name': _('Delete specific parameter')
     }
-    url_name = 'metadb:dataset_delete'
+    url_name = 'metadb:specpar_delete'
