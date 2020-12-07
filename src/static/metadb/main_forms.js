@@ -118,23 +118,26 @@ $(function() {
         // Buttons should exist at the moment of execution!
     
         // Update button
+        $(`.js-update-${tab_name}`).off('click');
         $(`.js-update-${tab_name}`).click(function() { 
             var modal_id = loadForm2.call(this);
             $(modal_id).on('hidden.bs.modal', function() {
                 $(modal_id).remove();  // Keep DOM clean!
             });  
         });
+        $('body').off('submit', `.js-${tab_name}-form`);
         $('body').on('submit', `.js-${tab_name}-form`, function(e) {
             saveForm2.call(this, e); return false;
         });
-    
         // Delete button
+        $(`.js-delete-${tab_name}`).off('click');
         $(`.js-delete-${tab_name}`).click(function() { 
             var modal_id = loadForm2.call(this);
             $(modal_id).on('hidden.bs.modal', function() {
                 $(modal_id).remove();  // Keep DOM clean!
             });  
         });
+        $('body').off('submit', `.js-${tab_name}-delete-form`);
         $('body').on('submit', `.js-${tab_name}-delete-form`, function(e) {
             saveForm2.call(this, e); return false;
         });
