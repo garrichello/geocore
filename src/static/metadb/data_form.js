@@ -90,7 +90,7 @@ $(function () {
         var lvsgroupId = $(modal_id+' #id_levels_group').val();
     
         $.ajax( { 
-            url: form.attr('parameter-lvsnames-url'),  // given a parameter load lvsnames
+            url: form.attr('lvsgroup-lvsnames-url'),  // given a levels group load lvsnames
             type: 'get',
             data: {
                 'lvsgroupId': lvsgroupId,
