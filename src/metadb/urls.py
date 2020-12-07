@@ -53,10 +53,11 @@ from .file_views import (FileCreateView, FileUpdateView, FileDeleteView)
 from .form_loads import (load_organizations, load_collections, load_resolutions,
                          load_scenarios, load_datakinds, load_filetypes,
                          load_dataset_resolutions, load_dataset_scenarios,
-                         load_parameter_lvsgroups, load_parameter_lvsnames,
+                         load_parameter_lvsgroups, load_lvsgroup_lvsnames,
                          load_parameter_timesteps, load_lvsvars, load_variables,
                          load_units, load_properties, load_propvals,
-                         load_rootdirs, load_files, load_guielements)
+                         load_rootdirs, load_files, load_guielements,
+                         load_parameters, load_timesteps, load_lvsgroups)
 
 app_name = 'metadb'
 urlpatterns = [
@@ -82,7 +83,10 @@ urlpatterns = [
     path('specpars/<int:pk>/update/', SpecificParameterUpdateView.as_view(), name='specpar_update'),
     path('specpars/<int:pk>/delete/', SpecificParameterDeleteView.as_view(), name='specpar_delete'),
     path('specpars/api/', SpecificParameterApiListView.as_view(), name='specpars_api'),
-
+    path('specpars/form/load-parameters/', load_parameters, name='form_load_parameters'),
+    path('specpars/form/load-timesteps/', load_timesteps, name='form_load_timesteps'),
+    path('specpars/form/load-lvsgroups/', load_lvsgroups, name='form_load_lvsgroups'),
+    path('specpars/form/load-lvsnames/', load_lvsgroup_lvsnames, name='sp_form_load_lvsgroup_lvsnames'),
 
     path('data/create/', DataCreateView.as_view(), name='data_create'),
     path('data/<int:pk>/update/', DataUpdateView.as_view(), name='data_update'),
@@ -93,7 +97,7 @@ urlpatterns = [
     path('data/form/load-scenarios/', load_dataset_scenarios, name='form_load_dataset_scenarios'),
     path('data/form/load-timesteps/', load_parameter_timesteps, name='form_load_parameter_timesteps'),
     path('data/form/load-lvsgroups/', load_parameter_lvsgroups, name='form_load_parameter_lvsgroups'),
-    path('data/form/load-lvsnames/', load_parameter_lvsnames, name='form_load_parameter_lvsnames'),
+    path('data/form/load-lvsnames/', load_lvsgroup_lvsnames, name='form_load_lvsgroup_lvsnames'),
     path('data/form/load-lvsvars/', load_lvsvars, name='form_load_lvsvars'),
     path('data/form/load-variables/', load_variables, name='form_load_variables'),
     path('data/form/load-units/', load_units, name='form_load_units'),
