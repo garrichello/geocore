@@ -2,9 +2,9 @@ from django.utils.translation import get_language
 from django.forms import (ModelForm, ModelChoiceField, Textarea, CharField)
 from django.utils.translation import gettext_lazy as _
 
-from .models import (SpecificParameter, ParameterI18N, TimeStepI18N, LevelsGroup,
-                     Parameter, TimeStep)
+from .models import SpecificParameter, ParameterI18N, TimeStepI18N
 
+from .db_loads import get_levels
 
 class SpecificParameterForm(ModelForm):
 
@@ -32,6 +32,19 @@ class SpecificParameterForm(ModelForm):
 
         self.order_fields(['parameteri18n', 'time_stepi18n', 'levels_group', 'levels_namesi18n'])
 
+    def fill_fields(self):
+        # The following is needed for passing validation by the form.
+        # Collection, resolution and scenario fields are connected.
+        # User selects collection, then resolution, and finally scenario.
+
+        if self.instance.pk:  # To Update an existing record
+            self.fields['parameteri18n'].initial = self.instance.parameter.parameteri18n_set.filter(
+                language__code=get_language()).get()
+            self.fields['time_stepi18n'].initial = self.instance.time_step.timestepi18n_set.filter(
+                language__code=get_language()).get()
+            self.fields['levels_group'].initial = self.instance.levels_group.description
+            self.fields['levels_namesi18n'].initial = get_levels(self.instance.levels_group.id)
+
 
     class Meta:
         model = SpecificParameter
@@ -41,3 +54,5 @@ class SpecificParameterForm(ModelForm):
         super().__init__(*args, **kwargs)
 
         self.set_fields()
+
+        self.fill_fields()
