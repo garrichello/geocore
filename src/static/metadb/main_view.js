@@ -90,10 +90,10 @@ var specpar_delete_url = $('#tab-specpar').attr('delete-data-url').split('99999'
 specpar_columns = [
     { 'render': function() { return null; } }, // For checkboxes
     { 'render': function (data, type, row, meta) {
-        return '<div><button type="button" class="btn btn-warning btn-sm js-update-dataset"'
+        return '<div><button type="button" class="btn btn-warning btn-sm js-update-specpar"'
                + `data-url="${specpar_update_url[0]}${row.id}${specpar_update_url[1]}">`
                + '<span class="glyphicon glyphicon-pencil"></span></button></div>&nbsp;'
-               + '<div><button type="button" class="btn btn-danger btn-sm js-delete-dataset"'
+               + '<div><button type="button" class="btn btn-danger btn-sm js-delete-specpar"'
                + `data-url="${specpar_delete_url[0]}${row.id}${specpar_delete_url[1]}">`
                + '<span class="glyphicon glyphicon-trash"></span></button></div>';
     } },  // for buttons
