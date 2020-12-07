@@ -8,8 +8,8 @@ from .models import (Collection, OrganizationI18N, Resolution, Scenario,
                      DataKind, FileType, ParameterI18N, TimeStepI18N,
                      Variable, UnitsI18N, Property, PropertyValue,
                      RootDir, File, GuiElement, LevelsGroup)
-from .data_forms import (get_resolutions, get_scenarios,
-                         get_timesteps, get_levelsgroups, get_levels)
+from .db_loads import (get_resolutions, get_scenarios,
+                       get_timesteps, get_levelsgroups, get_levels)
 
 
 def load_organizations(request):
