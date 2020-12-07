@@ -7,7 +7,7 @@ from time import sleep
 from .models import (Collection, OrganizationI18N, Resolution, Scenario, 
                      DataKind, FileType, ParameterI18N, TimeStepI18N,
                      Variable, UnitsI18N, Property, PropertyValue,
-                     RootDir, File, GuiElement)
+                     RootDir, File, GuiElement, LevelsGroup)
 from .data_forms import (get_resolutions, get_scenarios,
                          get_timesteps, get_levelsgroups, get_levels)
 
@@ -106,7 +106,7 @@ def load_parameter_lvsgroups(request):
     ctx = {'data': lvsgroups}
     return render(request, template_name, ctx)
 
-def load_parameter_lvsnames(request):
+def load_lvsgroup_lvsnames(request):
     ''' Get a list of levels in a given levels group '''
     lvsgroup_id = request.GET.get('lvsgroupId')
     levels = ''
@@ -169,5 +169,28 @@ def load_guielements(request):
     template_name = 'metadb/hr/dropdown_list_options.html'
     sleep(0.1)  # Have to wait for DB to arrange things.
     data = GuiElement.objects.order_by('name').all()
+    ctx = {'data': data}
+    return render(request, template_name, ctx)
+
+def load_parameters(request):
+    template_name = 'metadb/hr/dropdown_list_options.html'
+    sleep(0.1)  # Have to wait for DB to arrange things.
+    data = ParameterI18N.objects.filter(
+        language__code=get_language()).order_by('name').all()
+    ctx = {'data': data}
+    return render(request, template_name, ctx)
+
+def load_timesteps(request):
+    template_name = 'metadb/hr/dropdown_list_options.html'
+    sleep(0.1)  # Have to wait for DB to arrange things.
+    data = TimeStepI18N.objects.filter(
+        language__code=get_language()).order_by('name').all()
+    ctx = {'data': data}
+    return render(request, template_name, ctx)
+
+def load_lvsgroups(request):
+    template_name = 'metadb/hr/dropdown_list_options.html'
+    sleep(0.1)  # Have to wait for DB to arrange things.
+    data = LevelsGroup.objects.order_by('description').all()
     ctx = {'data': data}
     return render(request, template_name, ctx)
