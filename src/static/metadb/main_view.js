@@ -112,20 +112,20 @@ specpar_columns = [
 specpar_columnsDefs = [
     { width: '20px', targets: 0, orderable: false, className: 'select-checkbox' },  // Select checkbox
     { width: '45px', targets: 1, orderable: false, },  // Buttons
-    { width: '5%', targets: 2 },  // Id
+    { width: '25px', targets: 2 },  // Id
     { width: '45px', targets: 3,   // Is visible
       render: (data) => {
           return data == 0 ? "" : '<span class="glyphicon glyphicon-ok"></span>';
       }, 
     },
-    { width: '11%', targets: 4 },  // Parameter name
-    { width: '10%', targets: 5 },  // Accumulation mode
-    { width: '15%', targets: 6 },  // Time step name
-    { width: '7%', targets: 7 },   // Time step label
-    { width: '7%', targets: 8 },   // Time step subpath
-    { width: '8%', targets: 9 },   // Levels group
-    { width: '8%', targets: 10 },  // Levels group description
-    { width: '25%', targets: 11 }, // Levels
+    { width: '95px', targets: 4 },   // Parameter name
+    { width: '95px', targets: 5 },   // Accumulation mode
+    { width: '95px', targets: 6 },   // Time step name
+    { width: '95px', targets: 7 },   // Time step label
+    { width: '95px', targets: 8 },   // Time step subpath
+    { width: '95px', targets: 9 },   // Levels group
+    { width: '95px', targets: 10 },  // Levels group description
+    { width: '175px', targets: 11 },  // Levels
 ]
 
 var data_update_url = $('#tab-data').attr('update-data-url').split('99999');
