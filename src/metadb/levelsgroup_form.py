@@ -1,4 +1,4 @@
-from django.forms import (ModelForm, CharField, ModelChoiceField)
+from django.forms import (ModelForm, CharField, ModelChoiceField, HiddenInput)
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import get_language
 from django.urls import reverse
@@ -17,6 +17,9 @@ class LevelsGroupForm(ModelForm):
         self.fields['unitsi18n'].label = _('Measurement unit')
         self.fields['unitsi18n'].empty_label = '*'
         self.fields['unitsi18n'].data_url = reverse('metadb:unit_create')
+
+        self.fields['selected_levels'] = CharField(widget=HiddenInput())
+        self.fields['selected_levels'].label = _('Select levels')
 
         self.order_fields(['description', 'units'])
 
