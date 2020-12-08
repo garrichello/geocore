@@ -13,7 +13,7 @@ class ParameterForm(ModelForm):
         self.fields['is_visible'].label = _('Visible')
         # Name
         self.fields['name'] = CharField()
-        self.fields['name'].label = _('Parameter')
+        self.fields['name'].label = _('Name')
         # Accumulation mode
         self.fields['accumulation_mode'].empty_label = '*'
         self.fields['accumulation_mode'].label = _('Accumulation mode')
