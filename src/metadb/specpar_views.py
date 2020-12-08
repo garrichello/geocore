@@ -22,6 +22,7 @@ class SpecificParameterMixin():
             sp_obj = form.save(commit=False)  # Get data object
             sp_obj.parameter = form.cleaned_data['parameteri18n'].parameter
             sp_obj.time_step = form.cleaned_data['time_stepi18n'].time_step
+            sp_obj.levels_group = form.cleaned_data['lvs_group']
             sp_obj.save()  # Save object
             form.save_m2m()  # Save many-to-many relations
             data['form_is_valid'] = True
