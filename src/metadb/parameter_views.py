@@ -60,7 +60,7 @@ class ParameterUpdateView(ParameterMixin, SimpleUpdateView):
     ctx = {
         'form_class': 'js-parameter-form',
         'title': _("Update meteorological parameter"),
-        'submit_name': _("Update parameters"),
+        'submit_name': _("Update parameter"),
     }
     url_name = 'metadb:parameter_update'
 
@@ -73,6 +73,6 @@ class ParameterDeleteView(SimpleDeleteView):
         'form_class': 'js-parameter-delete-form',
         'title': _('Confirm meteorological parameter delete'),
         'text': _('Are you sure you want to delete the parameter'),
-        'submit_name': _('Delete parameters')
+        'submit_name': _('Delete parameter')
     }
     url_name = 'metadb:parameter_delete'
