@@ -1,15 +1,17 @@
 import os
-import django
 #from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 import unittest
-from selenium import webdriver
-from selenium.webdriver.support.ui import Select
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-#from selenium.common.exceptions import NoSuchElementException
-import metadb
 from time import sleep
+
+import django
+#from selenium.common.exceptions import NoSuchElementException
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import Select, WebDriverWait
+
+import metadb
+
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'geocore.settings.development')
 django.setup()
 
@@ -303,7 +305,7 @@ class NewVisitorTest(unittest.TestCase):
 
         # John waits until the all enterd data apperars in the data table
         WebDriverWait(self.browser, 10).until(
-            EC.presence_of_element_located((By.XPATH, 
+            EC.presence_of_element_located((By.XPATH,
             '//table[@id="dataset"]/tbody/tr/td[contains(text(), "JohnCol")]'))
         )
         # Now table contains a new record describing his dataset as follows:
