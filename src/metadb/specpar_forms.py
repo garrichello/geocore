@@ -1,6 +1,7 @@
 from django.utils.translation import get_language
 from django.forms import (ModelForm, ModelChoiceField, Textarea, CharField)
 from django.utils.translation import gettext_lazy as _
+from django.urls import reverse
 
 from .models import SpecificParameter, ParameterI18N, TimeStepI18N
 
@@ -17,14 +18,17 @@ class SpecificParameterForm(ModelForm):
         self.fields['parameteri18n'] = ModelChoiceField(queryset=qset)
         self.fields['parameteri18n'].empty_label = self.empty_label
         self.fields['parameteri18n'].label = _('Parameter')
+        self.fields['parameteri18n'].data_url = reverse('metadb:parameter_create')
         # Time step
         qset = TimeStepI18N.objects.filter(language__code=language).order_by('name')
         self.fields['time_stepi18n'] = ModelChoiceField(queryset=qset)
         self.fields['time_stepi18n'].empty_label = self.empty_label
         self.fields['time_stepi18n'].label = _('Time step')
+        self.fields['time_stepi18n'].data_url = reverse('metadb:time_step_create')
         # Levels group
         self.fields['levels_group'].empty_label = self.empty_label
         self.fields['levels_group'].label = _('Levels group')
+        self.fields['levels_group'].data_url = reverse('metadb:levels_group_create')
         # Levels names
         self.fields['levels_namesi18n'] = CharField(widget=Textarea(attrs={'rows': 3}), disabled=True)
         self.fields['levels_namesi18n'].label = _('Levels names')
