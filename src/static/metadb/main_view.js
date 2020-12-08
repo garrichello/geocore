@@ -30,8 +30,8 @@ collection_columnsDefs = [
     { width: '5%', targets: 2 },  // Id
     { width: '11%', targets: 3 },  // Label
     { width: '14%', targets: 4 },  // Name
-    { width: '22%', targets: 5 },  // Description
-    { width: '10%', targets: 6 },  // Organiation
+    { width: '20%', targets: 5 },  // Description
+    { width: '12%', targets: 6 },  // Organization
     { width: '15%', targets: 7,  // Urganization URL
       render: (data) => `<a href="${data}" target="_blank">${data}</a>`,
     },
@@ -156,6 +156,9 @@ data_columns = [
     { 'data': 'property_label' },
     { 'data': 'property_value' },
     { 'data': 'root_dir' },
+    { 'data': 'subpath0' },
+    { 'data': 'subpath1' },
+    { 'data': 'subpath2' },
     { 'data': 'file_pattern' },
     { 'data': 'scale' },
     { 'data': 'offset' },
@@ -183,9 +186,12 @@ data_columnsDefs = [
     { width: '85px', targets: 14 },   // Property label
     { width: '85px', targets: 15 },   // Property value
     { width: '165px', targets: 16 },   // Root dir
-    { width: '165px', targets: 17 },  // File pattern
-    { width: '55px', targets: 18 },   // Scale
-    { width: '55px', targets: 19 },   // Offset
+    { width: '75px', targets: 17 },   // Subpath0
+    { width: '75px', targets: 18 },   // Subpath1
+    { width: '75px', targets: 19 },   // Subpath2
+    { width: '165px', targets: 20 },  // File pattern
+    { width: '55px', targets: 21 },   // Scale
+    { width: '55px', targets: 22 },   // Offset
 ]
 
 commonOptions = {

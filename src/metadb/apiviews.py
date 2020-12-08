@@ -136,11 +136,14 @@ class DataApiListView(APIView):
                     data.specific_parameter.levels_group.description,
                     data.specific_parameter.levels_group.units.unitsi18n_set.filter(language__code=language).get().name
                 ),
-                'levels_variable': 
+                'levels_variable':
                     data.levels_variable.name if data.levels_variable else None,
                 'property_label': data.property.label,
                 'property_value': data.property_value.label,
                 'root_dir': data.root_dir.name,
+                'subpath0': data.dataset.scenario.subpath0,
+                'subpath1': data.dataset.resolution.subpath1,
+                'subpath2': data.specific_parameter.time_step.subpath2,
                 'file_pattern': data.file.name_pattern,
                 'scale': data.scale,
                 'offset': data.offset,
