@@ -70,7 +70,7 @@ from .form_loads import (load_organizations, load_collections, load_resolutions,
                          load_parameter_timesteps, load_lvsvars, load_variables,
                          load_units, load_properties, load_propvals,
                          load_rootdirs, load_files, load_guielements,
-                         load_parameters, load_timesteps, load_lvsgroups)
+                         load_parameters, load_timesteps, load_lvsgroups, load_levels)
 
 app_name = 'metadb'
 urlpatterns = [
@@ -100,6 +100,7 @@ urlpatterns = [
     path('specpars/form/load-timesteps/', load_timesteps, name='form_load_timesteps'),
     path('specpars/form/load-lvsgroups/', load_lvsgroups, name='form_load_lvsgroups'),
     path('specpars/form/load-lvsnames/', load_lvsgroup_lvsnames, name='sp_form_load_lvsgroup_lvsnames'),
+    path('specpars/form/load-levels/', load_levels, name='form_load_levels'),
 
     path('data/create/', DataCreateView.as_view(), name='data_create'),
     path('data/<int:pk>/update/', DataUpdateView.as_view(), name='data_update'),
