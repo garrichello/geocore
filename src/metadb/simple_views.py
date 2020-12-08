@@ -9,7 +9,7 @@ class SimpleBaseView(View):
     form_class = None
     model = None
 
-    def save_form(self, request, template_name, ctx):
+    def save_form(self, request, template_name, ctx, create=False):
         ''' Saves the form '''
         data = dict()
         form = ctx['forms'][0]
@@ -27,6 +27,7 @@ class SimpleCreateView(SimpleBaseView):
     template_name = ''
     ctx = {}
     url_name = ''
+    create = False
 
     def get(self, request):
         form = self.form_class()  # pylint: disable=not-callable
@@ -38,7 +39,7 @@ class SimpleCreateView(SimpleBaseView):
     def post(self, request):
         form = self.form_class(request.POST)  # pylint: disable=not-callable
         self.ctx['forms'] = [form]
-        return self.save_form(request, self.template_name, self.ctx)
+        return self.save_form(request, self.template_name, self.ctx, self.create)
 
 
 class SimpleUpdateView(SimpleBaseView):
