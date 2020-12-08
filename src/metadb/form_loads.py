@@ -7,7 +7,7 @@ from time import sleep
 from .models import (Collection, OrganizationI18N, Resolution, Scenario, 
                      DataKind, FileType, ParameterI18N, TimeStepI18N,
                      Variable, UnitsI18N, Property, PropertyValue,
-                     RootDir, File, GuiElement, LevelsGroup)
+                     RootDir, File, GuiElement, LevelsGroup, Level)
 from .db_loads import (get_resolutions, get_scenarios,
                        get_timesteps, get_levelsgroups, get_levels)
 
@@ -193,4 +193,11 @@ def load_lvsgroups(request):
     sleep(0.1)  # Have to wait for DB to arrange things.
     data = LevelsGroup.objects.order_by('description').all()
     ctx = {'data': data}
+    return render(request, template_name, ctx)
+
+def load_levels(request):
+    template_name = 'metadb/hr/list_group_items.html'
+    sleep(0.1)  # Have to wait for DB to arrange things.
+    levels = Level.objects.order_by('label').all()
+    ctx = {'data': levels}
     return render(request, template_name, ctx)
