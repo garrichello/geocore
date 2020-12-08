@@ -60,6 +60,9 @@ from .timestep_views import (TimeStepCreateView, TimeStepUpdateView,
 from .levelsgroup_views import (LevelsGroupCreateView, LevelsGroupUpdateView,
                                 LevelsGroupDeleteView)
 
+from .level_views import (LevelCreateView, LevelUpdateView,
+                                LevelDeleteView)
+
 from .form_loads import (load_organizations, load_collections, load_resolutions,
                          load_scenarios, load_datakinds, load_filetypes,
                          load_dataset_resolutions, load_dataset_scenarios,
@@ -180,5 +183,9 @@ urlpatterns = [
     path('levelsgroups/create/', LevelsGroupCreateView.as_view(), name='levels_group_create'),
     path('levelsgroups/<int:pk>/update/', LevelsGroupUpdateView.as_view(), name='levels_group_update'),
     path('levelsgroups/<int:pk>/delete/', LevelsGroupDeleteView.as_view(), name='levels_group_delete'),
+
+    path('levels/create/', LevelCreateView.as_view(), name='level_create'),
+    path('levels/<int:pk>/update/', LevelUpdateView.as_view(), name='level_update'),
+    path('levels/<int:pk>/delete/', LevelDeleteView.as_view(), name='level_delete'),
 
 ]
