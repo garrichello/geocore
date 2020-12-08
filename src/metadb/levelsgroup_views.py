@@ -1,13 +1,38 @@
 from .simple_views import SimpleCreateView, SimpleUpdateView, SimpleDeleteView
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse_lazy
+from django.http import JsonResponse
+from django.template.loader import render_to_string
 
 from .levelsgroup_form import LevelsGroupForm
 
-from .models import LevelsGroup
+from .models import LevelsGroup, Level
+
+import json
+
+class LevelsGroupMixin():
+
+    def save_form(self, request, template_name, ctx, create=False):
+        ''' Saves the form '''
+        data = dict()
+        form = ctx['forms'][0]
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.units = form.cleaned_data['unitsi18n'].units
+            lvs_names = json.loads(form.cleaned_data['selected_levels'])
+            lvs_objs = Level.objects.filter(label__in=lvs_names)
+            obj.save()
+            obj.level.set(lvs_objs)
+            form.save_m2m()
+            data['form_is_valid'] = True
+        else:
+            data['form_is_valid'] = False
+
+        data['html_form'] = render_to_string(template_name, ctx, request)
+        return JsonResponse(data)
 
 
-class LevelsGroupCreateView(SimpleCreateView):
+class LevelsGroupCreateView(LevelsGroupMixin, SimpleCreateView):
     form_class = LevelsGroupForm
     model = LevelsGroup
     template_name = 'metadb/includes/levelsgroup_form.html'
@@ -19,12 +44,14 @@ class LevelsGroupCreateView(SimpleCreateView):
         'attributes': [
             {'name': 'units-url',
              'value': reverse_lazy('metadb:form_load_units')},
+            {'name': 'levels-url',
+             'value': reverse_lazy('metadb:form_load_levels')},
         ]
     }
     url_name = 'metadb:levels_group_create'
 
 
-class LevelsGroupUpdateView(SimpleUpdateView):
+class LevelsGroupUpdateView(LevelsGroupMixin, SimpleUpdateView):
     form_class = LevelsGroupForm
     model = LevelsGroup
     template_name = 'metadb/includes/levelsgroup_form.html'
@@ -36,6 +63,8 @@ class LevelsGroupUpdateView(SimpleUpdateView):
         'attributes': [
             {'name': 'units-url',
              'value': reverse_lazy('metadb:form_load_units')},
+            {'name': 'levels-url',
+             'value': reverse_lazy('metadb:form_load_levels')},
         ]
     }
     url_name = 'metadb:levels_group_update'
