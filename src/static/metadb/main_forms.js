@@ -50,7 +50,7 @@ $(function() {
             error: function(xhr, errmsg, err) {
                 console.error('Error occured when loading form data');
 //                $(modal_name+' .modal-content').html(xhr.responseText);
-                console.log(xhr.status + ": " + xhr.responseText);
+//                console.log(xhr.status + ": " + xhr.responseText);
             }
         });
         return modal_id;
