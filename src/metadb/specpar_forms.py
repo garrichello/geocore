@@ -3,7 +3,7 @@ from django.forms import (ModelForm, ModelChoiceField, Textarea, CharField)
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
 
-from .models import SpecificParameter, ParameterI18N, TimeStepI18N
+from .models import SpecificParameter, ParameterI18N, TimeStepI18N, LevelsGroup
 
 from .db_loads import get_levels
 
@@ -26,15 +26,16 @@ class SpecificParameterForm(ModelForm):
         self.fields['time_stepi18n'].label = _('Time step')
         self.fields['time_stepi18n'].data_url = reverse('metadb:time_step_create')
         # Levels group
-        self.fields['levels_group'].empty_label = self.empty_label
-        self.fields['levels_group'].label = _('Levels group')
-        self.fields['levels_group'].data_url = reverse('metadb:levels_group_create')
+        self.fields['lvs_group'] = ModelChoiceField(queryset=LevelsGroup.objects)
+        self.fields['lvs_group'].empty_label = self.empty_label
+        self.fields['lvs_group'].label = _('Levels group')
+        self.fields['lvs_group'].data_url = reverse('metadb:levels_group_create')
         # Levels names
         self.fields['levels_namesi18n'] = CharField(widget=Textarea(attrs={'rows': 3}), disabled=True)
         self.fields['levels_namesi18n'].label = _('Levels names')
         self.fields['levels_namesi18n'].required = False
 
-        self.order_fields(['parameteri18n', 'time_stepi18n', 'levels_group', 'levels_namesi18n'])
+        self.order_fields(['parameteri18n', 'time_stepi18n', 'lvs_group', 'levels_namesi18n'])
 
     def fill_fields(self):
         # The following is needed for passing validation by the form.
@@ -52,7 +53,7 @@ class SpecificParameterForm(ModelForm):
 
     class Meta:
         model = SpecificParameter
-        fields = ['levels_group']
+        fields = []
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
