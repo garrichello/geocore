@@ -8,6 +8,13 @@
     },
     "python.linting.enabled": true,
     "python.linting.pylintEnabled": true,
+    "python.linting.pylintArgs": [
+        "--load-plugins",
+        "pylint_django",
+        "--disable=W0401",
+        "--disable=W0614",
+        "--max-line-length=150",
+    ],
     "python.testing.unittestArgs": [
         "-v",
         "-s",
