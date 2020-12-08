@@ -5,7 +5,7 @@ from django.urls import reverse
 from .models import ( DataKind, FileType, Organization,
     OrganizationI18N, Resolution, Scenario, Variable,
     UnitsI18N, Property, PropertyValue, RootDir, File, 
-    GuiElement, GuiElementI18N )
+    GuiElement, GuiElementI18N, Parameter, ParameterI18N )
 
 
 class DataKindForm(ModelForm):

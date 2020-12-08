@@ -6,7 +6,7 @@ from django.http import JsonResponse
 
 from .specpar_forms import SpecificParameterForm
 
-from .models import SpecificParameter, ParameterI18N, TimeStepI18N
+from .models import SpecificParameter
 
 
 class SpecificParameterMixin():

@@ -1,4 +1,4 @@
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import render
 from django.utils.translation import get_language
 from django.http import HttpResponse
 

@@ -66,7 +66,7 @@ class CollectionCreateView(CollectionBaseView):
         'submit_name': _("Create collection"),
         'script': 'metadb/collection_form.js',
         'attributes': [
-            {'name': 'organizations-url', 
+            {'name': 'organizations-url',
              'value': reverse_lazy('metadb:form_load_organizations')}
         ]
     }

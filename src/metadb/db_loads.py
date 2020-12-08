@@ -21,9 +21,9 @@ def get_levelsgroups(parameter_id, time_step_id):
 
 def get_levels(lvsgroup_id):
     units = UnitsI18N.objects.filter(
-        language__code=get_language(), 
+        language__code=get_language(),
         units__levelsgroup__id=lvsgroup_id).get().name
-    levels = '; '.join(['{} [{}]'.format(level.name, units) for level in 
+    levels = '; '.join(['{} [{}]'.format(level.name, units) for level in
         LevelI18N.objects.filter(
             language__code=get_language(),
             level__levels_group__id=lvsgroup_id)])
