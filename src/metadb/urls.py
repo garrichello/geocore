@@ -1,4 +1,4 @@
-from django.urls import include, path
+from django.urls import path
 
 from .views import MainView
 
@@ -49,6 +49,16 @@ from .rootdir_views import (RootDirCreateView, RootDirUpdateView,
 
 from .file_views import (FileCreateView, FileUpdateView, FileDeleteView)
 
+
+from .parameter_views import (ParameterCreateView, ParameterUpdateView,
+                              ParameterDeleteView)
+
+
+from .timestep_views import (TimeStepCreateView, TimeStepUpdateView,
+                             TimeStepDeleteView)
+
+from .levelsgroup_views import (LevelsGroupCreateView, LevelsGroupUpdateView,
+                                LevelsGroupDeleteView)
 
 from .form_loads import (load_organizations, load_collections, load_resolutions,
                          load_scenarios, load_datakinds, load_filetypes,
@@ -158,5 +168,17 @@ urlpatterns = [
     path('filenames/create/', FileCreateView.as_view(), name='file_create'),
     path('filenames/<int:pk>/update/', FileUpdateView.as_view(), name='file_update'),
     path('filenames/<int:pk>/delete/', FileDeleteView.as_view(), name='file_delete'),
+
+    path('parameters/create/', ParameterCreateView.as_view(), name='parameter_create'),
+    path('parameters/<int:pk>/update/', ParameterUpdateView.as_view(), name='parameter_update'),
+    path('parameters/<int:pk>/delete/', ParameterDeleteView.as_view(), name='parameter_delete'),
+
+    path('timesteps/create/', TimeStepCreateView.as_view(), name='time_step_create'),
+    path('timesteps/<int:pk>/update/', TimeStepUpdateView.as_view(), name='time_step_update'),
+    path('timesteps/<int:pk>/delete/', TimeStepDeleteView.as_view(), name='time_step_delete'),
+
+    path('levelsgroups/create/', LevelsGroupCreateView.as_view(), name='levels_group_create'),
+    path('levelsgroups/<int:pk>/update/', LevelsGroupUpdateView.as_view(), name='levels_group_update'),
+    path('levelsgroups/<int:pk>/delete/', LevelsGroupDeleteView.as_view(), name='levels_group_delete'),
 
 ]
