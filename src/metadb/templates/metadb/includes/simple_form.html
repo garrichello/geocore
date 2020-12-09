@@ -1,4 +1,4 @@
-{% load static i18n %}
+{% load static i18n metadb_extras %}
 
 <form method="post" action="{{ action }}" class="{{ form_class }}" 
     {% for attrib in attributes  %}
@@ -25,13 +25,12 @@
     </div>
 </form>
 
-{{ form_class|json_script:"simple-form-class-name" }}
 <script>
     $('.{{ form_class }}').on('submit', function(e) {
         saveForm2.call(this, e);
         return false; 
     });
-</script>
 {% if script %}
-    <script type="text/javascript" charset="utf-8" src="{% static script %}"></script>
+    {{ script|print_static|safe }}
 {% endif %}
+</script>
