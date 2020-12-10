@@ -1,4 +1,4 @@
-from .simple_views import CommonCreateView, CommonUpdateView, CommonDeleteView
+from .common_views import CommonCreateView, CommonUpdateView, CommonDeleteView
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse_lazy
 from django.template.loader import render_to_string
