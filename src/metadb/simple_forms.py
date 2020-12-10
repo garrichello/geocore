@@ -2,12 +2,19 @@ from django.utils.translation import gettext_lazy as _
 from django.forms import ModelForm
 from django.urls import reverse
 
-from .models import ( DataKind, FileType, Organization,
-    OrganizationI18N, Resolution, Scenario, Variable,
-    UnitsI18N, Property, PropertyValue, RootDir, File, 
-    GuiElement, GuiElementI18N, Parameter, ParameterI18N )
+from .models import *
 
 
+class AccumulationModeForm(ModelForm):
+
+    class Meta:
+        model = AccumulationMode
+        fields = ['name']
+        labels = {
+            'name': _('Accumulation mode')
+        }
+
+        
 class DataKindForm(ModelForm):
 
     class Meta:
