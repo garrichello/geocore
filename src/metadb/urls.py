@@ -63,14 +63,9 @@ from .levelsgroup_views import (LevelsGroupCreateView, LevelsGroupUpdateView,
 from .level_views import (LevelCreateView, LevelUpdateView,
                                 LevelDeleteView)
 
-from .form_loads import (load_organizations, load_collections, load_resolutions,
-                         load_scenarios, load_datakinds, load_filetypes,
-                         load_dataset_resolutions, load_dataset_scenarios,
-                         load_parameter_lvsgroups, load_lvsgroup_lvsnames,
-                         load_parameter_timesteps, load_lvsvars, load_variables,
-                         load_units, load_properties, load_propvals,
-                         load_rootdirs, load_files, load_guielements,
-                         load_parameters, load_timesteps, load_lvsgroups, load_levels)
+from .accmode_views import *
+
+from .form_loads import *
 
 app_name = 'metadb'
 urlpatterns = [
@@ -101,6 +96,7 @@ urlpatterns = [
     path('specpars/form/load-lvsgroups/', load_lvsgroups, name='form_load_lvsgroups'),
     path('specpars/form/load-lvsnames/', load_lvsgroup_lvsnames, name='sp_form_load_lvsgroup_lvsnames'),
     path('specpars/form/load-levels/', load_levels, name='form_load_levels'),
+    path('specpars/form/load-accmodes/', load_accmodes, name='form_load_accmodes'),
 
     path('data/create/', DataCreateView.as_view(), name='data_create'),
     path('data/<int:pk>/update/', DataUpdateView.as_view(), name='data_update'),
@@ -188,5 +184,9 @@ urlpatterns = [
     path('levels/create/', LevelCreateView.as_view(), name='level_create'),
     path('levels/<int:pk>/update/', LevelUpdateView.as_view(), name='level_update'),
     path('levels/<int:pk>/delete/', LevelDeleteView.as_view(), name='level_delete'),
+
+    path('accmodes/create/', AccumulationModeCreateView.as_view(), name='accmode_create'),
+    path('accmodes/<int:pk>/update/', AccumulationModeUpdateView.as_view(), name='accmode_update'),
+    path('accmodes/<int:pk>/delete/', AccumulationModeDeleteView.as_view(), name='accmode_delete'),
 
 ]
