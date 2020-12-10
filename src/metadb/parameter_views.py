@@ -49,6 +49,11 @@ class ParameterCreateView(ParameterMixin, SimpleCreateView):
         'action': reverse_lazy('metadb:parameter_create'),
         'title': _("Create a new meteorological parameter"),
         'submit_name': _("Create parameter"),
+        'script': 'metadb/parameter_form.js',
+        'attributes': [
+            {'name': 'accmodes-url',
+             'value': reverse_lazy('metadb:form_load_accmodes')}
+        ]
     }
     url_name = 'metadb:parameter_create'
 
@@ -61,6 +66,11 @@ class ParameterUpdateView(ParameterMixin, SimpleUpdateView):
         'form_class': 'js-parameter-form',
         'title': _("Update meteorological parameter"),
         'submit_name': _("Update parameter"),
+        'script': 'metadb/parameter_form.js',
+        'attributes': [
+            {'name': 'accmodes-url',
+             'value': reverse_lazy('metadb:form_load_accmodes')}
+        ]
     }
     url_name = 'metadb:parameter_update'
 
