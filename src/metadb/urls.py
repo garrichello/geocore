@@ -2,6 +2,10 @@ from django.urls import path
 
 from .views import MainView
 
+from .simple_views import *
+
+from .form_loads import *
+
 from .apiviews import (CollectionApiListView, DatasetApiListView, DataApiListView,
                        CollectionApiView, SpecificParameterApiListView)
 from .collection_views import (CollectionCreateView, CollectionDeleteView,
@@ -11,61 +15,21 @@ from .dataset_views import (DatasetCreateView, DatasetDeleteView,
 from .specpar_views import (SpecificParameterCreateView, SpecificParameterDeleteView,
                             SpecificParameterUpdateView)
 from .data_views import (DataCreateView, DataDeleteView, DataUpdateView)
-
 from .organization_views import (OrganizationCreateView, OrganizationUpdateView,
                                  OrganizationDeleteView)
-
-from .resolution_views import (ResolutionCreateView, ResolutionUpdateView,
-                               ResolutionDeleteView)
-
-from .scenario_views import (ScenarioCreateView, ScenarioUpdateView,
-                               ScenarioDeleteView)
-
-from .datakind_views import (DataKindCreateView, DataKindUpdateView,
-                               DataKindDeleteView)
-
-from .filetype_views import (FileTypeCreateView, FileTypeUpdateView,
-                               FileTypeDeleteView)
-
 from .levelsvariable_views import (LevelsVariableCreateView, LevelsVariableUpdateView,
                                    LevelsVariableDeleteView)
-
-from .variable_views import (VariableCreateView, VariableUpdateView,
-                             VariableDeleteView)
-
 from .unit_views import (UnitCreateView, UnitUpdateView, UnitDeleteView)
-
-from .property_views import (PropertyCreateView, PropertyUpdateView,
-                             PropertyDeleteView)
-
 from .guielement_views import (GuiElementCreateView, GuiElementUpdateView,
                                GuiElementDeleteView)
-
-from .propertyvalue_views import (PropertyValueCreateView, PropertyValueUpdateView,
-                                  PropertyValueDeleteView)
-
-from .rootdir_views import (RootDirCreateView, RootDirUpdateView,
-                            RootDirDeleteView)
-
-from .file_views import (FileCreateView, FileUpdateView, FileDeleteView)
-
-
 from .parameter_views import (ParameterCreateView, ParameterUpdateView,
                               ParameterDeleteView)
-
-
 from .timestep_views import (TimeStepCreateView, TimeStepUpdateView,
                              TimeStepDeleteView)
-
 from .levelsgroup_views import (LevelsGroupCreateView, LevelsGroupUpdateView,
                                 LevelsGroupDeleteView)
-
 from .level_views import (LevelCreateView, LevelUpdateView,
                                 LevelDeleteView)
-
-from .accmode_views import *
-
-from .form_loads import *
 
 app_name = 'metadb'
 urlpatterns = [
