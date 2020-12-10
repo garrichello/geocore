@@ -26,5 +26,5 @@ def get_levels(lvsgroup_id):
     levels = '; '.join(['{} [{}]'.format(level.name, units) for level in
         LevelI18N.objects.filter(
             language__code=get_language(),
-            level__levels_group__id=lvsgroup_id)])
+            level__levels_group__id=lvsgroup_id).order_by('name')])
     return levels
