@@ -1,6 +1,6 @@
 $(function () {
     var data_form_class_name = '.js-data-form';
-    var modal_id = '#'+getModalName('parent');
+    var modal_id = '#'+getModalName();
 
     var loadScenariosChain = function(form_name) {
         var form = $(form_name);
@@ -131,8 +131,8 @@ $(function () {
 
     // + buttons handling
     $(data_form_class_name).on('click', '.js-add-button', function() { 
-        var modal_id = loadForm2.call(this);
-        $(modal_id).on('hidden.bs.modal', function() {
+        var child_modal_id = loadForm2.call(this);
+        $(child_modal_id).on('hidden.bs.modal', function() {
             if ($('.js-levels-variable-form').length) {
                 var form_data = mapFormData('.js-levels-variable-form');  // Get levels variable fields
                 loadOptions.call(this, data_form_class_name, 'id_levels_variable',
@@ -175,7 +175,7 @@ $(function () {
                     'files-url', form_data['name_pattern']
                 );
             };
-            $(modal_id).remove();
+            $(child_modal_id).remove();
         })
     });
 });

@@ -3,8 +3,8 @@ $(function() {
 
     // Create organization modal
     $(collection_form_class_name).on('click', '.js-add-button', function() { 
-        var modal_id = loadForm2.call(this);
-        $(modal_id).on('hidden.bs.modal', function() {
+        var child_modal_id = loadForm2.call(this);
+        $(child_modal_id).on('hidden.bs.modal', function() {
             var form_data = mapFormData('.js-organization-form');  // Get fields of the form as a map
             if ('name' in form_data) {
                 if (form_data['name'].length) {                  
@@ -12,7 +12,7 @@ $(function() {
                     'organizations-url', form_data['name']
                 );                    
                 }
-                $(modal_id).remove();
+                $(child_modal_id).remove();
             }
         });
     });

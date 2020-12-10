@@ -23,8 +23,8 @@ $(function() {
     // Create organization modal
     var simple_form_class_name = '.js-property-form';
     $(simple_form_class_name).on('click', '.js-add-button', function() { 
-        var modal_id = loadForm2.call(this);
-        $(modal_id).on('hidden.bs.modal', function() {
+        var child_modal_id = loadForm2.call(this);
+        $(child_modal_id).on('hidden.bs.modal', function() {
             var form_data = mapFormData('.js-gui-element-form');  // Get fields of the form as a map
             if ('name' in form_data) {
                 if (form_data['name'].length) {
@@ -32,7 +32,7 @@ $(function() {
                         'gui-element-url', form_data['name']
                     );
                 }
-                $(modal_id).remove();
+                $(child_modal_id).remove();
             }
         });
     });

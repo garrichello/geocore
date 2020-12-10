@@ -3,8 +3,8 @@ $(function() {
 
     // + buttons handling
     $(dataset_form_class_name).on('click', '.js-add-button', function() {
-        var modal_id = loadForm2.call(this);
-        $(modal_id).on('hidden.bs.modal', function() {
+        var child_modal_id = loadForm2.call(this);
+        $(child_modal_id).on('hidden.bs.modal', function() {
             if ($('.js-collection-form').length) {
                 var form_data = mapFormData('.js-collection-form');  // Get collection fields
                 loadOptions.call( this, dataset_form_class_name, 'id_collection', 'collections-url',
@@ -35,7 +35,7 @@ $(function() {
                     form_data['name']
                 );
             };
-            $(modal_id).remove();
+            $(child_modal_id).remove();
         })
     });
 });
