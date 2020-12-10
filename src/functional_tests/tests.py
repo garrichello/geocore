@@ -603,10 +603,10 @@ class FullScaleTest(unittest.TestCase):
         # John waits for the form to be fully loaded (but no more than 10 sec!)
         form_class = 'js-specpar-form'
         WebDriverWait(self.browser, 10).until(
-            EC.presence_of_all_elements_located((By.XPATH,
-                f'//form[@class="{form_class}"]/*'))
+            EC.visibility_of_element_located((By.CLASS_NAME, form_class))
         )
         specpar_form = self.browser.find_element_by_class_name(form_class)
+        sleep(1)
 
         # John wants to select a meteorological parameter, but finds out that the needed one is absent
         # So he decides to add it and clicks '+' button next to the Parameter dropdown list.
