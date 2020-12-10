@@ -2,7 +2,7 @@ from django.template.loader import render_to_string
 from django.http import JsonResponse
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse_lazy
-from .simple_views import SimpleCreateView, SimpleUpdateView, SimpleDeleteView
+from .simple_views import CommonCreateView, CommonUpdateView, CommonDeleteView
 
 from .timestep_forms import TimeStepForm
 
@@ -39,7 +39,7 @@ class TimeStepMixin():
         return JsonResponse(data)
 
 
-class TimeStepCreateView(TimeStepMixin, SimpleCreateView):
+class TimeStepCreateView(TimeStepMixin, CommonCreateView):
     form_class = TimeStepForm
     model = TimeStep
     template_name = 'metadb/includes/simple_form.html'
@@ -53,7 +53,7 @@ class TimeStepCreateView(TimeStepMixin, SimpleCreateView):
     url_name = 'metadb:time_step_create'
 
 
-class TimeStepUpdateView(TimeStepMixin, SimpleUpdateView):
+class TimeStepUpdateView(TimeStepMixin, CommonUpdateView):
     form_class = TimeStepForm
     model = TimeStep
     template_name = 'metadb/includes/simple_form.html'
@@ -65,7 +65,7 @@ class TimeStepUpdateView(TimeStepMixin, SimpleUpdateView):
     url_name = 'metadb:time_step_update'
 
 
-class TimeStepDeleteView(SimpleDeleteView):
+class TimeStepDeleteView(CommonDeleteView):
     form_class = TimeStepForm
     model = TimeStep
     template_name = 'metadb/includes/delete_form.html'

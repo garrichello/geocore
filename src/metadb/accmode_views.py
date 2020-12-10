@@ -1,4 +1,4 @@
-from .simple_views import SimpleCreateView, SimpleUpdateView, SimpleDeleteView
+from .simple_views import CommonCreateView, CommonUpdateView, CommonDeleteView
 from django.utils.translation import gettext_lazy as _
 
 from .simple_forms import AccumulationModeForm
@@ -6,7 +6,7 @@ from .simple_forms import AccumulationModeForm
 from .models import AccumulationMode
 
 
-class AccumulationModeCreateView(SimpleCreateView):
+class AccumulationModeCreateView(CommonCreateView):
     form_class = AccumulationModeForm
     model = AccumulationMode
     template_name = 'metadb/includes/simple_form.html'
@@ -18,7 +18,7 @@ class AccumulationModeCreateView(SimpleCreateView):
     url_name = 'metadb:accmode_create'
 
 
-class AccumulationModeUpdateView(SimpleUpdateView):
+class AccumulationModeUpdateView(CommonUpdateView):
     form_class = AccumulationModeForm
     model = AccumulationMode
     template_name = 'metadb/includes/simple_form.html'
@@ -29,7 +29,7 @@ class AccumulationModeUpdateView(SimpleUpdateView):
     }
     url_name = 'metadb:accmode_update'
 
-class AccumulationModeDeleteView(SimpleDeleteView):
+class AccumulationModeDeleteView(CommonDeleteView):
     form_class = AccumulationModeForm
     model = AccumulationMode
     template_name = 'metadb/includes/delete_form.html'

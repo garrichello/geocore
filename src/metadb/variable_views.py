@@ -1,4 +1,4 @@
-from .simple_views import SimpleCreateView, SimpleUpdateView, SimpleDeleteView
+from .simple_views import CommonCreateView, CommonUpdateView, CommonDeleteView
 from django.utils.translation import gettext_lazy as _
 
 from .simple_forms import VariableForm
@@ -6,7 +6,7 @@ from .simple_forms import VariableForm
 from .models import Variable
 
 
-class VariableCreateView(SimpleCreateView):
+class VariableCreateView(CommonCreateView):
     form_class = VariableForm
     model = Variable
     template_name = 'metadb/includes/simple_form.html'
@@ -18,7 +18,7 @@ class VariableCreateView(SimpleCreateView):
     url_name = 'metadb:variable_create'
 
 
-class VariableUpdateView(SimpleUpdateView):
+class VariableUpdateView(CommonUpdateView):
     form_class = VariableForm
     model = Variable
     template_name = 'metadb/includes/simple_form.html'
@@ -29,7 +29,7 @@ class VariableUpdateView(SimpleUpdateView):
     }
     url_name = 'metadb:variable_update'
 
-class VariableDeleteView(SimpleDeleteView):
+class VariableDeleteView(CommonDeleteView):
     form_class = VariableForm
     model = Variable
     template_name = 'metadb/includes/delete_form.html'

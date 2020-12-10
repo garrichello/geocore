@@ -1,4 +1,4 @@
-from .simple_views import SimpleCreateView, SimpleUpdateView, SimpleDeleteView
+from .simple_views import CommonCreateView, CommonUpdateView, CommonDeleteView
 from django.utils.translation import gettext_lazy as _
 
 from .simple_forms import DataKindForm
@@ -6,7 +6,7 @@ from .simple_forms import DataKindForm
 from .models import DataKind
 
 
-class DataKindCreateView(SimpleCreateView):
+class DataKindCreateView(CommonCreateView):
     form_class = DataKindForm
     model = DataKind
     template_name = 'metadb/includes/simple_form.html'
@@ -18,7 +18,7 @@ class DataKindCreateView(SimpleCreateView):
     url_name = 'metadb:datakind_create'
 
 
-class DataKindUpdateView(SimpleUpdateView):
+class DataKindUpdateView(CommonUpdateView):
     form_class = DataKindForm
     model = DataKind
     template_name = 'metadb/includes/simple_form.html'
@@ -29,7 +29,7 @@ class DataKindUpdateView(SimpleUpdateView):
     }
     url_name = 'metadb:datakind_update'
 
-class DataKindDeleteView(SimpleDeleteView):
+class DataKindDeleteView(CommonDeleteView):
     form_class = DataKindForm
     model = DataKind
     template_name = 'metadb/includes/delete_form.html'

@@ -1,4 +1,4 @@
-from .simple_views import SimpleCreateView, SimpleUpdateView, SimpleDeleteView
+from .simple_views import CommonCreateView, CommonUpdateView, CommonDeleteView
 from django.utils.translation import gettext_lazy as _
 
 from .simple_forms import LevelsVariableForm
@@ -6,7 +6,7 @@ from .simple_forms import LevelsVariableForm
 from .models import Variable
 
 
-class LevelsVariableCreateView(SimpleCreateView):
+class LevelsVariableCreateView(CommonCreateView):
     form_class = LevelsVariableForm
     model = Variable
     template_name = 'metadb/includes/simple_form.html'
@@ -18,7 +18,7 @@ class LevelsVariableCreateView(SimpleCreateView):
     url_name = 'metadb:levels_variable_create'
 
 
-class LevelsVariableUpdateView(SimpleUpdateView):
+class LevelsVariableUpdateView(CommonUpdateView):
     form_class = LevelsVariableForm
     model = Variable
     template_name = 'metadb/includes/simple_form.html'
@@ -29,7 +29,7 @@ class LevelsVariableUpdateView(SimpleUpdateView):
     }
     url_name = 'metadb:levels_variable_update'
 
-class LevelsVariableDeleteView(SimpleDeleteView):
+class LevelsVariableDeleteView(CommonDeleteView):
     form_class = LevelsVariableForm
     model = Variable
     template_name = 'metadb/includes/delete_form.html'

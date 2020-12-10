@@ -1,4 +1,4 @@
-from .simple_views import SimpleCreateView, SimpleUpdateView, SimpleDeleteView
+from .simple_views import CommonCreateView, CommonUpdateView, CommonDeleteView
 from django.utils.translation import gettext_lazy as _
 
 from .simple_forms import RootDirForm
@@ -6,7 +6,7 @@ from .simple_forms import RootDirForm
 from .models import RootDir
 
 
-class RootDirCreateView(SimpleCreateView):
+class RootDirCreateView(CommonCreateView):
     form_class = RootDirForm
     model = RootDir
     template_name = 'metadb/includes/simple_form.html'
@@ -18,7 +18,7 @@ class RootDirCreateView(SimpleCreateView):
     url_name = 'metadb:root_dir_create'
 
 
-class RootDirUpdateView(SimpleUpdateView):
+class RootDirUpdateView(CommonUpdateView):
     form_class = RootDirForm
     model = RootDir
     template_name = 'metadb/includes/simple_form.html'
@@ -29,7 +29,7 @@ class RootDirUpdateView(SimpleUpdateView):
     }
     url_name = 'metadb:root_dir_update'
 
-class RootDirDeleteView(SimpleDeleteView):
+class RootDirDeleteView(CommonDeleteView):
     form_class = RootDirForm
     model = RootDir
     template_name = 'metadb/includes/delete_form.html'

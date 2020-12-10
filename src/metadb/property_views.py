@@ -1,4 +1,4 @@
-from .simple_views import SimpleCreateView, SimpleUpdateView, SimpleDeleteView
+from .simple_views import CommonCreateView, CommonUpdateView, CommonDeleteView
 from django.utils.translation import gettext_lazy as _
 from .simple_forms import PropertyForm
 from django.urls import reverse_lazy
@@ -6,7 +6,7 @@ from django.urls import reverse_lazy
 from .models import Property
 
 
-class PropertyCreateView(SimpleCreateView):
+class PropertyCreateView(CommonCreateView):
     form_class = PropertyForm
     model = Property
     template_name = 'metadb/includes/simple_form.html'
@@ -23,7 +23,7 @@ class PropertyCreateView(SimpleCreateView):
     url_name = 'metadb:property_create'
 
 
-class PropertyUpdateView(SimpleUpdateView):
+class PropertyUpdateView(CommonUpdateView):
     form_class = PropertyForm
     model = Property
     template_name = 'metadb/includes/simple_form.html'
@@ -39,7 +39,7 @@ class PropertyUpdateView(SimpleUpdateView):
     }
     url_name = 'metadb:property_update'
 
-class PropertyDeleteView(SimpleDeleteView):
+class PropertyDeleteView(CommonDeleteView):
     form_class = PropertyForm
     model = Property
     template_name = 'metadb/includes/delete_form.html'

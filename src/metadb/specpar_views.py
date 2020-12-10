@@ -1,4 +1,4 @@
-from .simple_views import SimpleCreateView, SimpleUpdateView, SimpleDeleteView
+from .simple_views import CommonCreateView, CommonUpdateView, CommonDeleteView
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse_lazy
 from django.template.loader import render_to_string
@@ -33,7 +33,7 @@ class SpecificParameterMixin():
         return JsonResponse(data)
 
 
-class SpecificParameterCreateView(SpecificParameterMixin, SimpleCreateView):
+class SpecificParameterCreateView(SpecificParameterMixin, CommonCreateView):
     ctx = {
         'form_class': 'js-specpar-form',
         'title': _("Create a new specific parameter"),
@@ -58,7 +58,7 @@ class SpecificParameterCreateView(SpecificParameterMixin, SimpleCreateView):
         return self.save_form(request, self.template_name, self.ctx)
 
 
-class SpecificParameterUpdateView(SpecificParameterMixin, SimpleUpdateView):
+class SpecificParameterUpdateView(SpecificParameterMixin, CommonUpdateView):
     ctx = {
         'form_class': 'js-specpar-update-form',
         'title': _("Update specific parameter"),
@@ -77,7 +77,7 @@ class SpecificParameterUpdateView(SpecificParameterMixin, SimpleUpdateView):
     }
     url_name = 'metadb:specpar_update'
 
-class SpecificParameterDeleteView(SimpleDeleteView):
+class SpecificParameterDeleteView(CommonDeleteView):
     form_class = SpecificParameterForm
     model = SpecificParameter
     template_name = 'metadb/includes/delete_form.html'

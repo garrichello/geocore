@@ -1,4 +1,4 @@
-from .simple_views import SimpleCreateView, SimpleUpdateView, SimpleDeleteView
+from .simple_views import CommonCreateView, CommonUpdateView, CommonDeleteView
 from django.utils.translation import gettext_lazy as _
 
 from .simple_forms import ScenarioForm
@@ -6,7 +6,7 @@ from .simple_forms import ScenarioForm
 from .models import Scenario
 
 
-class ScenarioCreateView(SimpleCreateView):
+class ScenarioCreateView(CommonCreateView):
     form_class = ScenarioForm
     model = Scenario
     template_name = 'metadb/includes/simple_form.html'
@@ -18,7 +18,7 @@ class ScenarioCreateView(SimpleCreateView):
     url_name = 'metadb:scenario_create'
 
 
-class ScenarioUpdateView(SimpleUpdateView):
+class ScenarioUpdateView(CommonUpdateView):
     form_class = ScenarioForm
     model = Scenario
     template_name = 'metadb/includes/simple_form.html'
@@ -29,7 +29,7 @@ class ScenarioUpdateView(SimpleUpdateView):
     }
     url_name = 'metadb:scenario_update'
 
-class ScenarioDeleteView(SimpleDeleteView):
+class ScenarioDeleteView(CommonDeleteView):
     form_class = ScenarioForm
     model = Scenario
     template_name = 'metadb/includes/delete_form.html'

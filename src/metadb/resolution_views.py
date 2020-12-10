@@ -1,4 +1,4 @@
-from .simple_views import SimpleCreateView, SimpleUpdateView, SimpleDeleteView
+from .simple_views import CommonCreateView, CommonUpdateView, CommonDeleteView
 from django.utils.translation import gettext_lazy as _
 
 from .simple_forms import ResolutionForm
@@ -6,7 +6,7 @@ from .simple_forms import ResolutionForm
 from .models import Resolution
 
 
-class ResolutionCreateView(SimpleCreateView):
+class ResolutionCreateView(CommonCreateView):
     form_class = ResolutionForm
     model = Resolution
     template_name = 'metadb/includes/simple_form.html'
@@ -18,7 +18,7 @@ class ResolutionCreateView(SimpleCreateView):
     url_name = 'metadb:resolution_create'
 
 
-class ResolutionUpdateView(SimpleUpdateView):
+class ResolutionUpdateView(CommonUpdateView):
     form_class = ResolutionForm
     model = Resolution
     template_name = 'metadb/includes/simple_form.html'
@@ -29,7 +29,7 @@ class ResolutionUpdateView(SimpleUpdateView):
     }
     url_name = 'metadb:resolution_update'
 
-class ResolutionDeleteView(SimpleDeleteView):
+class ResolutionDeleteView(CommonDeleteView):
     form_class = ResolutionForm
     model = Resolution
     template_name = 'metadb/includes/delete_form.html'

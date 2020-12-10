@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404
 from django.urls import reverse
 
 
-class SimpleBaseView(View):
+class CommonBaseView(View):
     form_class = None
     model = None
 
@@ -23,7 +23,7 @@ class SimpleBaseView(View):
         return JsonResponse(data)
 
 
-class SimpleCreateView(SimpleBaseView):
+class CommonCreateView(CommonBaseView):
     template_name = ''
     ctx = {}
     url_name = ''
@@ -42,7 +42,7 @@ class SimpleCreateView(SimpleBaseView):
         return self.save_form(request, self.template_name, self.ctx, self.create)
 
 
-class SimpleUpdateView(SimpleBaseView):
+class CommonUpdateView(CommonBaseView):
     template_name = ''
     ctx = {}
     url_name = ''
@@ -64,7 +64,7 @@ class SimpleUpdateView(SimpleBaseView):
         return self.save_form(request, self.template_name, self.ctx)
 
 
-class SimpleDeleteView(SimpleBaseView):
+class CommonDeleteView(CommonBaseView):
     template_name = ''
     ctx = {}
     url_name = ''

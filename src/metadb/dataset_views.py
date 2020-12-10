@@ -1,4 +1,4 @@
-from .simple_views import SimpleCreateView, SimpleUpdateView, SimpleDeleteView
+from .simple_views import CommonCreateView, CommonUpdateView, CommonDeleteView
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse_lazy
 
@@ -7,7 +7,7 @@ from .dataset_forms import DatasetForm
 from .models import Dataset
 
 
-class DatasetCreateView(SimpleCreateView):
+class DatasetCreateView(CommonCreateView):
     form_class = DatasetForm
     model = Dataset
     template_name = 'metadb/includes/simple_form.html'
@@ -32,7 +32,7 @@ class DatasetCreateView(SimpleCreateView):
     url_name = 'metadb:dataset_create'
 
 
-class DatasetUpdateView(SimpleUpdateView):
+class DatasetUpdateView(CommonUpdateView):
     form_class = DatasetForm
     model = Dataset
     template_name = 'metadb/includes/simple_form.html'
@@ -56,7 +56,7 @@ class DatasetUpdateView(SimpleUpdateView):
     }
     url_name = 'metadb:dataset_update'
 
-class DatasetDeleteView(SimpleDeleteView):
+class DatasetDeleteView(CommonDeleteView):
     form_class = DatasetForm
     model = Dataset
     template_name = 'metadb/includes/delete_form.html'

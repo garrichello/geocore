@@ -2,7 +2,7 @@ from django.template.loader import render_to_string
 from django.http import JsonResponse
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse_lazy
-from .simple_views import SimpleCreateView, SimpleUpdateView, SimpleDeleteView
+from .simple_views import CommonCreateView, CommonUpdateView, CommonDeleteView
 
 from .level_forms import LevelForm
 
@@ -39,7 +39,7 @@ class LevelMixin():
         return JsonResponse(data)
 
 
-class LevelCreateView(LevelMixin, SimpleCreateView):
+class LevelCreateView(LevelMixin, CommonCreateView):
     form_class = LevelForm
     model = Level
     template_name = 'metadb/includes/simple_form.html'
@@ -53,7 +53,7 @@ class LevelCreateView(LevelMixin, SimpleCreateView):
     url_name = 'metadb:level_create'
 
 
-class LevelUpdateView(LevelMixin, SimpleUpdateView):
+class LevelUpdateView(LevelMixin, CommonUpdateView):
     form_class = LevelForm
     model = Level
     template_name = 'metadb/includes/simple_form.html'
@@ -65,7 +65,7 @@ class LevelUpdateView(LevelMixin, SimpleUpdateView):
     url_name = 'metadb:level_update'
 
 
-class LevelDeleteView(SimpleDeleteView):
+class LevelDeleteView(CommonDeleteView):
     form_class = LevelForm
     model = Level
     template_name = 'metadb/includes/delete_form.html'

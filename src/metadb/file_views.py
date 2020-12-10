@@ -1,4 +1,4 @@
-from .simple_views import SimpleCreateView, SimpleUpdateView, SimpleDeleteView
+from .simple_views import CommonCreateView, CommonUpdateView, CommonDeleteView
 from django.utils.translation import gettext_lazy as _
 
 from .simple_forms import FileForm
@@ -6,7 +6,7 @@ from .simple_forms import FileForm
 from .models import File
 
 
-class FileCreateView(SimpleCreateView):
+class FileCreateView(CommonCreateView):
     form_class = FileForm
     model = File
     template_name = 'metadb/includes/simple_form.html'
@@ -18,7 +18,7 @@ class FileCreateView(SimpleCreateView):
     url_name = 'metadb:file_create'
 
 
-class FileUpdateView(SimpleUpdateView):
+class FileUpdateView(CommonUpdateView):
     form_class = FileForm
     model = File
     template_name = 'metadb/includes/simple_form.html'
@@ -29,7 +29,7 @@ class FileUpdateView(SimpleUpdateView):
     }
     url_name = 'metadb:file_update'
 
-class FileDeleteView(SimpleDeleteView):
+class FileDeleteView(CommonDeleteView):
     form_class = FileForm
     model = File
     template_name = 'metadb/includes/delete_form.html'

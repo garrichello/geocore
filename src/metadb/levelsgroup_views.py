@@ -1,4 +1,4 @@
-from .simple_views import SimpleCreateView, SimpleUpdateView, SimpleDeleteView
+from .simple_views import CommonCreateView, CommonUpdateView, CommonDeleteView
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse_lazy
 from django.http import JsonResponse
@@ -32,7 +32,7 @@ class LevelsGroupMixin():
         return JsonResponse(data)
 
 
-class LevelsGroupCreateView(LevelsGroupMixin, SimpleCreateView):
+class LevelsGroupCreateView(LevelsGroupMixin, CommonCreateView):
     form_class = LevelsGroupForm
     model = LevelsGroup
     template_name = 'metadb/includes/levelsgroup_form.html'
@@ -51,7 +51,7 @@ class LevelsGroupCreateView(LevelsGroupMixin, SimpleCreateView):
     url_name = 'metadb:levels_group_create'
 
 
-class LevelsGroupUpdateView(LevelsGroupMixin, SimpleUpdateView):
+class LevelsGroupUpdateView(LevelsGroupMixin, CommonUpdateView):
     form_class = LevelsGroupForm
     model = LevelsGroup
     template_name = 'metadb/includes/levelsgroup_form.html'
@@ -69,7 +69,7 @@ class LevelsGroupUpdateView(LevelsGroupMixin, SimpleUpdateView):
     }
     url_name = 'metadb:levels_group_update'
 
-class LevelsGroupDeleteView(SimpleDeleteView):
+class LevelsGroupDeleteView(CommonDeleteView):
     form_class = LevelsGroupForm
     model = LevelsGroup
     template_name = 'metadb/includes/delete_form.html'
