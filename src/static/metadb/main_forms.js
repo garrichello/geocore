@@ -41,11 +41,9 @@ $(function() {
             type: "get",
             url: btn.attr("data-url"),
             dataType: 'json',
-            beforeSend: function() {
-                $(modal_id).modal('show');
-            },
             success: function(data) {
-                $(modal_id+' .modal-content').html(data.html_form)
+                $(modal_id+' .modal-content').html(data.html_form);
+                $(modal_id).modal('show');
             },
             error: function(xhr, errmsg, err) {
                 console.error('Error occured when loading form data');
