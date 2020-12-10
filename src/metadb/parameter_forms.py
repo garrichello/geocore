@@ -1,6 +1,7 @@
 from django.forms import (ModelForm, BooleanField, CharField)
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import get_language
+from django.urls import reverse
 
 from .models import Parameter
 
@@ -17,6 +18,7 @@ class ParameterForm(ModelForm):
         # Accumulation mode
         self.fields['accumulation_mode'].empty_label = '*'
         self.fields['accumulation_mode'].label = _('Accumulation mode')
+        self.fields['accumulation_mode'].data_url = reverse('metadb:accmode_create')
 
         self.order_fields(['is_visible', 'name', 'accumulation_mode'])
 
