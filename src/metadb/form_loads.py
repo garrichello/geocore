@@ -4,10 +4,7 @@ from django.http import HttpResponse
 
 from time import sleep
 
-from .models import (Collection, OrganizationI18N, Resolution, Scenario, 
-                     DataKind, FileType, ParameterI18N, TimeStepI18N,
-                     Variable, UnitsI18N, Property, PropertyValue,
-                     RootDir, File, GuiElement, LevelsGroup, Level)
+from .models import *
 from .db_loads import (get_resolutions, get_scenarios,
                        get_timesteps, get_levelsgroups, get_levels)
 
@@ -200,4 +197,11 @@ def load_levels(request):
     sleep(0.1)  # Have to wait for DB to arrange things.
     levels = Level.objects.order_by('label').all()
     ctx = {'data': levels}
+    return render(request, template_name, ctx)
+
+def load_accmodes(request):
+    template_name = 'metadb/hr/dropdown_list_options.html'
+    sleep(0.1)  # Have to wait for DB to arrange things.
+    accmodes = AccumulationMode.objects.order_by('name').all()
+    ctx = {'data': accmodes}
     return render(request, template_name, ctx)
