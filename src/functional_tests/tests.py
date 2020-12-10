@@ -500,11 +500,6 @@ class FullScaleTest(unittest.TestCase):
         self.assertTrue(
             len(data_form.find_element_by_id('id_levels_namesi18n').get_attribute('value')) > 0)
 
-        # John decides to use Levels variable and checks Use levels variable checkbox
-        data_form.find_element_by_id('id_use_lvsvar').click()
-        # This enables Levels variable dropdown list
-        self.assertFalse(data_form.find_element_by_id('id_levels_variable').get_attribute('disabled'))
-
         # John wants to select a levels variable, but finds out that the needed one is absent
         # So he decides to add it and clicks '+' button next to the Levels variable dropdown list.
         self.wait_and_click_add_btn('/en/metadb/levelsvariables/create/')
@@ -528,13 +523,6 @@ class FullScaleTest(unittest.TestCase):
         # John adds a unit
         self.add_1_element('js-unit-form', 'id_name', 'mRd/yr')
         self.wait_and_assert_select_after_submit(form_class, 'id_unitsi18n', 'mRd/yr')
-
-        # John decides to use Property/Property value and checks Use property checkbox
-        data_form.find_element_by_id('id_use_property').click()
-        # This enables Property...
-        self.assertFalse(data_form.find_element_by_id('id_property').get_attribute('disabled'))
-        # ... and Property value dropdown lists
-        self.assertFalse(data_form.find_element_by_id('id_property_value').get_attribute('disabled'))
 
         # John wants to select a property, but finds out that the needed one is absent.
         # So he decides to add it and clicks '+' button next to the Proprty dropdown list.
