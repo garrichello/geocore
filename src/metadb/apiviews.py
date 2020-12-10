@@ -2,6 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import Collection, Dataset, Data, SpecificParameter
 from django.utils.translation import get_language
+from django.db.models import Q
 
 class CollectionApiListView(APIView):
     """
@@ -114,8 +115,9 @@ class DataApiListView(APIView):
     Returns datasets
     """
     def get(self, request):
+        print(request.GET)
         language = get_language()
-
+        qlang = Q(language__code=language)
         datas = Data.objects.all()
         data_data = [
             {
@@ -124,17 +126,17 @@ class DataApiListView(APIView):
                 'collection_label': data.dataset.collection.label,
                 'scenario_name': data.dataset.scenario.name,
                 'resolution_name': data.dataset.resolution.name,
-                'parameter_name': data.specific_parameter.parameter.parameteri18n_set.filter(language__code=language).get().name,
-                'time_step': data.specific_parameter.time_step.timestepi18n_set.filter(language__code=language).get().name,
+                'parameter_name': data.specific_parameter.parameter.parameteri18n_set.filter(qlang).get().name,
+                'time_step': data.specific_parameter.time_step.timestepi18n_set.filter(qlang).get().name,
                 'variable_name': data.variable.name,
-                'units_name': data.units.unitsi18n_set.filter(language__code=language).get().name,
+                'units_name': data.units.unitsi18n_set.filter(qlang).get().name,
                 'levels': '; '.join(
-                    sorted([ level.leveli18n_set.filter(language__code=language).get().name
+                    sorted([ level.leveli18n_set.filter(qlang).get().name
                     for level in data.specific_parameter.levels_group.level.all() ])
                 ),
                 'levels_group': '{} [{}]'.format(
                     data.specific_parameter.levels_group.description,
-                    data.specific_parameter.levels_group.units.unitsi18n_set.filter(language__code=language).get().name
+                    data.specific_parameter.levels_group.units.unitsi18n_set.filter(qlang).get().name
                 ),
                 'levels_variable':
                     data.levels_variable.name if data.levels_variable else None,
