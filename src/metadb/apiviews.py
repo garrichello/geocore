@@ -75,7 +75,7 @@ class DatasetApiListView(APIView):
 
 class SpecificParameterApiListView(APIView):
     """
-    Returns datasets
+    Returns specific parameters
     """
     def get(self, request):
         language = get_language()
@@ -99,8 +99,8 @@ class SpecificParameterApiListView(APIView):
                 ),
                 'levels_group_desc': specpar.levels_group.description,
                 'levels': '; '.join(
-                    [ level.leveli18n_set.filter(language__code=language).get().name
-                        for level in specpar.levels_group.level.all() ]
+                    sorted([ level.leveli18n_set.filter(language__code=language).get().name
+                        for level in specpar.levels_group.level.all() ])
                     ),
             }
             for specpar in specpars
@@ -128,9 +128,9 @@ class DataApiListView(APIView):
                 'time_step': data.specific_parameter.time_step.timestepi18n_set.filter(language__code=language).get().name,
                 'variable_name': data.variable.name,
                 'units_name': data.units.unitsi18n_set.filter(language__code=language).get().name,
-                'levels': '; '.join( 
-                    [ level.leveli18n_set.filter(language__code=language).get().name
-                    for level in data.specific_parameter.levels_group.level.all() ]
+                'levels': '; '.join(
+                    sorted([ level.leveli18n_set.filter(language__code=language).get().name
+                    for level in data.specific_parameter.levels_group.level.all() ])
                 ),
                 'levels_group': '{} [{}]'.format(
                     data.specific_parameter.levels_group.description,
