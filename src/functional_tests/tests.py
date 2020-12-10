@@ -1,10 +1,8 @@
 import os
-#from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 import unittest
 from time import sleep
 
 import django
-#from selenium.common.exceptions import NoSuchElementException
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
@@ -16,7 +14,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'geocore.settings.development')
 django.setup()
 
 
-class NewVisitorTest(unittest.TestCase):
+class FullScaleTest(unittest.TestCase):
 
     def setUp(self):
         self.browser = webdriver.Firefox()
@@ -62,100 +60,214 @@ class NewVisitorTest(unittest.TestCase):
         qs = metadb.models.File.objects.filter(name_pattern='experiment/%mm%_%year%.nc')
         if len(qs) > 0:
             qs.delete()
+        qs = metadb.models.AccumulationMode.objects.filter(name='mult')
+        if len(qs) > 0:
+            qs.delete()
+        qs = metadb.models.TimeStep.objects.filter(label='5h')
+        if len(qs) > 0:
+            qs.delete()
+        qs = metadb.models.Units.objects.filter(unitsi18n__name='Hz')
+        if len(qs) > 0:
+            qs.delete()
+        qs = metadb.models.Level.objects.filter(label__in=['46', '79'])
+        if len(qs) > 0:
+            qs.delete()
 
 #------------------------------------------------------------------------------------------------------
 
-    def wait_and_assert_select_after_submit(self, form, idd, text):
-        # Modal fades away revealing previous form 'Create a new dataset'
-        # John waits until the new collection label apperars in the dropdown list
+    def wait_and_type(self, form_class, element_id, text):
+        loc = f'//form[@class="{form_class}"]//*[@id="{element_id}"]'
+        WebDriverWait(self.browser, 10).until(
+            EC.element_to_be_clickable((By.XPATH, loc))
+        )
+        self.browser.find_element_by_xpath(loc).send_keys(text)
+        WebDriverWait(self.browser, 10).until(
+            EC.text_to_be_present_in_element_value((By.XPATH, loc), text)
+        )
+
+    def wait_and_click_add_btn(self, url):
+        loc = f'//button[@data-url="{url}" and contains(@class, "js-add-button")]'
+        WebDriverWait(self.browser, 10).until(
+            EC.element_to_be_clickable((By.XPATH, loc))
+        )
+        self.browser.find_element_by_xpath(loc).click()
+
+    def wait_and_assert_list_after_submit(self, form_class, idd, text):
+        # Modal fades away revealing previous form
+        # John waits until the new entity apperars in the list
+        element = f'//form[@class="{form_class}"]//div[@id="{idd}"]/a[contains(text(), "{text}")]'
+        WebDriverWait(self.browser, 10).until(
+            EC.presence_of_element_located((By.XPATH, element)))
+        # and in the list the new entity is shown
+        names = [it.text for it in self.browser.find_elements_by_xpath(
+            f'//form[@class="{form_class}"]//div[@id="{idd}"]/a')]
+        self.assertIn(text, names)
+
+    def wait_and_assert_select_after_submit(self, form_class, idd, text):
+        # Modal fades away revealing previous form
+        # John waits until the new entity apperars in the dropdown list
         WebDriverWait(self.browser, 10).until(
             lambda x: self.browser.find_element_by_xpath(
                 f'//select[@id="{idd}"]/option[contains(text(), "{text}")]').get_attribute(
                     'selected'))
-        # and in the drowpdown list Collection the new collections's label is shown
-        opts = form.find_elements_by_xpath(f'//select[@id="{idd}"]/option')
+        # and in the drowpdown list the new entity is shown
+        opts = self.browser.find_elements_by_xpath(
+            f'//form[@class="{form_class}"]//select[@id="{idd}"]/option')
         selected_opts = [opt.get_attribute('selected') for opt in opts]
         self.assertEqual(opts[selected_opts.index('true')].text, f'{text}')
 
     def add_1_element(self, form_class, element_id, value):
         # Another modal opens inviting to create a new record
         WebDriverWait(self.browser, 10).until(
-            EC.presence_of_element_located((By.CLASS_NAME, form_class))
+            EC.visibility_of_element_located((By.CLASS_NAME, form_class))
         )
         form = self.browser.find_element_by_class_name(form_class)
         # Then John types value into a textbox element_id,
-        form.find_element_by_id(element_id).send_keys(value)
+        self.wait_and_type(form_class, element_id, value)
         # And finally clicks Create
         form.submit()
 
     def add_2_elements(self, form_class, element1_id, value1, element2_id, value2):
         # Another modal opens
         WebDriverWait(self.browser, 10).until(
-            EC.presence_of_element_located((By.CLASS_NAME, form_class))
+            EC.visibility_of_element_located((By.CLASS_NAME, form_class))
         )
         form = self.browser.find_element_by_class_name(form_class)
-        # Then John types value1 into a textbox element2_id,
-        form.find_element_by_id(element1_id).send_keys(value1)
+        # Then John types value1 into a textbox element1_id,
+        self.wait_and_type(form_class, element1_id, value1)
         #  value2 into a textbox element2_id,
-        form.find_element_by_id(element2_id).send_keys(value2)
-        # And finally clicks Create scenario
+        self.wait_and_type(form_class, element2_id, value2)
+        # And finally clicks Create
+        form.submit()
+
+    def add_3_elements(self, form_class, element1_id, value1, element2_id, value2, 
+                       element3_id, value3):
+        # Another modal opens
+        WebDriverWait(self.browser, 10).until(
+            EC.visibility_of_element_located((By.CLASS_NAME, form_class))
+        )
+        form = self.browser.find_element_by_class_name(form_class)
+        # Then John types value1 into a textbox element1_id,
+        self.wait_and_type(form_class, element1_id, value1)
+        #  value2 into a textbox element2_id,
+        self.wait_and_type(form_class, element2_id, value2)
+        #  value3 into a textbox element3_id,
+        self.wait_and_type(form_class, element3_id, value3)
+        # And finally clicks Create
         form.submit()
 
     def add_collection(self):
+        form_class = 'js-collection-form'
         # John waits for the form to appear (but no more than 10 sec!)
         WebDriverWait(self.browser, 10).until(
-            EC.presence_of_element_located((By.CLASS_NAME, 'js-collection-form'))
+            EC.visibility_of_element_located((By.CLASS_NAME, form_class))
         )
-        collection_form = self.browser.find_element_by_class_name('js-collection-form')
+        collection_form = self.browser.find_element_by_class_name(form_class)
         # Then John types:
         #  'JohnCol' into a textbox Collection label,
-        WebDriverWait(self.browser, 10).until(
-            EC.presence_of_element_located((By.ID, 'id_label'))
-        )
-        collection_form.find_element_by_id('id_label').send_keys('JohnCol')
-        WebDriverWait(self.browser, 10).until(
-            EC.text_to_be_present_in_element_value((By.ID, 'id_label'), 'JohnCol')
-        )
+        self.wait_and_type(form_class, 'id_label', 'JohnCol')
         #  'http://mycollection.url' into a textbox Collection URL,
-        collection_form.find_element_by_id('id_url').send_keys('http://mycollection.url')
+        self.wait_and_type(form_class, 'id_url', 'http://mycollection.url')
         #  'John's collection' into a textbox name Collection name
-        collection_form.find_element_by_id('id_name').send_keys("John's collection")
+        self.wait_and_type(form_class, 'id_name', "John's collection")
         #  'This is a collection created by John' into textfield Collection description
-        collection_form.find_element_by_id('id_description').send_keys('This is a collection created by John')
+        self.wait_and_type(form_class, 'id_description', 'This is a collection created by John')
         # John wants to select an organization, but finds out that the one he needs is absent.
         # So he decides to add it and clicks '+' button next to the Organization dropdown list
-        plus_btn = collection_form.find_element_by_xpath('//button[@data-url="/en/metadb/organizations/create/"]')
-        sleep(1)
-        plus_btn.click()
+        self.wait_and_click_add_btn('/en/metadb/organizations/create/')
 
         # John adds a new organization
         self.add_2_elements('js-organization-form', 'id_name', 'John Brown research, USA',
-                                                           'id_url', 'http://johnbrownresearch.org/')
-        self.wait_and_assert_select_after_submit(collection_form, 'id_organizationi18n', 'John Brown research, USA')
+                                                    'id_url', 'http://johnbrownresearch.org/')
+        self.wait_and_assert_select_after_submit(form_class, 'id_organizationi18n', 'John Brown research, USA')
 
         # And finally John clicks Create collection
         collection_form.submit()
 
-
-    def add_property(self, label):
+    def add_parameter(self):
+        form_class = 'js-parameter-form'
         # John waits for the form to appear (but no more than 10 sec!)
         WebDriverWait(self.browser, 10).until(
-            EC.presence_of_element_located((By.CLASS_NAME, 'js-property-form'))
+            EC.presence_of_all_elements_located((By.XPATH,
+                f'//form[@class="{form_class}"]//*'))
         )
-        collection_form = self.browser.find_element_by_class_name('js-property-form')
+        parameter_form = self.browser.find_element_by_class_name(form_class)
+        # Then John types:
+        #  'Fogness' into a textbox Name,
+        self.wait_and_type(form_class, 'id_name', 'Fogness')
+        # John wants to select an accumulation mode, but finds out that the one he needs is absent.
+        # So he decides to add it and clicks '+' button next to the Accumulation mode dropdown list
+        self.wait_and_click_add_btn('/en/metadb/accmodes/create/')
+
+        # John adds a new organization
+        self.add_1_element('js-accmode-form', 'id_name', 'mult')
+        self.wait_and_assert_select_after_submit(form_class, 'id_accumulation_mode', 'mult')
+
+        # And finally John clicks Create parameter
+        parameter_form.submit()
+
+    def add_levels_group(self):
+        form_class = 'js-levels-group-form'
+        # John waits for the form to appear (but no more than 10 sec!)
+        WebDriverWait(self.browser, 10).until(
+            EC.presence_of_element_located((By.CLASS_NAME, form_class))
+        )
+        levels_group_form = self.browser.find_element_by_class_name(form_class)
+        # Then John types:
+        #  'Delta levels' into a textbox Description,
+        self.wait_and_type(form_class, 'id_description', 'Delta levels')
+        # John wants to select an measurement unit, but finds out that the one he needs is absent.
+        # So he decides to add it and clicks '+' button next to the Measurement unit dropdown list
+        self.wait_and_click_add_btn('/en/metadb/units/create/')
+
+        # John adds a unit
+        self.add_1_element('js-unit-form', 'id_name', 'Hz')
+        self.wait_and_assert_select_after_submit(form_class, 'id_unitsi18n', 'Hz')
+
+        # John wants to select levels, but finds out that the ones he needs are absent.
+        # So he decides to add them and clicks '+' button next to the Select levels label
+        # John adds a level
+        self.wait_and_click_add_btn('/en/metadb/levels/create/')
+        self.add_2_elements('js-level-form', 'id_label', '46', 'id_name', '46th')
+        self.wait_and_assert_list_after_submit(form_class, 'available_levels_list', '46')
+
+        # John adds another level
+        self.wait_and_click_add_btn('/en/metadb/levels/create/')
+        self.add_2_elements('js-level-form', 'id_label', '79', 'id_name', '79th')
+        self.wait_and_assert_list_after_submit(form_class, 'available_levels_list', '79')
+
+        # Now John sees new levels in a list of available levels and clicks them
+        # to move them to a list of selected levels
+        # He adds the level 46th
+        self.browser.find_element_by_xpath(
+            f'//form[@class="{form_class}"]//div[@id="available_levels_list"]/a[contains(text(), "46")]').click()
+        self.wait_and_assert_list_after_submit(form_class, 'selected_levels_list', '46')
+        # and the level 79th
+        self.browser.find_element_by_xpath(
+            f'//form[@class="{form_class}"]//div[@id="available_levels_list"]/a[contains(text(), "79")]').click()
+        self.wait_and_assert_list_after_submit(form_class, 'selected_levels_list', '79')
+
+        # And finally John clicks Create
+        levels_group_form.submit()
+
+    def add_property(self, label):
+        form_class = 'js-property-form'
+        # John waits for the form to appear (but no more than 10 sec!)
+        WebDriverWait(self.browser, 10).until(
+            EC.visibility_of_element_located((By.CLASS_NAME, form_class))
+        )
+        collection_form = self.browser.find_element_by_class_name(form_class)
         # Then John types label into a textbox Property label,
-        sleep(1)
-        collection_form.find_element_by_id('id_label').send_keys(label)
+        self.wait_and_type(form_class, 'id_label', label)
 
         # John wants to select a GUI element, but finds out that the one he needs is absent.
         # So he decides to add it and clicks '+' button next to the GUI element dropdown list
-        plus_btn = collection_form.find_element_by_xpath('//button[@data-url="/en/metadb/guielements/create/"]')
-        plus_btn.click()
+        self.wait_and_click_add_btn('/en/metadb/guielements/create/')
 
         # John adds a new GUI element
         self.add_2_elements('js-gui-element-form', 'id_name', 'feature',
-                                                         'id_caption', 'Feature')
-        self.wait_and_assert_select_after_submit(collection_form, 'id_gui_element', 'feature')
+                                                   'id_caption', 'Feature')
+        self.wait_and_assert_select_after_submit(form_class, 'id_gui_element', 'feature')
 
         # And finally John clicks Create collection
         collection_form.submit()
@@ -234,71 +346,61 @@ class NewVisitorTest(unittest.TestCase):
 
         # There is a button Create on the tab Dataset.
         create_btn = tab_dataset.find_element_by_class_name('js-create')
-
+        sleep(1)
         # John decides to add a new dataset.
         # He presses button Create on the tab Dataset.
         create_btn.click()
 
         # A new modal window for creating a new dataset opens inviting him to enter corresponding info.
         # John waits for the form to be fully loaded (but no more than 10 sec!)
+        form_class = 'js-dataset-form'
         WebDriverWait(self.browser, 10).until(
-            EC.presence_of_element_located((By.CLASS_NAME, 'js-dataset-form'))
+            EC.visibility_of_element_located((By.CLASS_NAME, form_class))
         )
-        dataset_form = self.browser.find_element_by_class_name('js-dataset-form')
+        dataset_form = self.browser.find_element_by_class_name(form_class)
 
         # John wants to select a collection, but finds out that the one he needs is absent.
         # So he decides to add it and clicks '+' button next to the Collection dropdown list.
-
-        plus_btn = self.browser.find_element_by_xpath(
-            '//form[@class="js-dataset-form"]//button[@data-url="/en/metadb/collections/create/"]')
-        plus_btn.click()
+        self.wait_and_click_add_btn('/en/metadb/collections/create/')
 
         # John adds a new collection
         self.add_collection()
-        self.wait_and_assert_select_after_submit(dataset_form, 'id_collection', 'JohnCol')
+        self.wait_and_assert_select_after_submit(form_class, 'id_collection', 'JohnCol')
 
         # John wants to select a resolution, but finds out that the needed one is absent
         # So he decides to add it and clicks '+' button next to the Resolution dropdown list.
-        plus_btn = self.browser.find_element_by_xpath(
-            '//form[@class="js-dataset-form"]//button[@data-url="/en/metadb/resolutions/create/"]')
-        plus_btn.click()
+        self.wait_and_click_add_btn('/en/metadb/resolutions/create/')
 
         self.add_2_elements('js-resolution-form', 'id_name', '0.13x0.13', 'id_subpath1', '0.13x0.13/')
-        self.wait_and_assert_select_after_submit(dataset_form, 'id_resolution', '0.13x0.13')
+        self.wait_and_assert_select_after_submit(form_class, 'id_resolution', '0.13x0.13')
 
         # John wants to select a scenario, but finds out that the needed one is absent
         # So he decides to add it and clicks '+' button next to the Scenario dropdown list.
-        plus_btn = self.browser.find_element_by_xpath(
-            '//form[@class="js-dataset-form"]//button[@data-url="/en/metadb/scenarios/create/"]')
-        plus_btn.click()
+        self.wait_and_click_add_btn('/en/metadb/scenarios/create/')
 
         self.add_2_elements('js-scenario-form', 'id_name', 'Specific', 'id_subpath0', 'specific/')
-        self.wait_and_assert_select_after_submit(dataset_form, 'id_scenario', 'Specific')
+        self.wait_and_assert_select_after_submit(form_class, 'id_scenario', 'Specific')
 
         # John wants to select a data kind, but finds out that the needed one is absent
         # So he decides to add it and clicks '+' button next to the Data kind dropdown list.
-        plus_btn = self.browser.find_element_by_xpath(
-            '//form[@class="js-dataset-form"]//button[@data-url="/en/metadb/datakinds/create/"]')
-        plus_btn.click()
+        self.wait_and_click_add_btn('/en/metadb/datakinds/create/')
 
         self.add_1_element('js-datakind-form', 'id_name', 'fractal')
-        self.wait_and_assert_select_after_submit(dataset_form, 'id_data_kind', 'fractal')
+        self.wait_and_assert_select_after_submit(form_class, 'id_data_kind', 'fractal')
 
         # John types 'JohnCol 0x13x0.13' into a textbox Description,
-        dataset_form.find_element_by_id('id_description').send_keys('JohnCol 0x13x0.13')
+        self.wait_and_type(form_class, 'id_description', 'JohnCol 0x13x0.13')
         #  '20000101' into a textbox Time start,
-        dataset_form.find_element_by_id('id_time_start').send_keys('20000101')
+        self.wait_and_type(form_class, 'id_time_start', '20000101')
         #  '20001231' into a textbox Time end,
-        dataset_form.find_element_by_id('id_time_end').send_keys('20001231')
+        self.wait_and_type(form_class, 'id_time_end', '20001231')
 
         # John wants to select a file type, but finds out that the needed one is absent
         # So he decides to add it and clicks '+' button next to the File type dropdown list.
-        plus_btn = self.browser.find_element_by_xpath(
-            '//form[@class="js-dataset-form"]//button[@data-url="/en/metadb/filetypes/create/"]')
-        plus_btn.click()
+        self.wait_and_click_add_btn('/en/metadb/filetypes/create/')
 
         self.add_1_element('js-filetype-form', 'id_name', 'hdf5')
-        self.wait_and_assert_select_after_submit(dataset_form, 'id_file_type', 'hdf5')
+        self.wait_and_assert_select_after_submit(form_class, 'id_file_type', 'hdf5')
 
         # When he clicks Create dataset modal window closes and Dataset table updates.
         dataset_form.submit()
@@ -352,12 +454,17 @@ class NewVisitorTest(unittest.TestCase):
 
         # A new modal window for creating a new data opens inviting him to enter corresponding info.
         # John waits for the form to be fully loaded (but no more than 10 sec!)
+        form_class = 'js-data-form'
         WebDriverWait(self.browser, 10).until(
-            EC.presence_of_element_located((By.CLASS_NAME, 'js-data-form'))
+            EC.presence_of_element_located((By.CLASS_NAME, form_class))
         )
-        data_form = self.browser.find_element_by_class_name('js-data-form')
+        data_form = self.browser.find_element_by_class_name(form_class)
 
         # John selects a collection with index=1
+        WebDriverWait(self.browser, 10).until(
+            EC.visibility_of_element_located((By.ID, 'id_collection'))
+        )
+        sleep(1)
         Select(data_form.find_element_by_id('id_collection')).select_by_index(1)
         WebDriverWait(self.browser, 10).until(lambda x:
             len(data_form.find_elements_by_xpath('//select[@id="id_resolution"]/option')) > 1
@@ -400,33 +507,27 @@ class NewVisitorTest(unittest.TestCase):
 
         # John wants to select a levels variable, but finds out that the needed one is absent
         # So he decides to add it and clicks '+' button next to the Levels variable dropdown list.
-        plus_btn = data_form.find_element_by_xpath(
-            '//button[@data-url="/en/metadb/levelsvariables/create/"]')
-        plus_btn.click()
+        self.wait_and_click_add_btn('/en/metadb/levelsvariables/create/')
 
         # John adds a levels variable
         self.add_1_element('js-levels-variable-form', 'id_name', 'gamma_level')
-        self.wait_and_assert_select_after_submit(data_form, 'id_levels_variable', 'gamma_level')
+        self.wait_and_assert_select_after_submit(form_class, 'id_levels_variable', 'gamma_level')
 
         # John wants to select a variable, but finds out that the needed one is absent.
         # So he decides to add it and clicks '+' button next to the Variable dropdown list.
-        plus_btn = data_form.find_element_by_xpath(
-            '//button[@data-url="/en/metadb/variables/create/"]')
-        plus_btn.click()
+        self.wait_and_click_add_btn('/en/metadb/variables/create/')
 
         # John adds a variable
         self.add_1_element('js-variable-form', 'id_name', 'spec3m')
-        self.wait_and_assert_select_after_submit(data_form, 'id_variable', 'spec3m')
+        self.wait_and_assert_select_after_submit(form_class, 'id_variable', 'spec3m')
 
         # John wants to select a unit of measurement, but finds out that the needed one is absent.
         # So he decides to add it and clicks '+' button next to the Unit dropdown list.
-        plus_btn = data_form.find_element_by_xpath(
-            '//button[@data-url="/en/metadb/units/create/"]')
-        plus_btn.click()
+        self.wait_and_click_add_btn('/en/metadb/units/create/')
 
         # John adds a unit
         self.add_1_element('js-unit-form', 'id_name', 'mRd/yr')
-        self.wait_and_assert_select_after_submit(data_form, 'id_unitsi18n', 'mRd/yr')
+        self.wait_and_assert_select_after_submit(form_class, 'id_unitsi18n', 'mRd/yr')
 
         # John decides to use Property/Property value and checks Use property checkbox
         data_form.find_element_by_id('id_use_property').click()
@@ -437,48 +538,100 @@ class NewVisitorTest(unittest.TestCase):
 
         # John wants to select a property, but finds out that the needed one is absent.
         # So he decides to add it and clicks '+' button next to the Proprty dropdown list.
-        plus_btn = data_form.find_element_by_xpath(
-            '//button[@data-url="/en/metadb/properties/create/"]')
-        plus_btn.click()
+        self.wait_and_click_add_btn('/en/metadb/properties/create/')
 
         # John adds a property
         self.add_property('volume')
-        self.wait_and_assert_select_after_submit(data_form, 'id_property', 'volume')
+        self.wait_and_assert_select_after_submit(form_class, 'id_property', 'volume')
 
         # John wants to select a property value, but finds out that the needed one is absent.
         # So he decides to add it and clicks '+' button next to the Property value dropdown list.
-        plus_btn = data_form.find_element_by_xpath(
-            '//button[@data-url="/en/metadb/propertyvalues/create/"]')
-        plus_btn.click()
+        self.wait_and_click_add_btn('/en/metadb/propertyvalues/create/')
 
         # John adds a property value
         self.add_1_element('js-property-value-form', 'id_label', 'low')
-        self.wait_and_assert_select_after_submit(data_form, 'id_property_value', 'low')
+        self.wait_and_assert_select_after_submit(form_class, 'id_property_value', 'low')
 
         # John wants to select a root directory, but finds out that the needed one is absent.
         # So he decides to add it and clicks '+' button next to the Root directory dropdown list.
-        plus_btn = data_form.find_element_by_xpath(
-            '//button[@data-url="/en/metadb/rootdirs/create/"]')
-        plus_btn.click()
+        self.wait_and_click_add_btn('/en/metadb/rootdirs/create/')
 
         # John adds a root directory
         self.add_1_element('js-root-dir-form', 'id_name', '/mnt/data/JohnCol/')
-        self.wait_and_assert_select_after_submit(data_form, 'id_root_dir', '/mnt/data/JohnCol/')
+        self.wait_and_assert_select_after_submit(form_class, 'id_root_dir', '/mnt/data/JohnCol/')
 
         # John wants to select a file name pattern, but finds out that the needed one is absent.
         # So he decides to add it and clicks '+' button next to the File name pattern dropdown list.
-        plus_btn = data_form.find_element_by_xpath(
-            '//button[@data-url="/en/metadb/filenames/create/"]')
-        plus_btn.click()
+        self.wait_and_click_add_btn('/en/metadb/filenames/create/')
 
         # John adds a file name pattern
         self.add_1_element('js-file-form', 'id_name_pattern', 'experiment/%mm%_%year%.nc')
-        self.wait_and_assert_select_after_submit(data_form, 'id_file', 'experiment/%mm%_%year%.nc')
+        self.wait_and_assert_select_after_submit(form_class, 'id_file', 'experiment/%mm%_%year%.nc')
 
         # John types '3.14' into a textbox Scale...
-        data_form.find_element_by_id('id_scale').send_keys('3.14')
+        self.wait_and_type(form_class, 'id_scale', '3.14')
         # ... and '2.76' into a textbox Offset
-        data_form.find_element_by_id('id_offset').send_keys('-2.76')
+        self.wait_and_type(form_class, 'id_offset', '-2.76')
 
         # When he clicks Create data modal window closes and Data table updates.
         data_form.submit()
+
+
+#------------------------------------------------------------------------------------------------------
+
+    def test_can_add_a_parameter_and_retrieve_it(self):
+        # John decides to expoler the Parameter tab
+        # He opens the main page again
+        self.browser.get('http://localhost:8001/metadb/')
+
+        # He clicks tha Parameter tab
+        self.browser.find_element_by_xpath(
+            '//ul[contains(@class, "nav-tabs")]//a[@href="#tab-specpar"]').click()
+
+        # Now the Parameter tab is active.
+        tab_specpar = self.browser.find_element_by_id('tab-specpar')
+        self.assertTrue('active' in tab_specpar.get_attribute('class'))
+
+        # There is a button Create on the tab Parameter.
+        create_btn = tab_specpar.find_element_by_class_name('js-create')
+
+        # John decides to add a new specific parameter.
+        # He presses button Create on the tab Parameter.
+        create_btn.click()
+
+        # A new modal window for creating a new specific parameter opens inviting him to enter corresponding info.
+        # John waits for the form to be fully loaded (but no more than 10 sec!)
+        form_class = 'js-specpar-form'
+        WebDriverWait(self.browser, 10).until(
+            EC.presence_of_all_elements_located((By.XPATH,
+                f'//form[@class="{form_class}"]/*'))
+        )
+        specpar_form = self.browser.find_element_by_class_name(form_class)
+
+        # John wants to select a meteorological parameter, but finds out that the needed one is absent
+        # So he decides to add it and clicks '+' button next to the Parameter dropdown list.
+        self.wait_and_click_add_btn('/en/metadb/parameters/create/')
+
+        # John adds a parameter
+        self.add_parameter()
+        self.wait_and_assert_select_after_submit(form_class, 'id_parameteri18n', 'Fogness')
+
+        # John wants to select a time step, but finds out that the needed one is absent.
+        # So he decides to add it and clicks '+' button next to the Time step dropdown list.
+        self.wait_and_click_add_btn('/en/metadb/timesteps/create/')
+
+        # John adds a time step
+        self.add_3_elements('js-timestep-form', 'id_label', '5h', 'id_name', '5 hours',
+                            'id_subpath2', '5h/')
+        self.wait_and_assert_select_after_submit(form_class, 'id_time_stepi18n', '5 hours')
+
+        # John wants to select a levels group, but finds out that the needed one is absent.
+        # So he decides to add it and clicks '+' button next to the Levels group dropdown list.
+        self.wait_and_click_add_btn('/en/metadb/levelsgroups/create/')
+
+        # John adds a levels group
+        self.add_levels_group()
+        self.wait_and_assert_select_after_submit(form_class, 'id_lvs_group', 'Delta levels')
+
+        # When he clicks Create specific parameter modal window closes and Parameter table updates.
+        specpar_form.submit()
