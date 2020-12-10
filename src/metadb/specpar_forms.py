@@ -47,7 +47,7 @@ class SpecificParameterForm(ModelForm):
                 language__code=get_language()).get()
             self.fields['time_stepi18n'].initial = self.instance.time_step.timestepi18n_set.filter(
                 language__code=get_language()).get()
-            self.fields['levels_group'].initial = self.instance.levels_group.description
+            self.fields['lvs_group'].initial = self.instance.levels_group.description
             self.fields['levels_namesi18n'].initial = get_levels(self.instance.levels_group.id)
 
 
