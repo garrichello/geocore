@@ -14,7 +14,7 @@ $(function() {
         } );
     };
 
-    $(levels_group_form_class_name).ready(loadLvsNames());
+    loadLvsNames();
 
     var sortLevels = function(listId) {
         var mylist = $(listId);
@@ -87,9 +87,16 @@ $(function() {
             dismissed = true;
         })
         $(child_modal_id).on('hidden.bs.modal', function() {
+            if ($('.js-unit-form').length) {
+                var form_data = mapFormData('.js-unit-form');  // Get unit fields
+                loadOptions.call(this, levels_group_form_class_name, 'id_unitsi18n',
+                    'units-url', form_data['name']
+                );
+            };
             if ($('.js-level-form').length && !dismissed) {
                 var form_data = mapFormData('.js-level-form');  // Get level fields
-                $(modal_id+' #available_levels_list').append(getLi(form_data['label']));
+                $(modal_id+' #available_levels_list').append(getLi('add', form_data['label']));
+                sortLevels('#available_levels_list');
             };
             $(child_modal_id).remove();
         })
