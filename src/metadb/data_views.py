@@ -112,7 +112,7 @@ class DataUpdateView(DataBaseView):
             {'name': 'parameter-lvsgroups-url',
              'value': reverse_lazy('metadb:form_load_parameter_lvsgroups')},
             {'name': 'parameter-lvsnames-url',
-             'value': reverse_lazy('metadb:form_load_parameter_lvsnames')},
+             'value': reverse_lazy('metadb:form_load_lvsgroup_lvsnames')},
             {'name': 'levels-variables-url',
              'value': reverse_lazy('metadb:form_load_lvsvars')},
             {'name': 'variables-url',
