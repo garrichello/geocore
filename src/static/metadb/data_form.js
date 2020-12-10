@@ -101,33 +101,11 @@ $(function () {
         } );
     };
     
-    var switchLvsVariable = function() {
-        if ($(this).is(':checked')) {
-            $(modal_id+' #id_levels_variable').prop('disabled', false);
-        }
-        else {
-            $(modal_id+' #id_levels_variable').prop('disabled', true);
-        }
-    }
-
-    var switchProperty = function() {
-        if ($(this).is(':checked')) {
-            $(modal_id+' #id_property').prop('disabled', false);
-            $(modal_id+' #id_property_value').prop('disabled', false);
-        }
-        else {
-            $(modal_id+' #id_property').prop('disabled', true);
-            $(modal_id+' #id_property_value').prop('disabled', true);
-        }
-    }
-   
     $(modal_id+' #id_collection').change( function() { loadResolutionsChain(data_form_class_name); } );
     $(modal_id+' #id_resolution').change( function() { loadScenariosChain(data_form_class_name); } );
     $(modal_id+' #id_parameteri18n').change( function() { loadTimeStepsChain(data_form_class_name); } );
     $(modal_id+' #id_time_stepi18n').change( function() { loadLvsGroupsChain(data_form_class_name); } );
     $(modal_id+' #id_levels_group').change( function() { loadLvsNamesChain(data_form_class_name); } );
-    $(modal_id+' #id_use_lvsvar').change ( switchLvsVariable )
-    $(modal_id+' #id_use_property').change ( switchProperty )
 
     // + buttons handling
     $(data_form_class_name).on('click', '.js-add-button', function() { 

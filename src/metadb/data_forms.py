@@ -59,11 +59,7 @@ class DataForm(ModelForm):
         self.fields['levels_namesi18n'] = CharField(widget=Textarea(attrs={'rows': 3}), disabled=True)
         self.fields['levels_namesi18n'].label = _('Levels names')
         # Levels variable
-        self.fields['use_lvsvar'] = BooleanField()
-        self.fields['use_lvsvar'].label = _('Use levels variable')
-        self.fields['use_lvsvar'].required = False
-        self.fields['levels_variable'].empty_label = self.empty_label
-        self.fields['levels_variable'].disabled = True
+        self.fields['levels_variable'].empty_label = None
         self.fields['levels_variable'].initial = 1
         self.fields['levels_variable'].label = _('Levels variable')
         self.fields['levels_variable'].data_url = reverse('metadb:levels_variable_create')
@@ -78,17 +74,12 @@ class DataForm(ModelForm):
         self.fields['unitsi18n'].label = _('Unit of measurement')
         self.fields['unitsi18n'].data_url = reverse('metadb:unit_create')
         # Property
-        self.fields['use_property'] = BooleanField()
-        self.fields['use_property'].label = _('Use property')
-        self.fields['use_property'].required = False
-        self.fields['property'].empty_label = self.empty_label
-        self.fields['property'].disabled = True
+        self.fields['property'].empty_label = None
         self.fields['property'].initial = 1
         self.fields['property'].label = _('Property')
         self.fields['property'].data_url = reverse('metadb:property_create')
         # Property value
-        self.fields['property_value'].empty_label = self.empty_label
-        self.fields['property_value'].disabled = True
+        self.fields['property_value'].empty_label = None
         self.fields['property_value'].initial = 1
         self.fields['property_value'].label = _('Property value')
         self.fields['property_value'].data_url = reverse('metadb:property_value_create')
@@ -107,11 +98,10 @@ class DataForm(ModelForm):
         self.fields['offset'].initial = 0
         self.fields['offset'].label = _('Offset')
 
-        self.order_fields(['collection', 'resolution', 'scenario', 'parameteri18n', 
-                          'time_stepi18n', 'levels_group', 'levels_namesi18n', 
-                          'use_lvsvar', 'levels_variable', 'variable', 'unitsi18n',
-                          'levels_variable', 'variable', 'use_property', 'property', 'property_value'])        
-
+        self.order_fields(['collection', 'resolution', 'scenario', 'parameteri18n',
+                          'time_stepi18n', 'levels_group', 'levels_namesi18n',
+                          'levels_variable', 'variable', 'unitsi18n',
+                          'levels_variable', 'variable', 'property', 'property_value'])
 
     def fill_fields(self):
         # The following is needed for passing validation by the form.
