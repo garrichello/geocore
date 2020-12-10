@@ -48,7 +48,7 @@ class TimeStepCreateView(TimeStepMixin, SimpleCreateView):
         'form_class': 'js-timestep-form',
         'action': reverse_lazy('metadb:timestep_create'),
         'title': _("Create a new time step"),
-        'submit_name': _("Create timestep"),
+        'submit_name': _("Create time step"),
     }
     url_name = 'metadb:time_step_create'
 
