@@ -28,26 +28,6 @@ class CollectionApiListView(APIView):
 
         return Response(collection_data)
 
-class CollectionApiView(APIView):
-    """
-    Returns one collection
-    """
-    def get(self, request, pk):
-        language = get_language()
-
-        collection = Collection.objects.get(pk=pk)
-        collection_data = {
-                    'id': collection.id,
-                    'label': collection.label,
-                    'name': collection.collectioni18n_set.filter(language__code=language).get().name,
-                    'description': collection.collectioni18n_set.filter(language__code=language).get().description,
-                    'organization': collection.organization.organizationi18n_set.filter(language__code=language).get().name,
-                    'organization_url': collection.organization.url,
-                    'url': collection.url,               
-        }
-
-        return Response(collection_data)
-
 
 class DatasetApiListView(APIView):
     """
@@ -115,7 +95,6 @@ class DataApiListView(APIView):
     Returns datasets
     """
     def get(self, request):
-        print(request.GET)
         language = get_language()
         qlang = Q(language__code=language)
         datas = Data.objects.all()
