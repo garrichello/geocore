@@ -9,8 +9,11 @@ from .level_forms import LevelForm
 from .models import Level, LevelI18N, Language
 
 class LevelMixin():
+    form_class = LevelForm
+    model = Level
+    create = False  # True for Create, False - for Update. Overriden in Create class.
 
-    def save_form(self, request, template_name, ctx, create=False):
+    def save_form(self, request, template_name, ctx):
         ''' Saves the form
         create -- True if creating, False if updating.
         '''
@@ -23,7 +26,7 @@ class LevelMixin():
             obji18n.level = obj  # Link it with the new Level object
             # To save DB consistency we create a new record for all languages.
             # User can update/translate to every other language lately and separately.
-            if create:
+            if self.create:
                 for db_lang in Language.objects.all():  # Iterate over all languages in DB
                     obji18n.language = db_lang  # Link it with an existing language
                     obji18n.pk = None  # Clear PK to save data into a new record
@@ -40,10 +43,9 @@ class LevelMixin():
 
 
 class LevelCreateView(LevelMixin, CommonCreateView):
-    form_class = LevelForm
-    model = Level
     template_name = 'metadb/includes/simple_form.html'
     create = True
+
     ctx = {
         'form_class': 'js-level-form',
         'action': reverse_lazy('metadb:level_create'),
@@ -54,8 +56,6 @@ class LevelCreateView(LevelMixin, CommonCreateView):
 
 
 class LevelUpdateView(LevelMixin, CommonUpdateView):
-    form_class = LevelForm
-    model = Level
     template_name = 'metadb/includes/simple_form.html'
     ctx = {
         'form_class': 'js-level-form',
