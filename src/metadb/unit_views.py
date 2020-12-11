@@ -1,19 +1,19 @@
-from django.views import View
 from django.template.loader import render_to_string
 from django.http import JsonResponse
 from django.utils.translation import gettext_lazy as _
-from django.shortcuts import get_object_or_404
-from django.urls import reverse, reverse_lazy
+
+from .common_views import CommonCreateView, CommonUpdateView, CommonDeleteView
 
 from .simple_forms import UnitsI18NForm
 
 from .models import Units, UnitsI18N, Language
 
-class UnitBaseView(View):
+class UnitMixin():
     form_class = UnitsI18NForm
     model = UnitsI18N
+    create = False
 
-    def save_form(self, request, template_name, ctx, create=False):
+    def save_form(self, request, template_name, ctx):
         ''' Saves the form
         create -- True if creating, False if updating.
         '''
@@ -27,7 +27,7 @@ class UnitBaseView(View):
             orgi18n.units = org  # Link it with the new Units object
             # To save DB consistency we create a new record for all languages.
             # User can update/translate to every other language lately and separately.
-            if create:
+            if self.create:
                 for db_lang in Language.objects.all():  # Iterate over all languages in DB
                     orgi18n.language = db_lang  # Link it with an existing language
                     orgi18n.pk = None  # Clear PK to save data into a new record
@@ -44,54 +44,30 @@ class UnitBaseView(View):
         return JsonResponse(data)
 
 
-class UnitCreateView(UnitBaseView):
+class UnitCreateView(UnitMixin, CommonCreateView):
+    create = True
     template_name = 'metadb/includes/simple_form.html'
     ctx = {
         'form_class': 'js-unit-form',
-        'action': reverse_lazy('metadb:unit_create'),
         'title': _("Create a new measurement unit"),
         'submit_name': _("Create unit"),
     }
-
-    def get(self, request):
-        form = self.form_class()
-
-        self.ctx['forms'] = [form]
-        html_form = render_to_string(self.template_name, self.ctx, request)
-        return JsonResponse({'html_form': html_form})
-
-    def post(self, request):
-        form = self.form_class(request.POST)
-        self.ctx['forms'] = [form]
-        return self.save_form(request, self.template_name, self.ctx, create=True)
+    url_name = 'metadb:unit_create'
 
 
-class UnitUpdateView(UnitBaseView):
+class UnitUpdateView(UnitMixin, CommonUpdateView):
     template_name = 'metadb/includes/simple_form.html'
     ctx = {
         'form_class': 'js-unit-form',
         'title': _("Update measurement unit"),
         'submit_name': _("Update units"),
     }
+    url_name = 'metadb:unit_update'
 
-    def get(self, request, pk):
-        model_obj = get_object_or_404(self.model, pk=pk)
-        form = self.form_class(instance=model_obj)
 
-        self.ctx['forms'] = [form]
-        self.ctx['action'] = reverse('metadb:unit_update', kwargs={'pk': form.instance.pk}),
-        html_form = render_to_string(self.template_name, self.ctx, request)
-        return JsonResponse({'html_form': html_form})
-
-    def post(self, request, pk):
-        model_obj = get_object_or_404(self.model, pk=pk)
-        form = self.form_class(request.POST, instance=model_obj)
-
-        self.ctx['forms'] = [form]
-        self.ctx['action'] = reverse('metadb:unit_update', kwargs={'pk': form.instance.pk}),
-        return self.save_form(request, self.template_name, self.ctx)
-
-class UnitDeleteView(UnitBaseView):
+class UnitDeleteView(CommonDeleteView):
+    form_class = UnitsI18NForm
+    model = UnitsI18N
     template_name = 'metadb/includes/delete_form.html'
     ctx = {
         'form_class': 'js-unit-delete-form',
@@ -99,15 +75,4 @@ class UnitDeleteView(UnitBaseView):
         'text': _('Are you sure you want to delete the unit'),
         'submit_name': _('Delete units')
     }
-
-    def get(self, request, pk):
-        model_obj = get_object_or_404(self.model, pk=pk)
-        self.ctx['action'] = reverse('metadb:unit_delete', kwargs={'pk': pk})
-        self.ctx['label'] = model_obj.name
-        html_form = render_to_string(self.template_name, self.ctx, request)
-        return JsonResponse({'html_form': html_form})
-
-    def post(self, request, pk):
-        org_model = get_object_or_404(self.model, pk=pk)
-        org_model.delete()
-        return JsonResponse({'html_form': None, 'form_is_valid': True})      
+    url_name = 'metadb:unit_delete'
