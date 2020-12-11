@@ -11,8 +11,10 @@ from .models import LevelsGroup, Level
 import json
 
 class LevelsGroupMixin():
+    form_class = LevelsGroupForm
+    model = LevelsGroup
 
-    def save_form(self, request, template_name, ctx, create=False):
+    def save_form(self, request, template_name, ctx):
         ''' Saves the form '''
         data = dict()
         form = ctx['forms'][0]
@@ -33,8 +35,6 @@ class LevelsGroupMixin():
 
 
 class LevelsGroupCreateView(LevelsGroupMixin, CommonCreateView):
-    form_class = LevelsGroupForm
-    model = LevelsGroup
     template_name = 'metadb/includes/levelsgroup_form.html'
     ctx = {
         'form_class': 'js-levels-group-form',
@@ -52,8 +52,6 @@ class LevelsGroupCreateView(LevelsGroupMixin, CommonCreateView):
 
 
 class LevelsGroupUpdateView(LevelsGroupMixin, CommonUpdateView):
-    form_class = LevelsGroupForm
-    model = LevelsGroup
     template_name = 'metadb/includes/levelsgroup_form.html'
     ctx = {
         'form_class': 'js-levels-group-form',
