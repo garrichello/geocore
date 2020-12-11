@@ -550,7 +550,7 @@ class FullScaleTest(unittest.TestCase):
 
         # John wants to select a file name pattern, but finds out that the needed one is absent.
         # So he decides to add it and clicks '+' button next to the File name pattern dropdown list.
-        self.wait_and_click_add_btn('/en/metadb/filenames/create/')
+        self.wait_and_click_add_btn('/en/metadb/files/create/')
 
         # John adds a file name pattern
         self.add_1_element('js-file-form', 'id_name_pattern', 'experiment/%mm%_%year%.nc')
