@@ -9,7 +9,6 @@ from .collection_forms import CollectionForm, CollectionI18NForm
 
 from .models import Collection, Language
 
-
 class CollectionBaseView(View):
     form_class = CollectionForm
     formi18n_class = CollectionI18NForm
