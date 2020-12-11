@@ -9,7 +9,7 @@ class CommonBaseView(View):
     form_class = None
     model = None
 
-    def save_form(self, request, template_name, ctx, create=False):
+    def save_form(self, request, template_name, ctx):
         ''' Saves the form '''
         data = dict()
         form = ctx['forms'][0]
@@ -25,9 +25,17 @@ class CommonBaseView(View):
 
 class CommonCreateView(CommonBaseView):
     template_name = ''
-    ctx = {}
+    ctx = {
+        'form_class': '',
+        'title': '',
+        'submit_name': '',
+        'script': '',
+        'attributes': [
+            {'name': '', 
+             'value': ''},
+        ]
+    }
     url_name = ''
-    create = False
 
     def get(self, request):
         form = self.form_class()  # pylint: disable=not-callable
@@ -39,12 +47,21 @@ class CommonCreateView(CommonBaseView):
     def post(self, request):
         form = self.form_class(request.POST)  # pylint: disable=not-callable
         self.ctx['forms'] = [form]
-        return self.save_form(request, self.template_name, self.ctx, self.create)
+        return self.save_form(request, self.template_name, self.ctx)
 
 
 class CommonUpdateView(CommonBaseView):
     template_name = ''
-    ctx = {}
+    ctx = {
+        'form_class': '',
+        'title': '',
+        'submit_name': '',
+        'script': '',
+        'attributes': [
+            {'name': '', 
+             'value': ''},
+        ]
+    }
     url_name = ''
 
     def get(self, request, pk):
@@ -66,7 +83,12 @@ class CommonUpdateView(CommonBaseView):
 
 class CommonDeleteView(CommonBaseView):
     template_name = ''
-    ctx = {}
+    ctx = {
+        'form_class': '',
+        'title': '',
+        'text': '',
+        'submit_name': '',
+    }
     url_name = ''
 
     def get(self, request, pk):
