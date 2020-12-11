@@ -9,6 +9,9 @@ from .timestep_forms import TimeStepForm
 from .models import TimeStep, TimeStepI18N, Language
 
 class TimeStepMixin():
+    form_class = TimeStepForm
+    model = TimeStep
+    create = False  # True for Create, False - for Update. Overriden in Create class.
 
     def save_form(self, request, template_name, ctx, create=False):
         ''' Saves the form
@@ -23,7 +26,7 @@ class TimeStepMixin():
             obji18n.time_step = obj  # Link it with the new TimeStep object
             # To save DB consistency we create a new record for all languages.
             # User can update/translate to every other language lately and separately.
-            if create:
+            if self.create:
                 for db_lang in Language.objects.all():  # Iterate over all languages in DB
                     obji18n.language = db_lang  # Link it with an existing language
                     obji18n.pk = None  # Clear PK to save data into a new record
@@ -40,8 +43,6 @@ class TimeStepMixin():
 
 
 class TimeStepCreateView(TimeStepMixin, CommonCreateView):
-    form_class = TimeStepForm
-    model = TimeStep
     template_name = 'metadb/includes/simple_form.html'
     create = True
     ctx = {
@@ -54,8 +55,6 @@ class TimeStepCreateView(TimeStepMixin, CommonCreateView):
 
 
 class TimeStepUpdateView(TimeStepMixin, CommonUpdateView):
-    form_class = TimeStepForm
-    model = TimeStep
     template_name = 'metadb/includes/simple_form.html'
     ctx = {
         'form_class': 'js-timestep-form',

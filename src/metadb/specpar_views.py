@@ -52,11 +52,6 @@ class SpecificParameterCreateView(SpecificParameterMixin, CommonCreateView):
     }
     url_name = 'metadb:specpar_create'
 
-    def post(self, request):
-        form = self.form_class(request.POST)
-        self.ctx['forms'] = [form]
-        return self.save_form(request, self.template_name, self.ctx)
-
 
 class SpecificParameterUpdateView(SpecificParameterMixin, CommonUpdateView):
     ctx = {

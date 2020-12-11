@@ -9,8 +9,11 @@ from .parameter_forms import ParameterForm
 from .models import Parameter, ParameterI18N, Language
 
 class ParameterMixin():
+    form_class = ParameterForm
+    model = Parameter
+    create = False  # True for Create, False - for Update. Overriden in Create class.
 
-    def save_form(self, request, template_name, ctx, create=False):
+    def save_form(self, request, template_name, ctx):
         ''' Saves the form
         create -- True if creating, False if updating.
         '''
@@ -23,7 +26,7 @@ class ParameterMixin():
             obji18n.parameter = obj  # Link it with the new Parameter object
             # To save DB consistency we create a new record for all languages.
             # User can update/translate to every other language lately and separately.
-            if create:
+            if self.create:
                 for db_lang in Language.objects.all():  # Iterate over all languages in DB
                     obji18n.language = db_lang  # Link it with an existing language
                     obji18n.pk = None  # Clear PK to save data into a new record
@@ -40,8 +43,6 @@ class ParameterMixin():
 
 
 class ParameterCreateView(ParameterMixin, CommonCreateView):
-    form_class = ParameterForm
-    model = Parameter
     template_name = 'metadb/includes/simple_form.html'
     create = True
     ctx = {
@@ -59,8 +60,6 @@ class ParameterCreateView(ParameterMixin, CommonCreateView):
 
 
 class ParameterUpdateView(ParameterMixin, CommonUpdateView):
-    form_class = ParameterForm
-    model = Parameter
     template_name = 'metadb/includes/simple_form.html'
     ctx = {
         'form_class': 'js-parameter-form',
