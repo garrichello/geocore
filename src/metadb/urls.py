@@ -17,8 +17,6 @@ from .specpar_views import (SpecificParameterCreateView, SpecificParameterDelete
 from .data_views import (DataCreateView, DataDeleteView, DataUpdateView)
 from .organization_views import (OrganizationCreateView, OrganizationUpdateView,
                                  OrganizationDeleteView)
-from .levelsvariable_views import (LevelsVariableCreateView, LevelsVariableUpdateView,
-                                   LevelsVariableDeleteView)
 from .unit_views import (UnitCreateView, UnitUpdateView, UnitDeleteView)
 from .guielement_views import (GuiElementCreateView, GuiElementUpdateView,
                                GuiElementDeleteView)
