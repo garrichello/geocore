@@ -29,6 +29,51 @@ class CollectionApiListView(APIView):
         return Response(collection_data)
 
 
+class DataApiListView(APIView):
+    """
+    Returns datasets
+    """
+    def get(self, request):
+        language = get_language()
+        qlang = Q(language__code=language)
+        datas = Data.objects.all()
+        data_data = [
+            {
+                'id': data.id,
+                'is_visible': data.specific_parameter.parameter.is_visible,
+                'collection_label': data.dataset.collection.label,
+                'scenario_name': data.dataset.scenario.name,
+                'resolution_name': data.dataset.resolution.name,
+                'parameter_name': data.specific_parameter.parameter.parameteri18n_set.filter(qlang).get().name,
+                'time_step': data.specific_parameter.time_step.timestepi18n_set.filter(qlang).get().name,
+                'variable_name': data.variable.name,
+                'units_name': data.units.unitsi18n_set.filter(qlang).get().name,
+                'levels': '; '.join(
+                    sorted([ level.leveli18n_set.filter(qlang).get().name
+                    for level in data.specific_parameter.levels_group.level.all() ])
+                ),
+                'levels_group': '{} [{}]'.format(
+                    data.specific_parameter.levels_group.description,
+                    data.specific_parameter.levels_group.units.unitsi18n_set.filter(qlang).get().name
+                ),
+                'levels_variable':
+                    data.levels_variable.name if data.levels_variable else None,
+                'property_label': data.property.label,
+                'property_value': data.property_value.label,
+                'root_dir': data.root_dir.name,
+                'subpath0': data.dataset.scenario.subpath0,
+                'subpath1': data.dataset.resolution.subpath1,
+                'subpath2': data.specific_parameter.time_step.subpath2,
+                'file_pattern': data.file.name_pattern,
+                'scale': data.scale,
+                'offset': data.offset,
+            }
+            for data in datas
+        ]
+
+        return Response(data_data)
+
+
 class DatasetApiListView(APIView):
     """
     Returns datasets
@@ -88,48 +133,3 @@ class SpecificParameterApiListView(APIView):
         ]
 
         return Response(specpar_data)
-
-
-class DataApiListView(APIView):
-    """
-    Returns datasets
-    """
-    def get(self, request):
-        language = get_language()
-        qlang = Q(language__code=language)
-        datas = Data.objects.all()
-        data_data = [
-            {
-                'id': data.id,
-                'is_visible': data.specific_parameter.parameter.is_visible,
-                'collection_label': data.dataset.collection.label,
-                'scenario_name': data.dataset.scenario.name,
-                'resolution_name': data.dataset.resolution.name,
-                'parameter_name': data.specific_parameter.parameter.parameteri18n_set.filter(qlang).get().name,
-                'time_step': data.specific_parameter.time_step.timestepi18n_set.filter(qlang).get().name,
-                'variable_name': data.variable.name,
-                'units_name': data.units.unitsi18n_set.filter(qlang).get().name,
-                'levels': '; '.join(
-                    sorted([ level.leveli18n_set.filter(qlang).get().name
-                    for level in data.specific_parameter.levels_group.level.all() ])
-                ),
-                'levels_group': '{} [{}]'.format(
-                    data.specific_parameter.levels_group.description,
-                    data.specific_parameter.levels_group.units.unitsi18n_set.filter(qlang).get().name
-                ),
-                'levels_variable':
-                    data.levels_variable.name if data.levels_variable else None,
-                'property_label': data.property.label,
-                'property_value': data.property_value.label,
-                'root_dir': data.root_dir.name,
-                'subpath0': data.dataset.scenario.subpath0,
-                'subpath1': data.dataset.resolution.subpath1,
-                'subpath2': data.specific_parameter.time_step.subpath2,
-                'file_pattern': data.file.name_pattern,
-                'scale': data.scale,
-                'offset': data.offset,
-            }
-            for data in datas
-        ]
-
-        return Response(data_data)
