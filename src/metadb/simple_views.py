@@ -3,11 +3,9 @@ from django.urls import reverse_lazy
 
 from .common_views import CommonCreateView, CommonUpdateView, CommonDeleteView
 
-from .simple_forms import ( AccumulationModeForm, DataKindForm, FileForm, FileTypeForm, PropertyForm,
-                            PropertyValueForm, ResolutionForm, RootDirForm, ScenarioForm, VariableForm )
+from .simple_forms import *
 
-from .models import ( AccumulationMode, DataKind, File, FileType, Property, PropertyValue, Resolution, 
-                      RootDir, Scenario, Variable )
+from .models import *
 
 
 class AccumulationModeCreateView(CommonCreateView):
@@ -156,6 +154,43 @@ class FileTypeDeleteView(CommonDeleteView):
         'submit_name': _('Delete file type')
     }
     url_name = 'metadb:filetype_delete'
+
+
+class LanguageCreateView(CommonCreateView):
+    form_class = LanguageForm
+    model = Language
+    template_name = 'metadb/includes/simple_form.html'
+    ctx = {
+        'form_class': 'js-language-form',
+        'title': _("Create a new language"),
+        'submit_name': _("Create language"),
+    }
+    url_name = 'metadb:language_create'
+
+
+class LanguageUpdateView(CommonUpdateView):
+    form_class = LanguageForm
+    model = Language
+    template_name = 'metadb/includes/simple_form.html'
+    ctx = {
+        'form_class': 'js-language-form',
+        'title': _("Update language"),
+        'submit_name': _("Update language"),
+    }
+    url_name = 'metadb:language_update'
+
+
+class LanguageDeleteView(CommonDeleteView):
+    form_class = LanguageForm
+    model = Language
+    template_name = 'metadb/includes/delete_form.html'
+    ctx = {
+        'form_class': 'js-language-delete-form',
+        'title': _('Confirm language delete'),
+        'text': _('Are you sure you want to delete the language'),
+        'submit_name': _('Delete language')
+    }
+    url_name = 'metadb:language_delete'
 
 
 class PropertyCreateView(CommonCreateView):
