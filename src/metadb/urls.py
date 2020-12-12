@@ -6,8 +6,7 @@ from .simple_views import *
 
 from .form_loads import *
 
-from .apiviews import (CollectionApiListView, DatasetApiListView, DataApiListView,
-                       SpecificParameterApiListView)
+from .apiviews import *
 from .collection_views import (CollectionCreateView, CollectionDeleteView,
                                CollectionUpdateView)
 from .dataset_views import (DatasetCreateView, DatasetDeleteView,
@@ -65,6 +64,7 @@ urlpatterns = [
     # CRUDs
 
     path('accmodes/create/', AccumulationModeCreateView.as_view(), name='accmode_create'),
+    path('accmodes/api/', AccumulationModeApiListView.as_view(), name='accmodes_api'),
     path('accmodes/<int:pk>/update/', AccumulationModeUpdateView.as_view(), name='accmode_update'),
     path('accmodes/<int:pk>/delete/', AccumulationModeDeleteView.as_view(), name='accmode_delete'),
 
@@ -91,6 +91,7 @@ urlpatterns = [
     path('data/<int:pk>/delete/', DataDeleteView.as_view(), name='data_delete'),
 
     path('datakinds/create/', DataKindCreateView.as_view(), name='datakind_create'),
+    path('datakinds/api/', DataKindApiListView.as_view(), name='datakinds_api'),
     path('datakinds/<int:pk>/update/', DataKindUpdateView.as_view(), name='datakind_update'),
     path('datakinds/<int:pk>/delete/', DataKindDeleteView.as_view(), name='datakind_delete'),
 
@@ -108,34 +109,42 @@ urlpatterns = [
 #    path('edges/<int:pk>/delete/', EdgeDeleteView.as_view(), name='edge_delete'),
 
     path('files/create/', FileCreateView.as_view(), name='file_create'),
+    path('files/api/', FileApiListView.as_view(), name='files_api'),
     path('files/<int:pk>/update/', FileUpdateView.as_view(), name='file_update'),
     path('files/<int:pk>/delete/', FileDeleteView.as_view(), name='file_delete'),
 
     path('filetypes/create/', FileTypeCreateView.as_view(), name='filetype_create'),
+    path('filetypes/api/', FileTypeApiListView.as_view(), name='filetypes_api'),
     path('filetypes/<int:pk>/update/', FileTypeUpdateView.as_view(), name='filetype_update'),
     path('filetypes/<int:pk>/delete/', FileTypeDeleteView.as_view(), name='filetype_delete'),
 
     path('guielements/create/', GuiElementCreateView.as_view(), name='gui_element_create'),
+    path('guielements/api/', GuiElementApiListView.as_view(), name='gui_elements_api'),
     path('guielements/<int:pk>/update/', GuiElementUpdateView.as_view(), name='gui_element_update'),
     path('guielements/<int:pk>/delete/', GuiElementDeleteView.as_view(), name='gui_element_delete'),
 
     path('languages/create/', LanguageCreateView.as_view(), name='language_create'),
+    path('languages/api/', LanguageApiListView.as_view(), name='languages_api'),
     path('languages/<int:pk>/update/', LanguageUpdateView.as_view(), name='language_update'),
     path('languages/<int:pk>/delete/', LanguageDeleteView.as_view(), name='language_delete'),
 
     path('levels/create/', LevelCreateView.as_view(), name='level_create'),
+    path('levels/api/', LevelApiListView.as_view(), name='levels_api'),
     path('levels/<int:pk>/update/', LevelUpdateView.as_view(), name='level_update'),
     path('levels/<int:pk>/delete/', LevelDeleteView.as_view(), name='level_delete'),
 
     path('levelsgroups/create/', LevelsGroupCreateView.as_view(), name='levels_group_create'),
+    path('levelsgroups/api/', LevelsGroupApiListView.as_view(), name='levels_groups_api'),
     path('levelsgroups/<int:pk>/update/', LevelsGroupUpdateView.as_view(), name='levels_group_update'),
     path('levelsgroups/<int:pk>/delete/', LevelsGroupDeleteView.as_view(), name='levels_group_delete'),
 
     path('levelsvariables/create/', LevelsVariableCreateView.as_view(), name='levels_variable_create'),
+    path('levelsvariables/api/', LevelsVariableApiListView.as_view(), name='levels_variables_api'),
     path('levelsvariables/<int:pk>/update/', LevelsVariableUpdateView.as_view(), name='levels_variable_update'),
     path('levelsvariables/<int:pk>/delete/', LevelsVariableDeleteView.as_view(), name='levels_variable_delete'),
 
     path('organizations/create/', OrganizationCreateView.as_view(), name='organization_create'),
+    path('organizations/api/', OrganizationApiListView.as_view(), name='organizations_api'),
     path('organizations/<int:pk>/update/', OrganizationUpdateView.as_view(), name='organization_update'),
     path('organizations/<int:pk>/delete/', OrganizationDeleteView.as_view(), name='organization_delete'),
 
@@ -152,10 +161,12 @@ urlpatterns = [
 #    path('optionvalues/<int:pk>/delete/', OptionValueDeleteView.as_view(), name='option_value_delete'),
 
     path('parameters/create/', ParameterCreateView.as_view(), name='parameter_create'),
+    path('parameters/api/', ParameterApiListView.as_view(), name='parameters_api'),
     path('parameters/<int:pk>/update/', ParameterUpdateView.as_view(), name='parameter_update'),
     path('parameters/<int:pk>/delete/', ParameterDeleteView.as_view(), name='parameter_delete'),
 
     path('properties/create/', PropertyCreateView.as_view(), name='property_create'),
+    path('properties/api/', PropertyApiListView.as_view(), name='properties_api'),
     path('properties/<int:pk>/update/', PropertyUpdateView.as_view(), name='property_update'),
     path('properties/<int:pk>/delete/', PropertyDeleteView.as_view(), name='property_delete'),
 
@@ -172,18 +183,22 @@ urlpatterns = [
 #    path('processorshasopts/<int:pk>/delete/', ProcessorHasOptsDeleteView.as_view(), name='processor_has_opts_delete'),
 
     path('propertyvalues/create/', PropertyValueCreateView.as_view(), name='property_value_create'),
+    path('propertyvalues/api/', PropertyValueApiListView.as_view(), name='property_values_api'),
     path('propertyvalues/<int:pk>/update/', PropertyValueUpdateView.as_view(), name='property_value_update'),
     path('propertyvalues/<int:pk>/delete/', PropertyValueDeleteView.as_view(), name='property_value_delete'),
 
     path('resolutions/create/', ResolutionCreateView.as_view(), name='resolution_create'),
+    path('resolutions/api/', ResolutionApiListView.as_view(), name='resolutions_api'),
     path('resolutions/<int:pk>/update/', ResolutionUpdateView.as_view(), name='resolution_update'),
     path('resolutions/<int:pk>/delete/', ResolutionDeleteView.as_view(), name='resolution_delete'),
 
     path('rootdirs/create/', RootDirCreateView.as_view(), name='root_dir_create'),
+    path('rootdirs/api/', RootDirApiListView.as_view(), name='root_dirs_api'),
     path('rootdirs/<int:pk>/update/', RootDirUpdateView.as_view(), name='root_dir_update'),
     path('rootdirs/<int:pk>/delete/', RootDirDeleteView.as_view(), name='root_dir_delete'),
 
     path('scenarios/create/', ScenarioCreateView.as_view(), name='scenario_create'),
+    path('scenarios/api/', ScenarioApiListView.as_view(), name='scenario_api'),
     path('scenarios/<int:pk>/update/', ScenarioUpdateView.as_view(), name='scenario_update'),
     path('scenarios/<int:pk>/delete/', ScenarioDeleteView.as_view(), name='scenario_delete'),
 
@@ -197,14 +212,17 @@ urlpatterns = [
 #    path('tptypes/<int:pk>/delete/', TimePeriodTypeDeleteView.as_view(), name='time_period_type_delete'),
 
     path('timesteps/create/', TimeStepCreateView.as_view(), name='time_step_create'),
+    path('timesteps/api/', TimeStepApiListView.as_view(), name='time_steps_api'),
     path('timesteps/<int:pk>/update/', TimeStepUpdateView.as_view(), name='time_step_update'),
     path('timesteps/<int:pk>/delete/', TimeStepDeleteView.as_view(), name='time_step_delete'),
 
     path('units/create/', UnitCreateView.as_view(), name='unit_create'),
+    path('units/api/', UnitApiListView.as_view(), name='units_api'),
     path('units/<int:pk>/update/', UnitUpdateView.as_view(), name='unit_update'),
     path('units/<int:pk>/delete/', UnitDeleteView.as_view(), name='unit_delete'),
 
     path('variables/create/', VariableCreateView.as_view(), name='variable_create'),
+    path('variables/api/', VariableApiListView.as_view(), name='variables_api'),
     path('variables/<int:pk>/update/', VariableUpdateView.as_view(), name='variable_update'),
     path('variables/<int:pk>/delete/', VariableDeleteView.as_view(), name='variable_delete'),
 
