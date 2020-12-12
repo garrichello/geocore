@@ -15,13 +15,6 @@ collection_columns = [
                + `data-url="${collection_delete_url[0]}${row.id}${collection_delete_url[1]}">`
                + '<span class="glyphicon glyphicon-trash"></span></button></div>';
     } },  // for buttons
-    { 'data': 'id' },
-    { 'data': 'label' },
-    { 'data': 'name' },
-    { 'data': 'description' },
-    { 'data': 'organization' },
-    { 'data': 'organization_url' },
-    { 'data': 'url' },
 ]
 
 collection_columnsDefs = [
@@ -53,16 +46,6 @@ dataset_columns = [
                + `data-url="${dataset_delete_url[0]}${row.id}${dataset_delete_url[1]}">`
                + '<span class="glyphicon glyphicon-trash"></span></button></div>';
     } },  // for buttons
-    { 'data': 'id' },
-    { 'data': 'is_visible' },
-    { 'data': 'collection_label' },
-    { 'data': 'resolution_name' },
-    { 'data': 'scenario_name' },
-    { 'data': 'data_kind_name' },
-    { 'data': 'file_type_name' },
-    { 'data': 'time_start' },
-    { 'data': 'time_end' },
-    { 'data': 'description' },
 ]
 
 dataset_columnsDefs = [
@@ -97,16 +80,6 @@ specpar_columns = [
                + `data-url="${specpar_delete_url[0]}${row.id}${specpar_delete_url[1]}">`
                + '<span class="glyphicon glyphicon-trash"></span></button></div>';
     } },  // for buttons
-    { 'data': 'id' },
-    { 'data': 'is_visible' },
-    { 'data': 'parameter_name' },
-    { 'data': 'acc_mode_name' },
-    { 'data': 'time_step_name' },
-    { 'data': 'time_step_label' },
-    { 'data': 'time_step_subpath' },
-    { 'data': 'levels_group' },
-    { 'data': 'levels_group_desc' },
-    { 'data': 'levels' },
 ]
 
 specpar_columnsDefs = [
@@ -141,27 +114,6 @@ data_columns = [
                + `data-url="${data_delete_url[0]}${row.id}${data_delete_url[1]}">`
                + '<span class="glyphicon glyphicon-trash"></span></button></div>';
     } },
-    { 'data': 'id' },
-    { 'data': 'is_visible' },
-    { 'data': 'collection_label' },
-    { 'data': 'resolution_name' },
-    { 'data': 'scenario_name' },
-    { 'data': 'parameter_name' },
-    { 'data': 'time_step' },
-    { 'data': 'levels_group' },
-    { 'data': 'levels' },
-    { 'data': 'levels_variable' },
-    { 'data': 'variable_name' },
-    { 'data': 'units_name' },
-    { 'data': 'property_label' },
-    { 'data': 'property_value' },
-    { 'data': 'root_dir' },
-    { 'data': 'subpath0' },
-    { 'data': 'subpath1' },
-    { 'data': 'subpath2' },
-    { 'data': 'file_pattern' },
-    { 'data': 'scale' },
-    { 'data': 'offset' },
 ]
 
 data_columnsDefs = [
