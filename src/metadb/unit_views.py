@@ -52,7 +52,7 @@ class UnitCreateView(UnitMixin, CommonCreateView):
         'title': _("Create a new measurement unit"),
         'submit_name': _("Create unit"),
     }
-    url_name = 'metadb:unit_create'
+    action_url = 'metadb:unit_create'
 
 
 class UnitUpdateView(UnitMixin, CommonUpdateView):
@@ -62,7 +62,7 @@ class UnitUpdateView(UnitMixin, CommonUpdateView):
         'title': _("Update measurement unit"),
         'submit_name': _("Update units"),
     }
-    url_name = 'metadb:unit_update'
+    action_url = 'metadb:unit_update'
 
 
 class UnitDeleteView(CommonDeleteView):
@@ -75,4 +75,4 @@ class UnitDeleteView(CommonDeleteView):
         'text': _('Are you sure you want to delete the unit'),
         'submit_name': _('Delete units')
     }
-    url_name = 'metadb:unit_delete'
+    action_url = 'metadb:unit_delete'

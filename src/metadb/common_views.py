@@ -35,12 +35,13 @@ class CommonCreateView(CommonBaseView):
              'value': ''},
         ]
     }
-    url_name = ''
+    action_url = ''
+    create = True
 
     def get(self, request):
         form = self.form_class()  # pylint: disable=not-callable
         self.ctx['forms'] = [form]
-        self.ctx['action'] = reverse(self.url_name)
+        self.ctx['action'] = reverse(self.action_url)
         html_form = render_to_string(self.template_name, self.ctx, request)
         return JsonResponse({'html_form': html_form})
 
@@ -62,14 +63,14 @@ class CommonUpdateView(CommonBaseView):
              'value': ''},
         ]
     }
-    url_name = ''
+    action_url = ''
 
     def get(self, request, pk):
         obj = get_object_or_404(self.model, pk=pk)
         form = self.form_class(instance=obj)  # pylint: disable=not-callable
 
         self.ctx['forms'] = [form]
-        self.ctx['action'] = reverse(self.url_name, kwargs={'pk': form.instance.pk})
+        self.ctx['action'] = reverse(self.action_url, kwargs={'pk': form.instance.pk})
         html_form = render_to_string(self.template_name, self.ctx, request)
         return JsonResponse({'html_form': html_form})
 
@@ -77,7 +78,7 @@ class CommonUpdateView(CommonBaseView):
         obj = get_object_or_404(self.model, pk=pk)
         form = self.form_class(request.POST, instance=obj)  # pylint: disable=not-callable
         self.ctx['forms'] = [form]
-        self.ctx['action'] = reverse(self.url_name, kwargs={'pk': form.instance.pk})
+        self.ctx['action'] = reverse(self.action_url, kwargs={'pk': form.instance.pk})
         return self.save_form(request, self.template_name, self.ctx)
 
 
@@ -89,11 +90,11 @@ class CommonDeleteView(CommonBaseView):
         'text': '',
         'submit_name': '',
     }
-    url_name = ''
+    action_url = ''
 
     def get(self, request, pk):
         model_obj = get_object_or_404(self.model, pk=pk)
-        self.ctx['action'] = reverse(self.url_name, kwargs={'pk': pk})
+        self.ctx['action'] = reverse(self.action_url, kwargs={'pk': pk})
         self.ctx['label'] = model_obj.pk
         html_form = render_to_string(self.template_name, self.ctx, request)
         return JsonResponse({'html_form': html_form})

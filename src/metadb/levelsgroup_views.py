@@ -48,7 +48,7 @@ class LevelsGroupCreateView(LevelsGroupMixin, CommonCreateView):
              'value': reverse_lazy('metadb:form_load_levels')},
         ]
     }
-    url_name = 'metadb:levels_group_create'
+    action_url = 'metadb:levels_group_create'
 
 
 class LevelsGroupUpdateView(LevelsGroupMixin, CommonUpdateView):
@@ -65,7 +65,7 @@ class LevelsGroupUpdateView(LevelsGroupMixin, CommonUpdateView):
              'value': reverse_lazy('metadb:form_load_levels')},
         ]
     }
-    url_name = 'metadb:levels_group_update'
+    action_url = 'metadb:levels_group_update'
 
 class LevelsGroupDeleteView(CommonDeleteView):
     form_class = LevelsGroupForm
@@ -77,4 +77,4 @@ class LevelsGroupDeleteView(CommonDeleteView):
         'text': _('Are you sure you want to delete the levels group'),
         'submit_name': _('Delete levels group')
     }
-    url_name = 'metadb:levels_group_delete'
+    action_url = 'metadb:levels_group_delete'

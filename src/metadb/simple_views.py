@@ -17,7 +17,7 @@ class AccumulationModeCreateView(CommonCreateView):
         'title': _("Create a new accumulation mode"),
         'submit_name': _("Create accumulation mode"),
     }
-    url_name = 'metadb:accmode_create'
+    action_url = 'metadb:accmode_create'
 
 
 class AccumulationModeUpdateView(CommonUpdateView):
@@ -29,7 +29,7 @@ class AccumulationModeUpdateView(CommonUpdateView):
         'title': _("Update accumulation mode"),
         'submit_name': _("Update accumulation mode"),
     }
-    url_name = 'metadb:accmode_update'
+    action_url = 'metadb:accmode_update'
 
 
 class AccumulationModeDeleteView(CommonDeleteView):
@@ -42,7 +42,7 @@ class AccumulationModeDeleteView(CommonDeleteView):
         'text': _('Are you sure you want to delete the accumulation mode'),
         'submit_name': _('Delete accumulation mode')
     }
-    url_name = 'metadb:accmode_delete'
+    action_url = 'metadb:accmode_delete'
 
 
 class DataKindCreateView(CommonCreateView):
@@ -54,7 +54,7 @@ class DataKindCreateView(CommonCreateView):
         'title': _("Create a new datakind"),
         'submit_name': _("Create datakind"),
     }
-    url_name = 'metadb:datakind_create'
+    action_url = 'metadb:datakind_create'
 
 
 class DataKindUpdateView(CommonUpdateView):
@@ -66,7 +66,7 @@ class DataKindUpdateView(CommonUpdateView):
         'title': _("Update datakind"),
         'submit_name': _("Update datakind"),
     }
-    url_name = 'metadb:datakind_update'
+    action_url = 'metadb:datakind_update'
 
 
 class DataKindDeleteView(CommonDeleteView):
@@ -79,7 +79,7 @@ class DataKindDeleteView(CommonDeleteView):
         'text': _('Are you sure you want to delete the data kind'),
         'submit_name': _('Delete data kind')
     }
-    url_name = 'metadb:datakind_delete'
+    action_url = 'metadb:datakind_delete'
 
 
 class FileCreateView(CommonCreateView):
@@ -91,7 +91,7 @@ class FileCreateView(CommonCreateView):
         'title': _("Create a new file"),
         'submit_name': _("Create file"),
     }
-    url_name = 'metadb:file_create'
+    action_url = 'metadb:file_create'
 
 
 class FileUpdateView(CommonUpdateView):
@@ -103,7 +103,7 @@ class FileUpdateView(CommonUpdateView):
         'title': _("Update file"),
         'submit_name': _("Update file"),
     }
-    url_name = 'metadb:file_update'
+    action_url = 'metadb:file_update'
 
 
 class FileDeleteView(CommonDeleteView):
@@ -116,7 +116,7 @@ class FileDeleteView(CommonDeleteView):
         'text': _('Are you sure you want to delete the file'),
         'submit_name': _('Delete file')
     }
-    url_name = 'metadb:file_delete'
+    action_url = 'metadb:file_delete'
 
 
 class FileTypeCreateView(CommonCreateView):
@@ -128,7 +128,7 @@ class FileTypeCreateView(CommonCreateView):
         'title': _("Create a new filetype"),
         'submit_name': _("Create filetype"),
     }
-    url_name = 'metadb:filetype_create'
+    action_url = 'metadb:filetype_create'
 
 
 class FileTypeUpdateView(CommonUpdateView):
@@ -140,7 +140,7 @@ class FileTypeUpdateView(CommonUpdateView):
         'title': _("Update filetype"),
         'submit_name': _("Update filetype"),
     }
-    url_name = 'metadb:filetype_update'
+    action_url = 'metadb:filetype_update'
 
 
 class FileTypeDeleteView(CommonDeleteView):
@@ -153,7 +153,7 @@ class FileTypeDeleteView(CommonDeleteView):
         'text': _('Are you sure you want to delete the file type'),
         'submit_name': _('Delete file type')
     }
-    url_name = 'metadb:filetype_delete'
+    action_url = 'metadb:filetype_delete'
 
 
 class LanguageCreateView(CommonCreateView):
@@ -165,7 +165,7 @@ class LanguageCreateView(CommonCreateView):
         'title': _("Create a new language"),
         'submit_name': _("Create language"),
     }
-    url_name = 'metadb:language_create'
+    action_url = 'metadb:language_create'
 
 
 class LanguageUpdateView(CommonUpdateView):
@@ -177,7 +177,7 @@ class LanguageUpdateView(CommonUpdateView):
         'title': _("Update language"),
         'submit_name': _("Update language"),
     }
-    url_name = 'metadb:language_update'
+    action_url = 'metadb:language_update'
 
 
 class LanguageDeleteView(CommonDeleteView):
@@ -190,7 +190,7 @@ class LanguageDeleteView(CommonDeleteView):
         'text': _('Are you sure you want to delete the language'),
         'submit_name': _('Delete language')
     }
-    url_name = 'metadb:language_delete'
+    action_url = 'metadb:language_delete'
 
 
 class LevelsVariableCreateView(CommonCreateView):
@@ -202,7 +202,7 @@ class LevelsVariableCreateView(CommonCreateView):
         'title': _("Create a new levels variable"),
         'submit_name': _("Create levels variable"),
     }
-    url_name = 'metadb:levels_variable_create'
+    action_url = 'metadb:levels_variable_create'
 
 
 class LevelsVariableUpdateView(CommonUpdateView):
@@ -214,7 +214,7 @@ class LevelsVariableUpdateView(CommonUpdateView):
         'title': _("Update levels variable"),
         'submit_name': _("Update levels variable"),
     }
-    url_name = 'metadb:levels_variable_update'
+    action_url = 'metadb:levels_variable_update'
 
 class LevelsVariableDeleteView(CommonDeleteView):
     form_class = LevelsVariableForm
@@ -226,7 +226,7 @@ class LevelsVariableDeleteView(CommonDeleteView):
         'text': _('Are you sure you want to delete the levels variable'),
         'submit_name': _('Delete levels variable')
     }
-    url_name = 'metadb:levels_variable_delete'
+    action_url = 'metadb:levels_variable_delete'
     
     
 class PropertyCreateView(CommonCreateView):
@@ -243,7 +243,7 @@ class PropertyCreateView(CommonCreateView):
              'value': reverse_lazy('metadb:form_load_guielements')},
         ],
     }
-    url_name = 'metadb:property_create'
+    action_url = 'metadb:property_create'
 
 
 class PropertyUpdateView(CommonUpdateView):
@@ -260,7 +260,7 @@ class PropertyUpdateView(CommonUpdateView):
              'value': reverse_lazy('metadb:form_load_guielements')},
         ],
     }
-    url_name = 'metadb:property_update'
+    action_url = 'metadb:property_update'
 
 
 class PropertyDeleteView(CommonDeleteView):
@@ -273,7 +273,7 @@ class PropertyDeleteView(CommonDeleteView):
         'text': _('Are you sure you want to delete the property'),
         'submit_name': _('Delete property')
     }
-    url_name = 'metadb:property_delete'
+    action_url = 'metadb:property_delete'
 
 
 class PropertyValueCreateView(CommonCreateView):
@@ -285,7 +285,7 @@ class PropertyValueCreateView(CommonCreateView):
         'title': _("Create a new property value"),
         'submit_name': _("Create property value"),
     }
-    url_name = 'metadb:property_value_create'
+    action_url = 'metadb:property_value_create'
 
 
 class PropertyValueUpdateView(CommonUpdateView):
@@ -297,7 +297,7 @@ class PropertyValueUpdateView(CommonUpdateView):
         'title': _("Update property value"),
         'submit_name': _("Update property value"),
     }
-    url_name = 'metadb:property_value_update'
+    action_url = 'metadb:property_value_update'
 
 
 class PropertyValueDeleteView(CommonDeleteView):
@@ -310,7 +310,7 @@ class PropertyValueDeleteView(CommonDeleteView):
         'text': _('Are you sure you want to delete the property value'),
         'submit_name': _('Delete property value')
     }
-    url_name = 'metadb:property_value_delete'
+    action_url = 'metadb:property_value_delete'
 
 
 class ResolutionCreateView(CommonCreateView):
@@ -322,7 +322,7 @@ class ResolutionCreateView(CommonCreateView):
         'title': _("Create a new resolution"),
         'submit_name': _("Create resolution"),
     }
-    url_name = 'metadb:resolution_create'
+    action_url = 'metadb:resolution_create'
 
 
 class ResolutionUpdateView(CommonUpdateView):
@@ -334,7 +334,7 @@ class ResolutionUpdateView(CommonUpdateView):
         'title': _("Update resolution"),
         'submit_name': _("Update resolution"),
     }
-    url_name = 'metadb:resolution_update'
+    action_url = 'metadb:resolution_update'
 
 
 class ResolutionDeleteView(CommonDeleteView):
@@ -347,7 +347,7 @@ class ResolutionDeleteView(CommonDeleteView):
         'text': _('Are you sure you want to delete the resolution'),
         'submit_name': _('Delete resolution')
     }
-    url_name = 'metadb:resolution_delete'
+    action_url = 'metadb:resolution_delete'
 
 
 class RootDirCreateView(CommonCreateView):
@@ -359,7 +359,7 @@ class RootDirCreateView(CommonCreateView):
         'title': _("Create a new root directory"),
         'submit_name': _("Create root directory"),
     }
-    url_name = 'metadb:root_dir_create'
+    action_url = 'metadb:root_dir_create'
 
 
 class RootDirUpdateView(CommonUpdateView):
@@ -371,7 +371,7 @@ class RootDirUpdateView(CommonUpdateView):
         'title': _("Update root directory"),
         'submit_name': _("Update root directory"),
     }
-    url_name = 'metadb:root_dir_update'
+    action_url = 'metadb:root_dir_update'
 
 
 class RootDirDeleteView(CommonDeleteView):
@@ -384,7 +384,7 @@ class RootDirDeleteView(CommonDeleteView):
         'text': _('Are you sure you want to delete the root directory'),
         'submit_name': _('Delete root directory')
     }
-    url_name = 'metadb:root_dir_delete'
+    action_url = 'metadb:root_dir_delete'
 
 
 class ScenarioCreateView(CommonCreateView):
@@ -396,7 +396,7 @@ class ScenarioCreateView(CommonCreateView):
         'title': _("Create a new scenario"),
         'submit_name': _("Create scenario"),
     }
-    url_name = 'metadb:scenario_create'
+    action_url = 'metadb:scenario_create'
 
 
 class ScenarioUpdateView(CommonUpdateView):
@@ -408,7 +408,7 @@ class ScenarioUpdateView(CommonUpdateView):
         'title': _("Update scenario"),
         'submit_name': _("Update scenario"),
     }
-    url_name = 'metadb:scenario_update'
+    action_url = 'metadb:scenario_update'
 
 
 class ScenarioDeleteView(CommonDeleteView):
@@ -421,7 +421,7 @@ class ScenarioDeleteView(CommonDeleteView):
         'text': _('Are you sure you want to delete the scenario'),
         'submit_name': _('Delete scenario')
     }
-    url_name = 'metadb:scenario_delete'
+    action_url = 'metadb:scenario_delete'
 
 
 class VariableCreateView(CommonCreateView):
@@ -433,7 +433,7 @@ class VariableCreateView(CommonCreateView):
         'title': _("Create a new variable"),
         'submit_name': _("Create variable"),
     }
-    url_name = 'metadb:variable_create'
+    action_url = 'metadb:variable_create'
 
 
 class VariableUpdateView(CommonUpdateView):
@@ -445,7 +445,7 @@ class VariableUpdateView(CommonUpdateView):
         'title': _("Update variable"),
         'submit_name': _("Update variable"),
     }
-    url_name = 'metadb:variable_update'
+    action_url = 'metadb:variable_update'
 
 
 class VariableDeleteView(CommonDeleteView):
@@ -458,4 +458,4 @@ class VariableDeleteView(CommonDeleteView):
         'text': _('Are you sure you want to delete the variable'),
         'submit_name': _('Delete variable')
     }
-    url_name = 'metadb:variable_delete'
+    action_url = 'metadb:variable_delete'

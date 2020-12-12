@@ -29,7 +29,7 @@ class DatasetCreateView(CommonCreateView):
              'value': reverse_lazy('metadb:form_load_filetypes')},
         ]
     }
-    url_name = 'metadb:dataset_create'
+    action_url = 'metadb:dataset_create'
 
 
 class DatasetUpdateView(CommonUpdateView):
@@ -54,7 +54,7 @@ class DatasetUpdateView(CommonUpdateView):
              'value': reverse_lazy('metadb:form_load_filetypes')},
         ]
     }
-    url_name = 'metadb:dataset_update'
+    action_url = 'metadb:dataset_update'
 
 class DatasetDeleteView(CommonDeleteView):
     form_class = DatasetForm
@@ -66,4 +66,4 @@ class DatasetDeleteView(CommonDeleteView):
         'text': _('Are you sure you want to delete the dataset'),
         'submit_name': _('Delete dataset')
     }
-    url_name = 'metadb:dataset_delete'
+    action_url = 'metadb:dataset_delete'

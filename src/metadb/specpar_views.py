@@ -50,7 +50,7 @@ class SpecificParameterCreateView(SpecificParameterMixin, CommonCreateView):
              'value': reverse_lazy('metadb:sp_form_load_lvsgroup_lvsnames')},
         ]
     }
-    url_name = 'metadb:specpar_create'
+    action_url = 'metadb:specpar_create'
 
 
 class SpecificParameterUpdateView(SpecificParameterMixin, CommonUpdateView):
@@ -70,7 +70,7 @@ class SpecificParameterUpdateView(SpecificParameterMixin, CommonUpdateView):
              'value': reverse_lazy('metadb:sp_form_load_lvsgroup_lvsnames')},
         ]
     }
-    url_name = 'metadb:specpar_update'
+    action_url = 'metadb:specpar_update'
 
 class SpecificParameterDeleteView(CommonDeleteView):
     form_class = SpecificParameterForm
@@ -82,4 +82,4 @@ class SpecificParameterDeleteView(CommonDeleteView):
         'text': _('Are you sure you want to delete the specific parameter'),
         'submit_name': _('Delete specific parameter')
     }
-    url_name = 'metadb:specpar_delete'
+    action_url = 'metadb:specpar_delete'

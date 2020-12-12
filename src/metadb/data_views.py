@@ -81,7 +81,7 @@ class DataCreateView(DataMixin, CommonCreateView):
              'value': reverse_lazy('metadb:form_load_files')},
         ]
     }
-    url_name = 'metadb:data_create'
+    action_url = 'metadb:data_create'
 
 
 class DataUpdateView(DataMixin, CommonUpdateView):
@@ -118,7 +118,7 @@ class DataUpdateView(DataMixin, CommonUpdateView):
              'value': reverse_lazy('metadb:form_load_files')},
         ]
     }
-    url_name = 'metadb:data_update'
+    action_url = 'metadb:data_update'
 
 
 class DataDeleteView(CommonDeleteView):
@@ -131,4 +131,4 @@ class DataDeleteView(CommonDeleteView):
         'text': _('Are you sure you want to delete the data record'),
         'submit_name': _('Delete data')
     }
-    url_name = 'metadb:data_delete'
+    action_url = 'metadb:data_delete'

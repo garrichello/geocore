@@ -51,7 +51,7 @@ class TimeStepCreateView(TimeStepMixin, CommonCreateView):
         'title': _("Create a new time step"),
         'submit_name': _("Create time step"),
     }
-    url_name = 'metadb:time_step_create'
+    action_url = 'metadb:time_step_create'
 
 
 class TimeStepUpdateView(TimeStepMixin, CommonUpdateView):
@@ -61,7 +61,7 @@ class TimeStepUpdateView(TimeStepMixin, CommonUpdateView):
         'title': _("Update time step"),
         'submit_name': _("Update time step"),
     }
-    url_name = 'metadb:time_step_update'
+    action_url = 'metadb:time_step_update'
 
 
 class TimeStepDeleteView(CommonDeleteView):
@@ -74,4 +74,4 @@ class TimeStepDeleteView(CommonDeleteView):
         'text': _('Are you sure you want to delete the time step'),
         'submit_name': _('Delete time step')
     }
-    url_name = 'metadb:time_step_delete'
+    action_url = 'metadb:time_step_delete'

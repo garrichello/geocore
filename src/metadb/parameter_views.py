@@ -56,7 +56,7 @@ class ParameterCreateView(ParameterMixin, CommonCreateView):
              'value': reverse_lazy('metadb:form_load_accmodes')}
         ]
     }
-    url_name = 'metadb:parameter_create'
+    action_url = 'metadb:parameter_create'
 
 
 class ParameterUpdateView(ParameterMixin, CommonUpdateView):
@@ -71,7 +71,7 @@ class ParameterUpdateView(ParameterMixin, CommonUpdateView):
              'value': reverse_lazy('metadb:form_load_accmodes')}
         ]
     }
-    url_name = 'metadb:parameter_update'
+    action_url = 'metadb:parameter_update'
 
 
 class ParameterDeleteView(CommonDeleteView):
@@ -84,4 +84,4 @@ class ParameterDeleteView(CommonDeleteView):
         'text': _('Are you sure you want to delete the parameter'),
         'submit_name': _('Delete parameter')
     }
-    url_name = 'metadb:parameter_delete'
+    action_url = 'metadb:parameter_delete'

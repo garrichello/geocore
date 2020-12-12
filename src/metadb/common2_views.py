@@ -7,11 +7,26 @@ from django.urls import reverse
 
 from .models import Language
 
-class Common2BaseView(View):
+class Common2Mixin():
     form_class = None
     formi18n_class = None
     model = None
     create = False
+
+    def save_valid_forms(self, form, formi18n, fk_field_name):
+        obj = form.save()
+        obji18n = formi18n.save(commit=False)  # Get i18n element object
+        setattr(obji18n, fk_field_name, obj)  # Link it with the new GUI element
+        # To save DB consistency we create a new record for all languages.
+        # User can update/translate to every other language lately and separately.
+        if self.create:
+            for db_lang in Language.objects.all():  # Iterate over all languages in DB
+                obji18n.language = db_lang  # Link it with an existing language
+                obji18n.pk = None  # Clear PK to save data into a new record
+                obji18n.save()  # Save
+        else:  # Just update the existing record.
+            obji18n.save()
+        formi18n.save_m2m()  # Save form and many-to-many relations
 
     def save_form(self, request, template_name, ctx, fk_field_name):
         ''' Saves the form
@@ -20,21 +35,7 @@ class Common2BaseView(View):
         form = ctx['forms'][0]
         formi18n = ctx['forms'][1]
         if form.is_valid() and formi18n.is_valid():
-            # Get GUI element object save.
-            obj = form.save()
-            obji18n = formi18n.save(commit=False)  # Get i18n element object
-            setattr(obji18n, fk_field_name, obj)  # Link it with the new GUI element
-            # To save DB consistency we create a new record for all languages.
-            # User can update/translate to every other language lately and separately.
-            if self.create:
-                for db_lang in Language.objects.all():  # Iterate over all languages in DB
-                    obji18n.language = db_lang  # Link it with an existing language
-                    obji18n.pk = None  # Clear PK to save data into a new record
-                    obji18n.save()  # Save
-            else:  # Just update the existing record.
-                obji18n.save()
-
-            formi18n.save_m2m()  # Save form and many-to-many relations
+            self.save_valid_forms(form, formi18n, fk_field_name)
             data['form_is_valid'] = True
         else:
             data['form_is_valid'] = False
@@ -49,14 +50,14 @@ class Common2BaseView(View):
         return model_obj, modeli18n_obj
 
 
-class GuiElementCreateView(Common2BaseView):
+class Common2CreateView(Common2Mixin, View):
     template_name = 'metadb/includes/simple_form.html'
     ctx = {
         'form_class': '',
         'title': '',
         'submit_name': '',
     }
-    url_name = ''
+    action_url = ''
     fk_field_name = ''
     create = True
 
@@ -64,7 +65,7 @@ class GuiElementCreateView(Common2BaseView):
         form = self.form_class()  # pylint: disable=not-callable
         formi18n = self.formi18n_class()  # pylint: disable=not-callable
         self.ctx['forms'] = [form, formi18n]
-        self.ctx['action'] = reverse(self.url_name)
+        self.ctx['action'] = reverse(self.action_url)
         html_form = render_to_string(self.template_name, self.ctx, request)
         return JsonResponse({'html_form': html_form})
 
@@ -75,14 +76,14 @@ class GuiElementCreateView(Common2BaseView):
         return self.save_form(request, self.template_name, self.ctx, self.fk_field_name)
 
 
-class GuiElementUpdateView(Common2BaseView):
+class Common2UpdateView(Common2Mixin, View):
     template_name = ''
     ctx = {
         'form_class': '',
         'title': '',
         'submit_name': '',
     }
-    url_name = ''
+    action_url = ''
     fk_field_name = ''
     reverse_field_name = ''
 
@@ -92,7 +93,7 @@ class GuiElementUpdateView(Common2BaseView):
         formi18n = self.formi18n_class(instance=modeli18n)  # pylint: disable=not-callable
 
         self.ctx['forms'] = [form, formi18n]
-        self.ctx['action'] = reverse(self.url_name, kwargs={'pk': form.instance.pk}),
+        self.ctx['action'] = reverse(self.action_url, kwargs={'pk': form.instance.pk}),
         html_form = render_to_string(self.template_name, self.ctx, request)
         return JsonResponse({'html_form': html_form})
 
@@ -101,10 +102,11 @@ class GuiElementUpdateView(Common2BaseView):
         form = self.form_class(request.POST, instance=model)  # pylint: disable=not-callable
         formi18n = self.formi18n_class(request.POST, instance=modeli18n)  # pylint: disable=not-callable
         self.ctx['forms'] = [form, formi18n]
-        self.ctx['action'] = reverse(self.url_name, kwargs={'pk': form.instance.pk}),
+        self.ctx['action'] = reverse(self.action_url, kwargs={'pk': form.instance.pk}),
         return self.save_form(request, self.template_name, self.ctx, self.fk_field_name)
 
-class GuiElementDeleteView(Common2BaseView):
+class Common2DeleteView(View):
+    model = None
     template_name = ''
     ctx = {
         'form_class': '',
@@ -112,11 +114,11 @@ class GuiElementDeleteView(Common2BaseView):
         'text': '',
         'submit_name': '',
     }
-    url_name = ''
+    action_url = ''
 
     def get(self, request, pk):
         model_obj = get_object_or_404(self.model, pk=pk)
-        self.ctx['action'] = reverse(self.url_name, kwargs={'pk': pk})
+        self.ctx['action'] = reverse(self.action_url, kwargs={'pk': pk})
         self.ctx['label'] = model_obj.pk
         html_form = render_to_string(self.template_name, self.ctx, request)
         return JsonResponse({'html_form': html_form})

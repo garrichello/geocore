@@ -52,7 +52,7 @@ class LevelCreateView(LevelMixin, CommonCreateView):
         'title': _("Create a new level"),
         'submit_name': _("Create level"),
     }
-    url_name = 'metadb:level_create'
+    action_url = 'metadb:level_create'
 
 
 class LevelUpdateView(LevelMixin, CommonUpdateView):
@@ -62,7 +62,7 @@ class LevelUpdateView(LevelMixin, CommonUpdateView):
         'title': _("Update level"),
         'submit_name': _("Update level"),
     }
-    url_name = 'metadb:level_update'
+    action_url = 'metadb:level_update'
 
 
 class LevelDeleteView(CommonDeleteView):
@@ -75,4 +75,4 @@ class LevelDeleteView(CommonDeleteView):
         'text': _('Are you sure you want to delete the level'),
         'submit_name': _('Delete level')
     }
-    url_name = 'metadb:level_delete'
+    action_url = 'metadb:level_delete'
