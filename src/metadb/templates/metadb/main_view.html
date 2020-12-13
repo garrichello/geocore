@@ -48,17 +48,7 @@
                         data-url="{% url 'metadb:collection_create' %}">
                     <span class="glyphicon glyphicon-plus"></span> {% trans "Create" %}
                 </button>
-                <table id='collection' class="table table-hover table-bordered" width="100%">
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th></th>
-                            {% for class, title in collection_headers %}
-                            <th class="{{ class }}">{{ title }}</th>
-                            {% endfor %}
-                        </tr>
-                    </thead>
-                </table>
+                <table id='collection' class="table table-hover table-bordered" width="100%"></table>
             </div>
             <div class="tab-pane" id="tab-dataset"
                 api-data-url="{% url 'metadb:datasets_api' %}"
@@ -69,17 +59,7 @@
                         data-url="{% url 'metadb:dataset_create' %}">
                     <span class="glyphicon glyphicon-plus"></span> {% trans "Create" %}
                 </button>
-                <table id='dataset' class="table table-hover table-bordered" width="100%">
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th></th>
-                            {% for class, title in dataset_headers %}
-                            <th class="{{ class }}">{{ title }}</th>
-                            {% endfor %}
-                        </tr>
-                    </thead>
-                </table>
+                <table id='dataset' class="table table-hover table-bordered" width="100%"></table>
             </div>
             <div class="tab-pane" id="tab-specpar"
                 api-data-url="{% url 'metadb:specpars_api' %}"
@@ -90,17 +70,7 @@
                         data-url="{% url 'metadb:specpar_create' %}">
                     <span class="glyphicon glyphicon-plus"></span> {% trans "Create" %}
                 </button>
-                <table id='specpar' class="table table-hover table-bordered" width="200%">
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th></th>
-                            {% for class, title in specpar_headers %}
-                            <th class="{{ class }}">{{ title }}</th>
-                            {% endfor %}
-                        </tr>
-                    </thead>
-                </table>
+                <table id='specpar' class="table table-hover table-bordered" width="200%"></table>
             </div>
             <div class="tab-pane" id="tab-data"
                 api-data-url="{% url 'metadb:data_api' %}"
@@ -111,17 +81,7 @@
                         data-url="{% url 'metadb:data_create' %}">
                     <span class="glyphicon glyphicon-plus"></span> {% trans "Create" %}
                 </button>
-                <table id='data' class="table table-hover table-bordered" width="200%">
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th></th>
-                            {% for class, title in data_headers %}
-                            <th class="{{ class }}">{{ title }}</th>
-                            {% endfor %}
-                        </tr>
-                    </thead>
-                </table>
+                <table id='data' class="table table-hover table-bordered" width="200%"></table>
             </div>
             <div class="tab-pane" id="tab-other">
                 <div class="container-fluid">
