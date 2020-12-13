@@ -40,8 +40,9 @@
         </ul>
         <div class="tab-content">
             <div class="tab-pane active" id="tab-collection"
-                 update-data-url="{% url 'metadb:collection_update' 99999 %}"
-                 delete-data-url="{% url 'metadb:collection_delete' 99999 %}">
+                api-data-url="{% url 'metadb:collections_api' %}"
+                update-data-url="{% url 'metadb:collection_update' 99999 %}"
+                delete-data-url="{% url 'metadb:collection_delete' 99999 %}">
                 <button type="button" 
                         class="btn btn-primary js-create"
                         data-url="{% url 'metadb:collection_create' %}">
@@ -60,8 +61,9 @@
                 </table>
             </div>
             <div class="tab-pane" id="tab-dataset"
-                 update-data-url="{% url 'metadb:dataset_update' 99999 %}"
-                 delete-data-url="{% url 'metadb:dataset_delete' 99999 %}">
+                api-data-url="{% url 'metadb:datasets_api' %}"
+                update-data-url="{% url 'metadb:dataset_update' 99999 %}"
+                delete-data-url="{% url 'metadb:dataset_delete' 99999 %}">
                 <button type="button"
                         class="btn btn-primary js-create"
                         data-url="{% url 'metadb:dataset_create' %}">
@@ -80,8 +82,9 @@
                 </table>
             </div>
             <div class="tab-pane" id="tab-specpar"
-                 update-data-url="{% url 'metadb:specpar_update' 99999 %}"
-                 delete-data-url="{% url 'metadb:specpar_delete' 99999 %}">
+                api-data-url="{% url 'metadb:specpars_api' %}"
+                update-data-url="{% url 'metadb:specpar_update' 99999 %}"
+                delete-data-url="{% url 'metadb:specpar_delete' 99999 %}">
                 <button type="button"
                         class="btn btn-primary js-create"
                         data-url="{% url 'metadb:specpar_create' %}">
@@ -100,8 +103,9 @@
                 </table>
             </div>
             <div class="tab-pane" id="tab-data"
-                 update-data-url="{% url 'metadb:data_update' 99999 %}"
-                 delete-data-url="{% url 'metadb:data_delete' 99999 %}">
+                api-data-url="{% url 'metadb:data_api' %}"
+                update-data-url="{% url 'metadb:data_update' 99999 %}"
+                delete-data-url="{% url 'metadb:data_delete' 99999 %}">
                 <button type="button"
                         class="btn btn-primary js-create"
                         data-url="{% url 'metadb:data_create' %}">
@@ -120,6 +124,30 @@
                 </table>
             </div>
             <div class="tab-pane" id="tab-other">
+                <div class="container-fluid">
+                <div class="radio">
+                    {% for choice in choices %}
+                    {% if forloop.counter0|divisibleby:4 %}<div class="row">{% endif %}
+                    <div class="col-md-3">
+                    <label>
+                        <input type="radio" name="data-choice" class="js-data-choice" 
+                        api-data-url={% url choice.api_url %}
+                        update-data-url={% url choice.update_url 99999%}
+                        delete-data-url={% url choice.delete_url 99999%}
+                        ></input>
+                        {{ choice.title }}
+                    </label>
+                    </div>
+                    {% if forloop.counter|divisibleby:4 %}</div>{% endif %}
+                    {% endfor %}
+                    {% if not choices|length|divisibleby:4 %}</div>{% endif %}
+                </div>
+                </div>
+                <button type="button"
+                        class="btn btn-primary js-create" disabled>
+                    <span class="glyphicon glyphicon-plus"></span> {% trans "Create" %}
+                </button>
+                <table id="other" class="table table-hover table-bordered" width="100%"></table>
             </div>
         </div>
     </div>
