@@ -198,7 +198,7 @@ urlpatterns = [
     path('rootdirs/<int:pk>/delete/', RootDirDeleteView.as_view(), name='root_dir_delete'),
 
     path('scenarios/create/', ScenarioCreateView.as_view(), name='scenario_create'),
-    path('scenarios/api/', ScenarioApiListView.as_view(), name='scenario_api'),
+    path('scenarios/api/', ScenarioApiListView.as_view(), name='scenarios_api'),
     path('scenarios/<int:pk>/update/', ScenarioUpdateView.as_view(), name='scenario_update'),
     path('scenarios/<int:pk>/delete/', ScenarioDeleteView.as_view(), name='scenario_delete'),
 
