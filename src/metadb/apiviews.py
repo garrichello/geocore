@@ -1,8 +1,9 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import *
 from django.utils.translation import get_language, gettext_lazy as _
 from django.db.models import Q
+
+from .models import *
 
 
 class AccumulationModeApiListView(APIView):
@@ -19,7 +20,7 @@ class AccumulationModeApiListView(APIView):
             } for item in items
         ]
         data['headers'] = [
-            _('Id'), 
+            _('Id'),
             _('Name'),
         ]
 
@@ -34,9 +35,9 @@ class CollectionApiListView(APIView):
         language = get_language()
 
         collections = Collection.objects.all()
-        collection_data = []
+        collection_data = {'data': []}
         for collection in collections:
-            collection_data.append(
+            collection_data['data'].append(
                 {
                     'id': collection.id,
                     'label': collection.label,
@@ -47,6 +48,15 @@ class CollectionApiListView(APIView):
                     'url': collection.url,
                 }
             )
+        collection_data['headers'] = [
+            ('head_none', 'Id'),
+            ('head_select', _('Collection label')),
+            ('head_select', _('Collection name')),
+            ('head_text', _('Collection description')),
+            ('head_select', _('Organization')),
+            ('head_text', _('Organization URL')),
+            ('head_text', _('Collection URL'))
+        ]
 
         return Response(collection_data)
 
@@ -59,7 +69,8 @@ class DataApiListView(APIView):
         language = get_language()
         qlang = Q(language__code=language)
         datas = Data.objects.all()
-        data_data = [
+        data_data = {}
+        data_data['data'] = [
             {
                 'id': data.id,
                 'is_visible': data.specific_parameter.parameter.is_visible,
@@ -91,6 +102,29 @@ class DataApiListView(APIView):
                 'offset': data.offset,
             }
             for data in datas
+        ]
+        data_data['headers'] = [
+            ('head_none', 'Id'),
+            ('head_none', _('Visible')),
+            ('head_select', _('Collection label')),
+            ('head_select', _('Resolution')),
+            ('head_select', _('Scenario')),
+            ('head_select', _('Parameter')),
+            ('head_select', _('Time step')),
+            ('head_text', _('Levels group')),
+            ('head_text', _('Levels names')),
+            ('head_none', _('Levels variable')),
+            ('head_select', _('Variable name')),
+            ('head_select', _('Units')),
+            ('head_none', _('Propery label')),
+            ('head_none', _('Property value')),
+            ('head_text', _('Root directory')),
+            ('head_text', _('Scenario subpath')),
+            ('head_text', _('Resolution subpath')),
+            ('head_text', _('Time step subpath')),
+            ('head_none', _('File name pattern')),
+            ('head_none', _('Scale')),
+            ('head_none', _('Offset')),
         ]
 
         return Response(data_data)
@@ -125,7 +159,8 @@ class DatasetApiListView(APIView):
     """
     def get(self, request):
         datasets = Dataset.objects.all()
-        dataset_data = [
+        dataset_data = {}
+        dataset_data['data'] = [
             {
                 'id': dataset.id,
                 'is_visible': dataset.is_visible,
@@ -139,6 +174,18 @@ class DatasetApiListView(APIView):
                 'description': dataset.description,
             }
             for dataset in datasets
+        ]
+        dataset_data['headers'] = [
+            ('head_none', 'Id'),
+            ('head_none', _('Visible')),
+            ('head_select', _('Collection label')),
+            ('head_select', _('Resolution')),
+            ('head_select', _('Scenario')),
+            ('head_select', _('Data kind')),
+            ('head_select', _('File type')),
+            ('head_none', _('Time start')),
+            ('head_none', _('Time end')),
+            ('head_text', _('Dataset description')),
         ]
 
         return Response(dataset_data)
@@ -510,7 +557,8 @@ class SpecificParameterApiListView(APIView):
         language = get_language()
 
         specpars = SpecificParameter.objects.all()
-        specpar_data = [
+        specpar_data = {}
+        specpar_data['data'] = [
             {
                 'id': specpar.id,
                 'is_visible': specpar.parameter.is_visible,
@@ -533,6 +581,18 @@ class SpecificParameterApiListView(APIView):
                     ),
             }
             for specpar in specpars
+        ]
+        specpar_data['headers'] = [
+            ('head_none', 'Id'),
+            ('head_none', _('Visible')),
+            ('head_select', _('Parameter')),
+            ('head_select', _('Accumulation mode')),
+            ('head_select', _('Time step')),
+            ('head_none', _('Time step label')),
+            ('head_none', _('Time step subpath')),
+            ('head_select', _('Levels group')),
+            ('head_text', _('Levels group description')),
+            ('head_text', _('Levels names')),
         ]
 
         return Response(specpar_data)
