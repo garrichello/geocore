@@ -308,6 +308,15 @@ function columnsAdjust() {
     $.fn.dataTable.tables( {visible: true, api: true} ).draw();
 };
 
+function set_header(e, settings, json, xhr) {
+    // Get headers from JSON data and put them into the table
+    var table = $(this).DataTable();
+    $.each(json.headers, function(i, v) {
+        table.columns().header()[i+2].innerText = v[1];  // Start at the 3rd column
+        $(table.columns().header()[i+2]).addClass(v[0]);
+    })
+}
+
 $(document).ready( function () {
     $('a[data-toggle="tab"]').on( 'shown.bs.tab', function() {
         columnsAdjust();
@@ -320,41 +329,53 @@ $(document).ready( function () {
     var collectionOptions = $.extend(true, {}, commonOptions);
     collectionOptions["columnDefs"] = collection_columnsDefs.concat(all_columns_defs);
     collectionOptions["columns"] = collection_columns;
-    collectionOptions["ajax"] = { 'url': collection_api_url, 'type': 'GET', 'dataSrc': '' };
+    collectionOptions["ajax"] = { 'url': collection_api_url, 'type': 'GET', 'dataSrc': 'data' };
     $('#collection').DataTable( collectionOptions ).on('draw', function() {
         addUpdDelButtonHandlers.call(this, 'collection');
     });
+    $('#collection').DataTable().on('xhr.dt', set_header);
 
     // Create Datasets table
     var datasetOptions = $.extend(true, {}, commonOptions);
     datasetOptions["columnDefs"] = dataset_columnsDefs.concat(all_columns_defs),
     datasetOptions["columns"] = dataset_columns;
-    datasetOptions["ajax"] = { 'url': dataset_api_url, 'type': 'GET', 'dataSrc': '' };
+    datasetOptions["ajax"] = { 'url': dataset_api_url, 'type': 'GET', 'dataSrc': 'data' };
     $('#dataset').DataTable( datasetOptions ).on('draw', function() {
         addUpdDelButtonHandlers.call(this, 'dataset');
     });
+    $('#dataset').DataTable().on('xhr.dt', set_header);
 
     // Create Specific parameter table
     var specparOptions = $.extend(true, {}, commonOptions);
     specparOptions["columnDefs"] = specpar_columnsDefs.concat(all_columns_defs),
     specparOptions["columns"] = specpar_columns;
-    specparOptions["ajax"] = { 'url': specpar_api_url, 'type': 'GET', 'dataSrc': '' };
+    specparOptions["ajax"] = { 'url': specpar_api_url, 'type': 'GET', 'dataSrc': 'data' };
     $('#specpar').DataTable( specparOptions ).on('draw', function() {
         addUpdDelButtonHandlers.call(this, 'specpar');
     });
+    $('#specpar').DataTable().on('xhr.dt', set_header);
 
     // Create Data table
     var dataOptions = $.extend(true, {}, commonOptions);  
     dataOptions["columnDefs"] = data_columnsDefs.concat(all_columns_defs),
     dataOptions["columns"] = data_columns;
-    dataOptions["ajax"] = { 'url': data_api_url, 'type': 'GET', 'dataSrc': '' };
+    dataOptions["ajax"] = { 'url': data_api_url, 'type': 'GET', 'dataSrc': 'data' };
     $('#data').DataTable( dataOptions ).on('draw', function() {
         addUpdDelButtonHandlers.call(this, 'data');
     });
+    $('#data').DataTable().on('xhr.dt', set_header);
 
     // Create Other tables
+    function prePostInit() {
+        var table = $(this).DataTable();
+        for (var i = 3; i < table.columns().header().length; i++) {
+            $(table.columns(i).header()).addClass('head_text');
+        }
+        postInit.call(this);
+    }
+
     var otherOptions = {
-        initComplete: postInit,
+        initComplete: prePostInit,
         sDom: 'ti',
         orderCellsTop: true,
         paginate: false,
