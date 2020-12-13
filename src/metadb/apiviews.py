@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import *
-from django.utils.translation import get_language
+from django.utils.translation import get_language, gettext_lazy as _
 from django.db.models import Q
 
 
@@ -12,14 +12,16 @@ class AccumulationModeApiListView(APIView):
     def get(self, request):
 
         items = AccumulationMode.objects.all()
-        data = []
-        for item in items:
-            data.append(
-                {
-                    'id': item.id,
-                    'name': item.name,
-                }
-            )
+        data = {}
+        data['data'] = [
+            { 'id': item.id,
+              'name': item.name
+            } for item in items
+        ]
+        data['headers'] = [
+            _('Id'), 
+            _('Name'),
+        ]
 
         return Response(data)
 
@@ -101,14 +103,18 @@ class DataKindApiListView(APIView):
     def get(self, request):
 
         items = DataKind.objects.all()
-        data = []
+        data = {'data': []}
         for item in items:
-            data.append(
+            data['data'].append(
                 {
                     'id': item.id,
                     'name': item.name,
                 }
             )
+        data['headers'] = [
+            _('Id'), 
+            _('Name'),
+        ]
 
         return Response(data)
 
@@ -145,14 +151,18 @@ class FileApiListView(APIView):
     def get(self, request):
 
         items = File.objects.all()
-        data = []
+        data = {'data': []}
         for item in items:
-            data.append(
+            data['data'].append(
                 {
                     'id': item.id,
                     'name_pattern': item.name_pattern,
                 }
             )
+        data['headers'] = [
+            _('Id'),
+            _('File name pattern'),
+        ]
 
         return Response(data)
 
@@ -164,14 +174,18 @@ class FileTypeApiListView(APIView):
     def get(self, request):
 
         items = FileType.objects.all()
-        data = []
+        data = {'data': []}
         for item in items:
-            data.append(
+            data['data'].append(
                 {
                     'id': item.id,
                     'name': item.name,
                 }
             )
+        data['headers'] = [
+            _('Id'), 
+            _('Name'),
+        ]
 
         return Response(data)
 
@@ -184,15 +198,20 @@ class GuiElementApiListView(APIView):
 
         language = get_language()
         items = GuiElement.objects.all()
-        data = []
+        data = {'data': []}
         for item in items:
-            data.append(
+            data['data'].append(
                 {
                     'id': item.id,
                     'name': item.name,
                     'caption': item.guielementi18n_set.filter(language__code=language).get().caption,
                 }
             )
+        data['headers'] = [
+            _('Id'), 
+            _('Name'),
+            _('Caption'),
+        ]
 
         return Response(data)
 
@@ -204,15 +223,20 @@ class LanguageApiListView(APIView):
     def get(self, request):
 
         items = Language.objects.all()
-        data = []
+        data = {'data': []}
         for item in items:
-            data.append(
+            data['data'].append(
                 {
                     'id': item.id,
                     'name': item.name,
                     'code': item.code,
                 }
             )
+        data['headers'] = [
+            _('Id'),
+            _('Name'),
+            _('Code'),
+        ]
 
         return Response(data)
 
@@ -225,15 +249,20 @@ class LevelApiListView(APIView):
 
         language = get_language()
         items = Level.objects.all()
-        data = []
+        data = {'data': []}
         for item in items:
-            data.append(
+            data['data'].append(
                 {
                     'id': item.id,
                     'label': item.label,
                     'name': item.leveli18n_set.filter(language__code=language).get().name,
                 }
             )
+        data['headers'] = [
+            _('Id'),
+            _('Label'),
+            _('Name'),
+        ]
 
         return Response(data)
 
@@ -246,9 +275,9 @@ class LevelsGroupApiListView(APIView):
 
         qlang = Q(language__code=get_language())
         items = LevelsGroup.objects.all()
-        data = []
+        data = {'data': []}
         for item in items:
-            data.append(
+            data['data'].append(
                 {
                     'id': item.id,
                     'description': item.description,
@@ -261,6 +290,12 @@ class LevelsGroupApiListView(APIView):
                     ),
                 }
             )
+        data['headers'] = [
+            _('Id'),
+            _('Description'),
+            _('Measurement unit'),
+            _('Levels'),
+        ]
 
         return Response(data)
 
@@ -272,14 +307,18 @@ class LevelsVariableApiListView(APIView):
     def get(self, request):
 
         items = Variable.objects.all()
-        data = []
+        data = {'data': []}
         for item in items:
-            data.append(
+            data['data'].append(
                 {
                     'id': item.id,
                     'name': item.name,
                 }
             )
+        data['headers'] = [
+            _('Id'),
+            _('Name'),
+        ]
 
         return Response(data)
 
@@ -292,15 +331,20 @@ class OrganizationApiListView(APIView):
 
         language = get_language()
         items = Organization.objects.all()
-        data = []
+        data = {'data': []}
         for item in items:
-            data.append(
+            data['data'].append(
                 {
                     'id': item.id,
                     'url': item.url,
                     'name': item.organizationi18n_set.filter(language__code=language).get().name,
                 }
             )
+        data['headers'] = [
+            _('Id'),
+            _('URL'),
+            _('Name'),
+        ]
 
         return Response(data)
 
@@ -313,9 +357,9 @@ class ParameterApiListView(APIView):
 
         language = get_language()
         items = Parameter.objects.all()
-        data = []
+        data = {'data': []}
         for item in items:
-            data.append(
+            data['data'].append(
                 {
                     'id': item.id,
                     'is_visible': item.is_visible,
@@ -323,6 +367,12 @@ class ParameterApiListView(APIView):
                     'name': item.parameteri18n_set.filter(language__code=language).get().name,
                 }
             )
+        data['headers'] = [
+            _('Id'),
+            _('Is visible'),
+            _('Accumulation mode'),
+            _('Name'),
+        ]
 
         return Response(data)
 
@@ -335,9 +385,9 @@ class PropertyApiListView(APIView):
 
         language = get_language()
         items = Property.objects.all()
-        data = []
+        data = {'data': []}
         for item in items:
-            data.append(
+            data['data'].append(
                 {
                     'id': item.id,
                     'label': item.label,
@@ -346,6 +396,12 @@ class PropertyApiListView(APIView):
                         language__code=language).get().caption,
                 }
             )
+        data['headers'] = [
+            _('Id'),
+            _('Label'),
+            _('GUI element name'),
+            _('GUI element caption'),
+        ]
 
         return Response(data)
 
@@ -357,14 +413,18 @@ class PropertyValueApiListView(APIView):
     def get(self, request):
 
         items = PropertyValue.objects.all()
-        data = []
+        data = {'data': []}
         for item in items:
-            data.append(
+            data['data'].append(
                 {
                     'id': item.id,
                     'label': item.label,
                 }
             )
+        data['headers'] = [
+            _('Id'),
+            _('Label'),
+        ]
 
         return Response(data)
 
@@ -376,15 +436,20 @@ class ResolutionApiListView(APIView):
     def get(self, request):
 
         items = Resolution.objects.all()
-        data = []
+        data = {'data': []}
         for item in items:
-            data.append(
+            data['data'].append(
                 {
                     'id': item.id,
                     'name': item.name,
                     'subpath1': item.subpath1,
                 }
             )
+        data['headers'] = [
+            _('Id'),
+            _('Name'),
+            _('Subpath'),
+        ]
 
         return Response(data)
 
@@ -396,14 +461,18 @@ class RootDirApiListView(APIView):
     def get(self, request):
 
         items = RootDir.objects.all()
-        data = []
+        data = {'data': []}
         for item in items:
-            data.append(
+            data['data'].append(
                 {
                     'id': item.id,
                     'name': item.name,
                 }
             )
+        data['headers'] = [
+            _('Id'),
+            _('Name'),
+        ]
 
         return Response(data)
 
@@ -415,15 +484,20 @@ class ScenarioApiListView(APIView):
     def get(self, request):
 
         items = Scenario.objects.all()
-        data = []
+        data = {'data': []}
         for item in items:
-            data.append(
+            data['data'].append(
                 {
                     'id': item.id,
                     'name': item.name,
                     'subpath0': item.subpath0,
                 }
             )
+        data['headers'] = [
+            _('Id'),
+            _('Name'),
+            _('Subpath'),
+        ]
 
         return Response(data)
 
@@ -472,9 +546,9 @@ class TimeStepApiListView(APIView):
 
         language = get_language()
         items = TimeStep.objects.all()
-        data = []
+        data = {'data': []}
         for item in items:
-            data.append(
+            data['data'].append(
                 {
                     'id': item.id,
                     'label': item.label,
@@ -482,6 +556,12 @@ class TimeStepApiListView(APIView):
                     'name': item.timestepi18n_set.filter(language__code=language).get().name,
                 }
             )
+        data['headers'] = [
+            _('Id'), 
+            _('Label'),
+            _('Subpath'),
+            _('Name'),
+        ]
 
         return Response(data)
 
@@ -494,14 +574,18 @@ class UnitApiListView(APIView):
 
         language = get_language()
         items = Units.objects.all()
-        data = []
+        data = {'data': []}
         for item in items:
-            data.append(
+            data['data'].append(
                 {
                     'id': item.id,
                     'name': item.unitsi18n_set.filter(language__code=language).get().name,
                 }
             )
+        data['headers'] = [
+            _('Id'),
+            _('Name'),
+        ]
 
         return Response(data)
 
@@ -513,13 +597,17 @@ class VariableApiListView(APIView):
     def get(self, request):
 
         items = Variable.objects.all()
-        data = []
+        data = {'data': []}
         for item in items:
-            data.append(
+            data['data'].append(
                 {
                     'id': item.id,
                     'name': item.name,
                 }
             )
+        data['headers'] = [
+            _('Id'), 
+            _('Name'),
+        ]
 
         return Response(data)
