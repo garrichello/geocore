@@ -132,8 +132,9 @@
                     <label>
                         <input type="radio" name="data-choice" class="js-data-choice" 
                         api-data-url={% url choice.api_url %}
-                        update-data-url={% url choice.update_url 99999%}
-                        delete-data-url={% url choice.delete_url 99999%}
+                        create-data-url={% url choice.create_url %}
+                        update-data-url={% url choice.update_url 99999 %}
+                        delete-data-url={% url choice.delete_url 99999 %}
                         ></input>
                         {{ choice.title }}
                     </label>
@@ -144,7 +145,7 @@
                 </div>
                 </div>
                 <button type="button"
-                        class="btn btn-primary js-create" disabled>
+                        class="btn btn-primary js-create" id="create-other-btn" disabled>
                     <span class="glyphicon glyphicon-plus"></span> {% trans "Create" %}
                 </button>
                 <table id="other" class="table table-hover table-bordered" width="100%"></table>
