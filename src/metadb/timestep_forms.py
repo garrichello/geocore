@@ -13,7 +13,7 @@ class TimeStepForm(ModelForm):
         self.fields['name'] = CharField()
         self.fields['name'].label = _('Name')
         # Subpath
-        self.fields['subpath2'].label = _('Subpath')
+        self.fields['subpath2'].label = _('Time step subpath')
 
         self.order_fields(['label', 'name', 'subpath2'])
 
