@@ -2,6 +2,7 @@ all_columns_defs = [
     { className: ' dt-center', targets: '_all', }
 ]
 
+var collection_api_url = $('#tab-collection').attr('api-data-url')
 var collection_update_url = $('#tab-collection').attr('update-data-url').split('99999');
 var collection_delete_url = $('#tab-collection').attr('delete-data-url').split('99999');
 
@@ -40,6 +41,7 @@ collection_columnsDefs = [
     },
 ]
 
+var dataset_api_url = $('#tab-dataset').attr('api-data-url');
 var dataset_update_url = $('#tab-dataset').attr('update-data-url').split('99999');
 var dataset_delete_url = $('#tab-dataset').attr('delete-data-url').split('99999');
 
@@ -84,6 +86,7 @@ dataset_columnsDefs = [
     { width: '15%', targets: 11 },  // Description
 ]
 
+var specpar_api_url = $('#tab-specpar').attr('api-data-url');
 var specpar_update_url = $('#tab-specpar').attr('update-data-url').split('99999');
 var specpar_delete_url = $('#tab-specpar').attr('delete-data-url').split('99999');
 
@@ -128,6 +131,7 @@ specpar_columnsDefs = [
     { width: '175px', targets: 11 },  // Levels
 ]
 
+var data_api_url = $('#tab-data').attr('api-data-url');
 var data_update_url = $('#tab-data').attr('update-data-url').split('99999');
 var data_delete_url = $('#tab-data').attr('delete-data-url').split('99999');
 
@@ -316,7 +320,7 @@ $(document).ready( function () {
     var collectionOptions = $.extend(true, {}, commonOptions);
     collectionOptions["columnDefs"] = collection_columnsDefs.concat(all_columns_defs);
     collectionOptions["columns"] = collection_columns;
-    collectionOptions["ajax"] = { 'url': 'collections/api/', 'type': 'GET', 'dataSrc': '' };
+    collectionOptions["ajax"] = { 'url': collection_api_url, 'type': 'GET', 'dataSrc': '' };
     $('#collection').DataTable( collectionOptions ).on('draw', function() {
         addUpdDelButtonHandlers.call(this, 'collection');
     });
@@ -325,7 +329,7 @@ $(document).ready( function () {
     var datasetOptions = $.extend(true, {}, commonOptions);
     datasetOptions["columnDefs"] = dataset_columnsDefs.concat(all_columns_defs),
     datasetOptions["columns"] = dataset_columns;
-    datasetOptions["ajax"] = { 'url': 'datasets/api/', 'type': 'GET', 'dataSrc': '' };
+    datasetOptions["ajax"] = { 'url': dataset_api_url, 'type': 'GET', 'dataSrc': '' };
     $('#dataset').DataTable( datasetOptions ).on('draw', function() {
         addUpdDelButtonHandlers.call(this, 'dataset');
     });
@@ -334,18 +338,85 @@ $(document).ready( function () {
     var specparOptions = $.extend(true, {}, commonOptions);
     specparOptions["columnDefs"] = specpar_columnsDefs.concat(all_columns_defs),
     specparOptions["columns"] = specpar_columns;
-    specparOptions["ajax"] = { 'url': 'specpars/api/', 'type': 'GET', 'dataSrc': '' };
+    specparOptions["ajax"] = { 'url': specpar_api_url, 'type': 'GET', 'dataSrc': '' };
     $('#specpar').DataTable( specparOptions ).on('draw', function() {
         addUpdDelButtonHandlers.call(this, 'specpar');
     });
 
     // Create Data table
-    var dataOptions = $.extend(true, {}, commonOptions);
+    var dataOptions = $.extend(true, {}, commonOptions);  
     dataOptions["columnDefs"] = data_columnsDefs.concat(all_columns_defs),
     dataOptions["columns"] = data_columns;
-    dataOptions["ajax"] = { 'url': 'data/api/', 'type': 'GET', 'dataSrc': '' };
+    dataOptions["ajax"] = { 'url': data_api_url, 'type': 'GET', 'dataSrc': '' };
     $('#data').DataTable( dataOptions ).on('draw', function() {
         addUpdDelButtonHandlers.call(this, 'data');
     });
- 
+
+    // Create Other tables
+    var otherOptions = {
+        initComplete: postInit,
+        sDom: 'ti',
+        orderCellsTop: true,
+        paginate: false,
+        select: {style: 'multi', selector: 'td:first-child',},
+        scrollY: 400,
+        scrollX: true,
+        scrollCollapse: true,
+        order: [[ 2, 'asc' ]],
+    };
+    var otherUpdateURL;
+    var otherDeleteURL;
+
+    var create_dt = function(data, data_url) {
+        if ($.fn.DataTable.isDataTable('#other')) {
+            $('#other').DataTable().destroy();
+            $('#other').empty();
+        }
+        var columns = [
+            { 'render': function() { return null; } },  // For checkboxes
+            { 'render': function (data, type, row, meta) {
+                return '<div><button type="button" class="btn btn-warning btn-sm js-update-other"'
+                       + `data-url="${otherUpdateURL[0]}${row.id}${otherUpdateURL[1]}">`
+                       + '<span class="glyphicon glyphicon-pencil"></span></button></div>&nbsp;'
+                       + '<div><button type="button" class="btn btn-danger btn-sm js-delete-other"'
+                       + `data-url="${otherDeleteURL[0]}${row.id}${otherDeleteURL[1]}">`
+                       + '<span class="glyphicon glyphicon-trash"></span></button></div>';
+            } },  // for buttons
+        ];
+        var fieldNames = Object.keys(data.data[0]);
+        $.each(fieldNames, function(i, v) {
+            columns.push({data: v, title: data.headers[i]});
+        });
+        otherOptions['data'] = data.data;
+        otherOptions['columns'] = columns;
+        otherOptions['columnDefs'] = [
+            { width: 20, targets: 0, orderable: false, className: 'select-checkbox' }, // Select checkbox
+            { width: 45, targets: 1, orderable: false, }, // Buttons
+        ]
+        $('#other').DataTable( otherOptions ).on('draw', function() {
+            addUpdDelButtonHandlers.call(this, 'other');
+        });
+        addUpdDelButtonHandlers('other');
+        $('#other').DataTable().ajax.url(data_url);
+    }
+
+    var get_data = function(data_url) {
+        $.ajax({
+            url: data_url,
+            dataType: 'json',
+            success: function(data) {
+                create_dt(data, data_url);
+            }
+        });
+    }
+
+    // Add button
+    $('.js-data-choice').click(function() {
+        get_data.call(this, $(this).attr('api-data-url'));
+        otherUpdateURL = $(this).attr('update-data-url').split('99999');;
+        otherDeleteURL = $(this).attr('delete-data-url').split('99999');;
+        $('#create-other-btn').attr('disabled', false);
+        $('#create-other-btn').attr('data-url', $(this).attr('create-data-url'));
+    });
+
 } );
