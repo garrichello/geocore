@@ -1,53 +1,20 @@
-from django.template.loader import render_to_string
-from django.http import JsonResponse
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse_lazy
+
 from .common_views import CommonCreateView, CommonUpdateView, CommonDeleteView
 
 from .parameter_forms import ParameterForm
 
-from .models import Parameter, ParameterI18N, Language
+from .models import Parameter, ParameterI18N
 
-class ParameterMixin():
+
+class ParameterCreateView(CommonCreateView):
     form_class = ParameterForm
     model = Parameter
-    create = False  # True for Create, False - for Update. Overriden in Create class.
-
-    def save_form(self, request, template_name, ctx):
-        ''' Saves the form
-        create -- True if creating, False if updating.
-        '''
-        data = dict()
-        form = ctx['forms'][0]
-        if form.is_valid():
-            obj = form.save()
-            obji18n = ParameterI18N()
-            obji18n.name = form.cleaned_data['name']
-            obji18n.parameter = obj  # Link it with the new Parameter object
-            # To save DB consistency we create a new record for all languages.
-            # User can update/translate to every other language lately and separately.
-            if self.create:
-                for db_lang in Language.objects.all():  # Iterate over all languages in DB
-                    obji18n.language = db_lang  # Link it with an existing language
-                    obji18n.pk = None  # Clear PK to save data into a new record
-                    obji18n.save()  # Save
-            else:  # Just update the existing record.
-                obji18n.save()
-
-            data['form_is_valid'] = True
-        else:
-            data['form_is_valid'] = False
-
-        data['html_form'] = render_to_string(template_name, ctx, request)
-        return JsonResponse(data)
-
-
-class ParameterCreateView(ParameterMixin, CommonCreateView):
+    modeli18n = ParameterI18N
     template_name = 'metadb/includes/simple_form.html'
-    create = True
     ctx = {
         'form_class': 'js-parameter-form',
-        'action': reverse_lazy('metadb:parameter_create'),
         'title': _("Create a new meteorological parameter"),
         'submit_name': _("Create parameter"),
         'script': 'metadb/parameter_form.js',
@@ -57,9 +24,12 @@ class ParameterCreateView(ParameterMixin, CommonCreateView):
         ]
     }
     action_url = 'metadb:parameter_create'
+    fk_field_name = 'parameter'
 
-
-class ParameterUpdateView(ParameterMixin, CommonUpdateView):
+class ParameterUpdateView(CommonUpdateView):
+    form_class = ParameterForm
+    model = Parameter
+    modeli18n = ParameterI18N
     template_name = 'metadb/includes/simple_form.html'
     ctx = {
         'form_class': 'js-parameter-form',
@@ -72,6 +42,7 @@ class ParameterUpdateView(ParameterMixin, CommonUpdateView):
         ]
     }
     action_url = 'metadb:parameter_update'
+    fk_field_name = 'parameter'
 
 
 class ParameterDeleteView(CommonDeleteView):

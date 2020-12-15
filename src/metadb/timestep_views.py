@@ -1,60 +1,30 @@
-from django.template.loader import render_to_string
-from django.http import JsonResponse
 from django.utils.translation import gettext_lazy as _
-from django.urls import reverse_lazy
+
 from .common_views import CommonCreateView, CommonUpdateView, CommonDeleteView
 
 from .timestep_forms import TimeStepForm
 
-from .models import TimeStep, TimeStepI18N, Language
+from .models import TimeStep, TimeStepI18N
 
-class TimeStepMixin():
+
+class TimeStepCreateView(CommonCreateView):
     form_class = TimeStepForm
     model = TimeStep
-    create = False  # True for Create, False - for Update. Overriden in Create class.
-
-    def save_form(self, request, template_name, ctx, create=False):
-        ''' Saves the form
-        create -- True if creating, False if updating.
-        '''
-        data = dict()
-        form = ctx['forms'][0]
-        if form.is_valid():
-            obj = form.save()
-            obji18n = TimeStepI18N()
-            obji18n.name = form.cleaned_data['name']
-            obji18n.time_step = obj  # Link it with the new TimeStep object
-            # To save DB consistency we create a new record for all languages.
-            # User can update/translate to every other language lately and separately.
-            if self.create:
-                for db_lang in Language.objects.all():  # Iterate over all languages in DB
-                    obji18n.language = db_lang  # Link it with an existing language
-                    obji18n.pk = None  # Clear PK to save data into a new record
-                    obji18n.save()  # Save
-            else:  # Just update the existing record.
-                obji18n.save()
-
-            data['form_is_valid'] = True
-        else:
-            data['form_is_valid'] = False
-
-        data['html_form'] = render_to_string(template_name, ctx, request)
-        return JsonResponse(data)
-
-
-class TimeStepCreateView(TimeStepMixin, CommonCreateView):
+    modeli18n = TimeStepI18N
     template_name = 'metadb/includes/simple_form.html'
-    create = True
     ctx = {
         'form_class': 'js-timestep-form',
-        'action': reverse_lazy('metadb:timestep_create'),
         'title': _("Create a new time step"),
         'submit_name': _("Create time step"),
     }
     action_url = 'metadb:time_step_create'
+    fk_field_name = 'time_step'
 
 
-class TimeStepUpdateView(TimeStepMixin, CommonUpdateView):
+class TimeStepUpdateView(CommonUpdateView):
+    form_class = TimeStepForm
+    model = TimeStep
+    modeli18n = TimeStepI18N
     template_name = 'metadb/includes/simple_form.html'
     ctx = {
         'form_class': 'js-timestep-form',
@@ -62,6 +32,7 @@ class TimeStepUpdateView(TimeStepMixin, CommonUpdateView):
         'submit_name': _("Update time step"),
     }
     action_url = 'metadb:time_step_update'
+    fk_field_name = 'time_step'
 
 
 class TimeStepDeleteView(CommonDeleteView):
