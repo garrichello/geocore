@@ -64,7 +64,7 @@ class MainView(View):
              'create_url': app_prfx+'resolution_create',
              'update_url': app_prfx+'resolution_update', 'delete_url': app_prfx+'resolution_delete'},
 
-            {'title': _('Root diresctory'), 'api_url': app_prfx+'root_dirs_api',
+            {'title': _('Root directory'), 'api_url': app_prfx+'root_dirs_api',
              'create_url': app_prfx+'root_dir_create',
              'update_url': app_prfx+'root_dir_update', 'delete_url': app_prfx+'root_dir_delete'},
 
