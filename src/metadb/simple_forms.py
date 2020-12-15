@@ -166,16 +166,6 @@ class ScenarioForm(ModelForm):
         }
 
 
-class UnitsI18NForm(ModelForm):
-
-    class Meta:
-        model = UnitsI18N
-        fields = ['name']
-        labels = {
-            'name': _('Measurement unit name'),
-        }
-
-
 class VariableForm(ModelForm):
 
     class Meta:
