@@ -200,7 +200,7 @@ data_columnsDefs = [
 
 commonOptions = {
     initComplete: postInit,
-    sDom: 'ti',
+    sDom: 'tri',
     orderCellsTop: true,
     paginate: false,
     select: {style: 'multi', selector: 'td:first-child',},
@@ -209,6 +209,12 @@ commonOptions = {
     scrollCollapse: true,
     order: [[ 2, 'asc' ]],
     autoWidth: false,
+    deferRender: true,
+    processing: true,
+    language: {
+        'loadingRecords': '&nbsp',
+        'processing': '<div class="spinner"></div>'
+    } 
 };
 
 function make_empty_row(table) {  
@@ -379,7 +385,7 @@ $(document).ready( function () {
 
     var otherOptions = {
         initComplete: prePostInit,
-        sDom: 'ti',
+        sDom: 'tri',
         orderCellsTop: true,
         paginate: false,
         select: {style: 'multi', selector: 'td:first-child',},
@@ -387,6 +393,11 @@ $(document).ready( function () {
         scrollX: true,
         scrollCollapse: true,
         order: [[ 2, 'asc' ]],
+        processing: true,
+        language: {
+            'loadingRecords': '&nbsp',
+            'processing': '<div class="spinner"></div>'
+        } 
     };
     var otherUpdateURL;
     var otherDeleteURL;
@@ -395,6 +406,7 @@ $(document).ready( function () {
         if ($.fn.DataTable.isDataTable('#other')) {
             $('#other').DataTable().destroy();
             $('#other').empty();
+            $('#other').off();
         }
         var columns = [
             { 'render': function() { return null; } },  // For checkboxes
@@ -417,11 +429,17 @@ $(document).ready( function () {
             { width: 20, targets: 0, orderable: false, className: 'select-checkbox' }, // Select checkbox
             { width: 45, targets: 1, orderable: false, }, // Buttons
         ]
-        $('#other').DataTable( otherOptions ).on('draw', function() {
+        var odt = $('#other').DataTable( otherOptions );
+        odt.on('draw', function() {
             addUpdDelButtonHandlers.call(this, 'other');
         });
+        odt.on('processing', function(e, settings, procesing) {
+            if (typeof processing !== 'undefined') {
+                $('#other_processing').css( 'display', processing ? 'block' : 'none' );
+            };
+        })
         addUpdDelButtonHandlers('other');
-        $('#other').DataTable().ajax.url(data_url);
+        odt.ajax.url(data_url);
     }
 
     var get_data = function(data_url) {
