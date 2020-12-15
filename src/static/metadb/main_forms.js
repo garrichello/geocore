@@ -141,4 +141,8 @@ $(function() {
         })
     });
 
+    // Reload button
+    $('.js-reload').click(function() { 
+        $.fn.dataTable.tables( {visible: true, api: true} ).ajax.reload();
+    });
 });
