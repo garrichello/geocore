@@ -446,8 +446,12 @@ $(document).ready( function () {
         $.ajax({
             url: data_url,
             dataType: 'json',
+            beforeSend: function() {
+                $('#other_processing').show();
+            },
             success: function(data) {
                 create_dt(data, data_url);
+                $('#other_processing').hide();
             }
         });
     }
