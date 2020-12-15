@@ -93,7 +93,7 @@ class Common2UpdateView(Common2Mixin, View):
         formi18n = self.formi18n_class(instance=modeli18n)  # pylint: disable=not-callable
 
         self.ctx['forms'] = [form, formi18n]
-        self.ctx['action'] = reverse(self.action_url, kwargs={'pk': form.instance.pk}),
+        self.ctx['action'] = reverse(self.action_url, kwargs={'pk': form.instance.pk})
         html_form = render_to_string(self.template_name, self.ctx, request)
         return JsonResponse({'html_form': html_form})
 
@@ -102,7 +102,7 @@ class Common2UpdateView(Common2Mixin, View):
         form = self.form_class(request.POST, instance=model)  # pylint: disable=not-callable
         formi18n = self.formi18n_class(request.POST, instance=modeli18n)  # pylint: disable=not-callable
         self.ctx['forms'] = [form, formi18n]
-        self.ctx['action'] = reverse(self.action_url, kwargs={'pk': form.instance.pk}),
+        self.ctx['action'] = reverse(self.action_url, kwargs={'pk': form.instance.pk})
         return self.save_form(request, self.template_name, self.ctx, self.fk_field_name)
 
 class Common2DeleteView(View):
