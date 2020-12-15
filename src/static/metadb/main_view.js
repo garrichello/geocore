@@ -311,10 +311,13 @@ function columnsAdjust() {
 function set_header(e, settings, json, xhr) {
     // Get headers from JSON data and put them into the table
     var table = $(this).DataTable();
-    $.each(json.headers, function(i, v) {
-        table.columns().header()[i+2].innerText = v[1];  // Start at the 3rd column
-        $(table.columns().header()[i+2]).addClass(v[0]);
-    })
+
+    if (json != null) {
+        $.each(json.headers, function(i, v) {
+            table.columns().header()[i+2].innerText = v[1];  // Start at the 3rd column
+            $(table.columns().header()[i+2]).addClass(v[0]);
+        })
+    }
 }
 
 $(document).ready( function () {
