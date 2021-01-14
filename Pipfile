@@ -16,6 +16,7 @@ django-widget-tweaks = "*"
 pylint = "*"
 selenium = "*"
 pylint-django = "*"
+jslint = "*"
 
 [requires]
 python_version = "3.8"
