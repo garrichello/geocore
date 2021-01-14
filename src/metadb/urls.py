@@ -9,6 +9,8 @@ from .form_loads import *
 from .apiviews import *
 from .collection_views import (CollectionCreateView, CollectionDeleteView,
                                CollectionUpdateView)
+from .conveyor_views import (ConveyorCreateView, ConveyorDeleteView,
+                               ConveyorUpdateView)
 from .dataset_views import (DatasetCreateView, DatasetDeleteView,
                             DatasetUpdateView)
 from .specpar_views import (SpecificParameterCreateView, SpecificParameterDeleteView,
@@ -84,6 +86,11 @@ urlpatterns = [
 #    path('computingmodules/create/', ComputingModuleCreateView.as_view(), name='computing_module_create'),
 #    path('computingmodules/<int:pk>/update/', ComputingModuleUpdateView.as_view(), name='computing_module_update'),
 #    path('computingmodules/<int:pk>/delete/', ComputingModuleDeleteView.as_view(), name='computing_module_delete'),
+
+    path('conveyors/create/', ConveyorCreateView.as_view(), name='conveyor_create'),
+    path('conveyors/api/', ConveyorApiListView.as_view(), name='conveyor_api'),
+    path('conveyors/<int:pk>/update/', ConveyorUpdateView.as_view(), name='conveyor_update'),
+    path('conveyors/<int:pk>/delete/', ConveyorDeleteView.as_view(), name='conveyor_delete'),
 
     path('data/create/', DataCreateView.as_view(), name='data_create'),
     path('data/api/', DataApiListView.as_view(), name='data_api'),

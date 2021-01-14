@@ -198,6 +198,57 @@ data_columnsDefs = [
     { width: '55px', targets: 22 },   // Offset
 ]
 
+var conveyor_api_url = $('#tab-conveyor').attr('api-data-url')
+var conveyor_update_url = $('#tab-conveyor').attr('update-data-url').split('99999');
+var conveyor_delete_url = $('#tab-conveyor').attr('delete-data-url').split('99999');
+
+conveyor_columns = [
+    { 'render': function() { return null; } },  // For checkboxes
+    { 'render': function (data, type, row, meta) {
+        return '<div><button type="button" class="btn btn-warning btn-sm js-update-collection"'
+               + `data-url="${conveyor_update_url[0]}${row.id}${conveyor_update_url[1]}">`
+               + '<span class="glyphicon glyphicon-pencil"></span></button></div>&nbsp;'
+               + '<div><button type="button" class="btn btn-danger btn-sm js-delete-collection"'
+               + `data-url="${conveyor_delete_url[0]}${row.id}${conveyor_delete_url[1]}">`
+               + '<span class="glyphicon glyphicon-trash"></span></button></div>';
+    } },  // for buttons
+    { 'data': 'conveyor_id' },
+    { 'data': 'edge_id' },
+    { 'data': 'from_vertex_id' },
+    { 'data': 'from_module' },
+    { 'data': 'from_option' },
+    { 'data': 'from_option_value' },
+    { 'data': 'from_output' },
+    { 'data': 'to_vertex_id' },
+    { 'data': 'to_module' },
+    { 'data': 'to_option' },
+    { 'data': 'to_option_value' },
+    { 'data': 'to_input' },
+    { 'data': 'data_label' },
+    { 'data': 'data_description' },
+    { 'data': 'units' },
+]
+
+conveyor_columnsDefs = [
+    { width: '20px', targets: 0, orderable: false, className: 'select-checkbox' }, // Select checkbox
+    { width: '45px', targets: 1, orderable: false, }, // Buttons
+    { width: '65px', targets: 2, },   // Conveyor id
+    { width: '55px', targets: 3 },    // Edge id
+    { width: '55px', targets: 4 },    // From vertex id
+    { width: '115px', targets: 5 },   // From module
+    { width: '75px', targets: 6 },    // From option
+    { width: '75px', targets: 7 },    // From option value
+    { width: '55px', targets: 8 },    // From output
+    { width: '55px', targets: 9 },    // To vertex id
+    { width: '115px', targets: 10 },  // To module
+    { width: '75px', targets: 11 },   // To option
+    { width: '75px', targets: 12 },   // To option value
+    { width: '55px', targets: 13 },   // To input
+    { width: '135px', targets: 14 },   // Data label
+    { width: '135px', targets: 15 },   // Data description
+    { width: '75px', targets: 16 },   // Units
+]
+
 commonOptions = {
     initComplete: postInit,
     sDom: 'tri',
@@ -373,6 +424,17 @@ $(document).ready( function () {
         addUpdDelButtonHandlers.call(this, 'data');
     });
     $('#data').DataTable().on('xhr.dt', set_header);
+
+    // Create Conveyor table
+    var conveyorOptions = $.extend(true, {}, commonOptions);
+    conveyorOptions["columnDefs"] = conveyor_columnsDefs.concat(all_columns_defs);
+    conveyorOptions["columns"] = conveyor_columns;
+    conveyorOptions["ajax"] = { 'url': conveyor_api_url, 'type': 'GET', 'dataSrc': 'data' };
+    $('#conveyor').DataTable( conveyorOptions ).on('draw', function() {
+        addUpdDelButtonHandlers.call(this, 'conveyor');
+    });
+    $('#conveyor').DataTable().on('xhr.dt', set_header);
+
 
     // Create Other tables
     function prePostInit() {

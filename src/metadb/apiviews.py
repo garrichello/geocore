@@ -61,6 +61,56 @@ class CollectionApiListView(APIView):
         return Response(collection_data)
 
 
+class ConveyorApiListView(APIView):
+    """
+    Returns conveyors
+    """
+    def get(self, request):
+        language = get_language()
+
+        edges = Edge.objects.all()
+        data = {'data': []}
+        for edge in edges:
+            data['data'].append(
+                {
+                    'conveyor_id': edge.conveyor.id,
+                    'edge_id': edge.id,
+                    'from_vertex_id': edge.from_vertex.id,
+                    'from_module': edge.from_vertex.computing_module.name,
+                    'from_option': edge.from_vertex.condition_option.label,
+                    'from_option_value': edge.from_vertex.condition_value.label,
+                    'from_output': edge.from_output,
+                    'to_vertex_id': edge.to_vertex.id,
+                    'to_module': edge.to_vertex.computing_module.name,
+                    'to_option': edge.to_vertex.condition_option.label,
+                    'to_option_value': edge.to_vertex.condition_value.label,
+                    'to_input': edge.to_input,
+                    'data_label': edge.data_variable.label,
+                    'data_description': edge.data_variable.description,
+                    'units': edge.data_variable.units.unitsi18n_set.filter(language__code=language).get().name,
+                }
+            )
+        data['headers'] = [
+            ('head_select', _('Conveyor id')),
+            ('head_none', _('Edge id')),
+            ('head_none', _('Source vertex id')),
+            ('head_none', _('Source module')),
+            ('head_none', _('Source condition option')),
+            ('head_none', _('Source condition value')),
+            ('head_none', _('Source module output')),
+            ('head_none', _('Target vertex id')),
+            ('head_none', _('Target module')),
+            ('head_none', _('Target condition option')),
+            ('head_none', _('Target condition value')),
+            ('head_none', _('Target module input')),
+            ('head_none', _('Data label')),
+            ('head_none', _('Data description')),
+            ('head_none', _('Data units')),
+        ]
+
+        return Response(data)
+
+
 class DataApiListView(APIView):
     """
     Returns datasets
