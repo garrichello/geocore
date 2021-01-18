@@ -1,4 +1,5 @@
-from django.urls import path
+from django.urls import include, path
+from rest_framework import routers
 
 from .views import MainView
 
@@ -30,9 +31,13 @@ from .levelsgroup_views import (LevelsGroupCreateView, LevelsGroupUpdateView,
 from .level_views import (LevelCreateView, LevelUpdateView,
                                 LevelDeleteView)
 
+router = routers.DefaultRouter()
+router.register('collections', CollectionViewSet)
+
 app_name = 'metadb'
 urlpatterns = [
     path('', MainView.as_view(), name='main_view'),
+    path('', include(router.urls)),
 
     # Form elements content loaders
 
@@ -88,7 +93,7 @@ urlpatterns = [
 #    path('computingmodules/<int:pk>/delete/', ComputingModuleDeleteView.as_view(), name='computing_module_delete'),
 
     path('conveyors/create/', ConveyorCreateView.as_view(), name='conveyor_create'),
-    path('conveyors/api/', ConveyorApiListView.as_view(), name='conveyor_api'),
+    path('conveyors/', ConveyorApiListView.as_view(), name='conveyor_api'),
     path('conveyors/<int:pk>/update/', ConveyorUpdateView.as_view(), name='conveyor_update'),
     path('conveyors/<int:pk>/delete/', ConveyorDeleteView.as_view(), name='conveyor_delete'),
 

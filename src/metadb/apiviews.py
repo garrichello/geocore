@@ -1,9 +1,11 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework import viewsets
 from django.utils.translation import get_language, gettext_lazy as _
 from django.db.models import Q
 
 from .models import *
+from .serializers import CollectionSerializer
 
 
 class AccumulationModeApiListView(APIView):
@@ -60,6 +62,61 @@ class CollectionApiListView(APIView):
 
         return Response(collection_data)
 
+
+class CollectionViewSet(viewsets.ModelViewSet):
+    queryset = Collection.objects.all()
+    serializer_class = CollectionSerializer
+
+    table_headers = [
+        ('head_none', 'Id'),
+        ('head_select', _('Collection label')),
+        ('head_select', _('Collection name')),
+        ('head_text', _('Collection description')),
+        ('head_select', _('Organization')),
+        ('head_text', _('Organization URL')),
+        ('head_text', _('Collection URL'))
+    ]
+
+    def list(self, request):
+        language = get_language()
+
+        collections = Collection.objects.all()
+        collection_data = {'data': []}
+        for collection in collections:
+            collection_data['data'].append(
+                {
+                    'id': collection.id,
+                    'label': collection.label,
+                    'name': collection.collectioni18n_set.filter(language__code=language).get().name,
+                    'description': collection.collectioni18n_set.filter(language__code=language).get().description,
+                    'organization': collection.organization.organizationi18n_set.filter(language__code=language).get().name,
+                    'organization_url': collection.organization.url,
+                    'url': collection.url,
+                }
+            )
+        collection_data['headers'] = self.table_headers
+
+        return Response(collection_data)
+
+    def retrieve(self, request, pk=None):
+        language = get_language()
+
+        collection = Collection.objects.get(pk=pk)
+        collection_data = {'data': []}
+        collection_data['data'].append(
+            {
+                'id': collection.id,
+                'label': collection.label,
+                'name': collection.collectioni18n_set.filter(language__code=language).get().name,
+                'description': collection.collectioni18n_set.filter(language__code=language).get().description,
+                'organization': collection.organization.organizationi18n_set.filter(language__code=language).get().name,
+                'organization_url': collection.organization.url,
+                'url': collection.url,
+            }
+        )
+        collection_data['headers'] = self.table_headers
+
+        return Response(collection_data)
 
 class ConveyorApiListView(APIView):
     """
