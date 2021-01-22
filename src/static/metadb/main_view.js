@@ -2,7 +2,7 @@ all_columns_defs = [
     { className: ' dt-center', targets: '_all', }
 ]
 
-var collection_api_url = $('#tab-collection').attr('api-data-url')
+var collection_list_url = $('#tab-collection').attr('list-data-url')
 var collection_update_url = $('#tab-collection').attr('update-data-url').split('99999');
 var collection_delete_url = $('#tab-collection').attr('delete-data-url').split('99999');
 
@@ -18,10 +18,10 @@ collection_columns = [
     } },  // for buttons
     { 'data': 'id' },
     { 'data': 'label' },
-    { 'data': 'name' },
-    { 'data': 'description' },
-    { 'data': 'organization' },
-    { 'data': 'organization_url' },
+    { 'data': 'collectioni18n.name' },
+    { 'data': 'collectioni18n.description' },
+    { 'data': 'organization.organizationi18n.name' },
+    { 'data': 'organization.url' },
     { 'data': 'url' },
 ]
 
@@ -389,7 +389,7 @@ $(document).ready( function () {
     var collectionOptions = $.extend(true, {}, commonOptions);
     collectionOptions["columnDefs"] = collection_columnsDefs.concat(all_columns_defs);
     collectionOptions["columns"] = collection_columns;
-    collectionOptions["ajax"] = { 'url': collection_api_url, 'type': 'GET', 'dataSrc': 'data' };
+    collectionOptions["ajax"] = { 'url': collection_list_url, 'type': 'GET', 'dataSrc': 'data' };
     $('#collection').DataTable( collectionOptions ).on('draw', function() {
         addUpdDelButtonHandlers.call(this, 'collection');
     });
