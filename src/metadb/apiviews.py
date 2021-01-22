@@ -3,9 +3,10 @@ from rest_framework.response import Response
 from rest_framework import viewsets
 from django.utils.translation import get_language, gettext_lazy as _
 from django.db.models import Q
+from django.shortcuts import get_object_or_404
 
 from .models import *
-from .serializers import CollectionSerializer
+from .serializers import *
 
 
 class AccumulationModeApiListView(APIView):
@@ -29,41 +30,10 @@ class AccumulationModeApiListView(APIView):
         return Response(data)
 
 
-class CollectionApiListView(APIView):
+class CollectionViewSet(viewsets.ModelViewSet):
     """
     Returns collections
     """
-    def get(self, request):
-        language = get_language()
-
-        collections = Collection.objects.all()
-        collection_data = {'data': []}
-        for collection in collections:
-            collection_data['data'].append(
-                {
-                    'id': collection.id,
-                    'label': collection.label,
-                    'name': collection.collectioni18n_set.filter(language__code=language).get().name,
-                    'description': collection.collectioni18n_set.filter(language__code=language).get().description,
-                    'organization': collection.organization.organizationi18n_set.filter(language__code=language).get().name,
-                    'organization_url': collection.organization.url,
-                    'url': collection.url,
-                }
-            )
-        collection_data['headers'] = [
-            ('head_none', 'Id'),
-            ('head_select', _('Collection label')),
-            ('head_select', _('Collection name')),
-            ('head_text', _('Collection description')),
-            ('head_select', _('Organization')),
-            ('head_text', _('Organization URL')),
-            ('head_text', _('Collection URL'))
-        ]
-
-        return Response(collection_data)
-
-
-class CollectionViewSet(viewsets.ModelViewSet):
     queryset = Collection.objects.all()
     serializer_class = CollectionSerializer
 
@@ -78,45 +48,17 @@ class CollectionViewSet(viewsets.ModelViewSet):
     ]
 
     def list(self, request):
-        language = get_language()
+        serializer = self.get_serializer(self.get_queryset(), many=True)
+        data = {'data': serializer.data, 'headers': self.table_headers}
 
-        collections = Collection.objects.all()
-        collection_data = {'data': []}
-        for collection in collections:
-            collection_data['data'].append(
-                {
-                    'id': collection.id,
-                    'label': collection.label,
-                    'name': collection.collectioni18n_set.filter(language__code=language).get().name,
-                    'description': collection.collectioni18n_set.filter(language__code=language).get().description,
-                    'organization': collection.organization.organizationi18n_set.filter(language__code=language).get().name,
-                    'organization_url': collection.organization.url,
-                    'url': collection.url,
-                }
-            )
-        collection_data['headers'] = self.table_headers
-
-        return Response(collection_data)
+        return Response(data)
 
     def retrieve(self, request, pk=None):
-        language = get_language()
+        collection = get_object_or_404(self.get_queryset(), pk=pk)
+        serializer = self.get_serializer(collection)
+        data = {'data': serializer.data, 'headers': self.table_headers}
 
-        collection = Collection.objects.get(pk=pk)
-        collection_data = {'data': []}
-        collection_data['data'].append(
-            {
-                'id': collection.id,
-                'label': collection.label,
-                'name': collection.collectioni18n_set.filter(language__code=language).get().name,
-                'description': collection.collectioni18n_set.filter(language__code=language).get().description,
-                'organization': collection.organization.organizationi18n_set.filter(language__code=language).get().name,
-                'organization_url': collection.organization.url,
-                'url': collection.url,
-            }
-        )
-        collection_data['headers'] = self.table_headers
-
-        return Response(collection_data)
+        return Response(data)
 
 class ConveyorApiListView(APIView):
     """
