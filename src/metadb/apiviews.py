@@ -1,9 +1,15 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.renderers import *
 from rest_framework import viewsets
+from rest_framework.decorators import action
 from django.utils.translation import get_language, gettext_lazy as _
 from django.db.models import Q
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
+from django.template.loader import render_to_string
+from django.urls import reverse, reverse_lazy
+from django.http import JsonResponse
+from django.template.loader import render_to_string
 
 from .models import *
 from .serializers import *
@@ -36,6 +42,8 @@ class CollectionViewSet(viewsets.ModelViewSet):
     """
     queryset = Collection.objects.all()
     serializer_class = CollectionSerializer
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
+    template_name = 'metadb/includes/rest_form.html'
 
     table_headers = [
         ('head_none', 'Id'),
@@ -47,7 +55,27 @@ class CollectionViewSet(viewsets.ModelViewSet):
         ('head_text', _('Collection URL'))
     ]
 
-    def list(self, request):
+    ctx = {
+        'form_class': 'js-collection-form',
+        'action': reverse_lazy('metadb:collection-list'),
+        'title': _("Create a new collection"),
+        'submit_name': _("Create collection"),
+        'script': 'metadb/collection_form.js',
+        'attributes': [
+            {'name': 'organizations-url',
+             'value': reverse_lazy('metadb:form_load_organizations')}
+        ],
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    @action(methods=['get'], detail=False)
+    def empty_form(self, request):
+        serializer = CollectionSerializer()
+        self.ctx['form'] = serializer
+        html_form = render_to_string(self.template_name, self.ctx, request)
+        return JsonResponse({'html_form': html_form})
+
+    def list(self, request, format=None, headers=None):
         serializer = self.get_serializer(self.get_queryset(), many=True)
         data = {'data': serializer.data, 'headers': self.table_headers}
 
@@ -59,6 +87,29 @@ class CollectionViewSet(viewsets.ModelViewSet):
         data = {'data': serializer.data, 'headers': self.table_headers}
 
         return Response(data)
+
+    def create(self, request):
+        print(request.data)
+        in_data = {
+            'label': request.data['label'],
+            'url': request.data['url'],
+            'collectioni18n': {
+                'name': request.data['collectioni18n.name'],
+                'description': request.data['collectioni18n.description']
+            },
+            'organization': request.data['organization'],
+        }
+        serializer = self.get_serializer(data=in_data)
+        is_valid = serializer.is_valid()
+        if is_valid:
+            serializer.save()
+
+        result_data = serializer.data
+        result_data['form_is_valid'] = is_valid
+        result_data['errors'] = serializer.errors
+
+        return Response(result_data)
+
 
 class ConveyorApiListView(APIView):
     """
@@ -441,6 +492,33 @@ class OrganizationApiListView(APIView):
             _('URL'),
             _('Name'),
         ]
+
+        return Response(data)
+
+
+class OrganizationViewSet(viewsets.ModelViewSet):
+    """
+    Returns organizations
+    """
+    queryset = Organization.objects.all()
+    serializer_class = OrganizationSerializer
+
+    table_headers = [
+            _('Id'),
+            _('URL'),
+            _('Name'),
+    ]
+
+    def list(self, request):
+        serializer = self.get_serializer(self.get_queryset(), many=True)
+        data = {'data': serializer.data, 'headers': self.table_headers}
+
+        return Response(data)
+
+    def retrieve(self, request, pk=None):
+        collection = get_object_or_404(self.get_queryset(), pk=pk)
+        serializer = self.get_serializer(collection)
+        data = {'data': serializer.data, 'headers': self.table_headers}
 
         return Response(data)
 

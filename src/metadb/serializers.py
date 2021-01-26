@@ -1,9 +1,35 @@
 from rest_framework import serializers
+from rest_framework.reverse import reverse
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import get_language
-from django.shortcuts import reverse
+from collections import OrderedDict
 
 from .models import *
+
+
+class ModifiedRelatedField(serializers.RelatedField):
+
+    # Below code is copied from rest_framework.serializers.RelatedField
+    # because we need to override the keys in the return value
+    def get_choices(self, cutoff=None):
+        queryset = self.get_queryset()
+        if queryset is None:
+            # Ensure that field.choices returns something sensible
+            # even when accessed with a read-only field.
+            return {}
+
+        if cutoff is not None:
+            queryset = queryset[:cutoff]
+
+        return OrderedDict([
+            (
+                # This is the only line that differs
+                # from the RelatedField's implementation
+                item.pk,
+                self.display_value(item)
+            )
+            for item in queryset
+        ])
 
 
 class OrganizationI18NSerializer(serializers.ModelSerializer):
@@ -16,12 +42,36 @@ class OrganizationI18NSerializer(serializers.ModelSerializer):
         data = data.filter(language__code=get_language()).get()
         return super().to_representation(data)
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
-class OrganizationSerializer(serializers.ModelSerializer):
+        self.fields['name'].label = _('Organization name')
+
+
+class OrganizationSerializer(serializers.HyperlinkedModelSerializer):
     organizationi18n = OrganizationI18NSerializer(source='organizationi18n_set')
+    dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:organization-detail',
+                                                   read_only=True)    
     class Meta:
         model = Organization
-        fields = ['id', 'url', 'organizationi18n']
+        fields = ['id', 'dataurl', 'url', 'organizationi18n']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['url'].label = _('Organization URL')
+
+
+class OrganizationRelatedField(ModifiedRelatedField):
+    
+    def to_representation(self, value):
+        return OrganizationSerializer(value, context=self.context).data
+
+    def to_internal_value(self, data):
+        return Organization.objects.get(pk=data)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
 
 class CollectionI18NSerializer(serializers.ModelSerializer):
@@ -34,15 +84,44 @@ class CollectionI18NSerializer(serializers.ModelSerializer):
         data = data.filter(language__code=get_language()).get()
         return super().to_representation(data)
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
-class CollectionSerializer(serializers.ModelSerializer):
-    collectioni18n = CollectionI18NSerializer(source='collectioni18n_set')
-    organization = OrganizationSerializer()
+        self.fields['name'].label = _('Collection name')
+        self.fields['name'].style = {'template': 'metadb/custom_input.html'}
+        self.fields['description'].label = _('Collection description')
+        self.fields['description'].style = {'template': 'metadb/custom_textarea.html', 'rows': 3}
+
+
+class CollectionSerializer(serializers.HyperlinkedModelSerializer):
+    collectioni18n = CollectionI18NSerializer(source='collectioni18n_set', label='')
+    qset = Organization.objects.all()
+    organization = OrganizationRelatedField(queryset=qset)
+    dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:collection-detail',
+                                                   read_only=True)
     class Meta:
         model = Collection
-        fields = ['id', 'label', 'url', 'collectioni18n', 'organization']
+        fields = ['id', 'dataurl', 'label', 'url', 'collectioni18n', 'organization']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['label'].label = _('Collection label')
+        self.fields['label'].style = {'template': 'metadb/custom_input.html'}
+        self.fields['url'].label = _('Collection URL')
+        self.fields['url'].style = {'template': 'metadb/custom_input.html'}
+        self.fields['organization'].label = _('Organization')
+        self.fields['organization'].data_url = reverse('metadb:organization-list')
+        self.fields['organization'].widget_type = 'select'
+        self.fields['organization'].style = {'template': 'metadb/custom_select.html'}
 
     def create(self, validated_data):
         print(validated_data)
-        return None
+        collectioni18n_data = validated_data.pop('collectioni18n_set')
+        collection = Collection.objects.create(**validated_data)
+        for db_lang in Language.objects.all():
+            CollectionI18N.objects.create(collection=collection, 
+                                          language=db_lang,
+                                          **collectioni18n_data)
+        return collection
 
