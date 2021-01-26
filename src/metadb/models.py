@@ -6,6 +6,7 @@
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
+from django.utils.translation import get_language
 
 
 class AccumulationMode(models.Model):
@@ -393,6 +394,9 @@ class Organization(models.Model):
     class Meta:
         managed = False
         db_table = 'organization'
+
+    def __str__(self):
+        return self.organizationi18n_set.filter(language__code=get_language()).get().name
 
 
 class OrganizationI18N(models.Model):
