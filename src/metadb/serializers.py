@@ -116,7 +116,6 @@ class CollectionSerializer(serializers.HyperlinkedModelSerializer):
         self.fields['organization'].style = {'template': 'metadb/custom_select.html'}
 
     def create(self, validated_data):
-        print(validated_data)
         collectioni18n_data = validated_data.pop('collectioni18n_set')
         collection = Collection.objects.create(**validated_data)
         for db_lang in Language.objects.all():

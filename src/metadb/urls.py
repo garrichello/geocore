@@ -33,6 +33,7 @@ from .level_views import (LevelCreateView, LevelUpdateView,
 
 router = routers.DefaultRouter()
 router.register('collections', CollectionViewSet)
+router.register('organizations', OrganizationViewSet)
 
 app_name = 'metadb'
 urlpatterns = [
@@ -83,10 +84,10 @@ urlpatterns = [
 #    path('argumenttypes/<int:pk>/update/', ArgumentTypeUpdateView.as_view(), name='argtype_update'),
 #    path('argumenttypes/<int:pk>/delete/', ArgumentTypeDeleteView.as_view(), name='argtype_delete'),
 
-    path('collections/create/', CollectionCreateView.as_view(), name='collection_create'),
-    path('collections/api/', CollectionApiListView.as_view(), name='collections_api'),
-    path('collections/<int:pk>/update/', CollectionUpdateView.as_view(), name='collection_update'),
-    path('collections/<int:pk>/delete/', CollectionDeleteView.as_view(), name='collection_delete'),
+#    path('collection/create/', CollectionCreateView.as_view(), name='collection_create'),
+#    path('collections/api/', CollectionApiListView.as_view(), name='collections_api'),
+    path('collection/<int:pk>/update/', CollectionUpdateView.as_view(), name='collection_update'),
+    path('collection/<int:pk>/delete/', CollectionDeleteView.as_view(), name='collection_delete'),
 
 #    path('computingmodules/create/', ComputingModuleCreateView.as_view(), name='computing_module_create'),
 #    path('computingmodules/<int:pk>/update/', ComputingModuleUpdateView.as_view(), name='computing_module_update'),
@@ -155,10 +156,10 @@ urlpatterns = [
     path('levelsvariables/<int:pk>/update/', LevelsVariableUpdateView.as_view(), name='levels_variable_update'),
     path('levelsvariables/<int:pk>/delete/', LevelsVariableDeleteView.as_view(), name='levels_variable_delete'),
 
-    path('organizations/create/', OrganizationCreateView.as_view(), name='organization_create'),
-    path('organizations/api/', OrganizationApiListView.as_view(), name='organizations_api'),
-    path('organizations/<int:pk>/update/', OrganizationUpdateView.as_view(), name='organization_update'),
-    path('organizations/<int:pk>/delete/', OrganizationDeleteView.as_view(), name='organization_delete'),
+    path('organization/create/', OrganizationCreateView.as_view(), name='organization_create'),
+#    path('organizations/api/', OrganizationApiListView.as_view(), name='organizations_api'),
+    path('organization/<int:pk>/update/', OrganizationUpdateView.as_view(), name='organization_update'),
+    path('organization/<int:pk>/delete/', OrganizationDeleteView.as_view(), name='organization_delete'),
 
 #    path('options/create/', OptionCreateView.as_view(), name='option_create'),
 #    path('options/<int:pk>/update/', OptionUpdateView.as_view(), name='option_update'),

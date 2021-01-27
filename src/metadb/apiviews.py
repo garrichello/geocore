@@ -68,47 +68,44 @@ class CollectionViewSet(viewsets.ModelViewSet):
         'style': {'template_pack': 'rest_framework/vertical/'}
     }
 
-    @action(methods=['get'], detail=False)
-    def empty_form(self, request):
-        serializer = CollectionSerializer()
-        self.ctx['form'] = serializer
-        html_form = render_to_string(self.template_name, self.ctx, request)
-        return JsonResponse({'html_form': html_form})
-
     def list(self, request, format=None, headers=None):
         serializer = self.get_serializer(self.get_queryset(), many=True)
-        data = {'data': serializer.data, 'headers': self.table_headers}
+        data = {'data': serializer.data}
+        if isinstance(request.accepted_renderer, JSONRenderer):
+            data['headers'] = self.table_headers
 
         return Response(data)
 
     def retrieve(self, request, pk=None):
-        collection = get_object_or_404(self.get_queryset(), pk=pk)
+        try:
+            collection = self.get_queryset().get(pk=pk)
+        except:
+            collection = None
         serializer = self.get_serializer(collection)
-        data = {'data': serializer.data, 'headers': self.table_headers}
 
-        return Response(data)
+        if isinstance(request.accepted_renderer, BrowsableAPIRenderer):
+            response = Response({'data': serializer.data})
+        else:
+            self.ctx['form'] = serializer
+            html_form = render_to_string(self.template_name, self.ctx, request)
+            response = JsonResponse({'html_form': html_form})
+        
+        return response
 
     def create(self, request):
-        print(request.data)
-        in_data = {
-            'label': request.data['label'],
-            'url': request.data['url'],
-            'collectioni18n': {
-                'name': request.data['collectioni18n.name'],
-                'description': request.data['collectioni18n.description']
-            },
-            'organization': request.data['organization'],
-        }
-        serializer = self.get_serializer(data=in_data)
+        serializer = self.get_serializer(data=request.data)
         is_valid = serializer.is_valid()
         if is_valid:
             serializer.save()
 
-        result_data = serializer.data
-        result_data['form_is_valid'] = is_valid
-        result_data['errors'] = serializer.errors
-
-        return Response(result_data)
+        if isinstance(request.accepted_renderer, BrowsableAPIRenderer):
+            response = Response({'data': serializer.data})
+        else:
+            self.ctx['form'] = serializer
+            html_form = render_to_string(self.template_name, self.ctx, request)
+            response = JsonResponse({'html_form': html_form, 'form_is_valid': is_valid})
+        
+        return response
 
 
 class ConveyorApiListView(APIView):
