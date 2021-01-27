@@ -2,18 +2,16 @@ all_columns_defs = [
     { className: ' dt-center', targets: '_all', }
 ]
 
-var collection_list_url = $('#tab-collection').attr('list-data-url')
-var collection_update_url = $('#tab-collection').attr('update-data-url').split('99999');
-var collection_delete_url = $('#tab-collection').attr('delete-data-url').split('99999');
+var collection_url = $('#tab-collection').attr('data-url')
 
 collection_columns = [
     { 'render': function() { return null; } },  // For checkboxes
     { 'render': function (data, type, row, meta) {
         return '<div><button type="button" class="btn btn-warning btn-sm js-update-collection"'
-               + `data-url="${collection_update_url[0]}${row.id}${collection_update_url[1]}">`
+               + `data-url="${collection_url}${row.id}/">`
                + '<span class="glyphicon glyphicon-pencil"></span></button></div>&nbsp;'
                + '<div><button type="button" class="btn btn-danger btn-sm js-delete-collection"'
-               + `data-url="${collection_delete_url[0]}${row.id}${collection_delete_url[1]}">`
+               + `data-url="${collection_url}${row.id}/">`
                + '<span class="glyphicon glyphicon-trash"></span></button></div>';
     } },  // for buttons
     { 'data': 'id' },
@@ -389,7 +387,7 @@ $(document).ready( function () {
     var collectionOptions = $.extend(true, {}, commonOptions);
     collectionOptions["columnDefs"] = collection_columnsDefs.concat(all_columns_defs);
     collectionOptions["columns"] = collection_columns;
-    collectionOptions["ajax"] = { 'url': collection_list_url, 'type': 'GET', 'dataSrc': 'data' };
+    collectionOptions["ajax"] = { 'url': collection_url, 'type': 'GET', 'dataSrc': 'data' };
     $('#collection').DataTable( collectionOptions ).on('draw', function() {
         addUpdDelButtonHandlers.call(this, 'collection');
     });

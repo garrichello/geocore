@@ -8,8 +8,6 @@ from .simple_views import *
 from .form_loads import *
 
 from .apiviews import *
-from .collection_views import (CollectionCreateView, CollectionDeleteView,
-                               CollectionUpdateView)
 from .conveyor_views import (ConveyorCreateView, ConveyorDeleteView,
                                ConveyorUpdateView)
 from .dataset_views import (DatasetCreateView, DatasetDeleteView,
@@ -83,11 +81,6 @@ urlpatterns = [
 #    path('argumenttypes/create/', ArgumentTypeCreateView.as_view(), name='argtype_create'),
 #    path('argumenttypes/<int:pk>/update/', ArgumentTypeUpdateView.as_view(), name='argtype_update'),
 #    path('argumenttypes/<int:pk>/delete/', ArgumentTypeDeleteView.as_view(), name='argtype_delete'),
-
-#    path('collection/create/', CollectionCreateView.as_view(), name='collection_create'),
-#    path('collections/api/', CollectionApiListView.as_view(), name='collections_api'),
-    path('collection/<int:pk>/update/', CollectionUpdateView.as_view(), name='collection_update'),
-    path('collection/<int:pk>/delete/', CollectionDeleteView.as_view(), name='collection_delete'),
 
 #    path('computingmodules/create/', ComputingModuleCreateView.as_view(), name='computing_module_create'),
 #    path('computingmodules/<int:pk>/update/', ComputingModuleUpdateView.as_view(), name='computing_module_update'),
