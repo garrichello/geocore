@@ -32,13 +32,16 @@ $(function() {
         return 'modal-dynamic-'+idx;
     };
 
-    loadForm2 = function () {
+    loadForm2 = function (action=None) {
         var btn = $(this);
         var modal_name = getModalName();
         addModal(modal_name);
         var modal_id = '#'+modal_name;
         $.ajax({
             type: "get",
+            headers: {
+                'ACTION': action,
+            },
             url: btn.attr("data-url"),
             dataType: 'json',
             success: function(data) {
@@ -118,7 +121,7 @@ $(function() {
         // Update button
         $(`.js-update-${tab_name}`).off('click');
         $(`.js-update-${tab_name}`).click(function() { 
-            var modal_id = loadForm2.call(this);
+            var modal_id = loadForm2.call(this, 'update');
             $(modal_id).on('hidden.bs.modal', function() {
                 $(modal_id).remove();  // Keep DOM clean!
             });  
@@ -126,7 +129,7 @@ $(function() {
         // Delete button
         $(`.js-delete-${tab_name}`).off('click');
         $(`.js-delete-${tab_name}`).click(function() { 
-            var modal_id = loadForm2.call(this);
+            var modal_id = loadForm2.call(this, 'delete');
             $(modal_id).on('hidden.bs.modal', function() {
                 $(modal_id).remove();  // Keep DOM clean!
             });  
@@ -135,7 +138,7 @@ $(function() {
 
     // Create button
     $('.js-create').click(function() { 
-        var modal_id = loadForm2.call(this);
+        var modal_id = loadForm2.call(this, 'create');
         $(modal_id).on('hidden.bs.modal', function() {
             $(modal_id).remove();  // Keep DOM clean!
         })
