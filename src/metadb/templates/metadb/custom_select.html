@@ -22,10 +22,10 @@
           {% endif %}
       {% endfor %}
     </select>
-    {% if field.widget_type == 'select' and not field.field.no_add_btn %}
+    {% if field.widget_type == 'select' and not field.no_add_btn %}
     <button type="button" 
             class="btn btn-primary js-add-button"
-            data-url={{ field.field.data_url }}>
+            data-url={{ field.data_url }}>
         <span class="glyphicon glyphicon-plus"></span>
     </button>
     {% endif %}
