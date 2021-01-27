@@ -43,9 +43,7 @@
         </ul>
         <div class="tab-content">
             <div class="tab-pane active" id="tab-collection"
-                list-data-url="{% url 'metadb:collection-list' %}"
-                update-data-url="{% url 'metadb:collection_update' 99999 %}"
-                delete-data-url="{% url 'metadb:collection_delete' 99999 %}">
+                data-url="{% url 'metadb:collection-list' %}">
                 <button type="button" 
                         class="btn btn-primary js-create"
                         data-url="{% url 'metadb:collection-detail' -1 %}">

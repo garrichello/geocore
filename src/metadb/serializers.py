@@ -3,6 +3,7 @@ from rest_framework.reverse import reverse
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import get_language
 from collections import OrderedDict
+from rest_framework.renderers import *
 
 from .models import *
 
@@ -38,8 +39,8 @@ class OrganizationI18NSerializer(serializers.ModelSerializer):
         model = OrganizationI18N
         fields = ['id', 'name']
 
-    def to_representation(self, data):
-        data = data.filter(language__code=get_language()).get()
+    def to_representation(self, instance):
+        data = instance.filter(language__code=get_language()).get()
         return super().to_representation(data)
 
     def __init__(self, *args, **kwargs):
@@ -65,13 +66,15 @@ class OrganizationSerializer(serializers.HyperlinkedModelSerializer):
 class OrganizationRelatedField(ModifiedRelatedField):
     
     def to_representation(self, value):
-        return OrganizationSerializer(value, context=self.context).data
+        data = OrganizationSerializer(value, context=self.context).data
+        action = self.context['request'].META.get('HTTP_ACTION')
+        result = data
+        if action == 'update':
+            result = result.get('id', None)
+        return result
 
     def to_internal_value(self, data):
         return Organization.objects.get(pk=data)
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
 
 
 class CollectionI18NSerializer(serializers.ModelSerializer):
@@ -80,8 +83,8 @@ class CollectionI18NSerializer(serializers.ModelSerializer):
         model = CollectionI18N
         fields = ['id', 'name', 'description']
 
-    def to_representation(self, data):
-        data = data.filter(language__code=get_language()).get()
+    def to_representation(self, instance):
+        data = instance.filter(language__code=get_language()).get()
         return super().to_representation(data)
 
     def __init__(self, *args, **kwargs):
@@ -119,8 +122,20 @@ class CollectionSerializer(serializers.HyperlinkedModelSerializer):
         collectioni18n_data = validated_data.pop('collectioni18n_set')
         collection = Collection.objects.create(**validated_data)
         for db_lang in Language.objects.all():
-            CollectionI18N.objects.create(collection=collection, 
+            CollectionI18N.objects.create(collection=collection,
                                           language=db_lang,
                                           **collectioni18n_data)
+
         return collection
 
+    def update(self, instance, validated_data):
+        instance.label = validated_data.get('label', instance.label)
+        instance.url = validated_data.get('url', instance.url)
+        collectioni18n = instance.collectioni18n_set.filter(language__code=get_language()).get()
+        collectioni18n.name = validated_data['collectioni18n_set'].get('name', collectioni18n.name)
+        collectioni18n.description = validated_data['collectioni18n_set'].get('description', collectioni18n.description)
+        collectioni18n.save()
+        instance.organization = validated_data.get('organization', instance.organization)
+        instance.save()
+
+        return instance

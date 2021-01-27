@@ -1,6 +1,6 @@
 {% load static i18n metadb_extras rest_framework %}
 
-<form method="post" action="{{ action }}" class="{{ form_class }}" 
+<form method="{{ method }}" action="{{ action }}" class="{{ form_class }}" 
     {% for attrib in attributes  %}
         {{attrib.name}}={{attrib.value}}
     {% endfor %}
@@ -15,18 +15,21 @@
     </div>
 
     <div class="modal-body">
-        {% for field in form %}
-            {% if not field.read_only %}
-                {% render_field field style=style %}
-            {% endif %}
-        {% endfor %}
-
-        {% block addinclude %}{% endblock addinclude %}
+        {% if method != 'DELETE' %}
+            {% for field in form %}
+                {% if not field.read_only %}
+                    {% render_field field style=style %}
+                {% endif %}
+            {% endfor %}
+            {% block addinclude %}{% endblock addinclude %}
+        {% else %}
+            <p class="lead">{{ text }} <strong>{{ label }}</strong>?</p>
+        {% endif %}
     </div>
 
     <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Close" %}</button>
-        <button type="submit" class="btn btn-primary">{{ submit_name }}</button>
+        <button type="submit" class="{% if method != 'DELETE' %}btn btn-primary{% else %}btn btn-danger{% endif %}">{{ submit_name }}</button>
     </div>
 </form>
 
