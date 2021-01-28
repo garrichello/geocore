@@ -99,8 +99,11 @@ $(function() {
 
         if (option_name.length) {
             $.ajax( {
-                url: form.attr(data_url),
                 type: 'get',
+                headers: {
+                    'ACTION': 'options_list',
+                },
+                url: form.attr(data_url),
                 success: function (data) {
                     $(`${modal_id} #${select_name}`).html(data);
                     $(`${modal_id} #${select_name} option`).filter(function() {
