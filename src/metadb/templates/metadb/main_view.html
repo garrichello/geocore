@@ -43,7 +43,7 @@
         </ul>
         <div class="tab-content">
             <div class="tab-pane active" id="tab-collection"
-                data-url="{% url 'metadb:collection-list' %}">
+                api-data-url="{% url 'metadb:collection-list' %}">
                 <button type="button" 
                         class="btn btn-primary js-create"
                         data-url="{% url 'metadb:collection-detail' -1 %}">
@@ -113,9 +113,6 @@
                     <label>
                         <input type="radio" name="data-choice" class="js-data-choice" 
                         api-data-url={% url choice.api_url %}
-                        create-data-url={% url choice.create_url %}
-                        update-data-url={% url choice.update_url 99999 %}
-                        delete-data-url={% url choice.delete_url 99999 %}
                         ></input>
                         {{ choice.title }}
                     </label>
