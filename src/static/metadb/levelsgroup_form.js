@@ -81,7 +81,7 @@ $(function() {
 
     // + buttons handling
     $(levels_group_form_class_name).on('click', '.js-add-button', function() {
-        var child_modal_id = loadForm2.call(this);
+        var child_modal_id = loadForm2.call(this, 'create');
         var dismissed = false;
         $(child_modal_id).on('click.dismiss.bs.modal', '[data-dismiss="modal"]', function() {
             dismissed = true;

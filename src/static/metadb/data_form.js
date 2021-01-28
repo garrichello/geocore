@@ -109,7 +109,7 @@ $(function () {
 
     // + buttons handling
     $(data_form_class_name).on('click', '.js-add-button', function() { 
-        var child_modal_id = loadForm2.call(this);
+        var child_modal_id = loadForm2.call(this, 'create');
         $(child_modal_id).on('hidden.bs.modal', function() {
             if ($('.js-levels-variable-form').length) {
                 var form_data = mapFormData('.js-levels-variable-form');  // Get levels variable fields
