@@ -32,6 +32,12 @@ from .level_views import (LevelCreateView, LevelUpdateView,
 router = routers.DefaultRouter()
 router.register('collections', CollectionViewSet)
 router.register('organizations', OrganizationViewSet)
+router.register('datasets', DatasetViewSet)
+router.register('scenarios', ScenarioViewSet)
+router.register('resolutions', ResolutionViewSet)
+router.register('datakinds', DataKindViewSet)
+router.register('filetypes', FileTypeViewSet)
+
 
 app_name = 'metadb'
 urlpatterns = [
@@ -96,15 +102,15 @@ urlpatterns = [
     path('data/<int:pk>/update/', DataUpdateView.as_view(), name='data_update'),
     path('data/<int:pk>/delete/', DataDeleteView.as_view(), name='data_delete'),
 
-    path('datakinds/create/', DataKindCreateView.as_view(), name='datakind_create'),
-    path('datakinds/api/', DataKindApiListView.as_view(), name='datakinds_api'),
-    path('datakinds/<int:pk>/update/', DataKindUpdateView.as_view(), name='datakind_update'),
-    path('datakinds/<int:pk>/delete/', DataKindDeleteView.as_view(), name='datakind_delete'),
+##    path('datakinds/create/', DataKindCreateView.as_view(), name='datakind_create'),
+##   path('datakinds/api/', DataKindApiListView.as_view(), name='datakinds_api'),
+##    path('datakinds/<int:pk>/update/', DataKindUpdateView.as_view(), name='datakind_update'),
+##    path('datakinds/<int:pk>/delete/', DataKindDeleteView.as_view(), name='datakind_delete'),
 
-    path('datasets/create/', DatasetCreateView.as_view(), name='dataset_create'),
-    path('datasets/api/', DatasetApiListView.as_view(), name='datasets_api'),
-    path('datasets/<int:pk>/update/', DatasetUpdateView.as_view(), name='dataset_update'),
-    path('datasets/<int:pk>/delete/', DatasetDeleteView.as_view(), name='dataset_delete'),
+##    path('datasets/create/', DatasetCreateView.as_view(), name='dataset_create'),
+##    path('datasets/api/', DatasetApiListView.as_view(), name='datasets_api'),
+##    path('datasets/<int:pk>/update/', DatasetUpdateView.as_view(), name='dataset_update'),
+##    path('datasets/<int:pk>/delete/', DatasetDeleteView.as_view(), name='dataset_delete'),
 
 #    path('datavars/create/', DataVariableCreateView.as_view(), name='data_variable_create'),
 #    path('datavars/<int:pk>/update/', DataVariableUpdateView.as_view(), name='data_variable_update'),
@@ -119,10 +125,10 @@ urlpatterns = [
     path('files/<int:pk>/update/', FileUpdateView.as_view(), name='file_update'),
     path('files/<int:pk>/delete/', FileDeleteView.as_view(), name='file_delete'),
 
-    path('filetypes/create/', FileTypeCreateView.as_view(), name='filetype_create'),
-    path('filetypes/api/', FileTypeApiListView.as_view(), name='filetypes_api'),
-    path('filetypes/<int:pk>/update/', FileTypeUpdateView.as_view(), name='filetype_update'),
-    path('filetypes/<int:pk>/delete/', FileTypeDeleteView.as_view(), name='filetype_delete'),
+##    path('filetypes/create/', FileTypeCreateView.as_view(), name='filetype_create'),
+##    path('filetypes/api/', FileTypeApiListView.as_view(), name='filetypes_api'),
+##    path('filetypes/<int:pk>/update/', FileTypeUpdateView.as_view(), name='filetype_update'),
+##    path('filetypes/<int:pk>/delete/', FileTypeDeleteView.as_view(), name='filetype_delete'),
 
     path('guielements/create/', GuiElementCreateView.as_view(), name='gui_element_create'),
     path('guielements/api/', GuiElementApiListView.as_view(), name='gui_elements_api'),
@@ -193,20 +199,20 @@ urlpatterns = [
     path('propertyvalues/<int:pk>/update/', PropertyValueUpdateView.as_view(), name='property_value_update'),
     path('propertyvalues/<int:pk>/delete/', PropertyValueDeleteView.as_view(), name='property_value_delete'),
 
-    path('resolutions/create/', ResolutionCreateView.as_view(), name='resolution_create'),
-    path('resolutions/api/', ResolutionApiListView.as_view(), name='resolutions_api'),
-    path('resolutions/<int:pk>/update/', ResolutionUpdateView.as_view(), name='resolution_update'),
-    path('resolutions/<int:pk>/delete/', ResolutionDeleteView.as_view(), name='resolution_delete'),
+##    path('resolutions/create/', ResolutionCreateView.as_view(), name='resolution_create'),
+##    path('resolutions/api/', ResolutionApiListView.as_view(), name='resolutions_api'),
+##    path('resolutions/<int:pk>/update/', ResolutionUpdateView.as_view(), name='resolution_update'),
+##    path('resolutions/<int:pk>/delete/', ResolutionDeleteView.as_view(), name='resolution_delete'),
 
     path('rootdirs/create/', RootDirCreateView.as_view(), name='root_dir_create'),
     path('rootdirs/api/', RootDirApiListView.as_view(), name='root_dirs_api'),
     path('rootdirs/<int:pk>/update/', RootDirUpdateView.as_view(), name='root_dir_update'),
     path('rootdirs/<int:pk>/delete/', RootDirDeleteView.as_view(), name='root_dir_delete'),
 
-    path('scenarios/create/', ScenarioCreateView.as_view(), name='scenario_create'),
-    path('scenarios/api/', ScenarioApiListView.as_view(), name='scenarios_api'),
-    path('scenarios/<int:pk>/update/', ScenarioUpdateView.as_view(), name='scenario_update'),
-    path('scenarios/<int:pk>/delete/', ScenarioDeleteView.as_view(), name='scenario_delete'),
+##    path('scenarios/create/', ScenarioCreateView.as_view(), name='scenario_create'),
+##    path('scenarios/api/', ScenarioApiListView.as_view(), name='scenarios_api'),
+##    path('scenarios/<int:pk>/update/', ScenarioUpdateView.as_view(), name='scenario_update'),
+##    path('scenarios/<int:pk>/delete/', ScenarioDeleteView.as_view(), name='scenario_delete'),
 
     path('specpars/create/', SpecificParameterCreateView.as_view(), name='specpar_create'),
     path('specpars/api/', SpecificParameterApiListView.as_view(), name='specpars_api'),

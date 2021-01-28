@@ -2,16 +2,16 @@ all_columns_defs = [
     { className: ' dt-center', targets: '_all', }
 ]
 
-var collection_url = $('#tab-collection').attr('api-data-url')
+var collection_api_url = $('#tab-collection').attr('api-data-url')
 
 collection_columns = [
     { 'render': function() { return null; } },  // For checkboxes
     { 'render': function (data, type, row, meta) {
         return '<div><button type="button" class="btn btn-warning btn-sm js-update-collection"'
-               + `data-url="${collection_url}${row.id}/">`
+               + `data-url="${collection_api_url}${row.id}/">`
                + '<span class="glyphicon glyphicon-pencil"></span></button></div>&nbsp;'
                + '<div><button type="button" class="btn btn-danger btn-sm js-delete-collection"'
-               + `data-url="${collection_url}${row.id}/">`
+               + `data-url="${collection_api_url}${row.id}/">`
                + '<span class="glyphicon glyphicon-trash"></span></button></div>';
     } },  // for buttons
     { 'data': 'id' },
@@ -40,17 +40,15 @@ collection_columnsDefs = [
 ]
 
 var dataset_api_url = $('#tab-dataset').attr('api-data-url');
-var dataset_update_url = $('#tab-dataset').attr('update-data-url').split('99999');
-var dataset_delete_url = $('#tab-dataset').attr('delete-data-url').split('99999');
 
 dataset_columns = [
     { 'render': function() { return null; } }, // For checkboxes
     { 'render': function (data, type, row, meta) {
         return '<div><button type="button" class="btn btn-warning btn-sm js-update-dataset"'
-               + `data-url="${dataset_update_url[0]}${row.id}${dataset_update_url[1]}">`
+               + `data-url="${dataset_api_url}${row.id}/">`
                + '<span class="glyphicon glyphicon-pencil"></span></button></div>&nbsp;'
                + '<div><button type="button" class="btn btn-danger btn-sm js-delete-dataset"'
-               + `data-url="${dataset_delete_url[0]}${row.id}${dataset_delete_url[1]}">`
+               + `data-url="${dataset_api_url}${row.id}/">`
                + '<span class="glyphicon glyphicon-trash"></span></button></div>';
     } },  // for buttons
     { 'data': 'id' },
@@ -387,7 +385,7 @@ $(document).ready( function () {
     var collectionOptions = $.extend(true, {}, commonOptions);
     collectionOptions["columnDefs"] = collection_columnsDefs.concat(all_columns_defs);
     collectionOptions["columns"] = collection_columns;
-    collectionOptions["ajax"] = { 'url': collection_url, 'type': 'GET', 'dataSrc': 'data' };
+    collectionOptions["ajax"] = { 'url': collection_api_url, 'type': 'GET', 'dataSrc': 'data' };
     $('#collection').DataTable( collectionOptions ).on('draw', function() {
         addUpdDelButtonHandlers.call(this, 'collection');
     });

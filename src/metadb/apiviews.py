@@ -94,8 +94,10 @@ class BaseViewSet(viewsets.ModelViewSet):
                 ctx['action'] = reverse(self.action_url, kwargs={'pk': pk})
             elif action == 'delete':
                 ctx = self.ctx_delete
-                ctx['label'] = instance.label
+                ctx['label'] = getattr(instance, 'label', instance.pk)
                 ctx['action'] = reverse(self.action_url, kwargs={'pk': pk})
+            else:
+                ctx = {'style': {'template_pack': 'rest_framework/vertical/'}}
             ctx['form'] = serializer
             html_form = render_to_string(self.template_name, ctx, request)
             response = JsonResponse({'html_form': html_form})
@@ -138,7 +140,7 @@ class BaseViewSet(viewsets.ModelViewSet):
 
         return JsonResponse({'html_form': None, 'form_is_valid': True})
 
-
+#==============================================================================================
 class AccumulationModeApiListView(APIView):
     """
     Returns accumulatiob modes
@@ -183,8 +185,8 @@ class CollectionViewSet(BaseViewSet):
     ]
 
     ctx_create = {
-        'form_class': 'js-collection-form',
         'method': 'POST',
+        'form_class': 'js-collection-form',
         'title': _("Create a new collection"),
         'submit_name': _("Create collection"),
         'script': 'metadb/collection_form.js',
@@ -196,8 +198,8 @@ class CollectionViewSet(BaseViewSet):
     }
 
     ctx_update = {
-        'form_class': 'js-collection-form',
         'method': 'PUT',
+        'form_class': 'js-collection-form',
         'title': _("Update collection"),
         'submit_name': _("Update collection"),
         'script': 'metadb/collection_form.js',
@@ -209,8 +211,8 @@ class CollectionViewSet(BaseViewSet):
     }
 
     ctx_delete = {
-        'form_class': 'js-collection-delete-form',
         'method': 'DELETE',
+        'form_class': 'js-collection-delete-form',
         'title': _('Confirm collection delete'),
         'text': _('Are you sure you want to delete the collection'),
         'submit_name': _('Delete collection'),
@@ -337,65 +339,124 @@ class DataApiListView(APIView):
         return Response(data_data)
 
 
-class DataKindApiListView(APIView):
+class DataKindViewSet(BaseViewSet):
     """
     Returns data kinds
     """
-    def get(self, request):
+    queryset = DataKind.objects.all().order_by('name')
+    serializer_class = DataKindSerializer
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer, TemplateHTMLRenderer]
+    template_name = 'metadb/includes/rest_form.html'
+    options_template_name = 'metadb/hr/dropdown_list_options.html'
+    list_url = 'metadb:datakind-list'
+    action_url = 'metadb:datakind-detail'
 
-        items = DataKind.objects.all()
-        data = {'data': []}
-        for item in items:
-            data['data'].append(
-                {
-                    'id': item.id,
-                    'name': item.name,
-                }
-            )
-        data['headers'] = [
-            _('Id'), 
-            _('Name'),
-        ]
+    table_headers = [
+        _('Id'),
+        _('Name'),
+    ]
 
-        return Response(data)
+    ctx_create = {
+        'method': 'POST',
+        'form_class': 'js-datakind-form',
+        'title': _("Create a new datakind"),
+        'submit_name': _("Create datakind"),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_update = {
+        'method': 'PUT',
+        'form_class': 'js-datakind-form',
+        'title': _("Update datakind"),
+        'submit_name': _("Update datakind"),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_delete = {
+        'method': 'DELETE',
+        'form_class': 'js-datakind-delete-form',
+        'title': _('Confirm data kind delete'),
+        'text': _('Are you sure you want to delete the data kind'),
+        'submit_name': _('Delete data kind'),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
 
 
-class DatasetApiListView(APIView):
+class DatasetViewSet(BaseViewSet):
     """
     Returns datasets
     """
-    def get(self, request):
-        datasets = Dataset.objects.all()
-        dataset_data = {}
-        dataset_data['data'] = [
-            {
-                'id': dataset.id,
-                'is_visible': dataset.is_visible,
-                'collection_label': dataset.collection.label,
-                'scenario_name': dataset.scenario.name,
-                'resolution_name': dataset.resolution.name,
-                'data_kind_name': dataset.data_kind.name,
-                'file_type_name': dataset.file_type.name,
-                'time_start': dataset.time_start,
-                'time_end': dataset.time_end,
-                'description': dataset.description,
-            }
-            for dataset in datasets
-        ]
-        dataset_data['headers'] = [
-            ('head_none', 'Id'),
-            ('head_none', _('Visible')),
-            ('head_select', _('Collection label')),
-            ('head_select', _('Resolution')),
-            ('head_select', _('Scenario')),
-            ('head_select', _('Data kind')),
-            ('head_select', _('File type')),
-            ('head_none', _('Time start')),
-            ('head_none', _('Time end')),
-            ('head_text', _('Dataset description')),
-        ]
+    queryset = Dataset.objects.all()
+    serializer_class = DatasetSerializer
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
+    template_name = 'metadb/includes/rest_form.html'
+    options_template_name = 'metadb/hr/dropdown_list_options.html'
+    list_url = 'metadb:dataset-list'
+    action_url = 'metadb:dataset-detail'
 
-        return Response(dataset_data)
+    table_headers = [
+        ('head_none', 'Id'),
+        ('head_none', _('Visible')),
+        ('head_select', _('Collection label')),
+        ('head_select', _('Resolution')),
+        ('head_select', _('Scenario')),
+        ('head_select', _('Data kind')),
+        ('head_select', _('File type')),
+        ('head_none', _('Time start')),
+        ('head_none', _('Time end')),
+        ('head_text', _('Dataset description')),
+    ]
+
+    ctx_create = {
+        'method': 'POST',
+        'form_class': 'js-dataset-form',
+        'title': _("Create a new dataset"),
+        'submit_name': _("Create dataset"),
+        'script': 'metadb/dataset_form.js',
+        'attributes': [
+            {'name': 'collections-url', 
+             'value': reverse_lazy('metadb:form_load_collections')},
+            {'name': 'resolutions-url', 
+             'value': reverse_lazy('metadb:form_load_resolutions')},
+            {'name': 'scenarios-url', 
+             'value': reverse_lazy('metadb:form_load_scenarios')},
+            {'name': 'datakinds-url', 
+             'value': reverse_lazy('metadb:form_load_datakinds')},
+            {'name': 'filetypes-url', 
+             'value': reverse_lazy('metadb:form_load_filetypes')},
+        ],
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_update = {
+        'method': 'PUT',
+        'form_class': 'js-dataset-form',
+        'title': _("Update dataset"),
+        'submit_name': _("Update dataset"),
+        'script': 'metadb/dataset_form.js',
+        'attributes': [
+            {'name': 'collections-url', 
+             'value': reverse_lazy('metadb:form_load_collections')},
+            {'name': 'resolutions-url', 
+             'value': reverse_lazy('metadb:form_load_resolutions')},
+            {'name': 'scenarios-url', 
+             'value': reverse_lazy('metadb:form_load_scenarios')},
+            {'name': 'datakinds-url', 
+             'value': reverse_lazy('metadb:form_load_datakinds')},
+            {'name': 'filetypes-url', 
+             'value': reverse_lazy('metadb:form_load_filetypes')},
+        ],
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_delete = {
+        'method': 'DELETE',
+        'form_class': 'js-dataset-delete-form',
+        'title': _('Confirm dataset delete'),
+        'text': _('Are you sure you want to delete the dataset'),
+        'submit_name': _('Delete dataset'),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
 
 
 class FileApiListView(APIView):
@@ -421,27 +482,47 @@ class FileApiListView(APIView):
         return Response(data)
 
 
-class FileTypeApiListView(APIView):
+class FileTypeViewSet(BaseViewSet):
     """
     Returns file types
     """
-    def get(self, request):
+    queryset = FileType.objects.all().order_by('name')
+    serializer_class = FileTypeSerializer
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer, TemplateHTMLRenderer]
+    template_name = 'metadb/includes/rest_form.html'
+    options_template_name = 'metadb/hr/dropdown_list_options.html'
+    list_url = 'metadb:filetype-list'
+    action_url = 'metadb:filetype-detail'
 
-        items = FileType.objects.all()
-        data = {'data': []}
-        for item in items:
-            data['data'].append(
-                {
-                    'id': item.id,
-                    'name': item.name,
-                }
-            )
-        data['headers'] = [
-            _('Id'), 
-            _('Name'),
-        ]
+    table_headers = [
+        _('Id'),
+        _('Name'),
+    ]
 
-        return Response(data)
+    ctx_create = {
+        'method': 'POST',
+        'form_class': 'js-filetype-form',
+        'title': _("Create a new filetype"),
+        'submit_name': _("Create filetype"),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_update = {
+        'method': 'PUT',
+        'form_class': 'js-filetype-form',
+        'title': _("Update filetype"),
+        'submit_name': _("Update filetype"),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_delete = {
+        'method': 'DELETE',
+        'form_class': 'js-filetype-delete-form',
+        'title': _('Confirm file type delete'),
+        'text': _('Are you sure you want to delete the file type'),
+        'submit_name': _('Delete file type'),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
 
 
 class GuiElementApiListView(APIView):
@@ -705,29 +786,48 @@ class PropertyValueApiListView(APIView):
         return Response(data)
 
 
-class ResolutionApiListView(APIView):
+class ResolutionViewSet(BaseViewSet):
     """
-    Returns horizontal resolutions
+    Returns resolutions
     """
-    def get(self, request):
+    queryset = Resolution.objects.all().order_by('name')
+    serializer_class = ResolutionSerializer
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer, TemplateHTMLRenderer]
+    template_name = 'metadb/includes/rest_form.html'
+    options_template_name = 'metadb/hr/dropdown_list_options.html'
+    list_url = 'metadb:resolution-list'
+    action_url = 'metadb:resolution-detail'
 
-        items = Resolution.objects.all()
-        data = {'data': []}
-        for item in items:
-            data['data'].append(
-                {
-                    'id': item.id,
-                    'name': item.name,
-                    'subpath1': item.subpath1,
-                }
-            )
-        data['headers'] = [
-            _('Id'),
-            _('Name'),
-            _('Subpath'),
-        ]
+    table_headers = [
+        _('Id'),
+        _('Name'),
+        _('Subpath'),
+    ]
 
-        return Response(data)
+    ctx_create = {
+        'method': 'POST',
+        'form_class': 'js-resolution-form',
+        'title': _("Create a new resolution"),
+        'submit_name': _("Create resolution"),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_update = {
+        'method': 'PUT',
+        'form_class': 'js-resolution-form',
+        'title': _("Update resolution"),
+        'submit_name': _("Update resolution"),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_delete = {
+        'method': 'DELETE',
+        'form_class': 'js-resolution-delete-form',
+        'title': _('Confirm resolution delete'),
+        'text': _('Are you sure you want to delete the resolution'),
+        'submit_name': _('Delete resolution'),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
 
 
 class RootDirApiListView(APIView):
@@ -753,29 +853,48 @@ class RootDirApiListView(APIView):
         return Response(data)
 
 
-class ScenarioApiListView(APIView):
+class ScenarioViewSet(BaseViewSet):
     """
     Returns scenarios
     """
-    def get(self, request):
+    queryset = Scenario.objects.all().order_by('name')
+    serializer_class = ScenarioSerializer
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer, TemplateHTMLRenderer]
+    template_name = 'metadb/includes/rest_form.html'
+    options_template_name = 'metadb/hr/dropdown_list_options.html'
+    list_url = 'metadb:scenario-list'
+    action_url = 'metadb:scenario-detail'
 
-        items = Scenario.objects.all()
-        data = {'data': []}
-        for item in items:
-            data['data'].append(
-                {
-                    'id': item.id,
-                    'name': item.name,
-                    'subpath0': item.subpath0,
-                }
-            )
-        data['headers'] = [
-            _('Id'),
-            _('Name'),
-            _('Subpath'),
-        ]
+    table_headers = [
+        _('Id'),
+        _('Name'),
+        _('Subpath'),
+    ]
 
-        return Response(data)
+    ctx_create = {
+        'method': 'POST',
+        'form_class': 'js-scenario-form',
+        'title': _("Create a new scenario"),
+        'submit_name': _("Create scenario"),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_update = {
+        'method': 'PUT',
+        'form_class': 'js-scenario-form',
+        'title': _("Update scenario"),
+        'submit_name': _("Update scenario"),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_delete = {
+        'method': 'DELETE',
+        'form_class': 'js-scenario-delete-form',
+        'title': _('Confirm scenario delete'),
+        'text': _('Are you sure you want to delete the scenario'),
+        'submit_name': _('Delete scenario'),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
 
 
 class SpecificParameterApiListView(APIView):

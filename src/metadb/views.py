@@ -12,17 +12,13 @@ class MainView(View):
              'create_url': app_prfx+'accmode_create',
              'update_url': app_prfx+'accmode_update', 'delete_url': app_prfx+'accmode_delete'},
 
-            {'title': _('Data kind'), 'api_url': app_prfx+'datakinds_api',
-             'create_url': app_prfx+'datakind_create',
-             'update_url': app_prfx+'datakind_update', 'delete_url': app_prfx+'datakind_delete'},
+            {'title': _('Data kind'), 'api_url': app_prfx+'datakind-list'},
 
             {'title': _('File'), 'api_url': app_prfx+'files_api',
              'create_url': app_prfx+'file_create',
              'update_url': app_prfx+'file_update', 'delete_url': app_prfx+'file_delete'},
 
-            {'title': _('File type'), 'api_url': app_prfx+'filetypes_api',
-             'create_url': app_prfx+'filetype_create',
-             'update_url': app_prfx+'filetype_update', 'delete_url': app_prfx+'filetype_delete'},
+            {'title': _('File type'), 'api_url': app_prfx+'filetype-list'},
 
             {'title': _('GUI element'), 'api_url': app_prfx+'gui_elements_api',
              'create_url': app_prfx+'gui_element_create',
@@ -58,17 +54,13 @@ class MainView(View):
              'create_url': app_prfx+'property_value_create',
              'update_url': app_prfx+'property_value_update', 'delete_url': app_prfx+'property_value_delete'},
 
-            {'title': _('Resolution'), 'api_url': app_prfx+'resolutions_api',
-             'create_url': app_prfx+'resolution_create',
-             'update_url': app_prfx+'resolution_update', 'delete_url': app_prfx+'resolution_delete'},
+            {'title': _('Resolution'), 'api_url': app_prfx+'resolution-list'},
 
             {'title': _('Root directory'), 'api_url': app_prfx+'root_dirs_api',
              'create_url': app_prfx+'root_dir_create',
              'update_url': app_prfx+'root_dir_update', 'delete_url': app_prfx+'root_dir_delete'},
 
-            {'title': _('Scenario'), 'api_url': app_prfx+'scenarios_api',
-             'create_url': app_prfx+'scenario_create',
-             'update_url': app_prfx+'scenario_update', 'delete_url': app_prfx+'scenario_delete'},
+            {'title': _('Scenario'), 'api_url': app_prfx+'scenario-list'},
 
             {'title': _('Time step'), 'api_url': app_prfx+'time_steps_api',
              'create_url': app_prfx+'time_step_create',
