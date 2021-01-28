@@ -125,7 +125,7 @@ class CollectionI18NSerializer(serializers.ModelSerializer):
 
 class CollectionSerializer(serializers.HyperlinkedModelSerializer):
     collectioni18n = CollectionI18NSerializer(source='collectioni18n_set', label='')
-    qset = Organization.objects.all().order_by('organizationi18n__name')
+    qset = Organization.objects.order_by('organizationi18n__name')
     organization = OrganizationRelatedField(queryset=qset)
     dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:collection-detail',
                                                    read_only=True)
