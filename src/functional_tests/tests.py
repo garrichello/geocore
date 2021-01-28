@@ -169,17 +169,17 @@ class FullScaleTest(unittest.TestCase):
         #  'http://mycollection.url' into a textbox Collection URL,
         self.wait_and_type(form_class, 'id_url', 'http://mycollection.url')
         #  'John's collection' into a textbox name Collection name
-        self.wait_and_type(form_class, 'id_name', "John's collection")
+        self.wait_and_type(form_class, 'id_collectioni18n.name', "John's collection")
         #  'This is a collection created by John' into textfield Collection description
-        self.wait_and_type(form_class, 'id_description', 'This is a collection created by John')
+        self.wait_and_type(form_class, 'id_collectioni18n.description', 'This is a collection created by John')
         # John wants to select an organization, but finds out that the one he needs is absent.
         # So he decides to add it and clicks '+' button next to the Organization dropdown list
-        self.wait_and_click_add_btn('/en/metadb/organizations/create/')
+        self.wait_and_click_add_btn('/en/metadb/organizations/-1/')
 
         # John adds a new organization
-        self.add_2_elements('js-organization-form', 'id_name', 'John Brown research, USA',
+        self.add_2_elements('js-organization-form', 'id_organizationi18n.name', 'John Brown research, USA',
                                                     'id_url', 'http://johnbrownresearch.org/')
-        self.wait_and_assert_select_after_submit(form_class, 'id_organizationi18n', 'John Brown research, USA')
+        self.wait_and_assert_select_after_submit(form_class, 'id_organization', 'John Brown research, USA')
 
         # And finally John clicks Create collection
         collection_form.submit()
