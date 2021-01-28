@@ -2,7 +2,7 @@ all_columns_defs = [
     { className: ' dt-center', targets: '_all', }
 ]
 
-var collection_url = $('#tab-collection').attr('data-url')
+var collection_url = $('#tab-collection').attr('api-data-url')
 
 collection_columns = [
     { 'render': function() { return null; } },  // For checkboxes
