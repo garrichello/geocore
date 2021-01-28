@@ -148,6 +148,14 @@ class CollectionSerializer(serializers.HyperlinkedModelSerializer):
         self.fields['organization'].widget_type = 'select'
         self.fields['organization'].style = {'template': 'metadb/custom_select.html'}
 
+    def to_representation(self, instance):
+        action = self.context['request'].META.get('HTTP_ACTION')
+        if action == 'options_list' or self.context['request'].GET.get('format') == 'html':
+            result = instance
+        else:
+            result = super().to_representation(instance)
+        return result
+
     def create(self, validated_data):
         collectioni18n_data = validated_data.pop('collectioni18n_set')
         collection = Collection.objects.create(**validated_data)

@@ -1,6 +1,6 @@
 {% for e in data %}
     <option value="{{ e.pk }}">{{ e }}</option>
-{% if e.name %}
+<!--{% if e.name %}
     <option value="{{ e.pk }}">{{ e.name }}</option>
 {% elif e.description %}
     <option value="{{ e.pk }}">{{ e.description }}</option>
@@ -8,5 +8,5 @@
     <option value="{{ e.pk }}">{{ e.label }}</option>
 {% elif e.name_pattern %}
     <option value="{{ e.pk }}">{{ e.name_pattern }}</option>
-{% endif %}
+{% endif %} -->
 {% endfor %}

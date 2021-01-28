@@ -164,7 +164,7 @@ class CollectionViewSet(BaseViewSet):
     """
     Returns collections
     """
-    queryset = Collection.objects.all()
+    queryset = Collection.objects.all().order_by('label')
     serializer_class = CollectionSerializer
     renderer_classes = [JSONRenderer, BrowsableAPIRenderer, TemplateHTMLRenderer]
     template_name = 'metadb/includes/rest_form.html'
@@ -577,31 +577,6 @@ class LevelsVariableApiListView(APIView):
         return Response(data)
 
 
-class OrganizationApiListView(APIView):
-    """
-    Returns organizations
-    """
-    def get(self, request):
-
-        language = get_language()
-        items = Organization.objects.all()
-        data = {'data': []}
-        for item in items:
-            data['data'].append(
-                {
-                    'id': item.id,
-                    'url': item.url,
-                    'name': item.organizationi18n_set.filter(language__code=language).get().name,
-                }
-            )
-        data['headers'] = [
-            _('Id'),
-            _('URL'),
-            _('Name'),
-        ]
-
-        return Response(data)
-
 class OrganizationViewSet(BaseViewSet):
     """
     Returns organizations
@@ -648,6 +623,7 @@ class OrganizationViewSet(BaseViewSet):
     def __init__(self, *args, **kwargs):
         self.queryset = self.queryset.filter(
             language__code=get_language()).order_by('organizationi18n__name')
+
 
 class ParameterApiListView(APIView):
     """
