@@ -47,6 +47,7 @@ class OrganizationI18NSerializer(serializers.ModelSerializer):
         super().__init__(*args, **kwargs)
 
         self.fields['name'].label = _('Organization name')
+        self.fields['name'].style = {'template': 'metadb/custom_input.html'}
 
 
 class OrganizationSerializer(serializers.HyperlinkedModelSerializer):
@@ -61,6 +62,8 @@ class OrganizationSerializer(serializers.HyperlinkedModelSerializer):
         super().__init__(*args, **kwargs)
 
         self.fields['url'].label = _('Organization URL')
+        self.fields['url'].style = {'template': 'metadb/custom_input.html'}
+
 
     def to_representation(self, instance):
         action = self.context['request'].META.get('HTTP_ACTION')
