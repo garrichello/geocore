@@ -5,13 +5,13 @@ from django.utils.translation import get_language, gettext_lazy as _
 from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
 
-from .collection_forms import CollectionForm, CollectionI18NForm
+#from .collection_forms import CollectionForm, CollectionI18NForm
 
 from .models import Collection, Language
 
 class ConveyorBaseView(View):
-    form_class = CollectionForm
-    formi18n_class = CollectionI18NForm
+    form_class = None #CollectionForm
+    formi18n_class = None #CollectionI18NForm
     model = Collection
 
     def save_form(self, request, template_name, ctx, create=False):
