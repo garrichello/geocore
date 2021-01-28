@@ -50,21 +50,48 @@ class OrganizationI18NSerializer(serializers.ModelSerializer):
 
 
 class OrganizationSerializer(serializers.HyperlinkedModelSerializer):
-    organizationi18n = OrganizationI18NSerializer(source='organizationi18n_set')
+    organizationi18n = OrganizationI18NSerializer(source='organizationi18n_set', label='')
     dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:organization-detail',
-                                                   read_only=True)    
+                                                   read_only=True)
     class Meta:
         model = Organization
-        fields = ['id', 'dataurl', 'url', 'organizationi18n']
+        fields = ['id', 'dataurl', 'organizationi18n', 'url']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.fields['url'].label = _('Organization URL')
 
+    def to_representation(self, instance):
+        action = self.context['request'].META.get('HTTP_ACTION')
+        if action == 'options_list' or self.context['request'].GET.get('format') == 'html':
+            result = instance
+        else:
+            result = super().to_representation(instance)
+        return result
+
+    def create(self, validated_data):
+        organizationi18n_data = validated_data.pop('organizationi18n_set')
+        organization = Organization.objects.create(**validated_data)
+        for db_lang in Language.objects.all():
+            OrganizationI18N.objects.create(organization=organization,
+                                            language=db_lang,
+                                            **organizationi18n_data)
+
+        return organization
+
+    def update(self, instance, validated_data):
+        instance.url = validated_data.get('url', instance.url)
+        organizationi18n = instance.organizationi18n_set.filter(language__code=get_language()).get()
+        organizationi18n.name = validated_data['organizationi18n_set'].get('name', organizationi18n.name)
+        organizationi18n.save()
+        instance.save()
+
+        return instance
+
 
 class OrganizationRelatedField(ModifiedRelatedField):
-    
+
     def to_representation(self, value):
         data = OrganizationSerializer(value, context=self.context).data
         action = self.context['request'].META.get('HTTP_ACTION')
@@ -98,7 +125,7 @@ class CollectionI18NSerializer(serializers.ModelSerializer):
 
 class CollectionSerializer(serializers.HyperlinkedModelSerializer):
     collectioni18n = CollectionI18NSerializer(source='collectioni18n_set', label='')
-    qset = Organization.objects.all()
+    qset = Organization.objects.all().order_by('organizationi18n__name')
     organization = OrganizationRelatedField(queryset=qset)
     dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:collection-detail',
                                                    read_only=True)
