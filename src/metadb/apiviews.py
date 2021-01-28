@@ -14,99 +14,73 @@ from .models import *
 from .serializers import *
 
 
-class AccumulationModeApiListView(APIView):
-    """
-    Returns accumulatiob modes
-    """
-    def get(self, request):
 
-        items = AccumulationMode.objects.all()
-        data = {}
-        data['data'] = [
-            { 'id': item.id,
-              'name': item.name
-            } for item in items
-        ]
-        data['headers'] = [
-            _('Id'),
-            _('Name'),
-        ]
-
-        return Response(data)
-
-
-class CollectionViewSet(viewsets.ModelViewSet):
+class BaseViewSet(viewsets.ModelViewSet):
     """
-    Returns collections
+    Abstract base class for all REST API viewsets
     """
-    queryset = Collection.objects.all()
-    serializer_class = CollectionSerializer
+    queryset = None
+    serializer_class = None
     renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
     template_name = 'metadb/includes/rest_form.html'
-    list_url = 'metadb:collection-list'
-    action_url = 'metadb:collection-detail'
+    options_template_name = 'metadb/hr/dropdown_list_options.html'
+    list_url = ''
+    action_url = ''
 
     table_headers = [
-        ('head_none', 'Id'),
-        ('head_select', _('Collection label')),
-        ('head_select', _('Collection name')),
-        ('head_text', _('Collection description')),
-        ('head_select', _('Organization')),
-        ('head_text', _('Organization URL')),
-        ('head_text', _('Collection URL'))
     ]
 
     ctx_create = {
-        'form_class': 'js-collection-form',
+        'form_class': '',
         'method': 'POST',
-        'title': _("Create a new collection"),
-        'submit_name': _("Create collection"),
-        'script': 'metadb/collection_form.js',
-        'attributes': [
-            {'name': 'organizations-url',
-             'value': reverse_lazy('metadb:organization-list')}
-        ],
+        'title': _(''),
+        'submit_name': _(''),
+        'script': '',
+        'attributes': [],
         'style': {'template_pack': 'rest_framework/vertical/'}
     }
 
     ctx_update = {
-        'form_class': 'js-collection-form',
+        'form_class': '',
         'method': 'PUT',
-        'title': _("Update collection"),
-        'submit_name': _("Update collection"),
-        'script': 'metadb/collection_form.js',
-        'attributes': [
-            {'name': 'organizations-url',
-             'value': reverse_lazy('metadb:organization-list')}
-        ],
+        'title': _(''),
+        'submit_name': _(''),
+        'script': '',
+        'attributes': [],
         'style': {'template_pack': 'rest_framework/vertical/'}
     }
 
     ctx_delete = {
-        'form_class': 'js-collection-delete-form',
+        'form_class': '',
         'method': 'DELETE',
-        'title': _('Confirm collection delete'),
-        'text': _('Are you sure you want to delete the collection'),
-        'submit_name': _('Delete collection'),
+        'title': _(''),
+        'text': _(''),
+        'submit_name': _(''),
         'style': {'template_pack': 'rest_framework/vertical/'}
     }
 
     def list(self, request):
+        action = request.META.get('HTTP_ACTION')
         serializer = self.get_serializer(self.get_queryset(), many=True)
-        data = {'data': serializer.data}
-        if isinstance(request.accepted_renderer, JSONRenderer):
-            data['headers'] = self.table_headers
+        ctx = {'data': serializer.data}
 
-        return Response(data)
+        if action == 'options_list' or request.GET.get('format') == 'html':
+            result = render(request, self.options_template_name, ctx)
+        else:
+            if isinstance(request.accepted_renderer, JSONRenderer):
+                ctx['headers'] = self.table_headers
+            result = Response(ctx)
+
+        return result
 
     def retrieve(self, request, pk=None):
         action = request.META.get('HTTP_ACTION')
         if action == 'create':
             instance = None
-        elif action == 'update' or action == 'delete':
-            instance = self.get_queryset().get(pk=pk)
+        elif action == 'update' or action == 'delete' or pk is not None:
+            instance = self.get_queryset().filter(pk=pk).first()
         else:
-            raise MethodNotAllowed(action, detail='Unknown action: ' + action)
+            raise MethodNotAllowed(action, detail='Unknown action')
         serializer = self.get_serializer(instance)
 
         if isinstance(request.accepted_renderer, BrowsableAPIRenderer):
@@ -163,6 +137,86 @@ class CollectionViewSet(viewsets.ModelViewSet):
         instance.delete()
 
         return JsonResponse({'html_form': None, 'form_is_valid': True})
+
+
+class AccumulationModeApiListView(APIView):
+    """
+    Returns accumulatiob modes
+    """
+    def get(self, request):
+
+        items = AccumulationMode.objects.all()
+        data = {}
+        data['data'] = [
+            { 'id': item.id,
+              'name': item.name
+            } for item in items
+        ]
+        data['headers'] = [
+            _('Id'),
+            _('Name'),
+        ]
+
+        return Response(data)
+
+
+class CollectionViewSet(BaseViewSet):
+    """
+    Returns collections
+    """
+    queryset = Collection.objects.all()
+    serializer_class = CollectionSerializer
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer, TemplateHTMLRenderer]
+    template_name = 'metadb/includes/rest_form.html'
+    options_template_name = 'metadb/hr/dropdown_list_options.html'
+    list_url = 'metadb:collection-list'
+    action_url = 'metadb:collection-detail'
+
+    table_headers = [
+        ('head_none', 'Id'),
+        ('head_select', _('Collection label')),
+        ('head_select', _('Collection name')),
+        ('head_text', _('Collection description')),
+        ('head_select', _('Organization')),
+        ('head_text', _('Organization URL')),
+        ('head_text', _('Collection URL'))
+    ]
+
+    ctx_create = {
+        'form_class': 'js-collection-form',
+        'method': 'POST',
+        'title': _("Create a new collection"),
+        'submit_name': _("Create collection"),
+        'script': 'metadb/collection_form.js',
+        'attributes': [
+            {'name': 'organizations-url',
+             'value': reverse_lazy('metadb:organization-list')}
+        ],
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_update = {
+        'form_class': 'js-collection-form',
+        'method': 'PUT',
+        'title': _("Update collection"),
+        'submit_name': _("Update collection"),
+        'script': 'metadb/collection_form.js',
+        'attributes': [
+            {'name': 'organizations-url',
+             'value': reverse_lazy('metadb:organization-list')}
+        ],
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_delete = {
+        'form_class': 'js-collection-delete-form',
+        'method': 'DELETE',
+        'title': _('Confirm collection delete'),
+        'text': _('Are you sure you want to delete the collection'),
+        'submit_name': _('Delete collection'),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
 
 class ConveyorApiListView(APIView):
     """
@@ -548,15 +602,15 @@ class OrganizationApiListView(APIView):
 
         return Response(data)
 
-class OrganizationViewSet(viewsets.ModelViewSet):
+class OrganizationViewSet(BaseViewSet):
     """
     Returns organizations
     """
-    queryset = Organization.objects.filter(
-        organizationi18n__language__code='en').order_by('organizationi18n__name')
+    queryset = Organization.objects.all()
     serializer_class = OrganizationSerializer
     renderer_classes = [JSONRenderer, BrowsableAPIRenderer, TemplateHTMLRenderer]
     template_name = 'metadb/includes/rest_form.html'
+    options_template_name = 'metadb/hr/dropdown_list_options.html'
     list_url = 'metadb:organization-list'
     action_url = 'metadb:organization-detail'
 
@@ -591,87 +645,9 @@ class OrganizationViewSet(viewsets.ModelViewSet):
         'style': {'template_pack': 'rest_framework/vertical/'}
     }
 
-    def list(self, request):
-        action = request.META.get('HTTP_ACTION')
-        options_template_name = 'metadb/hr/dropdown_list_options.html'
-        serializer = self.get_serializer(self.get_queryset(), many=True)
-        ctx = {'data': serializer.data}
-
-        if action == 'options_list' or request.GET.get('format') == 'html':
-            result = render(request, options_template_name, ctx)
-        else:
-            if isinstance(request.accepted_renderer, JSONRenderer):
-                ctx['headers'] = self.table_headers
-            result = Response(ctx)
-
-        return result
-
-    def retrieve(self, request, pk=None):
-        action = request.META.get('HTTP_ACTION')
-        if action == 'create':
-            instance = None
-        elif action == 'update' or action == 'delete':
-            instance = self.get_queryset().get(pk=pk)
-        else:
-            raise MethodNotAllowed(action, detail='Unknown action: ' + action)
-        serializer = self.get_serializer(instance)
-
-        if isinstance(request.accepted_renderer, BrowsableAPIRenderer):
-            response = Response({'data': serializer.data})
-        else:
-            if action == 'create':
-                ctx = self.ctx_create
-                ctx['action'] = reverse(self.list_url)
-            elif action == 'update':
-                ctx = self.ctx_update
-                ctx['action'] = reverse(self.action_url, kwargs={'pk': pk})
-            elif action == 'delete':
-                ctx = self.ctx_delete
-                ctx['label'] = instance.label
-                ctx['action'] = reverse(self.action_url, kwargs={'pk': pk})
-            ctx['form'] = serializer
-            html_form = render_to_string(self.template_name, ctx, request)
-            response = JsonResponse({'html_form': html_form})
-
-        return response
-
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        is_valid = serializer.is_valid()
-        if is_valid:
-            serializer.save()
-
-        if isinstance(request.accepted_renderer, BrowsableAPIRenderer):
-            response = Response({'data': serializer.data})
-        else:
-            self.ctx_create['form'] = serializer
-            html_form = render_to_string(self.template_name, self.ctx_create, request)
-            response = JsonResponse({'html_form': html_form, 'form_is_valid': is_valid})
-
-        return response
-
-    def update(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = self.get_serializer(data=request.data, instance=instance)
-        is_valid = serializer.is_valid()
-        if is_valid:
-            serializer.save()
-
-        if isinstance(request.accepted_renderer, BrowsableAPIRenderer):
-            response = Response({'data': serializer.data})
-        else:
-            self.ctx_update['form'] = serializer
-            html_form = render_to_string(self.template_name, self.ctx_update, request)
-            response = JsonResponse({'html_form': html_form, 'form_is_valid': is_valid})
-
-        return response
-
-    def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
-        instance.delete()
-
-        return JsonResponse({'html_form': None, 'form_is_valid': True})
-
+    def __init__(self, *args, **kwargs):
+        self.queryset = self.queryset.filter(
+            language__code=get_language()).order_by('organizationi18n__name')
 
 class ParameterApiListView(APIView):
     """
