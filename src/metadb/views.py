@@ -44,9 +44,7 @@ class MainView(View):
              'create_url': app_prfx+'levels_variable_create',
              'update_url': app_prfx+'levels_variable_update', 'delete_url': app_prfx+'levels_variable_delete'},
 
-            {'title': _('Organization'), 'api_url': app_prfx+'organizations_api',
-             'create_url': app_prfx+'organization_create',
-             'update_url': app_prfx+'organization_update', 'delete_url': app_prfx+'organization_delete'},
+            {'title': _('Organization'), 'api_url': app_prfx+'organization-list'},
 
             {'title': _('Meteorological parameter'), 'api_url': app_prfx+'parameters_api',
              'create_url': app_prfx+'parameter_create',
