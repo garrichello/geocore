@@ -15,8 +15,8 @@ from .dataset_views import (DatasetCreateView, DatasetDeleteView,
 from .specpar_views import (SpecificParameterCreateView, SpecificParameterDeleteView,
                             SpecificParameterUpdateView)
 from .data_views import (DataCreateView, DataDeleteView, DataUpdateView)
-from .organization_views import (OrganizationCreateView, OrganizationUpdateView,
-                                 OrganizationDeleteView)
+##from .organization_views import (OrganizationCreateView, OrganizationUpdateView,
+##                                 OrganizationDeleteView)
 from .unit_views import (UnitCreateView, UnitUpdateView, UnitDeleteView)
 from .guielement_views import (GuiElementCreateView, GuiElementUpdateView,
                                GuiElementDeleteView)
@@ -40,7 +40,7 @@ urlpatterns = [
 
     # Form elements content loaders
 
-    path('collections/form/load-organizations/', load_organizations, name='form_load_organizations'),
+##    path('collections/form/load-organizations/', load_organizations, name='form_load_organizations'),
     path('datasets/form/load-collections/', load_collections, name='form_load_collections'),
     path('datasets/form/load-resolutions/', load_resolutions, name='form_load_resolutions'),
     path('datasets/form/load-scenarios/', load_scenarios, name='form_load_scenarios'),
@@ -149,10 +149,10 @@ urlpatterns = [
     path('levelsvariables/<int:pk>/update/', LevelsVariableUpdateView.as_view(), name='levels_variable_update'),
     path('levelsvariables/<int:pk>/delete/', LevelsVariableDeleteView.as_view(), name='levels_variable_delete'),
 
-    path('organization/create/', OrganizationCreateView.as_view(), name='organization_create'),
-#    path('organizations/api/', OrganizationApiListView.as_view(), name='organizations_api'),
-    path('organization/<int:pk>/update/', OrganizationUpdateView.as_view(), name='organization_update'),
-    path('organization/<int:pk>/delete/', OrganizationDeleteView.as_view(), name='organization_delete'),
+##    path('organization/create/', OrganizationCreateView.as_view(), name='organization_create'),
+##    path('organizations/api/', OrganizationApiListView.as_view(), name='organizations_api'),
+##    path('organization/<int:pk>/update/', OrganizationUpdateView.as_view(), name='organization_update'),
+##    path('organization/<int:pk>/delete/', OrganizationDeleteView.as_view(), name='organization_delete'),
 
 #    path('options/create/', OptionCreateView.as_view(), name='option_create'),
 #    path('options/<int:pk>/update/', OptionUpdateView.as_view(), name='option_update'),
