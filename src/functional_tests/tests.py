@@ -361,32 +361,32 @@ class FullScaleTest(unittest.TestCase):
 
         # John wants to select a collection, but finds out that the one he needs is absent.
         # So he decides to add it and clicks '+' button next to the Collection dropdown list.
-        self.wait_and_click_add_btn('/en/metadb/collections/create/')
+        self.wait_and_click_add_btn('/en/metadb/collections/-1/')
 
         # John adds a new collection
         self.add_collection()
-        self.wait_and_assert_select_after_submit(form_class, 'id_collection', 'JohnCol')
+        self.wait_and_assert_select_after_submit(form_class, 'id_collection_label', 'JohnCol')
 
         # John wants to select a resolution, but finds out that the needed one is absent
         # So he decides to add it and clicks '+' button next to the Resolution dropdown list.
-        self.wait_and_click_add_btn('/en/metadb/resolutions/create/')
+        self.wait_and_click_add_btn('/en/metadb/resolutions/-1/')
 
         self.add_2_elements('js-resolution-form', 'id_name', '0.13x0.13', 'id_subpath1', '0.13x0.13/')
-        self.wait_and_assert_select_after_submit(form_class, 'id_resolution', '0.13x0.13')
+        self.wait_and_assert_select_after_submit(form_class, 'id_resolution_name', '0.13x0.13')
 
         # John wants to select a scenario, but finds out that the needed one is absent
         # So he decides to add it and clicks '+' button next to the Scenario dropdown list.
-        self.wait_and_click_add_btn('/en/metadb/scenarios/create/')
+        self.wait_and_click_add_btn('/en/metadb/scenarios/-1/')
 
         self.add_2_elements('js-scenario-form', 'id_name', 'Specific', 'id_subpath0', 'specific/')
-        self.wait_and_assert_select_after_submit(form_class, 'id_scenario', 'Specific')
+        self.wait_and_assert_select_after_submit(form_class, 'id_scenario_name', 'Specific')
 
         # John wants to select a data kind, but finds out that the needed one is absent
         # So he decides to add it and clicks '+' button next to the Data kind dropdown list.
-        self.wait_and_click_add_btn('/en/metadb/datakinds/create/')
+        self.wait_and_click_add_btn('/en/metadb/datakinds/-1/')
 
         self.add_1_element('js-datakind-form', 'id_name', 'fractal')
-        self.wait_and_assert_select_after_submit(form_class, 'id_data_kind', 'fractal')
+        self.wait_and_assert_select_after_submit(form_class, 'id_data_kind_name', 'fractal')
 
         # John types 'JohnCol 0x13x0.13' into a textbox Description,
         self.wait_and_type(form_class, 'id_description', 'JohnCol 0x13x0.13')
@@ -397,16 +397,16 @@ class FullScaleTest(unittest.TestCase):
 
         # John wants to select a file type, but finds out that the needed one is absent
         # So he decides to add it and clicks '+' button next to the File type dropdown list.
-        self.wait_and_click_add_btn('/en/metadb/filetypes/create/')
+        self.wait_and_click_add_btn('/en/metadb/filetypes/-1/')
 
         self.add_1_element('js-filetype-form', 'id_name', 'hdf5')
-        self.wait_and_assert_select_after_submit(form_class, 'id_file_type', 'hdf5')
+        self.wait_and_assert_select_after_submit(form_class, 'id_file_type_name', 'hdf5')
 
         # When he clicks Create dataset modal window closes and Dataset table updates.
         dataset_form.submit()
 
         # John waits until the all enterd data apperars in the data table
-        WebDriverWait(self.browser, 10).until(
+        WebDriverWait(self.browser, 20).until(
             EC.presence_of_element_located((By.XPATH,
             '//table[@id="dataset"]/tbody/tr/td[contains(text(), "JohnCol")]'))
         )
