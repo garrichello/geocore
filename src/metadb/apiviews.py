@@ -415,15 +415,15 @@ class DatasetViewSet(BaseViewSet):
         'script': 'metadb/dataset_form.js',
         'attributes': [
             {'name': 'collections-url', 
-             'value': reverse_lazy('metadb:form_load_collections')},
+             'value': reverse_lazy('metadb:collection-list')},
             {'name': 'resolutions-url', 
-             'value': reverse_lazy('metadb:form_load_resolutions')},
+             'value': reverse_lazy('metadb:resolution-list')},
             {'name': 'scenarios-url', 
-             'value': reverse_lazy('metadb:form_load_scenarios')},
+             'value': reverse_lazy('metadb:scenario-list')},
             {'name': 'datakinds-url', 
-             'value': reverse_lazy('metadb:form_load_datakinds')},
+             'value': reverse_lazy('metadb:datakind-list')},
             {'name': 'filetypes-url', 
-             'value': reverse_lazy('metadb:form_load_filetypes')},
+             'value': reverse_lazy('metadb:filetype-list')},
         ],
         'style': {'template_pack': 'rest_framework/vertical/'}
     }
@@ -436,15 +436,15 @@ class DatasetViewSet(BaseViewSet):
         'script': 'metadb/dataset_form.js',
         'attributes': [
             {'name': 'collections-url', 
-             'value': reverse_lazy('metadb:form_load_collections')},
+             'value': reverse_lazy('metadb:collection-list')},
             {'name': 'resolutions-url', 
-             'value': reverse_lazy('metadb:form_load_resolutions')},
+             'value': reverse_lazy('metadb:resolution-list')},
             {'name': 'scenarios-url', 
-             'value': reverse_lazy('metadb:form_load_scenarios')},
+             'value': reverse_lazy('metadb:scenario-list')},
             {'name': 'datakinds-url', 
-             'value': reverse_lazy('metadb:form_load_datakinds')},
+             'value': reverse_lazy('metadb:datakind-list')},
             {'name': 'filetypes-url', 
-             'value': reverse_lazy('metadb:form_load_filetypes')},
+             'value': reverse_lazy('metadb:filetype-list')},
         ],
         'style': {'template_pack': 'rest_framework/vertical/'}
     }
@@ -502,16 +502,16 @@ class FileTypeViewSet(BaseViewSet):
     ctx_create = {
         'method': 'POST',
         'form_class': 'js-filetype-form',
-        'title': _("Create a new filetype"),
-        'submit_name': _("Create filetype"),
+        'title': _("Create a new file type"),
+        'submit_name': _("Create file type"),
         'style': {'template_pack': 'rest_framework/vertical/'}
     }
 
     ctx_update = {
         'method': 'PUT',
         'form_class': 'js-filetype-form',
-        'title': _("Update filetype"),
-        'submit_name': _("Update filetype"),
+        'title': _("Update file type"),
+        'submit_name': _("Update file type"),
         'style': {'template_pack': 'rest_framework/vertical/'}
     }
 
