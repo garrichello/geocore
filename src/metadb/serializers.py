@@ -403,7 +403,8 @@ class DatasetSerializer(serializers.HyperlinkedModelSerializer):
 
         # Is visible
         self.fields['is_visible'].label = _('Visible')
-#        self.fields['is_visible'].style = {'template': 'metadb/custom_input.html'}
+        self.fields['is_visible'].style = {'template': 'metadb/custom_checkbox.html'}
+        self.fields['is_visible'].initial = True
         # Collection label
         self.fields['collection_label'].data_url = reverse('metadb:collection-list')
         self.fields['collection_label'].label = _('Collection label')
@@ -448,23 +449,18 @@ class DatasetSerializer(serializers.HyperlinkedModelSerializer):
         return result
 
     def create(self, validated_data):
-        collectioni18n_data = validated_data.pop('collectioni18n_set')
-        collection = Collection.objects.create(**validated_data)
-        for db_lang in Language.objects.all():
-            CollectionI18N.objects.create(collection=collection,
-                                          language=db_lang,
-                                          **collectioni18n_data)
-
-        return collection
+        return Dataset.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
-        instance.label = validated_data.get('label', instance.label)
-        instance.url = validated_data.get('url', instance.url)
-        collectioni18n = instance.collectioni18n_set.filter(language__code=get_language()).get()
-        collectioni18n.name = validated_data['collectioni18n_set'].get('name', collectioni18n.name)
-        collectioni18n.description = validated_data['collectioni18n_set'].get('description', collectioni18n.description)
-        collectioni18n.save()
-        instance.organization = validated_data.get('organization', instance.organization)
+        instance.is_visible = validated_data.get('is_visible', instance.is_visible)
+        instance.collection = validated_data.get('collection', instance.collection)
+        instance.resolution = validated_data.get('resolution', instance.resolution)
+        instance.scenario = validated_data.get('scenario', instance.scenario)
+        instance.data_kind = validated_data.get('data_kind', instance.data_kind)
+        instance.file_type = validated_data.get('file_type', instance.file_type)
+        instance.time_start = validated_data.get('time_start', instance.time_start)
+        instance.time_end = validated_data.get('time_end', instance.time_end)
+        instance.description = validated_data.get('description', instance.description)
         instance.save()
 
         return instance
