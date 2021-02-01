@@ -1,0 +1,42 @@
+{% load i18n %}
+{% load rest_framework %}
+{% trans "No items to select." as no_items %}
+
+<div class="form-group {% if field.errors %}has-error{% endif %}">
+  {% if field.label %}
+    <label {% if style.hide_label %}class="sr-only"{% endif %}>
+      {{ field.label }}
+    </label>
+  {% endif %}
+
+  <div class="form-inline">
+    <select multiple {{ field.choices|yesno:",disabled" }} id="id_{{ field.name }}" class="form-control" name="{{ field.name }}" style="width: 91%">
+      {% for select in field.iter_options %}
+          {% if select.start_option_group %}
+            <optgroup label="{{ select.label }}">
+          {% elif select.end_option_group %}
+            </optgroup>
+          {% else %}
+            <option value="{{ select.value }}" {% if select.value|as_string in field.value|as_list_of_strings %}selected{% endif %} {% if select.disabled %}disabled{% endif %}>{{ select.display_text }}</option>
+          {% endif %}
+      {% empty %}
+          <option>{{ no_items }}</option>
+      {% endfor %}
+    </select>
+    {% if not field.no_add_btn %}
+    <button type="button" 
+            class="btn btn-primary js-add-button"
+            data-url="{{ field.data_url }}-1/">
+        <span class="glyphicon glyphicon-plus"></span>
+    </button>
+    {% endif %}
+  </div>
+
+    {% if field.errors %}
+      {% for error in field.errors %}<span class="help-block">{{ error }}</span>{% endfor %}
+    {% endif %}
+
+    {% if field.help_text %}
+      <span class="help-block">{{ field.help_text|safe }}</span>
+    {% endif %}
+</div>
