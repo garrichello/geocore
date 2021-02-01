@@ -83,29 +83,33 @@ dataset_columnsDefs = [
 ]
 
 var specpar_api_url = $('#tab-specpar').attr('api-data-url');
-var specpar_update_url = $('#tab-specpar').attr('update-data-url').split('99999');
-var specpar_delete_url = $('#tab-specpar').attr('delete-data-url').split('99999');
 
 specpar_columns = [
     { 'render': function() { return null; } }, // For checkboxes
     { 'render': function (data, type, row, meta) {
         return '<div><button type="button" class="btn btn-warning btn-sm js-update-specpar"'
-               + `data-url="${specpar_update_url[0]}${row.id}${specpar_update_url[1]}">`
+               + `data-url="${specpar_api_url}${row.id}">`
                + '<span class="glyphicon glyphicon-pencil"></span></button></div>&nbsp;'
                + '<div><button type="button" class="btn btn-danger btn-sm js-delete-specpar"'
-               + `data-url="${specpar_delete_url[0]}${row.id}${specpar_delete_url[1]}">`
+               + `data-url="${specpar_api_url}${row.id}">`
                + '<span class="glyphicon glyphicon-trash"></span></button></div>';
     } },  // for buttons
     { 'data': 'id' },
-    { 'data': 'is_visible' },
-    { 'data': 'parameter_name' },
-    { 'data': 'acc_mode_name' },
-    { 'data': 'time_step_name' },
-    { 'data': 'time_step_label' },
-    { 'data': 'time_step_subpath' },
-    { 'data': 'levels_group' },
-    { 'data': 'levels_group_desc' },
-    { 'data': 'levels' },
+    { 'data': 'parameter.is_visible' },
+    { 'data': 'parameter.parameteri18n.name' },
+    { 'data': 'parameter.accumulation_mode' },
+    { 'data': 'time_step.timestepi18n.name' },
+    { 'data': 'time_step.label' },
+    { 'data': 'time_step.subpath2' },
+    { 'data': 'levels_group.units.unitsi18n.name' },
+    { 'data': 'levels_group.description' },
+    { 'data': function(data, type, row, meta) {
+        levels = Array();
+        data.levels_group.levels.forEach(element => {
+            levels.push(element.leveli18n.name);
+        });
+        return levels.join();
+    } },
 ]
 
 specpar_columnsDefs = [
