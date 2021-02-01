@@ -8,6 +8,9 @@ $(function() {
         $.ajax( { 
             url: form.attr('levels-url'),  // load lvsnames
             type: 'get',
+            headers: {
+                'ACTION': 'options_list',
+            },
             success: function (data) {
                 $(modal_id+' #available_levels_list').html(data);
             }

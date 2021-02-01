@@ -1,4 +1,4 @@
-{% extends 'metadb/includes/simple_form.html' %}
+{% extends 'metadb/includes/rest_form.html' %}
 
 {% block addinclude %}
 <style>
@@ -24,7 +24,7 @@
   <div class="row" style="height:31;">
     <div class="col-md-12">
       <div>
-        <button type="button" class="btn btn-primary js-add-button" data-url={% url 'metadb:level_create' %}>
+        <button type="button" class="btn btn-primary js-add-button" data-url={% url 'metadb:level-detail' -1 %}>
           <span class="glyphicon glyphicon-plus"></span>
         </button>
       </div>
