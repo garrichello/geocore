@@ -599,63 +599,113 @@ class LanguageApiListView(APIView):
         return Response(data)
 
 
-class LevelApiListView(APIView):
+class LevelViewSet(BaseViewSet):
     """
     Returns levels
     """
-    def get(self, request):
+    queryset = Level.objects.all()
+    serializer_class = LevelSerializer
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer, TemplateHTMLRenderer]
+    template_name = 'metadb/includes/rest_form.html'
+    options_template_name = 'metadb/hr/dropdown_list_options.html'
+    list_url = 'metadb:level-list'
+    action_url = 'metadb:level-detail'
 
-        language = get_language()
-        items = Level.objects.all()
-        data = {'data': []}
-        for item in items:
-            data['data'].append(
-                {
-                    'id': item.id,
-                    'label': item.label,
-                    'name': item.leveli18n_set.filter(language__code=language).get().name,
-                }
-            )
-        data['headers'] = [
-            _('Id'),
-            _('Label'),
-            _('Name'),
-        ]
+    table_headers = [
+        _('Id'),
+        _('Label'),
+        _('Name'),
+    ]
 
-        return Response(data)
+    ctx_create = {
+        'method': 'POST',
+        'form_class': 'js-level-form',
+        'title': _("Create a new level"),
+        'submit_name': _("Create level"),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_update = {
+        'method': 'PUT',
+        'form_class': 'js-level-form',
+        'title': _("Update level"),
+        'submit_name': _("Update level"),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_delete = {
+        'method': 'DELETE',
+        'form_class': 'js-level-delete-form',
+        'title': _('Confirm level delete'),
+        'text': _('Are you sure you want to delete the level'),
+        'submit_name': _('Delete level'),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    def __init__(self, *args, **kwargs):
+        self.queryset = self.queryset.filter(
+            language__code=get_language()).order_by('leveli18n__name')
 
 
-class LevelsGroupApiListView(APIView):
+
+
+class LevelsGroupViewSet(BaseViewSet):
     """
     Returns levels groups
     """
-    def get(self, request):
+    queryset = LevelsGroup.objects.all()
+    serializer_class = LevelsGroupSerializer
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
+    template_name = 'metadb/includes/rest_form.html'
+    options_template_name = 'metadb/hr/dropdown_list_options.html'
+    list_url = 'metadb:levelsgroup-list'
+    action_url = 'metadb:levelsgroup-detail'
 
-        qlang = Q(language__code=get_language())
-        items = LevelsGroup.objects.all()
-        data = {'data': []}
-        for item in items:
-            data['data'].append(
-                {
-                    'id': item.id,
-                    'description': item.description,
-                    'unit': item.units.unitsi18n_set.filter(qlang).get().name,
-                    'levels': '; '.join(
-                        sorted([ 
-                            level.leveli18n_set.filter(qlang).get().name
-                            for level in item.level.all()
-                        ])
-                    ),
-                }
-            )
-        data['headers'] = [
+    table_headers = [
             _('Id'),
             _('Description'),
             _('Measurement unit'),
             _('Levels'),
-        ]
+    ]
 
-        return Response(data)
+    ctx_create = {
+        'method': 'POST',
+        'form_class': 'js-levels-group-form',
+        'title': _("Create a new levels group"),
+        'submit_name': _("Create levels group"),
+        'script': 'metadb/levelsgroup_form.js',
+        'attributes': [
+            {'name': 'units-url',
+             'value': reverse_lazy('metadb:units-list')},
+            {'name': 'levels-url',
+             'value': reverse_lazy('metadb:level-list')},
+        ],
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_update = {
+        'method': 'PUT',
+        'form_class': 'js-levels-group-form',
+        'title': _("Update levels_group"),
+        'submit_name': _("Update levels group"),
+        'script': 'metadb/levelsgroup_form.js',
+        'attributes': [
+            {'name': 'units-url',
+             'value': reverse_lazy('metadb:units-list')},
+            {'name': 'levels-url',
+             'value': reverse_lazy('metadb:level-list')},
+        ],
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_delete = {
+        'method': 'DELETE',
+        'form_class': 'js-levels-group-delete-form',
+        'title': _('Confirm levels group delete'),
+        'text': _('Are you sure you want to delete the levels group'),
+        'submit_name': _('Delete levels group'),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
 
 
 class LevelsVariableApiListView(APIView):
@@ -729,32 +779,63 @@ class OrganizationViewSet(BaseViewSet):
             language__code=get_language()).order_by('organizationi18n__name')
 
 
-class ParameterApiListView(APIView):
+class ParameterViewSet(BaseViewSet):
     """
-    Returns meteorological parameters
+    Returns parameters
     """
-    def get(self, request):
+    queryset = Parameter.objects.all()
+    serializer_class = ParameterSerializer
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer, TemplateHTMLRenderer]
+    template_name = 'metadb/includes/rest_form.html'
+    options_template_name = 'metadb/hr/dropdown_list_options.html'
+    list_url = 'metadb:parameter-list'
+    action_url = 'metadb:parameter-detail'
 
-        language = get_language()
-        items = Parameter.objects.all()
-        data = {'data': []}
-        for item in items:
-            data['data'].append(
-                {
-                    'id': item.id,
-                    'is_visible': item.is_visible,
-                    'accumulation_mode': item.accumulation_mode.name,
-                    'name': item.parameteri18n_set.filter(language__code=language).get().name,
-                }
-            )
-        data['headers'] = [
-            _('Id'),
-            _('Is visible'),
-            _('Accumulation mode'),
-            _('Name'),
-        ]
+    table_headers = [
+        _('Id'),
+        _('Is visible'),
+        _('Accumulation mode'),
+        _('Name'),
+    ]
 
-        return Response(data)
+    ctx_create = {
+        'method': 'POST',
+        'form_class': 'js-parameter-form',
+        'title': _("Create a new meteorological parameter"),
+        'submit_name': _("Create parameter"),
+        'script': 'metadb/parameter_form.js',
+        'attributes': [
+            {'name': 'accmodes-url',
+             'value': reverse_lazy('metadb:accumulationmode-list')}
+        ],
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_update = {
+        'method': 'PUT',
+        'form_class': 'js-parameter-form',
+        'title': _("Update meteorological parameter"),
+        'submit_name': _("Update parameter"),
+        'script': 'metadb/parameter_form.js',
+        'attributes': [
+            {'name': 'accmodes-url',
+             'value': reverse_lazy('metadb:accumulationmode-list')}
+        ],
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_delete = {
+        'method': 'DELETE',
+        'form_class': 'js-parameter-delete-form',
+        'title': _('Confirm meteorological parameter delete'),
+        'text': _('Are you sure you want to delete the parameter'),
+        'submit_name': _('Delete parameter'),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    def __init__(self, *args, **kwargs):
+        self.queryset = self.queryset.filter(
+            language__code=get_language()).order_by('parameteri18n__name')
 
 
 class PropertyApiListView(APIView):
@@ -920,55 +1001,6 @@ class ScenarioViewSet(BaseViewSet):
     }
 
 
-class SpecificParameterApiListView(APIView):
-    """
-    Returns specific parameters
-    """
-    def get(self, request):
-        language = get_language()
-
-        specpars = SpecificParameter.objects.all()
-        specpar_data = {}
-        specpar_data['data'] = [
-            {
-                'id': specpar.id,
-                'is_visible': specpar.parameter.is_visible,
-                'parameter_name': specpar.parameter.parameteri18n_set.filter(
-                    language__code=language).get().name,
-                'acc_mode_name': specpar.parameter.accumulation_mode.name,
-                'time_step_name': specpar.time_step.timestepi18n_set.filter(
-                    language__code='en').get().name,
-                'time_step_label': specpar.time_step.label,
-                'time_step_subpath': specpar.time_step.subpath2,
-                'levels_group': '{} [{}]'.format(
-                    specpar.levels_group.description,
-                    specpar.levels_group.units.unitsi18n_set.filter(
-                        language__code=language).get().name
-                ),
-                'levels_group_desc': specpar.levels_group.description,
-                'levels': '; '.join(
-                    sorted([ level.leveli18n_set.filter(language__code=language).get().name
-                        for level in specpar.levels_group.level.all() ])
-                    ),
-            }
-            for specpar in specpars
-        ]
-        specpar_data['headers'] = [
-            ('head_none', 'Id'),
-            ('head_none', _('Visible')),
-            ('head_select', _('Parameter')),
-            ('head_select', _('Accumulation mode')),
-            ('head_select', _('Time step')),
-            ('head_none', _('Time step label')),
-            ('head_none', _('Time step subpath')),
-            ('head_select', _('Levels group')),
-            ('head_text', _('Levels group description')),
-            ('head_text', _('Levels names')),
-        ]
-
-        return Response(specpar_data)
-
-
 class SpecificParameterViewSet(BaseViewSet):
     """
     Returns specific parameters
@@ -978,8 +1010,8 @@ class SpecificParameterViewSet(BaseViewSet):
     renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
     template_name = 'metadb/includes/rest_form.html'
     options_template_name = 'metadb/hr/dropdown_list_options.html'
-    list_url = 'metadb:specpar-list'
-    action_url = 'metadb:specpar-detail'
+    list_url = 'metadb:specificparameter-list'
+    action_url = 'metadb:specificparameter-detail'
 
     table_headers = [
         ('head_none', 'Id'),
@@ -989,7 +1021,7 @@ class SpecificParameterViewSet(BaseViewSet):
         ('head_select', _('Time step')),
         ('head_none', _('Time step label')),
         ('head_none', _('Time step subpath')),
-        ('head_select', _('Levels group')),
+        ('head_select', _('Levels group units')),
         ('head_text', _('Levels group description')),
         ('head_text', _('Levels names')),
     ]
@@ -1002,13 +1034,13 @@ class SpecificParameterViewSet(BaseViewSet):
         'script': 'metadb/specpar_form.js',
         'attributes': [
             {'name': 'parameter-url',
-             'value': reverse_lazy('metadb:form_load_parameters')},
+             'value': reverse_lazy('metadb:parameter-list')},
             {'name': 'time-step-url',
-             'value': reverse_lazy('metadb:form_load_timesteps')},
+             'value': reverse_lazy('metadb:timestep-list')},
             {'name': 'levels-group-url',
-             'value': reverse_lazy('metadb:form_load_lvsgroups')},
+             'value': reverse_lazy('metadb:levelsgroup-list')},
             {'name': 'lvsgroup-lvsnames-url',
-             'value': reverse_lazy('metadb:sp_form_load_lvsgroup_lvsnames')},
+             'value': reverse_lazy('metadb:levelsgroup-list')},
         ],
         'style': {'template_pack': 'rest_framework/vertical/'}
     }
@@ -1021,13 +1053,13 @@ class SpecificParameterViewSet(BaseViewSet):
         'script': 'metadb/specpar_form.js',
         'attributes': [
             {'name': 'parameter-url',
-             'value': reverse_lazy('metadb:form_load_parameters')},
+             'value': reverse_lazy('metadb:parameter-list')},
             {'name': 'time-step-url',
-             'value': reverse_lazy('metadb:form_load_timesteps')},
+             'value': reverse_lazy('metadb:timestep-list')},
             {'name': 'levels-group-url',
-             'value': reverse_lazy('metadb:form_load_lvsgroups')},
+             'value': reverse_lazy('metadb:levelsgroup-list')},
             {'name': 'lvsgroup-lvsnames-url',
-             'value': reverse_lazy('metadb:sp_form_load_lvsgroup_lvsnames')},
+             'value': reverse_lazy('metadb:levelsgroup-list')},
         ],
         'style': {'template_pack': 'rest_framework/vertical/'}
     }
@@ -1042,56 +1074,100 @@ class SpecificParameterViewSet(BaseViewSet):
     }
 
 
-class TimeStepApiListView(APIView):
+class TimeStepViewSet(BaseViewSet):
     """
-    Returns time steps
+    Returns time step
     """
-    def get(self, request):
+    queryset = TimeStep.objects.all()
+    serializer_class = TimeStepSerializer
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer, TemplateHTMLRenderer]
+    template_name = 'metadb/includes/rest_form.html'
+    options_template_name = 'metadb/hr/dropdown_list_options.html'
+    list_url = 'metadb:timestep-list'
+    action_url = 'metadb:timestep-detail'
 
-        language = get_language()
-        items = TimeStep.objects.all()
-        data = {'data': []}
-        for item in items:
-            data['data'].append(
-                {
-                    'id': item.id,
-                    'label': item.label,
-                    'subpath2': item.subpath2,
-                    'name': item.timestepi18n_set.filter(language__code=language).get().name,
-                }
-            )
-        data['headers'] = [
-            _('Id'), 
-            _('Label'),
-            _('Subpath'),
-            _('Name'),
-        ]
+    table_headers = [
+        _('Id'), 
+        _('Label'),
+        _('Subpath'),
+        _('Name'),
+    ]
 
-        return Response(data)
+    ctx_create = {
+        'method': 'POST',
+        'form_class': 'js-timestep-form',
+        'title': _("Create a new time step"),
+        'submit_name': _("Create time step"),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_update = {
+        'method': 'PUT',
+        'form_class': 'js-unit-form',
+        'title': _("Update measurement unit"),
+        'submit_name': _("Update units"),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_delete = {
+        'method': 'DELETE',
+        'form_class': 'js-timestep-delete-form',
+        'title': _('Confirm time step delete'),
+        'text': _('Are you sure you want to delete the time step'),
+        'submit_name': _('Delete time step'),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    def __init__(self, *args, **kwargs):
+        self.queryset = self.queryset.filter(
+            language__code=get_language()).order_by('timestepi18n__name')
 
 
-class UnitApiListView(APIView):
+class UnitsViewSet(BaseViewSet):
     """
     Returns units
     """
-    def get(self, request):
+    queryset = Units.objects.all()
+    serializer_class = UnitsSerializer
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer, TemplateHTMLRenderer]
+    template_name = 'metadb/includes/rest_form.html'
+    options_template_name = 'metadb/hr/dropdown_list_options.html'
+    list_url = 'metadb:units-list'
+    action_url = 'metadb:units-detail'
 
-        language = get_language()
-        items = Units.objects.all()
-        data = {'data': []}
-        for item in items:
-            data['data'].append(
-                {
-                    'id': item.id,
-                    'name': item.unitsi18n_set.filter(language__code=language).get().name,
-                }
-            )
-        data['headers'] = [
-            _('Id'),
-            _('Name'),
-        ]
+    table_headers = [
+        _('Id'),
+        _('Name'),
+    ]
 
-        return Response(data)
+    ctx_create = {
+        'method': 'POST',
+        'form_class': 'js-unit-form',
+        'title': _("Create a new measurement unit"),
+        'submit_name': _("Create unit"),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_update = {
+        'method': 'PUT',
+        'form_class': 'js-unit-form',
+        'title': _("Update measurement unit"),
+        'submit_name': _("Update units"),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_delete = {
+        'method': 'DELETE',
+        'form_class': 'js-unit-delete-form',
+        'title': _('Confirm measurement unit delete'),
+        'text': _('Are you sure you want to delete the unit'),
+        'submit_name': _('Delete units'),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    def __init__(self, *args, **kwargs):
+        self.queryset = self.queryset.filter(
+            language__code=get_language()).order_by('unitsi18n__name')
 
 
 class VariableApiListView(APIView):

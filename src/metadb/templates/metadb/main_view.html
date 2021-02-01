@@ -71,12 +71,10 @@
                 <table id='dataset' class="table table-hover table-bordered" width="100%"></table>
             </div>
             <div class="tab-pane" id="tab-specpar"
-                api-data-url="{% url 'metadb:specpars_api' %}"
-                update-data-url="{% url 'metadb:specpar_update' 99999 %}"
-                delete-data-url="{% url 'metadb:specpar_delete' 99999 %}">
+                api-data-url="{% url 'metadb:specificparameter-list' %}">
                 <button type="button"
                         class="btn btn-primary js-create"
-                        data-url="{% url 'metadb:specpar_create' %}">
+                        data-url="{% url 'metadb:specificparameter-detail' -1 %}">
                     <span class="glyphicon glyphicon-plus"></span> {% trans "Create" %}
                 </button>
                 <span>

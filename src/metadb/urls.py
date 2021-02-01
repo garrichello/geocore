@@ -39,6 +39,12 @@ router.register('datakinds', DataKindViewSet)
 router.register('filetypes', FileTypeViewSet)
 router.register('specificparameters', SpecificParameterViewSet)
 router.register('accumulationmodes', AccumulationModeViewSet)
+router.register('parameters', ParameterViewSet)
+router.register('units', UnitsViewSet)
+router.register('levelsgroups', LevelsGroupViewSet)
+router.register('levels', LevelViewSet)
+router.register('timesteps', TimeStepViewSet)
+
 
 
 app_name = 'metadb'
@@ -54,12 +60,12 @@ urlpatterns = [
 ##    path('datasets/form/load-scenarios/', load_scenarios, name='form_load_scenarios'),
 ##    path('datasets/form/load-datakinds/', load_datakinds, name='form_load_datakinds'),
 ##    path('datasets/form/load-filetypes/', load_filetypes, name='form_load_filetypes'),
-    path('specpars/form/load-parameters/', load_parameters, name='form_load_parameters'),
-    path('specpars/form/load-timesteps/', load_timesteps, name='form_load_timesteps'),
-    path('specpars/form/load-lvsgroups/', load_lvsgroups, name='form_load_lvsgroups'),
-    path('specpars/form/load-lvsnames/', load_lvsgroup_lvsnames, name='sp_form_load_lvsgroup_lvsnames'),
-    path('specpars/form/load-levels/', load_levels, name='form_load_levels'),
-    path('specpars/form/load-accmodes/', load_accmodes, name='form_load_accmodes'),
+##    path('specpars/form/load-parameters/', load_parameters, name='form_load_parameters'),
+##    path('specpars/form/load-timesteps/', load_timesteps, name='form_load_timesteps'),
+##    path('specpars/form/load-lvsgroups/', load_lvsgroups, name='form_load_lvsgroups'),
+##    path('specpars/form/load-lvsnames/', load_lvsgroup_lvsnames, name='sp_form_load_lvsgroup_lvsnames'),
+##    path('specpars/form/load-levels/', load_levels, name='form_load_levels'),
+##    path('specpars/form/load-accmodes/', load_accmodes, name='form_load_accmodes'),
     path('data/form/load-resolutions/', load_dataset_resolutions, name='form_load_dataset_resolutions'),
     path('data/form/load-scenarios/', load_dataset_scenarios, name='form_load_dataset_scenarios'),
     path('data/form/load-timesteps/', load_parameter_timesteps, name='form_load_parameter_timesteps'),
@@ -142,15 +148,15 @@ urlpatterns = [
     path('languages/<int:pk>/update/', LanguageUpdateView.as_view(), name='language_update'),
     path('languages/<int:pk>/delete/', LanguageDeleteView.as_view(), name='language_delete'),
 
-    path('levels/create/', LevelCreateView.as_view(), name='level_create'),
-    path('levels/api/', LevelApiListView.as_view(), name='levels_api'),
-    path('levels/<int:pk>/update/', LevelUpdateView.as_view(), name='level_update'),
-    path('levels/<int:pk>/delete/', LevelDeleteView.as_view(), name='level_delete'),
+##    path('levels/create/', LevelCreateView.as_view(), name='level_create'),
+##    path('levels/api/', LevelApiListView.as_view(), name='levels_api'),
+##    path('levels/<int:pk>/update/', LevelUpdateView.as_view(), name='level_update'),
+##   path('levels/<int:pk>/delete/', LevelDeleteView.as_view(), name='level_delete'),
 
-    path('levelsgroups/create/', LevelsGroupCreateView.as_view(), name='levels_group_create'),
-    path('levelsgroups/api/', LevelsGroupApiListView.as_view(), name='levels_groups_api'),
-    path('levelsgroups/<int:pk>/update/', LevelsGroupUpdateView.as_view(), name='levels_group_update'),
-    path('levelsgroups/<int:pk>/delete/', LevelsGroupDeleteView.as_view(), name='levels_group_delete'),
+##    path('levelsgroups/create/', LevelsGroupCreateView.as_view(), name='levels_group_create'),
+##    path('levelsgroups/api/', LevelsGroupApiListView.as_view(), name='levels_groups_api'),
+##    path('levelsgroups/<int:pk>/update/', LevelsGroupUpdateView.as_view(), name='levels_group_update'),
+##    path('levelsgroups/<int:pk>/delete/', LevelsGroupDeleteView.as_view(), name='levels_group_delete'),
 
     path('levelsvariables/create/', LevelsVariableCreateView.as_view(), name='levels_variable_create'),
     path('levelsvariables/api/', LevelsVariableApiListView.as_view(), name='levels_variables_api'),
@@ -174,10 +180,10 @@ urlpatterns = [
 #    path('optionvalues/<int:pk>/update/', OptionValueUpdateView.as_view(), name='option_value_update'),
 #    path('optionvalues/<int:pk>/delete/', OptionValueDeleteView.as_view(), name='option_value_delete'),
 
-    path('parameters/create/', ParameterCreateView.as_view(), name='parameter_create'),
-    path('parameters/api/', ParameterApiListView.as_view(), name='parameters_api'),
-    path('parameters/<int:pk>/update/', ParameterUpdateView.as_view(), name='parameter_update'),
-    path('parameters/<int:pk>/delete/', ParameterDeleteView.as_view(), name='parameter_delete'),
+##    path('parameters/create/', ParameterCreateView.as_view(), name='parameter_create'),
+##    path('parameters/api/', ParameterApiListView.as_view(), name='parameters_api'),
+##    path('parameters/<int:pk>/update/', ParameterUpdateView.as_view(), name='parameter_update'),
+##    path('parameters/<int:pk>/delete/', ParameterDeleteView.as_view(), name='parameter_delete'),
 
     path('properties/create/', PropertyCreateView.as_view(), name='property_create'),
     path('properties/api/', PropertyApiListView.as_view(), name='properties_api'),
@@ -225,15 +231,15 @@ urlpatterns = [
 #    path('tptypes/<int:pk>/update/', TimePeriodTypeUpdateView.as_view(), name='time_period_type_update'),
 #    path('tptypes/<int:pk>/delete/', TimePeriodTypeDeleteView.as_view(), name='time_period_type_delete'),
 
-    path('timesteps/create/', TimeStepCreateView.as_view(), name='time_step_create'),
-    path('timesteps/api/', TimeStepApiListView.as_view(), name='time_steps_api'),
-    path('timesteps/<int:pk>/update/', TimeStepUpdateView.as_view(), name='time_step_update'),
-    path('timesteps/<int:pk>/delete/', TimeStepDeleteView.as_view(), name='time_step_delete'),
+##    path('timesteps/create/', TimeStepCreateView.as_view(), name='time_step_create'),
+##    path('timesteps/api/', TimeStepApiListView.as_view(), name='time_steps_api'),
+##    path('timesteps/<int:pk>/update/', TimeStepUpdateView.as_view(), name='time_step_update'),
+##    path('timesteps/<int:pk>/delete/', TimeStepDeleteView.as_view(), name='time_step_delete'),
 
-    path('units/create/', UnitCreateView.as_view(), name='unit_create'),
-    path('units/api/', UnitApiListView.as_view(), name='units_api'),
-    path('units/<int:pk>/update/', UnitUpdateView.as_view(), name='unit_update'),
-    path('units/<int:pk>/delete/', UnitDeleteView.as_view(), name='unit_delete'),
+##    path('units/create/', UnitCreateView.as_view(), name='unit_create'),
+##    path('units/api/', UnitApiListView.as_view(), name='units_api'),
+##    path('units/<int:pk>/update/', UnitUpdateView.as_view(), name='unit_update'),
+##    path('units/<int:pk>/delete/', UnitDeleteView.as_view(), name='unit_delete'),
 
     path('variables/create/', VariableCreateView.as_view(), name='variable_create'),
     path('variables/api/', VariableApiListView.as_view(), name='variables_api'),
