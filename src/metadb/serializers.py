@@ -464,3 +464,180 @@ class DatasetSerializer(serializers.HyperlinkedModelSerializer):
         instance.save()
 
         return instance
+
+
+
+class AccumulationModeSerializer(serializers.HyperlinkedModelSerializer):
+    dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:accumulationmode-detail',
+                                                   read_only=True)
+    class Meta:
+        model = AccumulationMode
+        fields = ['id', 'dataurl', 'name']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['name'].label = _('Accumulation mode')
+        self.fields['name'].style = {'template': 'metadb/custom_input.html'}
+
+
+    def to_representation(self, instance):
+        action = self.context['request'].META.get('HTTP_ACTION')
+        if action == 'options_list' or self.context['request'].GET.get('format') == 'html':
+            result = instance
+        else:
+            result = super().to_representation(instance)
+        return result
+
+    def create(self, validated_data):
+        return AccumulationMode.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        instance.name = validated_data.get('name', instance.name)
+        instance.save()
+        return instance
+
+
+class AccumulationModeRelatedField(ModifiedRelatedField):
+
+    def to_representation(self, value):
+        data = AccumulationModeSerializer(value, context=self.context).data
+        action = self.context['request'].META.get('HTTP_ACTION')
+        result = data['name']
+        if action == 'update':
+            result = data.get('id', None)
+        return result
+
+    def to_internal_value(self, data):
+        return AccumulationMode.objects.get(pk=data)
+
+class ParameterI18NSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ParameterI18N
+        fields = ['id', 'name']
+
+    def to_representation(self, instance):
+        data = instance.filter(language__code=get_language()).get()
+        return super().to_representation(data)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['name'].label = _('Parameter name')
+        self.fields['name'].style = {'template': 'metadb/custom_input.html'}
+
+
+class ParameterSerializer(serializers.HyperlinkedModelSerializer):
+    dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:parameter-detail',
+                                                   read_only=True)
+    qset = AccumulationMode.objects.order_by('name')
+    accumulation_mode = AccumulationModeRelatedField(queryset=qset, source='accumulation_mode')
+    parameteri18n = ParameterI18NSerializer(source='parameteri18n_set', label='')
+
+
+    class Meta:
+        model = Parameter
+        fields = ['id', 'dataurl', 'is_visible', 'accumulation_mode', 'parameteri18n']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Is visible
+        self.fields['is_visible'].label = _('Visible')
+        self.fields['is_visible'].style = {'template': 'metadb/custom_checkbox.html'}
+        self.fields['is_visible'].initial = True
+        # Accumulation mode
+        self.fields['accumulation_mode'].data_url = reverse('metadb:accumulationmode-list')
+        self.fields['accumulation_mode'].label = _('Accumulation mode')
+        self.fields['accumulation_mode'].style = {'template': 'metadb/custom_select.html'}
+        self.fields['accumulation_mode'].widget_type = 'select'
+
+    def to_representation(self, instance):
+        action = self.context['request'].META.get('HTTP_ACTION')
+        if action == 'options_list' or self.context['request'].GET.get('format') == 'html':
+            result = instance
+        else:
+            result = super().to_representation(instance)
+        return result
+
+    def create(self, validated_data):
+        organizationi18n_data = validated_data.pop('organizationi18n_set')
+        organization = Organization.objects.create(**validated_data)
+        for db_lang in Language.objects.all():
+            OrganizationI18N.objects.create(organization=organization,
+                                            language=db_lang,
+                                            **organizationi18n_data)
+
+        return organization
+
+    def update(self, instance, validated_data):
+        instance.url = validated_data.get('url', instance.url)
+        organizationi18n = instance.organizationi18n_set.filter(language__code=get_language()).get()
+        organizationi18n.name = validated_data['organizationi18n_set'].get('name', organizationi18n.name)
+        organizationi18n.save()
+        instance.save()
+
+        return instance
+
+
+class OrganizationRelatedField(ModifiedRelatedField):
+
+    def to_representation(self, value):
+        data = OrganizationSerializer(value, context=self.context).data
+        action = self.context['request'].META.get('HTTP_ACTION')
+        result = data
+        if action == 'update':
+            result = result.get('id', None)
+        return result
+
+    def to_internal_value(self, data):
+        return Organization.objects.get(pk=data)
+
+
+class SpecificParameterSerializer(serializers.HyperlinkedModelSerializer):
+    dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:dataset-detail',
+                                                   read_only=True)
+#    qset = Parameter.objects.order_by('parameteri18n__name')
+#    parameter = CollectionRelatedField(queryset=qset, source='collection')
+#    qset = Scenario.objects.order_by('name')
+#    scenario_name = ScenarioRelatedField(queryset=qset, source='scenario')
+#    qset = Resolution.objects.order_by('name')
+#    resolution_name = ResolutionRelatedField(queryset=qset, source='resolution')
+#    qset = DataKind.objects.order_by('name')
+#    data_kind_name = DataKindRelatedField(queryset=qset, source='data_kind')
+#    qset = FileType.objects.order_by('name')
+#    file_type_name = FileTypeRelatedField(queryset=qset, source='file_type')
+    class Meta:
+        model = SpecificParameter
+        fields = ['id', 'dataurl', 'parameter', 'levels_group', 'time_step']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Is visible
+
+    def to_representation(self, instance):
+        action = self.context['request'].META.get('HTTP_ACTION')
+        if action == 'options_list' or self.context['request'].GET.get('format') == 'html':
+            result = instance
+        else:
+            result = super().to_representation(instance)
+        return result
+
+    def create(self, validated_data):
+        return Dataset.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        instance.is_visible = validated_data.get('is_visible', instance.is_visible)
+        instance.collection = validated_data.get('collection', instance.collection)
+        instance.resolution = validated_data.get('resolution', instance.resolution)
+        instance.scenario = validated_data.get('scenario', instance.scenario)
+        instance.data_kind = validated_data.get('data_kind', instance.data_kind)
+        instance.file_type = validated_data.get('file_type', instance.file_type)
+        instance.time_start = validated_data.get('time_start', instance.time_start)
+        instance.time_end = validated_data.get('time_end', instance.time_end)
+        instance.description = validated_data.get('description', instance.description)
+        instance.save()
+
+        return instance

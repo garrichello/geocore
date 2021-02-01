@@ -141,25 +141,48 @@ class BaseViewSet(viewsets.ModelViewSet):
         return JsonResponse({'html_form': None, 'form_is_valid': True})
 
 #==============================================================================================
-class AccumulationModeApiListView(APIView):
-    """
-    Returns accumulatiob modes
-    """
-    def get(self, request):
 
-        items = AccumulationMode.objects.all()
-        data = {}
-        data['data'] = [
-            { 'id': item.id,
-              'name': item.name
-            } for item in items
-        ]
-        data['headers'] = [
-            _('Id'),
-            _('Name'),
-        ]
+class AccumulationModeViewSet(BaseViewSet):
+    """
+    Returns accumulation modes
+    """
+    queryset = AccumulationMode.objects.all().order_by('name')
+    serializer_class = AccumulationModeSerializer
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer, TemplateHTMLRenderer]
+    template_name = 'metadb/includes/rest_form.html'
+    options_template_name = 'metadb/hr/dropdown_list_options.html'
+    list_url = 'metadb:accumulationmode-list'
+    action_url = 'metadb:accumulationmode-detail'
 
-        return Response(data)
+    table_headers = [
+        _('Id'),
+        _('Name'),
+    ]
+
+    ctx_create = {
+        'method': 'POST',
+        'form_class': 'js-accmode-form',
+        'title': _("Create a new accumulation mode"),
+        'submit_name': _("Create accumulation mode"),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_update = {
+        'method': 'PUT',
+        'form_class': 'js-accmode-form',
+        'title': _("Update accumulation mode"),
+        'submit_name': _("Update accumulation mode"),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_delete = {
+        'method': 'DELETE',
+        'form_class': 'js-accmode-delete-form',
+        'title': _('Confirm accumulation mode delete'),
+        'text': _('Are you sure you want to delete the accumulation mode'),
+        'submit_name': _('Delete accumulation mode'),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
 
 
 class CollectionViewSet(BaseViewSet):
@@ -944,6 +967,79 @@ class SpecificParameterApiListView(APIView):
         ]
 
         return Response(specpar_data)
+
+
+class SpecificParameterViewSet(BaseViewSet):
+    """
+    Returns specific parameters
+    """
+    queryset = SpecificParameter.objects.all()
+    serializer_class = SpecificParameterSerializer
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
+    template_name = 'metadb/includes/rest_form.html'
+    options_template_name = 'metadb/hr/dropdown_list_options.html'
+    list_url = 'metadb:specpar-list'
+    action_url = 'metadb:specpar-detail'
+
+    table_headers = [
+        ('head_none', 'Id'),
+        ('head_none', _('Visible')),
+        ('head_select', _('Parameter')),
+        ('head_select', _('Accumulation mode')),
+        ('head_select', _('Time step')),
+        ('head_none', _('Time step label')),
+        ('head_none', _('Time step subpath')),
+        ('head_select', _('Levels group')),
+        ('head_text', _('Levels group description')),
+        ('head_text', _('Levels names')),
+    ]
+
+    ctx_create = {
+        'method': 'POST',
+        'form_class': 'js-specpar-form',
+        'title': _("Create a new specific parameter"),
+        'submit_name': _("Create specific parameter"),
+        'script': 'metadb/specpar_form.js',
+        'attributes': [
+            {'name': 'parameter-url',
+             'value': reverse_lazy('metadb:form_load_parameters')},
+            {'name': 'time-step-url',
+             'value': reverse_lazy('metadb:form_load_timesteps')},
+            {'name': 'levels-group-url',
+             'value': reverse_lazy('metadb:form_load_lvsgroups')},
+            {'name': 'lvsgroup-lvsnames-url',
+             'value': reverse_lazy('metadb:sp_form_load_lvsgroup_lvsnames')},
+        ],
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_update = {
+        'method': 'PUT',
+        'form_class': 'js-specpar-update-form',
+        'title': _("Update specific parameter"),
+        'submit_name': _("Update specific parameter"),
+        'script': 'metadb/specpar_form.js',
+        'attributes': [
+            {'name': 'parameter-url',
+             'value': reverse_lazy('metadb:form_load_parameters')},
+            {'name': 'time-step-url',
+             'value': reverse_lazy('metadb:form_load_timesteps')},
+            {'name': 'levels-group-url',
+             'value': reverse_lazy('metadb:form_load_lvsgroups')},
+            {'name': 'lvsgroup-lvsnames-url',
+             'value': reverse_lazy('metadb:sp_form_load_lvsgroup_lvsnames')},
+        ],
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_delete = {
+        'method': 'DELETE',
+        'form_class': 'js-specpar-delete-form',
+        'title': _('Confirm specific parameter delete'),
+        'text': _('Are you sure you want to delete the specific parameter'),
+        'submit_name': _('Delete specific parameter'),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
 
 
 class TimeStepApiListView(APIView):

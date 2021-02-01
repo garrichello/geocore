@@ -37,6 +37,8 @@ router.register('scenarios', ScenarioViewSet)
 router.register('resolutions', ResolutionViewSet)
 router.register('datakinds', DataKindViewSet)
 router.register('filetypes', FileTypeViewSet)
+router.register('specificparameters', SpecificParameterViewSet)
+router.register('accumulationmodes', AccumulationModeViewSet)
 
 
 app_name = 'metadb'
@@ -47,11 +49,11 @@ urlpatterns = [
     # Form elements content loaders
 
 ##    path('collections/form/load-organizations/', load_organizations, name='form_load_organizations'),
-    path('datasets/form/load-collections/', load_collections, name='form_load_collections'),
-    path('datasets/form/load-resolutions/', load_resolutions, name='form_load_resolutions'),
-    path('datasets/form/load-scenarios/', load_scenarios, name='form_load_scenarios'),
-    path('datasets/form/load-datakinds/', load_datakinds, name='form_load_datakinds'),
-    path('datasets/form/load-filetypes/', load_filetypes, name='form_load_filetypes'),
+##    path('datasets/form/load-collections/', load_collections, name='form_load_collections'),
+##    path('datasets/form/load-resolutions/', load_resolutions, name='form_load_resolutions'),
+##    path('datasets/form/load-scenarios/', load_scenarios, name='form_load_scenarios'),
+##    path('datasets/form/load-datakinds/', load_datakinds, name='form_load_datakinds'),
+##    path('datasets/form/load-filetypes/', load_filetypes, name='form_load_filetypes'),
     path('specpars/form/load-parameters/', load_parameters, name='form_load_parameters'),
     path('specpars/form/load-timesteps/', load_timesteps, name='form_load_timesteps'),
     path('specpars/form/load-lvsgroups/', load_lvsgroups, name='form_load_lvsgroups'),
@@ -75,10 +77,10 @@ urlpatterns = [
 
     # CRUDs
 
-    path('accmodes/create/', AccumulationModeCreateView.as_view(), name='accmode_create'),
-    path('accmodes/api/', AccumulationModeApiListView.as_view(), name='accmodes_api'),
-    path('accmodes/<int:pk>/update/', AccumulationModeUpdateView.as_view(), name='accmode_update'),
-    path('accmodes/<int:pk>/delete/', AccumulationModeDeleteView.as_view(), name='accmode_delete'),
+##    path('accmodes/create/', AccumulationModeCreateView.as_view(), name='accmode_create'),
+##    path('accmodes/api/', AccumulationModeApiListView.as_view(), name='accmodes_api'),
+##    path('accmodes/<int:pk>/update/', AccumulationModeUpdateView.as_view(), name='accmode_update'),
+##    path('accmodes/<int:pk>/delete/', AccumulationModeDeleteView.as_view(), name='accmode_delete'),
 
 #    path('argumentsgroups/create/', ArgumentsGroupCreateView.as_view(), name='argsgroup_create'),
 #    path('argumentsgroups/<int:pk>/update/', ArgumentsGroupUpdateView.as_view(), name='argsgroup_update'),
@@ -214,10 +216,10 @@ urlpatterns = [
 ##    path('scenarios/<int:pk>/update/', ScenarioUpdateView.as_view(), name='scenario_update'),
 ##    path('scenarios/<int:pk>/delete/', ScenarioDeleteView.as_view(), name='scenario_delete'),
 
-    path('specpars/create/', SpecificParameterCreateView.as_view(), name='specpar_create'),
-    path('specpars/api/', SpecificParameterApiListView.as_view(), name='specpars_api'),
-    path('specpars/<int:pk>/update/', SpecificParameterUpdateView.as_view(), name='specpar_update'),
-    path('specpars/<int:pk>/delete/', SpecificParameterDeleteView.as_view(), name='specpar_delete'),
+##    path('specpars/create/', SpecificParameterCreateView.as_view(), name='specpar_create'),
+##    path('specpars/api/', SpecificParameterApiListView.as_view(), name='specpars_api'),
+##    path('specpars/<int:pk>/update/', SpecificParameterUpdateView.as_view(), name='specpar_update'),
+##    path('specpars/<int:pk>/delete/', SpecificParameterDeleteView.as_view(), name='specpar_delete'),
 
 #    path('tptypes/create/', TimePeriodTypeCreateView.as_view(), name='time_period_type_create'),
 #    path('tptypes/<int:pk>/update/', TimePeriodTypeUpdateView.as_view(), name='time_period_type_update'),
