@@ -296,10 +296,14 @@ class Language(models.Model):
 class Level(models.Model):
     label = models.CharField(unique=True, max_length=45)
     levels_group = models.ManyToManyField("LevelsGroup", through='LevelsGroupHasLevel', related_name='levels_group')
+    language = models.ManyToManyField('Language', through='LevelI18N')
 
     class Meta:
         managed = False
         db_table = 'level'
+
+    def __str__(self):
+        return self.leveli18n_set.filter(language__code=get_language()).get().name
 
 
 class LevelI18N(models.Model):
@@ -421,6 +425,9 @@ class Parameter(models.Model):
     class Meta:
         managed = False
         db_table = 'parameter'
+
+    def __str__(self):
+        return self.parameteri18n_set.filter(language__code=get_language()).get().name
 
 
 class ParameterI18N(models.Model):
@@ -600,6 +607,8 @@ class TimeStep(models.Model):
         managed = False
         db_table = 'time_step'
 
+    def __str__(self):
+        return self.label
 
 class TimeStepI18N(models.Model):
     time_step = models.ForeignKey('TimeStep', models.CASCADE)
@@ -622,6 +631,8 @@ class Units(models.Model):
         managed = False
         db_table = 'units'
 
+    def __str__(self):
+        return self.unitsi18n_set.filter(language__code=get_language()).get().name
 
 class UnitsI18N(models.Model):
     units = models.ForeignKey('Units', models.CASCADE)
