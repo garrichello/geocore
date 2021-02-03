@@ -86,7 +86,7 @@ $(function () {
                 if ($(modal_id+' #id_time_step option').length == 2) {
                     $(modal_id+' #id_time_step').prop("selectedIndex", 1);
                 }
-//                $(modal_id+' #id_time_step').trigger('change');
+                $(modal_id+' #id_time_step').trigger('change');
             }
         } );
     };
