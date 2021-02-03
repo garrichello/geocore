@@ -293,73 +293,121 @@ class ConveyorApiListView(APIView):
         return Response(data)
 
 
-class DataApiListView(APIView):
+class DataViewSet(BaseViewSet):
     """
-    Returns datasets
+    Returns data
     """
-    def get(self, request):
-        language = get_language()
-        qlang = Q(language__code=language)
-        datas = Data.objects.all()
-        data_data = {}
-        data_data['data'] = [
-            {
-                'id': data.id,
-                'is_visible': data.specific_parameter.parameter.is_visible,
-                'collection_label': data.dataset.collection.label,
-                'scenario_name': data.dataset.scenario.name,
-                'resolution_name': data.dataset.resolution.name,
-                'parameter_name': data.specific_parameter.parameter.parameteri18n_set.filter(qlang).get().name,
-                'time_step': data.specific_parameter.time_step.timestepi18n_set.filter(qlang).get().name,
-                'variable_name': data.variable.name,
-                'units_name': data.units.unitsi18n_set.filter(qlang).get().name,
-                'levels': '; '.join(
-                    sorted([ level.leveli18n_set.filter(qlang).get().name
-                    for level in data.specific_parameter.levels_group.level.all() ])
-                ),
-                'levels_group': '{} [{}]'.format(
-                    data.specific_parameter.levels_group.description,
-                    data.specific_parameter.levels_group.units.unitsi18n_set.filter(qlang).get().name
-                ),
-                'levels_variable':
-                    data.levels_variable.name if data.levels_variable else None,
-                'property_label': data.property.label,
-                'property_value': data.property_value.label,
-                'root_dir': data.root_dir.name,
-                'subpath0': data.dataset.scenario.subpath0,
-                'subpath1': data.dataset.resolution.subpath1,
-                'subpath2': data.specific_parameter.time_step.subpath2,
-                'file_pattern': data.file.name_pattern,
-                'scale': data.scale,
-                'offset': data.offset,
-            }
-            for data in datas
-        ]
-        data_data['headers'] = [
-            ('head_none', 'Id'),
-            ('head_none', _('Visible')),
-            ('head_select', _('Collection label')),
-            ('head_select', _('Resolution')),
-            ('head_select', _('Scenario')),
-            ('head_select', _('Parameter')),
-            ('head_select', _('Time step')),
-            ('head_text', _('Levels group')),
-            ('head_text', _('Levels names')),
-            ('head_none', _('Levels variable')),
-            ('head_select', _('Variable name')),
-            ('head_select', _('Units')),
-            ('head_none', _('Propery label')),
-            ('head_none', _('Property value')),
-            ('head_text', _('Root directory')),
-            ('head_text', _('Scenario subpath')),
-            ('head_text', _('Resolution subpath')),
-            ('head_text', _('Time step subpath')),
-            ('head_none', _('File name pattern')),
-            ('head_none', _('Scale')),
-            ('head_none', _('Offset')),
-        ]
+    queryset = Data.objects.all()
+    serializer_class = DataSerializer
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
+    template_name = 'metadb/includes/rest_form.html'
+    options_template_name = 'metadb/hr/dropdown_list_options.html'
+    list_url = 'metadb:data-list'
+    action_url = 'metadb:data-detail'
 
-        return Response(data_data)
+    table_headers = [
+        ('head_none', 'Id'),
+        ('head_none', _('Dataset visibility')),
+        ('head_select', _('Collection label')),
+        ('head_select', _('Resolution')),
+        ('head_select', _('Scenario')),
+        ('head_none', _('Parameter visibility')),
+        ('head_select', _('Parameter')),
+        ('head_select', _('Time step')),
+        ('head_text', _('Levels group')),
+        ('head_text', _('Levels names')),
+        ('head_none', _('Levels variable')),
+        ('head_select', _('Variable name')),
+        ('head_select', _('Units')),
+        ('head_none', _('Propery label')),
+        ('head_none', _('Property value')),
+        ('head_text', _('Root directory')),
+        ('head_text', _('Scenario subpath')),
+        ('head_text', _('Resolution subpath')),
+        ('head_text', _('Time step subpath')),
+        ('head_none', _('File name pattern')),
+        ('head_none', _('Scale')),
+        ('head_none', _('Offset')),
+    ]
+
+    ctx_create = {
+        'method': 'POST',
+        'form_class': 'js-data-form',
+        'title': _("Create a new data"),
+        'submit_name': _("Create data"),
+        'script': 'metadb/data_form.js',
+        'attributes': [
+            {'name': 'dataset-resolutions-url',
+             'value': reverse_lazy('metadb:form_load_dataset_resolutions')},
+            {'name': 'dataset-scenario-url',
+             'value': reverse_lazy('metadb:form_load_dataset_scenarios')},
+            {'name': 'parameter-timesteps-url',
+             'value': reverse_lazy('metadb:form_load_parameter_timesteps')},
+            {'name': 'parameter-lvsgroups-url',
+             'value': reverse_lazy('metadb:form_load_parameter_lvsgroups')},
+            {'name': 'lvsgroup-lvsnames-url',
+             'value': reverse_lazy('metadb:form_load_lvsgroup_lvsnames')},
+            {'name': 'levels-variables-url',
+             'value': reverse_lazy('metadb:form_load_lvsvars')},
+            {'name': 'variables-url',
+             'value': reverse_lazy('metadb:form_load_variables')},
+            {'name': 'units-url',
+             'value': reverse_lazy('metadb:form_load_units')},
+            {'name': 'properties-url',
+             'value': reverse_lazy('metadb:form_load_properties')},
+            {'name': 'property-values-url',
+             'value': reverse_lazy('metadb:form_load_propvals')},
+            {'name': 'root-dirs-url',
+             'value': reverse_lazy('metadb:form_load_rootdirs')},
+            {'name': 'files-url',
+             'value': reverse_lazy('metadb:form_load_files')},
+        ],
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_update = {
+        'method': 'PUT',
+        'form_class': 'js-data-form',
+        'title': _("Update data"),
+        'submit_name': _("Update data"),
+        'script': 'metadb/data_form.js',
+        'attributes': [
+            {'name': 'dataset-resolutions-url',
+             'value': reverse_lazy('metadb:form_load_dataset_resolutions')},
+            {'name': 'dataset-scenario-url',
+             'value': reverse_lazy('metadb:form_load_dataset_scenarios')},
+            {'name': 'parameter-timesteps-url',
+             'value': reverse_lazy('metadb:form_load_parameter_timesteps')},
+            {'name': 'parameter-lvsgroups-url',
+             'value': reverse_lazy('metadb:form_load_parameter_lvsgroups')},
+            {'name': 'parameter-lvsnames-url',
+             'value': reverse_lazy('metadb:form_load_lvsgroup_lvsnames')},
+            {'name': 'levels-variables-url',
+             'value': reverse_lazy('metadb:form_load_lvsvars')},
+            {'name': 'variables-url',
+             'value': reverse_lazy('metadb:form_load_variables')},
+            {'name': 'units-url',
+             'value': reverse_lazy('metadb:form_load_units')},
+            {'name': 'properties-url',
+             'value': reverse_lazy('metadb:form_load_properties')},
+            {'name': 'property-values-url',
+             'value': reverse_lazy('metadb:form_load_propvals')},
+            {'name': 'root-dirs-url',
+             'value': reverse_lazy('metadb:form_load_rootdirs')},
+            {'name': 'files-url',
+             'value': reverse_lazy('metadb:form_load_files')},
+        ],
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_delete = {
+        'method': 'DELETE',
+        'form_class': 'js-data-delete-form',
+        'title': _('Confirm data delete'),
+        'text': _('Are you sure you want to delete the data record'),
+        'submit_name': _('Delete data'),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
 
 
 class DataKindViewSet(BaseViewSet):
@@ -482,27 +530,48 @@ class DatasetViewSet(BaseViewSet):
     }
 
 
-class FileApiListView(APIView):
+class FileViewSet(BaseViewSet):
     """
-    Returns files patterns
+    Returns file name patterns
     """
-    def get(self, request):
+    queryset = File.objects.all()
+    serializer_class = FileSerializer
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer, TemplateHTMLRenderer]
+    template_name = 'metadb/includes/rest_form.html'
+    options_template_name = 'metadb/hr/dropdown_list_options.html'
+    list_url = 'metadb:file-list'
+    action_url = 'metadb:file-detail'
 
-        items = File.objects.all()
-        data = {'data': []}
-        for item in items:
-            data['data'].append(
-                {
-                    'id': item.id,
-                    'name_pattern': item.name_pattern,
-                }
-            )
-        data['headers'] = [
-            _('Id'),
-            _('File name pattern'),
-        ]
+    table_headers = [
+        _('Id'),
+        _('File name pattern'),
+    ]
 
-        return Response(data)
+    ctx_create = {
+        'method': 'POST',
+        'form_class': 'js-file-form',
+        'title': _("Create a new file"),
+        'submit_name': _("Create file"),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_update = {
+        'method': 'PUT',
+        'form_class': 'js-file-form',
+        'title': _("Update file"),
+        'submit_name': _("Update file"),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_delete = {
+        'method': 'DELETE',
+        'form_class': 'js-file-delete-form',
+        'title': _('Confirm file delete'),
+        'text': _('Are you sure you want to delete the file'),
+        'submit_name': _('Delete file'),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
 
 
 class FileTypeViewSet(BaseViewSet):
@@ -548,55 +617,92 @@ class FileTypeViewSet(BaseViewSet):
     }
 
 
-class GuiElementApiListView(APIView):
+class GuiElementViewSet(BaseViewSet):
     """
     Returns GUI elements
     """
-    def get(self, request):
+    queryset = GuiElement.objects.all().order_by('name')
+    serializer_class = GuiElementSerializer
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer, TemplateHTMLRenderer]
+    template_name = 'metadb/includes/rest_form.html'
+    options_template_name = 'metadb/hr/dropdown_list_options.html'
+    list_url = 'metadb:guielement-list'
+    action_url = 'metadb:guielement-detail'
 
-        language = get_language()
-        items = GuiElement.objects.all()
-        data = {'data': []}
-        for item in items:
-            data['data'].append(
-                {
-                    'id': item.id,
-                    'name': item.name,
-                    'caption': item.guielementi18n_set.filter(language__code=language).get().caption,
-                }
-            )
-        data['headers'] = [
-            _('Id'), 
-            _('Name'),
-            _('Caption'),
-        ]
+    table_headers = [
+        _('Id'), 
+        _('Name'),
+        _('Caption'),
+    ]
 
-        return Response(data)
+    ctx_create = {
+        'method': 'POST',
+        'form_class': 'js-gui-element-form',
+        'title': _("Create a new GUI element"),
+        'submit_name': _("Create GUI element"),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_update = {
+        'method': 'PUT',
+        'form_class': 'js-gui-element-form',
+        'title': _("Update GUI element"),
+        'submit_name': _("Update GUI element"),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_delete = {
+        'method': 'DELETE',
+        'form_class': 'js-gui-element-delete-form',
+        'title': _('Confirm GUI element delete'),
+        'text': _('Are you sure you want to delete the GUI element'),
+        'submit_name': _('Delete GUI element'),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
 
 
-class LanguageApiListView(APIView):
+class LanguageViewSet(BaseViewSet):
     """
     Returns languages
     """
-    def get(self, request):
+    queryset = Language.objects.all().order_by('name')
+    serializer_class = LanguageSerializer
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer, TemplateHTMLRenderer]
+    template_name = 'metadb/includes/rest_form.html'
+    options_template_name = 'metadb/hr/dropdown_list_options.html'
+    list_url = 'metadb:language-list'
+    action_url = 'metadb:language-detail'
 
-        items = Language.objects.all()
-        data = {'data': []}
-        for item in items:
-            data['data'].append(
-                {
-                    'id': item.id,
-                    'name': item.name,
-                    'code': item.code,
-                }
-            )
-        data['headers'] = [
-            _('Id'),
-            _('Name'),
-            _('Code'),
-        ]
+    table_headers = [
+        _('Id'), 
+        _('Name'),
+        _('Code'),
+    ]
 
-        return Response(data)
+    ctx_create = {
+        'method': 'POST',
+        'form_class': 'js-language-form',
+        'title': _("Create a new language"),
+        'submit_name': _("Create language"),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_update = {
+        'method': 'PUT',
+        'form_class': 'js-language-form',
+        'title': _("Update language"),
+        'submit_name': _("Update language"),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_delete = {
+        'method': 'DELETE',
+        'form_class': 'js-language-delete-form',
+        'title': _('Confirm language delete'),
+        'text': _('Are you sure you want to delete the language'),
+        'submit_name': _('Delete language'),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
 
 
 class LevelViewSet(BaseViewSet):
@@ -645,8 +751,6 @@ class LevelViewSet(BaseViewSet):
     def __init__(self, *args, **kwargs):
         self.queryset = self.queryset.filter(
             language__code=get_language()).order_by('leveli18n__name')
-
-
 
 
 class LevelsGroupViewSet(BaseViewSet):
@@ -708,27 +812,47 @@ class LevelsGroupViewSet(BaseViewSet):
     }
 
 
-class LevelsVariableApiListView(APIView):
+class LevelsVariableViewSet(BaseViewSet):
     """
     Returns levels variables
     """
-    def get(self, request):
+    queryset = Variable.objects.all()
+    serializer_class = LevelsVariableSerializer
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer, TemplateHTMLRenderer]
+    template_name = 'metadb/includes/rest_form.html'
+    options_template_name = 'metadb/hr/dropdown_list_options.html'
+    list_url = 'metadb:levelsvariable-list'
+    action_url = 'metadb:levelsvariable-detail'
 
-        items = Variable.objects.all()
-        data = {'data': []}
-        for item in items:
-            data['data'].append(
-                {
-                    'id': item.id,
-                    'name': item.name,
-                }
-            )
-        data['headers'] = [
+    table_headers = [
             _('Id'),
             _('Name'),
-        ]
+    ]
 
-        return Response(data)
+    ctx_create = {
+        'method': 'POST',
+        'form_class': 'js-levels-variable-form',
+        'title': _("Create a new levels variable"),
+        'submit_name': _("Create levels variable"),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_update = {
+        'method': 'PUT',
+        'form_class': 'js-levels-variable-form',
+        'title': _("Update levels variable"),
+        'submit_name': _("Update levels variable"),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_delete = {
+        'method': 'DELETE',
+        'form_class': 'js-levels-variable-delete-form',
+        'title': _('Confirm levels variable delete'),
+        'text': _('Are you sure you want to delete the levels variable'),
+        'submit_name': _('Delete levels variable'),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
 
 
 class OrganizationViewSet(BaseViewSet):
@@ -838,56 +962,102 @@ class ParameterViewSet(BaseViewSet):
             language__code=get_language()).order_by('parameteri18n__name')
 
 
-class PropertyApiListView(APIView):
+class PropertyViewSet(BaseViewSet):
     """
     Returns properties
     """
-    def get(self, request):
+    queryset = Property.objects.all()
+    serializer_class = PropertySerializer
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer, TemplateHTMLRenderer]
+    template_name = 'metadb/includes/rest_form.html'
+    options_template_name = 'metadb/hr/dropdown_list_options.html'
+    list_url = 'metadb:property-list'
+    action_url = 'metadb:property-detail'
 
-        language = get_language()
-        items = Property.objects.all()
-        data = {'data': []}
-        for item in items:
-            data['data'].append(
-                {
-                    'id': item.id,
-                    'label': item.label,
-                    'gui_element_name': item.gui_element.name,
-                    'gui_element_caption': item.gui_element.guielementi18n_set.filter(
-                        language__code=language).get().caption,
-                }
-            )
-        data['headers'] = [
-            _('Id'),
-            _('Label'),
-            _('GUI element name'),
-            _('GUI element caption'),
-        ]
+    table_headers = [
+        _('Id'),
+        _('Label'),
+        _('GUI element name'),
+        _('GUI element caption'),
+    ]
 
-        return Response(data)
+    ctx_create = {
+        'method': 'POST',
+        'form_class': 'js-property-form',
+        'title': _("Create a new property"),
+        'submit_name': _("Create property"),
+        'script': 'metadb/property_form.js',
+        'attributes': [
+            {'name': 'gui-element-url', 
+             'value': reverse_lazy('metadb:form_load_guielements')},
+        ],
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_update = {
+        'method': 'PUT',
+        'form_class': 'js-property-form',
+        'title': _("Update property"),
+        'submit_name': _("Update property"),
+        'script': 'metadb/property_form.js',
+        'attributes': [
+            {'name': 'gui-element-url', 
+             'value': reverse_lazy('metadb:form_load_guielements')},
+        ],
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_delete = {
+        'method': 'DELETE',
+        'form_class': 'js-property-delete-form',
+        'title': _('Confirm property delete'),
+        'text': _('Are you sure you want to delete the property'),
+        'submit_name': _('Delete property'),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
 
 
-class PropertyValueApiListView(APIView):
+class PropertyValueViewSet(BaseViewSet):
     """
-    Returns properties values
+    Returns property values
     """
-    def get(self, request):
+    queryset = PropertyValue.objects.all()
+    serializer_class = PropertyValueSerializer
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer, TemplateHTMLRenderer]
+    template_name = 'metadb/includes/rest_form.html'
+    options_template_name = 'metadb/hr/dropdown_list_options.html'
+    list_url = 'metadb:propertyvalue-list'
+    action_url = 'metadb:propertyvalue-detail'
 
-        items = PropertyValue.objects.all()
-        data = {'data': []}
-        for item in items:
-            data['data'].append(
-                {
-                    'id': item.id,
-                    'label': item.label,
-                }
-            )
-        data['headers'] = [
-            _('Id'),
-            _('Label'),
-        ]
+    table_headers = [
+        _('Id'),
+        _('Label'),
+    ]
 
-        return Response(data)
+    ctx_create = {
+        'method': 'POST',
+        'form_class': 'js-property-value-form',
+        'title': _("Create a new property value"),
+        'submit_name': _("Create property value"),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_update = {
+        'method': 'PUT',
+        'form_class': 'js-property-value-form',
+        'title': _("Update property value"),
+        'submit_name': _("Update property value"),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_delete = {
+        'method': 'DELETE',
+        'form_class': 'js-property-value-delete-form',
+        'title': _('Confirm property value delete'),
+        'text': _('Are you sure you want to delete the property value'),
+        'submit_name': _('Delete property value'),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
 
 
 class ResolutionViewSet(BaseViewSet):
@@ -934,27 +1104,47 @@ class ResolutionViewSet(BaseViewSet):
     }
 
 
-class RootDirApiListView(APIView):
+class RootDirViewSet(BaseViewSet):
     """
-    Returns root directories
+    Returns root directory names
     """
-    def get(self, request):
+    queryset = RootDir.objects.all()
+    serializer_class = RootDirSerializer
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer, TemplateHTMLRenderer]
+    template_name = 'metadb/includes/rest_form.html'
+    options_template_name = 'metadb/hr/dropdown_list_options.html'
+    list_url = 'metadb:rootdir-list'
+    action_url = 'metadb:rootdir-detail'
 
-        items = RootDir.objects.all()
-        data = {'data': []}
-        for item in items:
-            data['data'].append(
-                {
-                    'id': item.id,
-                    'name': item.name,
-                }
-            )
-        data['headers'] = [
+    table_headers = [
             _('Id'),
             _('Name'),
-        ]
+    ]
 
-        return Response(data)
+    ctx_create = {
+        'method': 'POST',
+        'form_class': 'js-root-dir-form',
+        'title': _("Create a new root directory"),
+        'submit_name': _("Create root directory"),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_update = {
+        'method': 'PUT',
+        'form_class': 'js-root-dir-form',
+        'title': _("Update root directory"),
+        'submit_name': _("Update root directory"),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_delete = {
+        'method': 'DELETE',
+        'form_class': 'js-root-dir-delete-form',
+        'title': _('Confirm root directory delete'),
+        'text': _('Are you sure you want to delete the root directory'),
+        'submit_name': _('Delete root directory'),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
 
 
 class ScenarioViewSet(BaseViewSet):
@@ -1170,24 +1360,44 @@ class UnitsViewSet(BaseViewSet):
             language__code=get_language()).order_by('unitsi18n__name')
 
 
-class VariableApiListView(APIView):
+class VariableViewSet(BaseViewSet):
     """
     Returns variables
     """
-    def get(self, request):
+    queryset = Variable.objects.all()
+    serializer_class = VariableSerializer
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer, TemplateHTMLRenderer]
+    template_name = 'metadb/includes/rest_form.html'
+    options_template_name = 'metadb/hr/dropdown_list_options.html'
+    list_url = 'metadb:variable-list'
+    action_url = 'metadb:variable-detail'
 
-        items = Variable.objects.all()
-        data = {'data': []}
-        for item in items:
-            data['data'].append(
-                {
-                    'id': item.id,
-                    'name': item.name,
-                }
-            )
-        data['headers'] = [
-            _('Id'), 
-            _('Name'),
-        ]
+    table_headers = [
+        _('Id'),
+        _('Name'),
+    ]
 
-        return Response(data)
+    ctx_create = {
+        'method': 'POST',
+        'form_class': 'js-variable-form',
+        'title': _("Create a new variable"),
+        'submit_name': _("Create variable"),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_update = {
+        'method': 'PUT',
+        'form_class': 'js-variable-form',
+        'title': _("Update variable"),
+        'submit_name': _("Update variable"),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_delete = {
+        'method': 'DELETE',
+        'form_class': 'js-variable-delete-form',
+        'title': _('Confirm variable delete'),
+        'text': _('Are you sure you want to delete the variable'),
+        'submit_name': _('Delete variable'),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
