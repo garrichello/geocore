@@ -147,6 +147,7 @@ class CollectionSerializer(serializers.HyperlinkedModelSerializer):
         self.fields['organization'].data_url = reverse('metadb:organization-list')
         self.fields['organization'].widget_type = 'select'
         self.fields['organization'].style = {'template': 'metadb/custom_select.html'}
+        self.fields['organization'].allow_blank = True
 
     def to_representation(self, instance):
         action = self.context['request'].META.get('HTTP_ACTION')
@@ -232,7 +233,7 @@ class ScenarioRelatedField(ModifiedRelatedField):
     def to_representation(self, value):
         data = ScenarioSerializer(value, context=self.context).data
         action = self.context['request'].META.get('HTTP_ACTION')
-        result = data['name']
+        result = data
         if action == 'update':
             result = data.get('id', None)
         return result
@@ -280,7 +281,7 @@ class ResolutionRelatedField(ModifiedRelatedField):
     def to_representation(self, value):
         data = ResolutionSerializer(value, context=self.context).data
         action = self.context['request'].META.get('HTTP_ACTION')
-        result = data['name']
+        result = data
         if action == 'update':
             result = data.get('id', None)
         return result
@@ -385,17 +386,17 @@ class DatasetSerializer(serializers.HyperlinkedModelSerializer):
     qset = Collection.objects.order_by('collectioni18n__name')
     collection_label = CollectionRelatedField(queryset=qset, source='collection')
     qset = Scenario.objects.order_by('name')
-    scenario_name = ScenarioRelatedField(queryset=qset, source='scenario')
+    scenario = ScenarioRelatedField(queryset=qset)
     qset = Resolution.objects.order_by('name')
-    resolution_name = ResolutionRelatedField(queryset=qset, source='resolution')
+    resolution = ResolutionRelatedField(queryset=qset)
     qset = DataKind.objects.order_by('name')
     data_kind_name = DataKindRelatedField(queryset=qset, source='data_kind')
     qset = FileType.objects.order_by('name')
     file_type_name = FileTypeRelatedField(queryset=qset, source='file_type')
     class Meta:
         model = Dataset
-        fields = ['id', 'dataurl', 'is_visible', 'collection_label', 'resolution_name',
-                  'scenario_name', 'data_kind_name', 'file_type_name', 'time_start',
+        fields = ['id', 'dataurl', 'is_visible', 'collection_label', 'resolution',
+                  'scenario', 'data_kind_name', 'file_type_name', 'time_start',
                   'time_end', 'description']
 
     def __init__(self, *args, **kwargs):
@@ -410,26 +411,31 @@ class DatasetSerializer(serializers.HyperlinkedModelSerializer):
         self.fields['collection_label'].label = _('Collection label')
         self.fields['collection_label'].style = {'template': 'metadb/custom_select.html'}
         self.fields['collection_label'].widget_type = 'select'
+        self.fields['collection_label'].allow_blank = True
         # Horizontal resolution
-        self.fields['resolution_name'].data_url = reverse('metadb:resolution-list')
-        self.fields['resolution_name'].label = _('Horizontal resolution')
-        self.fields['resolution_name'].style = {'template': 'metadb/custom_select.html'}
-        self.fields['resolution_name'].widget_type = 'select'
+        self.fields['resolution'].data_url = reverse('metadb:resolution-list')
+        self.fields['resolution'].label = _('Horizontal resolution')
+        self.fields['resolution'].style = {'template': 'metadb/custom_select.html'}
+        self.fields['resolution'].widget_type = 'select'
+        self.fields['resolution'].allow_blank = True
         # Scenario
-        self.fields['scenario_name'].data_url = reverse('metadb:scenario-list')
-        self.fields['scenario_name'].label = _('Scenario')
-        self.fields['scenario_name'].style = {'template': 'metadb/custom_select.html'}
-        self.fields['scenario_name'].widget_type = 'select'
+        self.fields['scenario'].data_url = reverse('metadb:scenario-list')
+        self.fields['scenario'].label = _('Scenario')
+        self.fields['scenario'].style = {'template': 'metadb/custom_select.html'}
+        self.fields['scenario'].widget_type = 'select'
+        self.fields['scenario'].allow_blank = True
         # Data kind
         self.fields['data_kind_name'].data_url = reverse('metadb:datakind-list')
         self.fields['data_kind_name'].label = _('Data kind')
         self.fields['data_kind_name'].style = {'template': 'metadb/custom_select.html'}
         self.fields['data_kind_name'].widget_type = 'select'
+        self.fields['data_kind_name'].allow_blank = True
         # File type
         self.fields['file_type_name'].data_url = reverse('metadb:filetype-list')
         self.fields['file_type_name'].label = _('File type')
         self.fields['file_type_name'].style = {'template': 'metadb/custom_select.html'}
         self.fields['file_type_name'].widget_type = 'select'
+        self.fields['file_type_name'].allow_blank = True
         # Time start
         self.fields['time_start'].label = _('Start date')
         self.fields['time_start'].style = {'template': 'metadb/custom_input.html'}
@@ -465,6 +471,19 @@ class DatasetSerializer(serializers.HyperlinkedModelSerializer):
 
         return instance
 
+
+class DatasetRelatedField(ModifiedRelatedField):
+
+    def to_representation(self, value):
+        data = DatasetSerializer(value, context=self.context).data
+        action = self.context['request'].META.get('HTTP_ACTION')
+        result = data
+        if action == 'update':
+            result = data.get('id', None)
+        return result
+
+    def to_internal_value(self, data):
+        return Dataset.objects.get(pk=data)
 
 class AccumulationModeSerializer(serializers.HyperlinkedModelSerializer):
     dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:accumulationmode-detail',
@@ -536,7 +555,7 @@ class ParameterSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Parameter
-        fields = ['id', 'dataurl', 'is_visible', 'accumulation_mode', 'parameteri18n']
+        fields = ['id', 'dataurl', 'is_visible', 'parameteri18n', 'accumulation_mode']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -827,7 +846,7 @@ class TimeStepSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = TimeStep
-        fields = ['id', 'dataurl', 'label', 'timestepi18n', 'subpath2']
+        fields = ['id', 'dataurl', 'label', 'subpath2', 'timestepi18n']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -853,7 +872,7 @@ class TimeStepSerializer(serializers.HyperlinkedModelSerializer):
                                         language=db_lang,
                                         **timestepi18n_data)
 
-        return timestep
+        return timesteps
 
     def update(self, instance, validated_data):
         timestepi18n = instance.timestepi18n_set.filter(language__code=get_language()).get()
@@ -878,7 +897,6 @@ class TimeStepRelatedField(ModifiedRelatedField):
         return TimeStep.objects.get(pk=data)
 
 
-
 class SpecificParameterSerializer(serializers.HyperlinkedModelSerializer):
     dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:specificparameter-detail',
                                                    read_only=True)
@@ -891,7 +909,7 @@ class SpecificParameterSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = SpecificParameter
-        fields = ['id', 'dataurl', 'parameter', 'levels_group', 'time_step']
+        fields = ['id', 'dataurl', 'parameter', 'time_step', 'levels_group']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -901,16 +919,19 @@ class SpecificParameterSerializer(serializers.HyperlinkedModelSerializer):
         self.fields['parameter'].label = _('Meteorological parameter')
         self.fields['parameter'].style = {'template': 'metadb/custom_select.html'}
         self.fields['parameter'].widget_type = 'select'
-        # Parameter
+        self.fields['parameter'].allow_blank = True
+        # Levels group
         self.fields['levels_group'].data_url = reverse('metadb:levelsgroup-list')
         self.fields['levels_group'].label = _('Levels group')
         self.fields['levels_group'].style = {'template': 'metadb/custom_select.html'}
         self.fields['levels_group'].widget_type = 'select'
-        # Parameter
+        self.fields['levels_group'].allow_blank = True
+        # Time step
         self.fields['time_step'].data_url = reverse('metadb:timestep-list')
         self.fields['time_step'].label = _('Time step')
         self.fields['time_step'].style = {'template': 'metadb/custom_select.html'}
         self.fields['time_step'].widget_type = 'select'
+        self.fields['time_step'].allow_blank = True
 
 
     def to_representation(self, instance):
@@ -922,18 +943,559 @@ class SpecificParameterSerializer(serializers.HyperlinkedModelSerializer):
         return result
 
     def create(self, validated_data):
-        return Dataset.objects.create(**validated_data)
+        return SpecificParameter.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
-        instance.is_visible = validated_data.get('is_visible', instance.is_visible)
-        instance.collection = validated_data.get('collection', instance.collection)
-        instance.resolution = validated_data.get('resolution', instance.resolution)
-        instance.scenario = validated_data.get('scenario', instance.scenario)
-        instance.data_kind = validated_data.get('data_kind', instance.data_kind)
-        instance.file_type = validated_data.get('file_type', instance.file_type)
-        instance.time_start = validated_data.get('time_start', instance.time_start)
-        instance.time_end = validated_data.get('time_end', instance.time_end)
-        instance.description = validated_data.get('description', instance.description)
+        instance.parameter = validated_data.get('parameter', instance.parameter)
+        instance.levels_group = validated_data.get('levels_group', instance.levels_group)
+        instance.time_step = validated_data.get('time_step', instance.time_step)
         instance.save()
 
         return instance
+
+class SpecificParameterRelatedField(ModifiedRelatedField):
+
+    def to_representation(self, value):
+        data = SpecificParameterSerializer(value, context=self.context).data
+        action = self.context['request'].META.get('HTTP_ACTION')
+        result = data
+        if action == 'update':
+            result = result.get('id', None)
+        return result
+
+    def to_internal_value(self, data):
+        return SpecificParameter.objects.get(pk=data)
+
+
+
+
+class GuiElementI18NSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = GuiElementI18N
+        fields = ['id', 'caption']
+
+    def to_representation(self, instance):
+        data = instance.filter(language__code=get_language()).get()
+        return super().to_representation(data)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['caption'].label = _('GUI element caption')
+        self.fields['caption'].style = {'template': 'metadb/custom_input.html'}
+
+
+class GuiElementSerializer(serializers.HyperlinkedModelSerializer):
+    dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:guielement-detail',
+                                                   read_only=True)
+    guielementi18n = GuiElementI18NSerializer(source='guielementi18n_set', label='')
+
+    class Meta:
+        model = GuiElement
+        fields = ['id', 'dataurl', 'name', 'guielementi18n']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['name'].label = _('GUI element name')
+        self.fields['name'].style = {'template': 'metadb/custom_input.html'}
+
+    def to_representation(self, instance):
+        action = self.context['request'].META.get('HTTP_ACTION')
+        if action == 'options_list' or self.context['request'].GET.get('format') == 'html':
+            result = instance
+        else:
+            result = super().to_representation(instance)
+        return result
+
+    def create(self, validated_data):
+        guielementi18n_data = validated_data.pop('guielementi18n_set')
+        guielement = GuiElement.objects.create(**validated_data)
+        for db_lang in Language.objects.all():
+            GuiElementI18N.objects.create(gui_element=guielement,
+                                          language=db_lang,
+                                          **guielementi18n_data)
+
+        return guielement
+
+    def update(self, instance, validated_data):
+        guielementi18n = instance.guielementi18n_set.filter(language__code=get_language()).get()
+        guielementi18n.caption = validated_data['guielementi18n_set'].get('caption', guielementi18n.caption)
+        guielementi18n.save()
+        instance.name = validated_data.get('name', instance.name)
+        instance.save()
+
+        return instance
+
+
+class GuiElementRelatedField(ModifiedRelatedField):
+
+    def to_representation(self, value):
+        data = GuiElementSerializer(value, context=self.context).data
+        action = self.context['request'].META.get('HTTP_ACTION')
+        result = data
+        if action == 'update':
+            result = result.get('id', None)
+        return result
+
+    def to_internal_value(self, data):
+        return GuiElement.objects.get(pk=data)
+
+
+class PropertySerializer(serializers.HyperlinkedModelSerializer):
+    dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:property-detail',
+                                                   read_only=True)
+    qset = GuiElement.objects.order_by('name')
+    gui_element = GuiElementRelatedField(queryset=qset)
+
+    class Meta:
+        model = Property
+        fields = ['id', 'dataurl', 'label', 'gui_element']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Label
+        self.fields['label'].label = _('Property label')
+        self.fields['label'].style = {'template': 'metadb/custom_input.html'}
+        # GUI element
+        self.fields['gui_element'].data_url = reverse('metadb:guielement-list')
+        self.fields['gui_element'].label = _('GUI element name')
+        self.fields['gui_element'].style = {'template': 'metadb/custom_select.html'}
+
+    def to_representation(self, instance):
+        action = self.context['request'].META.get('HTTP_ACTION')
+        if action == 'options_list' or self.context['request'].GET.get('format') == 'html':
+            result = instance
+        else:
+            result = super().to_representation(instance)
+        return result
+
+    def create(self, validated_data):
+        return Property.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        instance.label = validated_data.get('label', instance.label)
+        instance.gui_element = validated_data.get('gui_element', instance.gui_element)
+        instance.save()
+
+        return instance
+
+
+class PropertyRelatedField(ModifiedRelatedField):
+
+    def to_representation(self, value):
+        data = PropertySerializer(value, context=self.context).data
+        action = self.context['request'].META.get('HTTP_ACTION')
+        result = data
+        if action == 'update':
+            result = result.get('id', None)
+        return result
+
+    def to_internal_value(self, data):
+        return Property.objects.get(pk=data)
+
+
+class PropertyValueSerializer(serializers.HyperlinkedModelSerializer):
+    dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:propertyvalue-detail',
+                                                   read_only=True)
+    class Meta:
+        model = Property
+        fields = ['id', 'dataurl', 'label']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Label
+        self.fields['label'].label = _('Property value label')
+        self.fields['label'].style = {'template': 'metadb/custom_input.html'}
+
+    def to_representation(self, instance):
+        action = self.context['request'].META.get('HTTP_ACTION')
+        if action == 'options_list' or self.context['request'].GET.get('format') == 'html':
+            result = instance
+        else:
+            result = super().to_representation(instance)
+        return result
+
+    def create(self, validated_data):
+        return Property.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        instance.label = validated_data.get('label', instance.label)
+        instance.save()
+
+        return instance
+
+
+class PropertyValueRelatedField(ModifiedRelatedField):
+
+    def to_representation(self, value):
+        data = PropertyValueSerializer(value, context=self.context).data
+        action = self.context['request'].META.get('HTTP_ACTION')
+        result = data
+        if action == 'update':
+            result = result.get('id', None)
+        return result
+
+    def to_internal_value(self, data):
+        return PropertyValue.objects.get(pk=data)
+
+
+class VariableSerializer(serializers.HyperlinkedModelSerializer):
+    dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:variable-detail',
+                                                   read_only=True)
+    class Meta:
+        model = Variable
+        fields = ['id', 'dataurl', 'name']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Label
+        self.fields['name'].label = _('Variable name')
+        self.fields['name'].style = {'template': 'metadb/custom_input.html'}
+
+    def to_representation(self, instance):
+        action = self.context['request'].META.get('HTTP_ACTION')
+        if action == 'options_list' or self.context['request'].GET.get('format') == 'html':
+            result = instance
+        else:
+            result = super().to_representation(instance)
+        return result
+
+    def create(self, validated_data):
+        return Variable.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        instance.name = validated_data.get('name', instance.name)
+        instance.save()
+
+        return instance
+
+
+class VariableRelatedField(ModifiedRelatedField):
+
+    def to_representation(self, value):
+        data = VariableSerializer(value, context=self.context).data
+        action = self.context['request'].META.get('HTTP_ACTION')
+        result = data
+        if action == 'update':
+            result = result.get('id', None)
+        return result
+
+    def to_internal_value(self, data):
+        return Variable.objects.get(pk=data)
+
+
+class LevelsVariableSerializer(serializers.HyperlinkedModelSerializer):
+    dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:levelsvariable-detail',
+                                                   read_only=True)
+    class Meta:
+        model = Variable
+        fields = ['id', 'dataurl', 'name']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Label
+        self.fields['name'].label = _('Levels variable name')
+        self.fields['name'].style = {'template': 'metadb/custom_input.html'}
+
+    def to_representation(self, instance):
+        action = self.context['request'].META.get('HTTP_ACTION')
+        if action == 'options_list' or self.context['request'].GET.get('format') == 'html':
+            result = instance
+        else:
+            result = super().to_representation(instance)
+        return result
+
+    def create(self, validated_data):
+        return Variable.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        instance.name = validated_data.get('name', instance.name)
+        instance.save()
+
+        return instance
+
+
+class LevelsVariableRelatedField(ModifiedRelatedField):
+
+    def to_representation(self, value):
+        data = VariableSerializer(value, context=self.context).data
+        action = self.context['request'].META.get('HTTP_ACTION')
+        result = data
+        if action == 'update':
+            result = result.get('id', None)
+        return result
+
+    def to_internal_value(self, data):
+        return Variable.objects.get(pk=data)
+
+
+class FileSerializer(serializers.HyperlinkedModelSerializer):
+    dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:file-detail',
+                                                   read_only=True)
+    class Meta:
+        model = File
+        fields = ['id', 'dataurl', 'name_pattern']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Label
+        self.fields['name_pattern'].label = _('File name pattern')
+        self.fields['name_pattern'].style = {'template': 'metadb/custom_input.html'}
+
+    def to_representation(self, instance):
+        action = self.context['request'].META.get('HTTP_ACTION')
+        if action == 'options_list' or self.context['request'].GET.get('format') == 'html':
+            result = instance
+        else:
+            result = super().to_representation(instance)
+        return result
+
+    def create(self, validated_data):
+        return File.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        instance.name_pattern = validated_data.get('name_pattern', instance.name_pattern)
+        instance.save()
+
+        return instance
+
+
+class FileRelatedField(ModifiedRelatedField):
+
+    def to_representation(self, value):
+        data = FileSerializer(value, context=self.context).data
+        action = self.context['request'].META.get('HTTP_ACTION')
+        result = data
+        if action == 'update':
+            result = result.get('id', None)
+        return result
+
+    def to_internal_value(self, data):
+        return File.objects.get(pk=data)
+
+
+class RootDirSerializer(serializers.HyperlinkedModelSerializer):
+    dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:rootdir-detail',
+                                                   read_only=True)
+    class Meta:
+        model = RootDir
+        fields = ['id', 'dataurl', 'name']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Label
+        self.fields['name'].label = _('Root directory name')
+        self.fields['name'].style = {'template': 'metadb/custom_input.html'}
+
+    def to_representation(self, instance):
+        action = self.context['request'].META.get('HTTP_ACTION')
+        if action == 'options_list' or self.context['request'].GET.get('format') == 'html':
+            result = instance
+        else:
+            result = super().to_representation(instance)
+        return result
+
+    def create(self, validated_data):
+        return RootDir.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        instance.name = validated_data.get('name', instance.name)
+        instance.save()
+
+        return instance
+
+
+class RootDirRelatedField(ModifiedRelatedField):
+
+    def to_representation(self, value):
+        data = RootDirSerializer(value, context=self.context).data
+        action = self.context['request'].META.get('HTTP_ACTION')
+        result = data
+        if action == 'update':
+            result = result.get('id', None)
+        return result
+
+    def to_internal_value(self, data):
+        return RootDir.objects.get(pk=data)
+
+
+
+
+
+class DataSerializer(serializers.HyperlinkedModelSerializer):
+    dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:data-detail',
+                                                   read_only=True)
+    qset = Dataset.objects.all()
+    dataset = DatasetRelatedField(queryset=qset)
+    qset = SpecificParameter.objects.all()
+    specific_parameter = SpecificParameterRelatedField(queryset=qset)
+    qset = Property.objects.all()
+    property = PropertyRelatedField(queryset=qset)
+    qset = PropertyValue.objects.all()
+    property_value = PropertyValueRelatedField(queryset=qset)
+    qset = Units.objects.order_by('unitsi18n__name')
+    units = UnitsRelatedField(queryset=qset)
+    qset = Variable.objects.all()
+    variable = VariableRelatedField(queryset=qset)
+    qset = File.objects.all()
+    file = FileRelatedField(queryset=qset)
+    qset = Variable.objects.all()
+    levels_variable = VariableRelatedField(queryset=qset)
+    qset = RootDir.objects.all()
+    root_dir = RootDirRelatedField(queryset=qset)
+
+    class Meta:
+        model = Data
+        fields = ['id', 'dataurl', 'dataset', 'specific_parameter', 'property', 'property_value',
+                  'units', 'variable', 'file', 'levels_variable', 'root_dir', 'scale', 'offset']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Dataset
+        self.fields['dataset'].data_url = reverse('metadb:dataset-list')
+        self.fields['dataset'].label = _('Dataset')
+        self.fields['dataset'].style = {'template': 'metadb/custom_select.html'}
+        self.fields['dataset'].widget_type = 'select'
+        self.fields['dataset'].allow_blank = True
+        # Specific parameter
+        self.fields['specific_parameter'].data_url = reverse('metadb:specificparameter-list')
+        self.fields['specific_parameter'].label = _('Specific parameter')
+        self.fields['specific_parameter'].style = {'template': 'metadb/custom_select.html'}
+        self.fields['specific_parameter'].widget_type = 'select'
+        self.fields['specific_parameter'].allow_blank = True
+        # Property
+        self.fields['property'].data_url = reverse('metadb:property-list')
+        self.fields['property'].label = _('Property')
+        self.fields['property'].style = {'template': 'metadb/custom_select.html'}
+        self.fields['property'].widget_type = 'select'
+        self.fields['property'].allow_blank = True
+        # Property value
+        self.fields['property_value'].data_url = reverse('metadb:propertyvalue-list')
+        self.fields['property_value'].label = _('Property value')
+        self.fields['property_value'].style = {'template': 'metadb/custom_select.html'}
+        self.fields['property_value'].widget_type = 'select'
+        self.fields['property_value'].allow_blank = True
+        # Units
+        self.fields['units'].data_url = reverse('metadb:units-list')
+        self.fields['units'].label = _('Units')
+        self.fields['units'].style = {'template': 'metadb/custom_select.html'}
+        self.fields['units'].widget_type = 'select'
+        self.fields['units'].allow_blank = True
+        # Variable
+        self.fields['variable'].data_url = reverse('metadb:variable-list')
+        self.fields['variable'].label = _('Variable')
+        self.fields['variable'].style = {'template': 'metadb/custom_select.html'}
+        self.fields['variable'].widget_type = 'select'
+        self.fields['variable'].allow_blank = True
+        # File
+        self.fields['file'].data_url = reverse('metadb:file-list')
+        self.fields['file'].label = _('File name pattern')
+        self.fields['file'].style = {'template': 'metadb/custom_select.html'}
+        self.fields['file'].widget_type = 'select'
+        self.fields['file'].allow_blank = True
+        # Levels variable
+        self.fields['levels_variable'].data_url = reverse('metadb:levelsvariable-list')
+        self.fields['levels_variable'].label = _('Levels variable')
+        self.fields['levels_variable'].style = {'template': 'metadb/custom_select.html'}
+        self.fields['levels_variable'].widget_type = 'select'
+        self.fields['levels_variable'].allow_blank = True
+        # Root directory
+        self.fields['root_dir'].data_url = reverse('metadb:rootdir-list')
+        self.fields['root_dir'].label = _('Root directory')
+        self.fields['root_dir'].style = {'template': 'metadb/custom_select.html'}
+        self.fields['root_dir'].widget_type = 'select'
+        self.fields['root_dir'].allow_blank = True
+        # Scale
+        self.fields['scale'].label = _('Scale coefficient')
+        self.fields['scale'].style = {'template': 'metadb/custom_input.html'}
+        self.fields['scale'].initial = 1.0
+        # Offset
+        self.fields['offset'].label = _('Offset coefficient')
+        self.fields['offset'].style = {'template': 'metadb/custom_input.html'}
+        self.fields['offset'].initial = 0.0
+
+
+    def to_representation(self, instance):
+        action = self.context['request'].META.get('HTTP_ACTION')
+        if action == 'options_list' or self.context['request'].GET.get('format') == 'html':
+            result = instance
+        else:
+            result = super().to_representation(instance)
+        return result
+
+    def create(self, validated_data):
+        return Data.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        instance.dataset = validated_data.get('dataset', instance.dataset)
+        instance.specific_parameter = validated_data.get('specific_parameter', instance.specific_parameter)
+        instance.property = validated_data.get('property', instance.property)
+        instance.property_value = validated_data.get('property_value', instance.property_value)
+        instance.units = validated_data.get('units', instance.units)
+        instance.variable = validated_data.get('variable', instance.variable)
+        instance.file = validated_data.get('file', instance.file)
+        instance.levels_variable = validated_data.get('levels_variable', instance.levels_variable)
+        instance.root_dir = validated_data.get('root_dir', instance.root_dir)
+        instance.scale = validated_data.get('scale', instance.scale)
+        instance.offset = validated_data.get('offset', instance.offset)
+        instance.save()
+
+        return instance
+
+
+class LanguageSerializer(serializers.HyperlinkedModelSerializer):
+    dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:language-detail',
+                                                   read_only=True)
+    class Meta:
+        model = File
+        fields = ['id', 'dataurl', 'name', 'code']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Name
+        self.fields['name'].label = _('Language name')
+        self.fields['name'].style = {'template': 'metadb/custom_input.html'}
+        # Code
+        self.fields['code'].label = _('Language code')
+        self.fields['code'].style = {'template': 'metadb/custom_input.html'}
+
+    def to_representation(self, instance):
+        action = self.context['request'].META.get('HTTP_ACTION')
+        if action == 'options_list' or self.context['request'].GET.get('format') == 'html':
+            result = instance
+        else:
+            result = super().to_representation(instance)
+        return result
+
+    def create(self, validated_data):
+        return Language.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        instance.name_pattern = validated_data.get('name_pattern', instance.name_pattern)
+        instance.save()
+
+        return instance
+
+
+class LanguageRelatedField(ModifiedRelatedField):
+
+    def to_representation(self, value):
+        data = LanguageSerializer(value, context=self.context).data
+        action = self.context['request'].META.get('HTTP_ACTION')
+        result = data
+        if action == 'update':
+            result = result.get('id', None)
+        return result
+
+    def to_internal_value(self, data):
+        return Language.objects.get(pk=data)
