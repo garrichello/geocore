@@ -148,13 +148,13 @@ data_columns = [
     { 'data': 'dataset.collection_label' },
     { 'data': 'dataset.resolution.name' },
     { 'data': 'dataset.scenario.name' },
-    { 'data': 'specific_parameter.parameter.is_visible' },
-    { 'data': 'specific_parameter.parameter.parameteri18n.name' },
-    { 'data': 'specific_parameter.time_step.timestepi18n.name' },
-    { 'data': 'specific_parameter.levels_group.description' },
+    { 'data': 'parameter.is_visible' },
+    { 'data': 'parameter.parameteri18n.name' },
+    { 'data': 'time_step.timestepi18n.name' },
+    { 'data': 'levels_group.description' },
     { 'data': function(data, type, row, meta) {
         levels = Array();
-        data.specific_parameter.levels_group.levels.forEach(element => {
+        data.levels_group.levels.forEach(element => {
             levels.push(element.leveli18n.name);
         });
         return levels.join();
@@ -167,7 +167,7 @@ data_columns = [
     { 'data': 'root_dir.name' },
     { 'data': 'dataset.scenario.subpath0' },
     { 'data': 'dataset.resolution.subpath1' },
-    { 'data': 'specific_parameter.time_step.subpath2' },
+    { 'data': 'time_step.subpath2' },
     { 'data': 'file.name_pattern' },
     { 'data': 'scale' },
     { 'data': 'offset' },

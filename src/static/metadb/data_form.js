@@ -2,7 +2,7 @@ $(function () {
     var data_form_class_name = '.js-data-form';
     var modal_id = '#'+getModalName();
 
-    var loadScenariosChain = function(form_name) {
+/*    var loadScenariosChain = function(form_name) {
         var form = $(form_name);
         var collectionId = $(modal_id+' #id_collection').val();
         var resolutionId = $(modal_id+' #id_resolution').val();
@@ -42,45 +42,51 @@ $(function () {
             }
         } );
     };
-    
+*/    
     var loadLvsGroupsChain = function(form_name) {
         var form = $(form_name);
-        var parameteri18nId = $(modal_id+' #id_parameteri18n').val();
-        var timestepi18nId = $(modal_id+' #id_time_stepi18n').val();
+        var parameterId = $(modal_id+' #id_parameter').val();
+        var timestepId = $(modal_id+' #id_time_step').val();
     
         $.ajax( {
-            url: form.attr('parameter-lvsgroups-url'), // given a parameter load lvsgroups
+            url: form.attr('levelsgroups-url'), // given a parameter load lvsgroups
             type: 'get',
+            headers: {
+                'ACTION': 'options_list',
+            },
             data: {
-                'parameteri18nId': parameteri18nId,
-                'timestepi18nId': timestepi18nId,
+                'parameterId': parameterId,
+                'timestepId': timestepId,
             },
             success: function (data) {
                 $(modal_id+' #id_levels_group').html(data);
                 if ($(modal_id+' #id_levels_group option').length == 2) {
                     $(modal_id+' #id_levels_group').prop("selectedIndex", 1);
                 }
-                $(modal_id+' #id_levels_group').trigger('change');
+//                $(modal_id+' #id_levels_group').trigger('change');
             }
         } );
     };
     
     var loadTimeStepsChain = function(form_name) {
         var form = $(form_name);
-        var parameteri18nId = $(modal_id+' #id_parameteri18n').val();
-    
+        var parameterId = $(modal_id+' #id_parameter').val();
+
         $.ajax( {
-            url: form.attr('parameter-timesteps-url'), // given parameter load timesteps
+            url: form.attr('timesteps-url'), // given parameter load timesteps
             type: 'get',
+            headers: {
+                'ACTION': 'options_list',
+            },
             data: {
-                'parameteri18nId': parameteri18nId,
+                'parameterId': parameterId,
             },
             success: function (data) {
-                $(modal_id+' #id_time_stepi18n').html(data);
-                if ($(modal_id+' #id_time_stepi18n option').length == 2) {
-                    $(modal_id+' #id_time_stepi18n').prop("selectedIndex", 1);
+                $(modal_id+' #id_time_step').html(data);
+                if ($(modal_id+' #id_time_step option').length == 2) {
+                    $(modal_id+' #id_time_step').prop("selectedIndex", 1);
                 }
-                $(modal_id+' #id_time_stepi18n').trigger('change');
+//                $(modal_id+' #id_time_step').trigger('change');
             }
         } );
     };
@@ -96,25 +102,25 @@ $(function () {
                 'lvsgroupId': lvsgroupId,
             },
             success: function (data) {
-                $(modal_id+' #id_levels_namesi18n').val(data);
+                $(modal_id+' #id_levels_names').val(data);
             }
         } );
     };
-    
-    $(modal_id+' #id_collection').change( function() { loadResolutionsChain(data_form_class_name); } );
-    $(modal_id+' #id_resolution').change( function() { loadScenariosChain(data_form_class_name); } );
-    $(modal_id+' #id_parameteri18n').change( function() { loadTimeStepsChain(data_form_class_name); } );
-    $(modal_id+' #id_time_stepi18n').change( function() { loadLvsGroupsChain(data_form_class_name); } );
+
+//    $(modal_id+' #id_collection').change( function() { loadResolutionsChain(data_form_class_name); } );
+//    $(modal_id+' #id_resolution').change( function() { loadScenariosChain(data_form_class_name); } );
+    $(modal_id+' #id_parameter').change( function() { loadTimeStepsChain(data_form_class_name); } );
+    $(modal_id+' #id_time_step').change( function() { loadLvsGroupsChain(data_form_class_name); } );
     $(modal_id+' #id_levels_group').change( function() { loadLvsNamesChain(data_form_class_name); } );
 
     // + buttons handling
     $(data_form_class_name).on('click', '.js-add-button', function() { 
         var child_modal_id = loadForm2.call(this, 'create');
         $(child_modal_id).on('hidden.bs.modal', function() {
-            if ($('.js-levels-variable-form').length) {
-                var form_data = mapFormData('.js-levels-variable-form');  // Get levels variable fields
-                loadOptions.call(this, data_form_class_name, 'id_levels_variable',
-                    'levels-variables-url', form_data['name']
+            if ($('.js-dataset-form').length) {
+                var form_data = mapFormData('.js-dataset-form');  // Get dataset fields
+                loadOptions.call(this, data_form_class_name, 'id_dataset',
+                    'datasets-url', form_data['description']
                 );
             };
             if ($('.js-variable-form').length) {
@@ -125,8 +131,14 @@ $(function () {
             };
             if ($('.js-unit-form').length) {
                 var form_data = mapFormData('.js-unit-form');  // Get unit fields
-                loadOptions.call(this, data_form_class_name, 'id_unitsi18n',
-                    'units-url', form_data['name']
+                loadOptions.call(this, data_form_class_name, 'id_units',
+                    'units-url', form_data['unitsi18n.name']
+                );
+            };
+            if ($('.js-levels-variable-form').length) {
+                var form_data = mapFormData('.js-levels-variable-form');  // Get levels variable fields
+                loadOptions.call(this, data_form_class_name, 'id_levels_variable',
+                    'levels-variables-url', form_data['name']
                 );
             };
             if ($('.js-property-form').length) {
@@ -141,16 +153,16 @@ $(function () {
                     'property-values-url', form_data['label']
                 );
             };
-            if ($('.js-root-dir-form').length) {
-                var form_data = mapFormData('.js-root-dir-form');  // Get root directory fields
-                loadOptions.call(this, data_form_class_name, 'id_root_dir',
-                    'root-dirs-url', form_data['name']
-                );
-            };
             if ($('.js-file-form').length) {
                 var form_data = mapFormData('.js-file-form');  // Get file name fields
                 loadOptions.call(this, data_form_class_name, 'id_file',
                     'files-url', form_data['name_pattern']
+                );
+            };
+            if ($('.js-root-dir-form').length) {
+                var form_data = mapFormData('.js-root-dir-form');  // Get root directory fields
+                loadOptions.call(this, data_form_class_name, 'id_root_dir',
+                    'root-dirs-url', form_data['name']
                 );
             };
             $(child_modal_id).remove();
