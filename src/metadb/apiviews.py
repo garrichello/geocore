@@ -886,8 +886,8 @@ class OrganizationViewSet(BaseViewSet):
 
     table_headers = [
         _('Id'),
-        _('URL'),
         _('Name'),
+        _('URL'),
     ]
 
     ctx_create = {
