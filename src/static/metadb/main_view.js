@@ -18,7 +18,7 @@ collection_columns = [
     { 'data': 'label' },
     { 'data': 'collectioni18n.name' },
     { 'data': 'collectioni18n.description' },
-    { 'data': 'organization.organizationi18n.name' },
+    { 'data': 'organization.name' },
     { 'data': 'organization.url' },
     { 'data': 'url' },
 ]
@@ -96,17 +96,17 @@ specpar_columns = [
     } },  // for buttons
     { 'data': 'id' },
     { 'data': 'parameter.is_visible' },
-    { 'data': 'parameter.parameteri18n.name' },
+    { 'data': 'parameter.name' },
     { 'data': 'parameter.accumulation_mode' },
-    { 'data': 'time_step.timestepi18n.name' },
+    { 'data': 'time_step.name' },
     { 'data': 'time_step.label' },
     { 'data': 'time_step.subpath2' },
-    { 'data': 'levels_group.units.unitsi18n.name' },
+    { 'data': 'levels_group.units' },
     { 'data': 'levels_group.description' },
     { 'data': function(data, type, row, meta) {
         levels = Array();
         data.levels_group.levels.forEach(element => {
-            levels.push(element.leveli18n.name);
+            levels.push(element);
         });
         return levels.join();
     } },
@@ -149,19 +149,19 @@ data_columns = [
     { 'data': 'dataset.resolution.name' },
     { 'data': 'dataset.scenario.name' },
     { 'data': 'parameter.is_visible' },
-    { 'data': 'parameter.parameteri18n.name' },
-    { 'data': 'time_step.timestepi18n.name' },
+    { 'data': 'parameter.name' },
+    { 'data': 'time_step.name' },
     { 'data': 'levels_group.description' },
     { 'data': function(data, type, row, meta) {
         levels = Array();
         data.levels_group.levels.forEach(element => {
-            levels.push(element.leveli18n.name);
+            levels.push(element);
         });
         return levels.join();
     } },
     { 'data': 'levels_variable.name' },
     { 'data': 'variable.name' },
-    { 'data': 'units.unitsi18n.name' },
+    { 'data': 'units' },
     { 'data': 'property.label' },
     { 'data': 'property_value.label' },
     { 'data': 'root_dir.name' },
@@ -471,8 +471,7 @@ $(document).ready( function () {
             'processing': '<div class="spinner"></div>'
         } 
     };
-    var otherUpdateURL;
-    var otherDeleteURL;
+    var other_api_url;
 
     var create_dt = function(data, data_url) {
         if ($.fn.DataTable.isDataTable('#other')) {
@@ -484,15 +483,16 @@ $(document).ready( function () {
             { 'render': function() { return null; } },  // For checkboxes
             { 'render': function (data, type, row, meta) {
                 return '<div><button type="button" class="btn btn-warning btn-sm js-update-other"'
-                       + `data-url="${otherUpdateURL[0]}${row.id}${otherUpdateURL[1]}">`
+                       + `data-url="${other_api_url}${row.id}">`
                        + '<span class="glyphicon glyphicon-pencil"></span></button></div>&nbsp;'
                        + '<div><button type="button" class="btn btn-danger btn-sm js-delete-other"'
-                       + `data-url="${otherDeleteURL[0]}${row.id}${otherDeleteURL[1]}">`
+                       + `data-url="${other_api_url}${row.id}">`
                        + '<span class="glyphicon glyphicon-trash"></span></button></div>';
             } },  // for buttons
         ];
         var fieldNames = Object.keys(data.data[0]);
-        $.each(fieldNames, function(i, v) {
+        filtFieldNames = fieldNames.filter(e => e !== 'dataurl');
+        $.each(filtFieldNames, function(i, v) {
             columns.push({data: v, title: data.headers[i]});
         });
         otherOptions['data'] = data.data;
@@ -530,9 +530,8 @@ $(document).ready( function () {
 
     // Add button
     $('.js-data-choice').click(function() {
-        get_data.call(this, $(this).attr('api-data-url'));
-        otherUpdateURL = $(this).attr('update-data-url').split('99999');;
-        otherDeleteURL = $(this).attr('delete-data-url').split('99999');;
+        other_api_url = $(this).attr('api-data-url');
+        get_data.call(this, other_api_url);
         $('#create-other-btn').attr('disabled', false);
         $('#create-other-btn').attr('data-url', $(this).attr('create-data-url'));
     });
