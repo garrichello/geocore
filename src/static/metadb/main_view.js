@@ -54,8 +54,8 @@ dataset_columns = [
     { 'data': 'id' },
     { 'data': 'is_visible' },
     { 'data': 'collection_label' },
-    { 'data': 'resolution_name' },
-    { 'data': 'scenario_name' },
+    { 'data': 'resolution.name' },
+    { 'data': 'scenario.name' },
     { 'data': 'data_kind_name' },
     { 'data': 'file_type_name' },
     { 'data': 'time_start' },
@@ -132,38 +132,43 @@ specpar_columnsDefs = [
 ]
 
 var data_api_url = $('#tab-data').attr('api-data-url');
-var data_update_url = $('#tab-data').attr('update-data-url').split('99999');
-var data_delete_url = $('#tab-data').attr('delete-data-url').split('99999');
 
 data_columns = [
     { 'render': function() { return null; } }, // For checkboxes
     { 'render': function (data, type, row, meta) {
         return '<div><button type="button" class="btn btn-warning btn-sm js-update-data"'
-               + `data-url="${data_update_url[0]}${row.id}${data_update_url[1]}">`
+               + `data-url="${data_api_url}${row.id}">`
                + '<span class="glyphicon glyphicon-pencil"></span></button></div>&nbsp;'
                + '<div><button type="button" class="btn btn-danger btn-sm js-delete-data"'
-               + `data-url="${data_delete_url[0]}${row.id}${data_delete_url[1]}">`
+               + `data-url="${data_api_url}${row.id}">`
                + '<span class="glyphicon glyphicon-trash"></span></button></div>';
     } },
     { 'data': 'id' },
-    { 'data': 'is_visible' },
-    { 'data': 'collection_label' },
-    { 'data': 'resolution_name' },
-    { 'data': 'scenario_name' },
-    { 'data': 'parameter_name' },
-    { 'data': 'time_step' },
-    { 'data': 'levels_group' },
-    { 'data': 'levels' },
-    { 'data': 'levels_variable' },
-    { 'data': 'variable_name' },
-    { 'data': 'units_name' },
-    { 'data': 'property_label' },
-    { 'data': 'property_value' },
-    { 'data': 'root_dir' },
-    { 'data': 'subpath0' },
-    { 'data': 'subpath1' },
-    { 'data': 'subpath2' },
-    { 'data': 'file_pattern' },
+    { 'data': 'dataset.is_visible' },
+    { 'data': 'dataset.collection_label' },
+    { 'data': 'dataset.resolution.name' },
+    { 'data': 'dataset.scenario.name' },
+    { 'data': 'specific_parameter.parameter.is_visible' },
+    { 'data': 'specific_parameter.parameter.parameteri18n.name' },
+    { 'data': 'specific_parameter.time_step.timestepi18n.name' },
+    { 'data': 'specific_parameter.levels_group.description' },
+    { 'data': function(data, type, row, meta) {
+        levels = Array();
+        data.specific_parameter.levels_group.levels.forEach(element => {
+            levels.push(element.leveli18n.name);
+        });
+        return levels.join();
+    } },
+    { 'data': 'levels_variable.name' },
+    { 'data': 'variable.name' },
+    { 'data': 'units.unitsi18n.name' },
+    { 'data': 'property.label' },
+    { 'data': 'property_value.label' },
+    { 'data': 'root_dir.name' },
+    { 'data': 'dataset.scenario.subpath0' },
+    { 'data': 'dataset.resolution.subpath1' },
+    { 'data': 'specific_parameter.time_step.subpath2' },
+    { 'data': 'file.name_pattern' },
     { 'data': 'scale' },
     { 'data': 'offset' },
 ]
@@ -172,7 +177,7 @@ data_columnsDefs = [
     { width: '20px', targets: 0, orderable: false, className: 'select-checkbox' },  // Select checkbox
     { width: '45px', targets: 1, orderable: false, },  // Buttons
     { width: '25px', targets: 2 },    // Id
-    { width: '45px', targets: 3,   // Is visible
+    { width: '55px', targets: 3,   // Is dataset visible
       render: (data) => {
           return data == 0 ? "" : '<span class="glyphicon glyphicon-ok"></span>';
       }, 
@@ -180,22 +185,27 @@ data_columnsDefs = [
     { width: '95px', targets: 4, },   // Collection label
     { width: '75px', targets: 5 },    // Resolution
     { width: '95px', targets: 6 },    // Scenario
-    { width: '95px', targets: 7 },    // Parameter
-    { width: '75px', targets: 8 },    // Time step
-    { width: '95px', targets: 9 },   // Levels group
-    { width: '175px', targets: 10 },  // Levels names
-    { width: '55px', targets: 11 },   // Levels variable
-    { width: '95px', targets: 12 },    // Variable name
-    { width: '55px', targets: 13 },   // Units
-    { width: '85px', targets: 14 },   // Property label
-    { width: '85px', targets: 15 },   // Property value
-    { width: '165px', targets: 16 },   // Root dir
-    { width: '75px', targets: 17 },   // Subpath0
-    { width: '75px', targets: 18 },   // Subpath1
-    { width: '75px', targets: 19 },   // Subpath2
-    { width: '165px', targets: 20 },  // File pattern
-    { width: '55px', targets: 21 },   // Scale
-    { width: '55px', targets: 22 },   // Offset
+    { width: '65px', targets: 7,   // Is parameter visible
+      render: (data) => {
+          return data == 0 ? "" : '<span class="glyphicon glyphicon-ok"></span>';
+      }, 
+    },
+    { width: '95px', targets: 8 },    // Parameter
+    { width: '75px', targets: 9 },    // Time step
+    { width: '95px', targets: 10 },   // Levels group
+    { width: '175px', targets: 11 },  // Levels names
+    { width: '55px', targets: 12 },   // Levels variable
+    { width: '95px', targets: 13 },    // Variable name
+    { width: '55px', targets: 14 },   // Units
+    { width: '85px', targets: 15 },   // Property label
+    { width: '85px', targets: 16 },   // Property value
+    { width: '165px', targets: 17 },   // Root dir
+    { width: '75px', targets: 18 },   // Subpath0
+    { width: '75px', targets: 19 },   // Subpath1
+    { width: '75px', targets: 20 },   // Subpath2
+    { width: '165px', targets: 21 },  // File pattern
+    { width: '55px', targets: 22 },   // Scale
+    { width: '55px', targets: 23 },   // Offset
 ]
 
 var conveyor_api_url = $('#tab-conveyor').attr('api-data-url')

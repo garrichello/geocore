@@ -29,7 +29,7 @@
                 <a href="#tab-dataset" data-toggle="tab">{% trans "Dataset"%}</a>
             </li>
             <li>
-                <a href="#tab-specpar" data-toggle="tab">{% trans "Parameter"%}</a>
+                <a href="#tab-specpar" data-toggle="tab">{% trans "Specific parameter"%}</a>
             </li>
             <li>
                 <a href="#tab-data" data-toggle="tab">{% trans "Data" %}</a>
@@ -85,12 +85,10 @@
                 <table id='specpar' class="table table-hover table-bordered" width="200%"></table>
             </div>
             <div class="tab-pane" id="tab-data"
-                api-data-url="{% url 'metadb:data_api' %}"
-                update-data-url="{% url 'metadb:data_update' 99999 %}"
-                delete-data-url="{% url 'metadb:data_delete' 99999 %}">
+                api-data-url="{% url 'metadb:data-list' %}">
                 <button type="button"
                         class="btn btn-primary js-create"
-                        data-url="{% url 'metadb:data_create' %}">
+                        data-url="{% url 'metadb:data-detail' -1 %}">
                     <span class="glyphicon glyphicon-plus"></span> {% trans "Create" %}
                 </button>
                 <span>
