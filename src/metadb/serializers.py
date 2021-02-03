@@ -382,7 +382,7 @@ class FileTypeRelatedField(ModifiedRelatedField):
 class DatasetSerializer(serializers.HyperlinkedModelSerializer):
     dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:dataset-detail',
                                                    read_only=True)
-    qset = Collection.objects.order_by('collectioni18n__name')
+    qset = Collection.objects.order_by('label')
     collection_label = CollectionRelatedField(queryset=qset, source='collection')
     qset = Scenario.objects.order_by('name')
     scenario = ScenarioRelatedField(queryset=qset)
@@ -1321,11 +1321,11 @@ class RootDirRelatedField(ModifiedRelatedField):
 class DataSerializer(serializers.HyperlinkedModelSerializer):
     dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:data-detail',
                                                    read_only=True)
-    qset = Dataset.objects.all()
+    qset = Dataset.objects.all().order_by('description')
     dataset = DatasetRelatedField(queryset=qset)
 #    qset = SpecificParameter.objects.all()
 #    specific_parameter = SpecificParameterRelatedField(queryset=qset)
-    qset = Parameter.objects.all()
+    qset = Parameter.objects.all().order_by('parameteri18n__name')
     parameter = ParameterRelatedField(queryset=qset, source='specific_parameter.parameter')
     qset = LevelsGroup.objects.all()
     levels_group = LevelsGroupRelatedField(queryset=qset, source='specific_parameter.levels_group')
