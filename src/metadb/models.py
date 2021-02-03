@@ -419,7 +419,7 @@ class OrganizationI18N(models.Model):
 
 class Parameter(models.Model):
     accumulation_mode = models.ForeignKey('AccumulationMode', models.CASCADE)
-    is_visible = models.IntegerField(default=1)
+    is_visible = models.BooleanField(default=True)
     language = models.ManyToManyField('Language', through='ParameterI18N')
 
     class Meta:
@@ -574,6 +574,11 @@ class SpecificParameter(models.Model):
         managed = False
         db_table = 'specific_parameter'
 
+    def __str__(self):
+        parameter = self.parameter.parameteri18n_set.filter(language__code=get_language()).get().name
+        levels_group = self.levels_group.description
+        time_step = self.time_step.timestepi18n_set.filter(language__code=get_language()).get().name
+        return f'{parameter} @ {levels_group} / {time_step}'
 
 class TimePeriodType(models.Model):
     const_name = models.CharField(unique=True, max_length=45)
@@ -608,7 +613,7 @@ class TimeStep(models.Model):
         db_table = 'time_step'
 
     def __str__(self):
-        return self.label
+        return self.timestepi18n_set.filter(language__code=get_language()).get().name
 
 class TimeStepI18N(models.Model):
     time_step = models.ForeignKey('TimeStep', models.CASCADE)
