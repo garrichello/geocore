@@ -26,19 +26,19 @@ $(function() {
         $(child_modal_id).on('hidden.bs.modal', function() {
             if ($('.js-parameter-form').length) {
                 var form_data = mapFormData('.js-parameter-form');  // Get parameter fields
-                loadOptions.call( this, specpar_form_class_name, 'id_parameteri18n', 'parameter-url',
-                    form_data['name']
+                loadOptions.call( this, specpar_form_class_name, 'id_parameter', 'parameter-url',
+                    form_data['parameteri18n.name']
                 );
             };
             if ($('.js-timestep-form').length) {
                 var form_data = mapFormData('.js-timestep-form');  // Get time step fields
-                loadOptions.call(this, specpar_form_class_name, 'id_time_stepi18n', 'time-step-url',
-                    form_data['name']
+                loadOptions.call(this, specpar_form_class_name, 'id_time_step', 'time-step-url',
+                    form_data['timestepi18n.name']
                 );
             };
             if ($('.js-levels-group-form').length) {
                 var form_data = mapFormData('.js-levels-group-form');  // Get levels group fields
-                loadOptions.call(this, specpar_form_class_name, 'id_lvs_group', 'levels-group-url',
+                loadOptions.call(this, specpar_form_class_name, 'id_levels_group', 'levels-group-url',
                     form_data['description']
                 );
                 $(modal_id+' #id_lvs_group').trigger('change');
