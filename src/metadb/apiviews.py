@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework.renderers import *
 from rest_framework import viewsets
 from rest_framework.exceptions import MethodNotAllowed
+from rest_framework.decorators import action
 from django.utils.translation import get_language, gettext_lazy as _
 from django.db.models import Q
 from django.shortcuts import render
@@ -83,7 +84,7 @@ class BaseViewSet(viewsets.ModelViewSet):
             raise MethodNotAllowed(action, detail='Unknown action')
         serializer = self.get_serializer(instance)
 
-        if isinstance(request.accepted_renderer, BrowsableAPIRenderer):
+        if isinstance(request.accepted_renderer, BrowsableAPIRenderer) or action == 'json':
             response = Response({'data': serializer.data})
         else:
             if action == 'create':
@@ -337,30 +338,28 @@ class DataViewSet(BaseViewSet):
         'submit_name': _("Create data"),
         'script': 'metadb/data_form.js',
         'attributes': [
-            {'name': 'dataset-resolutions-url',
-             'value': reverse_lazy('metadb:form_load_dataset_resolutions')},
-            {'name': 'dataset-scenario-url',
-             'value': reverse_lazy('metadb:form_load_dataset_scenarios')},
-            {'name': 'parameter-timesteps-url',
-             'value': reverse_lazy('metadb:form_load_parameter_timesteps')},
-            {'name': 'parameter-lvsgroups-url',
-             'value': reverse_lazy('metadb:form_load_parameter_lvsgroups')},
-            {'name': 'lvsgroup-lvsnames-url',
-             'value': reverse_lazy('metadb:form_load_lvsgroup_lvsnames')},
+            {'name': 'datasets-url',
+             'value': reverse_lazy('metadb:dataset-list')},
+            {'name': 'parameters-url',
+             'value': reverse_lazy('metadb:parameter-list')},
+            {'name': 'timesteps-url',
+             'value': reverse_lazy('metadb:timestep-list')},
+            {'name': 'levelsgroups-url',
+             'value': reverse_lazy('metadb:levelsgroup-list')},
             {'name': 'levels-variables-url',
-             'value': reverse_lazy('metadb:form_load_lvsvars')},
+             'value': reverse_lazy('metadb:levelsvariable-list')},
             {'name': 'variables-url',
-             'value': reverse_lazy('metadb:form_load_variables')},
+             'value': reverse_lazy('metadb:variable-list')},
             {'name': 'units-url',
-             'value': reverse_lazy('metadb:form_load_units')},
+             'value': reverse_lazy('metadb:units-list')},
             {'name': 'properties-url',
-             'value': reverse_lazy('metadb:form_load_properties')},
+             'value': reverse_lazy('metadb:property-list')},
             {'name': 'property-values-url',
-             'value': reverse_lazy('metadb:form_load_propvals')},
+             'value': reverse_lazy('metadb:propertyvalue-list')},
             {'name': 'root-dirs-url',
-             'value': reverse_lazy('metadb:form_load_rootdirs')},
+             'value': reverse_lazy('metadb:rootdir-list')},
             {'name': 'files-url',
-             'value': reverse_lazy('metadb:form_load_files')},
+             'value': reverse_lazy('metadb:file-list')},
         ],
         'style': {'template_pack': 'rest_framework/vertical/'}
     }
@@ -372,30 +371,28 @@ class DataViewSet(BaseViewSet):
         'submit_name': _("Update data"),
         'script': 'metadb/data_form.js',
         'attributes': [
-            {'name': 'dataset-resolutions-url',
-             'value': reverse_lazy('metadb:form_load_dataset_resolutions')},
-            {'name': 'dataset-scenario-url',
-             'value': reverse_lazy('metadb:form_load_dataset_scenarios')},
-            {'name': 'parameter-timesteps-url',
-             'value': reverse_lazy('metadb:form_load_parameter_timesteps')},
-            {'name': 'parameter-lvsgroups-url',
-             'value': reverse_lazy('metadb:form_load_parameter_lvsgroups')},
-            {'name': 'parameter-lvsnames-url',
-             'value': reverse_lazy('metadb:form_load_lvsgroup_lvsnames')},
+            {'name': 'datasets-url',
+             'value': reverse_lazy('metadb:dataset-list')},
+            {'name': 'parameters-url',
+             'value': reverse_lazy('metadb:parameter-list')},
+            {'name': 'timesteps-url',
+             'value': reverse_lazy('metadb:timestep-list')},
+            {'name': 'levelsgroups-url',
+             'value': reverse_lazy('metadb:levelsgroup-list')},
             {'name': 'levels-variables-url',
-             'value': reverse_lazy('metadb:form_load_lvsvars')},
+             'value': reverse_lazy('metadb:levelsvariable-list')},
             {'name': 'variables-url',
-             'value': reverse_lazy('metadb:form_load_variables')},
+             'value': reverse_lazy('metadb:variable-list')},
             {'name': 'units-url',
-             'value': reverse_lazy('metadb:form_load_units')},
+             'value': reverse_lazy('metadb:units-list')},
             {'name': 'properties-url',
-             'value': reverse_lazy('metadb:form_load_properties')},
+             'value': reverse_lazy('metadb:property-list')},
             {'name': 'property-values-url',
-             'value': reverse_lazy('metadb:form_load_propvals')},
+             'value': reverse_lazy('metadb:propertyvalue-list')},
             {'name': 'root-dirs-url',
-             'value': reverse_lazy('metadb:form_load_rootdirs')},
+             'value': reverse_lazy('metadb:rootdir-list')},
             {'name': 'files-url',
-             'value': reverse_lazy('metadb:form_load_files')},
+             'value': reverse_lazy('metadb:file-list')},
         ],
         'style': {'template_pack': 'rest_framework/vertical/'}
     }
@@ -810,6 +807,26 @@ class LevelsGroupViewSet(BaseViewSet):
         'submit_name': _('Delete levels group'),
         'style': {'template_pack': 'rest_framework/vertical/'}
     }
+
+    def list(self, request):
+        action = request.META.get('HTTP_ACTION')
+        qset = self.get_queryset()
+        parameter_id = request.GET.get('parameterId')
+        time_step_id = request.GET.get('timestepId')
+        if parameter_id and time_step_id:
+            qset = qset.filter(specificparameter__parameter_id=parameter_id, 
+                               specificparameter__time_step_id=time_step_id)
+        serializer = self.get_serializer(qset, many=True)
+        ctx = {'data': serializer.data}
+
+        if action == 'options_list' or request.GET.get('format') == 'html':
+            result = render(request, self.options_template_name, ctx)
+        else:
+            if isinstance(request.accepted_renderer, JSONRenderer):
+                ctx['headers'] = self.table_headers
+            result = Response(ctx)
+
+        return result
 
 
 class LevelsVariableViewSet(BaseViewSet):
@@ -1311,6 +1328,25 @@ class TimeStepViewSet(BaseViewSet):
     def __init__(self, *args, **kwargs):
         self.queryset = self.queryset.filter(
             language__code=get_language()).order_by('timestepi18n__name')
+
+
+    def list(self, request):
+        action = request.META.get('HTTP_ACTION')
+        qset = self.get_queryset()
+        parameter_id = request.GET.get('parameterId')
+        if parameter_id:
+            qset = qset.filter(specificparameter__parameter_id=parameter_id).distinct()
+        serializer = self.get_serializer(qset, many=True)
+        ctx = {'data': serializer.data}
+
+        if action == 'options_list' or request.GET.get('format') == 'html':
+            result = render(request, self.options_template_name, ctx)
+        else:
+            if isinstance(request.accepted_renderer, JSONRenderer):
+                ctx['headers'] = self.table_headers
+            result = Response(ctx)
+
+        return result
 
 
 class UnitsViewSet(BaseViewSet):
