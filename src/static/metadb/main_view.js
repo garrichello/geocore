@@ -18,7 +18,7 @@ collection_columns = [
     { 'data': 'label' },
     { 'data': 'collectioni18n.name' },
     { 'data': 'collectioni18n.description' },
-    { 'data': 'organization.name' },
+    { 'data': 'organization.organizationi18n.name' },
     { 'data': 'organization.url' },
     { 'data': 'url' },
 ]
@@ -96,17 +96,17 @@ specpar_columns = [
     } },  // for buttons
     { 'data': 'id' },
     { 'data': 'parameter.is_visible' },
-    { 'data': 'parameter.name' },
+    { 'data': 'parameter.parameteri18n.name' },
     { 'data': 'parameter.accumulation_mode' },
-    { 'data': 'time_step.name' },
+    { 'data': 'time_step.timestepi18n.name' },
     { 'data': 'time_step.label' },
     { 'data': 'time_step.subpath2' },
-    { 'data': 'levels_group.units' },
+    { 'data': 'levels_group.units.unitsi18n.name' },
     { 'data': 'levels_group.description' },
     { 'data': function(data, type, row, meta) {
         levels = Array();
         data.levels_group.levels.forEach(element => {
-            levels.push(element);
+            levels.push(element.leveli18n.name);
         });
         return levels.join();
     } },
@@ -149,19 +149,19 @@ data_columns = [
     { 'data': 'dataset.resolution.name' },
     { 'data': 'dataset.scenario.name' },
     { 'data': 'parameter.is_visible' },
-    { 'data': 'parameter.name' },
-    { 'data': 'time_step.name' },
+    { 'data': 'parameter.parameteri18n.name' },
+    { 'data': 'time_step.timestepi18n.name' },
     { 'data': 'levels_group.description' },
     { 'data': function(data, type, row, meta) {
         levels = Array();
         data.levels_group.levels.forEach(element => {
-            levels.push(element);
+            levels.push(element.leveli18n.name);
         });
         return levels.join();
     } },
     { 'data': 'levels_variable.name' },
     { 'data': 'variable.name' },
-    { 'data': 'units' },
+    { 'data': 'units.unitsi18n.name' },
     { 'data': 'property.label' },
     { 'data': 'property_value.label' },
     { 'data': 'root_dir.name' },
@@ -473,6 +473,33 @@ $(document).ready( function () {
     };
     var other_api_url;
 
+    var dwell = function(dict, path) {
+        var val = dict;
+        chunks = path.split('.');
+        $.each(chunks, (i, chunk) => {
+            val = val[chunk];
+        });
+        return val;
+    }
+
+    var delister = function(data, field_idx) {
+        // Here we extract items from an Array of dictionaries came from the server as a JSON.
+        // In rare cases a field contains a list of structures (dictionaries) with items.
+        // Items can be borrowed deep in the nested dictionary structure.
+        // subfield field in the JSON helps to reach for these items.
+        $.each(data.data, (i, e) => {  // loop over rows
+            $.each(e, (v, k) => {  // loop over columns
+                if (Array.isArray(k)) {  // if a cell contains an Array
+                    var items = Array();  // here we will store the Array items
+                    $.each(data.data[i][v], (l, m) => {  // loop over items
+                        items.push(dwell(m, data.headers[field_idx[v]].subfield));  // group
+                    })
+                    data.data[i][v] = items; // replace original dict with the array
+                };
+            })
+        });
+    }
+
     var create_dt = function(data, data_url) {
         if ($.fn.DataTable.isDataTable('#other')) {
             $('#other').DataTable().destroy();
@@ -490,11 +517,12 @@ $(document).ready( function () {
                        + '<span class="glyphicon glyphicon-trash"></span></button></div>';
             } },  // for buttons
         ];
-        var fieldNames = Object.keys(data.data[0]);
-        filtFieldNames = fieldNames.filter(e => e !== 'dataurl');
-        $.each(filtFieldNames, function(i, v) {
-            columns.push({data: v, title: data.headers[i]});
+        var field_idx = [];
+        $.each(data.headers, function (i, v) {
+            columns.push({data: v.field, title: v.caption}); // describe columns headers
+            field_idx[v.field] = i;  // map field name to its column position
         });
+        delister(data, field_idx);
         otherOptions['data'] = data.data;
         otherOptions['columns'] = columns;
         otherOptions['columnDefs'] = [
@@ -509,6 +537,9 @@ $(document).ready( function () {
             if (typeof processing !== 'undefined') {
                 $('#other_processing').css( 'display', processing ? 'block' : 'none' );
             };
+        })
+        odt.on('xhr', (e, settings, json, xhr) => {
+            delister(json, field_idx);
         })
         addUpdDelButtonHandlers('other');
         odt.ajax.url(data_url);
