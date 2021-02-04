@@ -40,8 +40,8 @@ class OrganizationI18NSerializer(serializers.ModelSerializer):
         fields = ['id', 'name']
 
     def to_representation(self, instance):
-        data = instance.filter(language__code=get_language()).get().name
-        return data #super().to_representation(data)
+        data = instance.filter(language__code=get_language()).get()
+        return super().to_representation(data)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -51,12 +51,12 @@ class OrganizationI18NSerializer(serializers.ModelSerializer):
 
 
 class OrganizationSerializer(serializers.HyperlinkedModelSerializer):
-    name = OrganizationI18NSerializer(source='organizationi18n_set', label='')
+    organizationi18n = OrganizationI18NSerializer(source='organizationi18n_set', label='')
     dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:organization-detail',
                                                    read_only=True)
     class Meta:
         model = Organization
-        fields = ['id', 'dataurl', 'name', 'url']
+        fields = ['id', 'dataurl', 'organizationi18n', 'url']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -530,8 +530,8 @@ class ParameterI18NSerializer(serializers.ModelSerializer):
         fields = ['id', 'name']
 
     def to_representation(self, instance):
-        data = instance.filter(language__code=get_language()).get().name
-        return data #super().to_representation(data)
+        data = instance.filter(language__code=get_language()).get()
+        return super().to_representation(data)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -545,11 +545,11 @@ class ParameterSerializer(serializers.HyperlinkedModelSerializer):
                                                    read_only=True)
     qset = AccumulationMode.objects.order_by('name')
     accumulation_mode = AccumulationModeRelatedField(queryset=qset)
-    name = ParameterI18NSerializer(source='parameteri18n_set', label='')
+    parameteri18n = ParameterI18NSerializer(source='parameteri18n_set', label='')
 
     class Meta:
         model = Parameter
-        fields = ['id', 'dataurl', 'is_visible', 'accumulation_mode', 'name']
+        fields = ['id', 'dataurl', 'is_visible', 'accumulation_mode', 'parameteri18n']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -614,8 +614,8 @@ class UnitsI18NSerializer(serializers.ModelSerializer):
         fields = ['id', 'name']
 
     def to_representation(self, instance):
-        data = instance.filter(language__code=get_language()).get().name
-        return data #super().to_representation(data)
+        data = instance.filter(language__code=get_language()).get()
+        return super().to_representation(data)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -627,11 +627,11 @@ class UnitsI18NSerializer(serializers.ModelSerializer):
 class UnitsSerializer(serializers.HyperlinkedModelSerializer):
     dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:organization-detail',
                                                    read_only=True)
-    name = UnitsI18NSerializer(source='unitsi18n_set', label='')
+    unitsi18n = UnitsI18NSerializer(source='unitsi18n_set', label='')
 
     class Meta:
         model = Units
-        fields = ['id', 'dataurl', 'name']
+        fields = ['id', 'dataurl', 'unitsi18n']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -671,7 +671,7 @@ class UnitsRelatedField(ModifiedRelatedField):
         result = data
         if action == 'update':
             result = result.get('id', None)
-        return result['name']
+        return result
 
     def to_internal_value(self, data):
         return Units.objects.get(pk=data)
@@ -684,8 +684,8 @@ class LevelI18NSerializer(serializers.ModelSerializer):
         fields = ['id', 'name']
 
     def to_representation(self, instance):
-        data = instance.filter(language__code=get_language()).get().name
-        return data #super().to_representation(data)
+        data = instance.filter(language__code=get_language()).get()
+        return super().to_representation(data)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -697,11 +697,11 @@ class LevelI18NSerializer(serializers.ModelSerializer):
 class LevelSerializer(serializers.HyperlinkedModelSerializer):
     dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:level-detail',
                                                    read_only=True)
-    name = LevelI18NSerializer(source='leveli18n_set', label='')
+    leveli18n = LevelI18NSerializer(source='leveli18n_set', label='')
 
     class Meta:
         model = Level
-        fields = ['id', 'dataurl', 'label', 'name']
+        fields = ['id', 'dataurl', 'label', 'leveli18n']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -745,7 +745,7 @@ class LevelRelatedField(ModifiedRelatedField):
         result = data
         if action == 'update':
             result = result.get('id', None)
-        return result['name']
+        return result
 
     def to_internal_value(self, data):
         return Level.objects.get(pk=data)
@@ -824,8 +824,8 @@ class TimeStepI18NSerializer(serializers.ModelSerializer):
         fields = ['id', 'name']
 
     def to_representation(self, instance):
-        data = instance.filter(language__code=get_language()).get().name
-        return data #super().to_representation(data)
+        data = instance.filter(language__code=get_language()).get()
+        return super().to_representation(data)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -837,11 +837,11 @@ class TimeStepI18NSerializer(serializers.ModelSerializer):
 class TimeStepSerializer(serializers.HyperlinkedModelSerializer):
     dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:timestep-detail',
                                                    read_only=True)
-    name = TimeStepI18NSerializer(source='timestepi18n_set', label='')
+    timestepi18n = TimeStepI18NSerializer(source='timestepi18n_set', label='')
 
     class Meta:
         model = TimeStep
-        fields = ['id', 'dataurl', 'label', 'subpath2', 'name']
+        fields = ['id', 'dataurl', 'label', 'subpath2', 'timestepi18n']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -966,8 +966,8 @@ class GuiElementI18NSerializer(serializers.ModelSerializer):
         fields = ['id', 'caption']
 
     def to_representation(self, instance):
-        data = instance.filter(language__code=get_language()).get().caption
-        return data #super().to_representation(data)
+        data = instance.filter(language__code=get_language()).get()
+        return super().to_representation(data)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -979,11 +979,11 @@ class GuiElementI18NSerializer(serializers.ModelSerializer):
 class GuiElementSerializer(serializers.HyperlinkedModelSerializer):
     dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:guielement-detail',
                                                    read_only=True)
-    caption = GuiElementI18NSerializer(source='guielementi18n_set', label='')
+    guielementi18n = GuiElementI18NSerializer(source='guielementi18n_set', label='')
 
     class Meta:
         model = GuiElement
-        fields = ['id', 'dataurl', 'name', 'caption']
+        fields = ['id', 'dataurl', 'name', 'guielementi18n']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -1027,7 +1027,7 @@ class GuiElementRelatedField(ModifiedRelatedField):
         result = data
         if action == 'update':
             result = result.get('id', None)
-        return result['name']
+        return result
 
     def to_internal_value(self, data):
         return GuiElement.objects.get(pk=data)
