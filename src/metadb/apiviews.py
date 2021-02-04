@@ -28,8 +28,7 @@ class BaseViewSet(viewsets.ModelViewSet):
     list_url = ''
     action_url = ''
 
-    table_headers = [
-    ]
+    table_headers = []
 
     ctx_create = {
         'form_class': '',
@@ -156,8 +155,8 @@ class AccumulationModeViewSet(BaseViewSet):
     action_url = 'metadb:accumulationmode-detail'
 
     table_headers = [
-        _('Id'),
-        _('Name'),
+        {'type': 'head_none', 'caption': _('Id'), 'field': 'id'},
+        {'type': 'head_text', 'caption': _('Name'), 'field': 'name'},
     ]
 
     ctx_create = {
@@ -420,8 +419,8 @@ class DataKindViewSet(BaseViewSet):
     action_url = 'metadb:datakind-detail'
 
     table_headers = [
-        _('Id'),
-        _('Name'),
+        {'type': 'head_none', 'caption': _('Id'), 'field': 'id'},
+        {'type': 'head_text', 'caption': _('Name'), 'field': 'name'},
     ]
 
     ctx_create = {
@@ -540,8 +539,8 @@ class FileViewSet(BaseViewSet):
     action_url = 'metadb:file-detail'
 
     table_headers = [
-        _('Id'),
-        _('File name pattern'),
+        {'type': 'head_none', 'caption': _('Id'), 'field': 'id'},
+        {'type': 'head_text', 'caption': _('File name pattern'), 'field': 'name_pattern'},
     ]
 
     ctx_create = {
@@ -584,8 +583,8 @@ class FileTypeViewSet(BaseViewSet):
     action_url = 'metadb:filetype-detail'
 
     table_headers = [
-        _('Id'),
-        _('Name'),
+        {'type': 'head_none', 'caption': _('Id'), 'field': 'id'},
+        {'type': 'head_text', 'caption': _('Name'), 'field': 'name'},
     ]
 
     ctx_create = {
@@ -627,9 +626,9 @@ class GuiElementViewSet(BaseViewSet):
     action_url = 'metadb:guielement-detail'
 
     table_headers = [
-        _('Id'), 
-        _('Name'),
-        _('Caption'),
+        {'type': 'head_none', 'caption': _('Id'), 'field': 'id'},
+        {'type': 'head_text', 'caption': _('Name'), 'field': 'name'},
+        {'type': 'head_text', 'caption': _('Caption'), 'field': 'guielementi18n.caption'},
     ]
 
     ctx_create = {
@@ -671,9 +670,9 @@ class LanguageViewSet(BaseViewSet):
     action_url = 'metadb:language-detail'
 
     table_headers = [
-        _('Id'), 
-        _('Name'),
-        _('Code'),
+        {'type': 'head_none', 'caption': _('Id'), 'field': 'id'},
+        {'type': 'head_text', 'caption': _('Name'), 'field': 'name'},
+        {'type': 'head_text', 'caption': _('Code'), 'field': 'code'},
     ]
 
     ctx_create = {
@@ -715,9 +714,9 @@ class LevelViewSet(BaseViewSet):
     action_url = 'metadb:level-detail'
 
     table_headers = [
-        _('Id'),
-        _('Label'),
-        _('Name'),
+        {'type': 'head_none', 'caption': _('Id'), 'field': 'id'},
+        {'type': 'head_text', 'caption': _('Label'), 'field': 'label'},
+        {'type': 'head_text', 'caption': _('Name'), 'field': 'leveli18n.name'},
     ]
 
     ctx_create = {
@@ -763,10 +762,10 @@ class LevelsGroupViewSet(BaseViewSet):
     action_url = 'metadb:levelsgroup-detail'
 
     table_headers = [
-            _('Id'),
-            _('Description'),
-            _('Measurement unit'),
-            _('Levels'),
+        {'type': 'head_none', 'caption': _('Id'), 'field': 'id'},
+        {'type': 'head_text', 'caption': _('Description'), 'field': 'description'},
+        {'type': 'head_text', 'caption': _('Measurement unit'), 'field': 'units.unitsi18n.name'},
+        {'type': 'head_text', 'caption': _('Levels'), 'field': 'levels', 'subfield': 'leveli18n.name'},
     ]
 
     ctx_create = {
@@ -842,8 +841,8 @@ class LevelsVariableViewSet(BaseViewSet):
     action_url = 'metadb:levelsvariable-detail'
 
     table_headers = [
-            _('Id'),
-            _('Name'),
+        {'type': 'head_none', 'caption': _('Id'), 'field': 'id'},
+        {'type': 'head_text', 'caption': _('Name'), 'field': 'name'},
     ]
 
     ctx_create = {
@@ -885,9 +884,9 @@ class OrganizationViewSet(BaseViewSet):
     action_url = 'metadb:organization-detail'
 
     table_headers = [
-        _('Id'),
-        _('Name'),
-        _('URL'),
+        {'type': 'head_none', 'caption': _('Id'), 'field': 'id'},
+        {'type': 'head_text', 'caption': _('Name'), 'field': 'organizationi18n.name'},
+        {'type': 'head_text', 'caption': _('URL'), 'field': 'url'},
     ]
 
     ctx_create = {
@@ -933,10 +932,10 @@ class ParameterViewSet(BaseViewSet):
     action_url = 'metadb:parameter-detail'
 
     table_headers = [
-        _('Id'),
-        _('Is visible'),
-        _('Accumulation mode'),
-        _('Name'),
+        {'type': 'head_none', 'caption': _('Id'), 'field': 'id'},
+        {'type': 'head_select', 'caption': _('Is visible'), 'field': 'is_visible'},
+        {'type': 'head_text', 'caption': _('Accumulation mode'), 'field': 'accumulation_mode'},
+        {'type': 'head_text', 'caption': _('Name'), 'field': 'parameteri18n.name'},
     ]
 
     ctx_create = {
@@ -992,10 +991,10 @@ class PropertyViewSet(BaseViewSet):
     action_url = 'metadb:property-detail'
 
     table_headers = [
-        _('Id'),
-        _('Label'),
-        _('GUI element name'),
-        _('GUI element caption'),
+        {'type': 'head_none', 'caption': _('Id'), 'field': 'id'},
+        {'type': 'head_text', 'caption': _('Label'), 'field': 'label'},
+        {'type': 'head_text', 'caption': _('GUI element name'), 'field': 'gui_element.name'},
+        {'type': 'head_text', 'caption': _('GUI element caption'), 'field': 'gui_element.guielementi18n.caption'},
     ]
 
     ctx_create = {
@@ -1047,8 +1046,8 @@ class PropertyValueViewSet(BaseViewSet):
     action_url = 'metadb:propertyvalue-detail'
 
     table_headers = [
-        _('Id'),
-        _('Label'),
+        {'type': 'head_none', 'caption': _('Id'), 'field': 'id'},
+        {'type': 'head_text', 'caption': _('Label'), 'field': 'label'},
     ]
 
     ctx_create = {
@@ -1090,9 +1089,9 @@ class ResolutionViewSet(BaseViewSet):
     action_url = 'metadb:resolution-detail'
 
     table_headers = [
-        _('Id'),
-        _('Name'),
-        _('Subpath'),
+        {'type': 'head_none', 'caption': _('Id'), 'field': 'id'},
+        {'type': 'head_text', 'caption': _('Name'), 'field': 'name'},
+        {'type': 'head_text', 'caption': _('Subpath'), 'field': 'subpath1'},
     ]
 
     ctx_create = {
@@ -1134,8 +1133,8 @@ class RootDirViewSet(BaseViewSet):
     action_url = 'metadb:rootdir-detail'
 
     table_headers = [
-            _('Id'),
-            _('Name'),
+        {'type': 'head_none', 'caption': _('Id'), 'field': 'id'},
+        {'type': 'head_text', 'caption': _('Name'), 'field': 'name'},
     ]
 
     ctx_create = {
@@ -1177,9 +1176,9 @@ class ScenarioViewSet(BaseViewSet):
     action_url = 'metadb:scenario-detail'
 
     table_headers = [
-        _('Id'),
-        _('Name'),
-        _('Subpath'),
+        {'type': 'head_none', 'caption': _('Id'), 'field': 'id'},
+        {'type': 'head_text', 'caption': _('Name'), 'field': 'name'},
+        {'type': 'head_text', 'caption': _('Subpath'), 'field': 'subpath0'},
     ]
 
     ctx_create = {
@@ -1294,10 +1293,10 @@ class TimeStepViewSet(BaseViewSet):
     action_url = 'metadb:timestep-detail'
 
     table_headers = [
-        _('Id'), 
-        _('Label'),
-        _('Subpath'),
-        _('Name'),
+        {'type': 'head_none', 'caption': _('Id'), 'field': 'id'},
+        {'type': 'head_text', 'caption': _('Label'), 'field': 'label'},
+        {'type': 'head_text', 'caption': _('Subpath'), 'field': 'subpath2'},
+        {'type': 'head_text', 'caption': _('Name'), 'field': 'timestepi18n.name'},
     ]
 
     ctx_create = {
@@ -1362,8 +1361,8 @@ class UnitsViewSet(BaseViewSet):
     action_url = 'metadb:units-detail'
 
     table_headers = [
-        _('Id'),
-        _('Name'),
+        {'type': 'head_none', 'caption': _('Id'), 'field': 'id'},
+        {'type': 'head_text', 'caption': _('Name'), 'field': 'unitsi18n.name'},
     ]
 
     ctx_create = {
@@ -1409,8 +1408,8 @@ class VariableViewSet(BaseViewSet):
     action_url = 'metadb:variable-detail'
 
     table_headers = [
-        _('Id'),
-        _('Name'),
+        {'type': 'head_none', 'caption': _('Id'), 'field': 'id'},
+        {'type': 'head_text', 'caption': _('Name'), 'field': 'name'},
     ]
 
     ctx_create = {
