@@ -106,7 +106,8 @@
                     <div class="col-md-3">
                     <label>
                         <input type="radio" name="data-choice" class="js-data-choice" 
-                        api-data-url={% url choice.api_url %}
+                        api-data-url="{% url choice.api_url %}" 
+                        create-data-url="{% url choice.create_api_url -1 %}"
                         ></input>
                         {{ choice.title }}
                     </label>
