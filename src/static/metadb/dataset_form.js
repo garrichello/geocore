@@ -13,13 +13,13 @@ $(function() {
             };
             if ($('.js-resolution-form').length) {
                 var form_data = mapFormData('.js-resolution-form');  // Get resolution fields
-                loadOptions.call(this, dataset_form_class_name, 'id_resolution_name',
+                loadOptions.call(this, dataset_form_class_name, 'id_resolution',
                     'resolutions-url', form_data['name']
                 );
             };
             if ($('.js-scenario-form').length) {
                 var form_data = mapFormData('.js-scenario-form');  // Get scenario fields
-                loadOptions.call(this, dataset_form_class_name, 'id_scenario_name',
+                loadOptions.call(this, dataset_form_class_name, 'id_scenario',
                     'scenarios-url', form_data['name']
                 );
             };
