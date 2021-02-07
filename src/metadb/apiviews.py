@@ -3,9 +3,7 @@ from rest_framework.response import Response
 from rest_framework.renderers import *
 from rest_framework import viewsets
 from rest_framework.exceptions import MethodNotAllowed
-from rest_framework.decorators import action
 from django.utils.translation import get_language, gettext_lazy as _
-from django.db.models import Q
 from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.urls import reverse, reverse_lazy
@@ -13,7 +11,6 @@ from django.http import JsonResponse
 
 from .models import *
 from .serializers import *
-
 
 
 class BaseViewSet(viewsets.ModelViewSet):
@@ -243,6 +240,49 @@ class CollectionViewSet(BaseViewSet):
     }
 
 
+class ComputingModuleViewSet(BaseViewSet):
+    """
+    Returns computing modules
+    """
+    queryset = ComputingModule.objects.all().order_by('name')
+    serializer_class = ComputingModuleSerializer
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer, TemplateHTMLRenderer]
+    template_name = 'metadb/includes/rest_form.html'
+    options_template_name = 'metadb/hr/dropdown_list_options.html'
+    list_url = 'metadb:computingmodule-list'
+    action_url = 'metadb:computingmodule-detail'
+
+    table_headers = [
+        {'type': 'head_none', 'caption': _('Id'), 'field': 'id'},
+        {'type': 'head_text', 'caption': _('Name'), 'field': 'name'},
+    ]
+
+    ctx_create = {
+        'method': 'POST',
+        'form_class': 'js-computingmodule-form',
+        'title': _("Create a new computing module"),
+        'submit_name': _("Create computing module"),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_update = {
+        'method': 'PUT',
+        'form_class': 'js-computingmodule-form',
+        'title': _("Update computing module"),
+        'submit_name': _("Update computing module"),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_delete = {
+        'method': 'DELETE',
+        'form_class': 'js-computingmodule-delete-form',
+        'title': _('Confirm computing module delete'),
+        'text': _('Are you sure you want to delete the computing module'),
+        'submit_name': _('Delete computing module'),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+
 class ConveyorApiListView(APIView):
     """
     Returns conveyors
@@ -291,6 +331,48 @@ class ConveyorApiListView(APIView):
         ]
 
         return Response(data)
+
+
+class ConveyorViewSet(BaseViewSet):
+    """
+    Returns conveyors
+    """
+    queryset = Conveyor.objects.all()
+    serializer_class = ConveyorSerializer
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
+    template_name = 'metadb/includes/rest_form.html'
+    options_template_name = 'metadb/hr/dropdown_list_options.html'
+    list_url = 'metadb:conveyor-list'
+    action_url = 'metadb:conveyor-detail'
+
+    table_headers = [
+        {'type': 'head_none', 'caption': _('Id'), 'field': 'id'},
+    ]
+
+    ctx_create = {
+        'method': 'POST',
+        'form_class': 'js-conveyor-form',
+        'title': _("Create a new conveyor"),
+        'submit_name': _("Create conveyor"),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_update = {
+        'method': 'PUT',
+        'form_class': 'js-conveyor-form',
+        'title': _("Update conveyor"),
+        'submit_name': _("Update conveyor"),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_delete = {
+        'method': 'DELETE',
+        'form_class': 'js-conveyor-delete-form',
+        'title': _('Confirm conveyor delete'),
+        'text': _('Are you sure you want to delete the conveyor'),
+        'submit_name': _('Delete conveyor'),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
 
 
 class DataViewSet(BaseViewSet):
@@ -481,15 +563,15 @@ class DatasetViewSet(BaseViewSet):
         'submit_name': _("Create dataset"),
         'script': 'metadb/dataset_form.js',
         'attributes': [
-            {'name': 'collections-url', 
+            {'name': 'collections-url',
              'value': reverse_lazy('metadb:collection-list')},
-            {'name': 'resolutions-url', 
+            {'name': 'resolutions-url',
              'value': reverse_lazy('metadb:resolution-list')},
-            {'name': 'scenarios-url', 
+            {'name': 'scenarios-url',
              'value': reverse_lazy('metadb:scenario-list')},
-            {'name': 'datakinds-url', 
+            {'name': 'datakinds-url',
              'value': reverse_lazy('metadb:datakind-list')},
-            {'name': 'filetypes-url', 
+            {'name': 'filetypes-url',
              'value': reverse_lazy('metadb:filetype-list')},
         ],
         'style': {'template_pack': 'rest_framework/vertical/'}
@@ -502,15 +584,15 @@ class DatasetViewSet(BaseViewSet):
         'submit_name': _("Update dataset"),
         'script': 'metadb/dataset_form.js',
         'attributes': [
-            {'name': 'collections-url', 
+            {'name': 'collections-url',
              'value': reverse_lazy('metadb:collection-list')},
-            {'name': 'resolutions-url', 
+            {'name': 'resolutions-url',
              'value': reverse_lazy('metadb:resolution-list')},
-            {'name': 'scenarios-url', 
+            {'name': 'scenarios-url',
              'value': reverse_lazy('metadb:scenario-list')},
-            {'name': 'datakinds-url', 
+            {'name': 'datakinds-url',
              'value': reverse_lazy('metadb:datakind-list')},
-            {'name': 'filetypes-url', 
+            {'name': 'filetypes-url',
              'value': reverse_lazy('metadb:filetype-list')},
         ],
         'style': {'template_pack': 'rest_framework/vertical/'}
@@ -813,7 +895,7 @@ class LevelsGroupViewSet(BaseViewSet):
         parameter_id = request.GET.get('parameterId')
         time_step_id = request.GET.get('timestepId')
         if parameter_id and time_step_id:
-            qset = qset.filter(specificparameter__parameter_id=parameter_id, 
+            qset = qset.filter(specificparameter__parameter_id=parameter_id,
                                specificparameter__time_step_id=time_step_id)
         serializer = self.get_serializer(qset, many=True)
         ctx = {'data': serializer.data}
@@ -869,6 +951,111 @@ class LevelsVariableViewSet(BaseViewSet):
         'submit_name': _('Delete levels variable'),
         'style': {'template_pack': 'rest_framework/vertical/'}
     }
+
+
+class OptionViewSet(BaseViewSet):
+    """
+    Returns options
+    """
+    queryset = Option.objects.all()
+    serializer_class = OptionSerializer
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer, TemplateHTMLRenderer]
+    template_name = 'metadb/includes/rest_form.html'
+    options_template_name = 'metadb/hr/dropdown_list_options.html'
+    list_url = 'metadb:option-list'
+    action_url = 'metadb:option-detail'
+
+    table_headers = [
+        {'type': 'head_none', 'caption': _('Id'), 'field': 'id'},
+        {'type': 'head_text', 'caption': _('Label'), 'field': 'label'},
+        {'type': 'head_text', 'caption': _('GUI element name'), 'field': 'gui_element.name'},
+        {'type': 'head_text', 'caption': _('GUI element caption'), 'field': 'gui_element.guielementi18n.caption'},
+    ]
+
+    ctx_create = {
+        'method': 'POST',
+        'form_class': 'js-option-form',
+        'title': _("Create a new option"),
+        'submit_name': _("Create option"),
+        'script': 'metadb/option_form.js',
+        'attributes': [
+            {'name': 'gui-element-url',
+             'value': reverse_lazy('metadb:form_load_guielements')},
+        ],
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_update = {
+        'method': 'PUT',
+        'form_class': 'js-option-form',
+        'title': _("Update option"),
+        'submit_name': _("Update option"),
+        'script': 'metadb/option_form.js',
+        'attributes': [
+            {'name': 'gui-element-url',
+             'value': reverse_lazy('metadb:form_load_guielements')},
+        ],
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_delete = {
+        'method': 'DELETE',
+        'form_class': 'js-option-delete-form',
+        'title': _('Confirm option delete'),
+        'text': _('Are you sure you want to delete the option'),
+        'submit_name': _('Delete option'),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+
+class OptionValueViewSet(BaseViewSet):
+    """
+    Returns option values
+    """
+    queryset = OptionValue.objects.all()
+    serializer_class = OptionValueSerializer
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer, TemplateHTMLRenderer]
+    template_name = 'metadb/includes/rest_form.html'
+    options_template_name = 'metadb/hr/dropdown_list_options.html'
+    list_url = 'metadb:optionvalue-list'
+    action_url = 'metadb:optionvalue-detail'
+
+    table_headers = [
+        {'type': 'head_none', 'caption': _('Id'), 'field': 'id'},
+        {'type': 'head_text', 'caption': _('Label'), 'field': 'label'},
+        {'type': 'head_text', 'caption': _('Name'), 'field': 'optionvaluei18n.name'},
+    ]
+
+    ctx_create = {
+        'method': 'POST',
+        'form_class': 'js-optionvalue-form',
+        'title': _("Create a new option value"),
+        'submit_name': _("Create option value"),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_update = {
+        'method': 'PUT',
+        'form_class': 'js-optionvalue-form',
+        'title': _("Update option value"),
+        'submit_name': _("Update option value"),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_delete = {
+        'method': 'DELETE',
+        'form_class': 'js-optionvalue-delete-form',
+        'title': _('Confirm level option value'),
+        'text': _('Are you sure you want to delete the option value'),
+        'submit_name': _('Delete option value'),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    def __init__(self, *args, **kwargs):
+        self.queryset = self.queryset.filter(
+            language__code=get_language()).order_by('optionvaluei18n__name')
+
+
 
 
 class OrganizationViewSet(BaseViewSet):
@@ -1004,7 +1191,7 @@ class PropertyViewSet(BaseViewSet):
         'submit_name': _("Create property"),
         'script': 'metadb/property_form.js',
         'attributes': [
-            {'name': 'gui-element-url', 
+            {'name': 'gui-element-url',
              'value': reverse_lazy('metadb:form_load_guielements')},
         ],
         'style': {'template_pack': 'rest_framework/vertical/'}
@@ -1017,7 +1204,7 @@ class PropertyViewSet(BaseViewSet):
         'submit_name': _("Update property"),
         'script': 'metadb/property_form.js',
         'attributes': [
-            {'name': 'gui-element-url', 
+            {'name': 'gui-element-url',
              'value': reverse_lazy('metadb:form_load_guielements')},
         ],
         'style': {'template_pack': 'rest_framework/vertical/'}
@@ -1436,3 +1623,68 @@ class VariableViewSet(BaseViewSet):
         'submit_name': _('Delete variable'),
         'style': {'template_pack': 'rest_framework/vertical/'}
     }
+
+
+class VertexViewSet(BaseViewSet):
+    """
+    Returns vertices
+    """
+    queryset = Vertex.objects.all()
+    serializer_class = VertexSerializer
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
+    template_name = 'metadb/includes/rest_form.html'
+    options_template_name = 'metadb/hr/dropdown_list_options.html'
+    list_url = 'metadb:vertex-list'
+    action_url = 'metadb:vertex-detail'
+
+    table_headers = [
+        ('head_none', 'Id'),
+        ('head_select', _('Computing module')),
+        ('head_select', _('Option label')),
+        ('head_select', _('GUI element')),
+        ('head_none', _('Option value')),
+    ]
+
+    ctx_create = {
+        'method': 'POST',
+        'form_class': 'js-vertex-form',
+        'title': _("Create a new vertex"),
+        'submit_name': _("Create vertex"),
+        'script': 'metadb/vertex_form.js',
+        'attributes': [
+            {'name': 'computingmodule-url',
+             'value': reverse_lazy('metadb:computingmodule-list')},
+            {'name': 'option-url',
+             'value': reverse_lazy('metadb:option-list')},
+            {'name': 'optionvalue-url',
+             'value': reverse_lazy('metadb:optionvalue-list')},
+        ],
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_update = {
+        'method': 'PUT',
+        'form_class': 'js-vertex-form',
+        'title': _("Update vertex"),
+        'submit_name': _("Update vertex"),
+        'script': 'metadb/specpar_form.js',
+        'attributes': [
+            {'name': 'computingmodule-url',
+             'value': reverse_lazy('metadb:computingmodule-list')},
+            {'name': 'option-url',
+             'value': reverse_lazy('metadb:option-list')},
+            {'name': 'optionvalue-url',
+             'value': reverse_lazy('metadb:optionvalue-list')},
+        ],
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_delete = {
+        'method': 'DELETE',
+        'form_class': 'js-vertex-delete-form',
+        'title': _('Confirm vertex delete'),
+        'text': _('Are you sure you want to delete the vertex'),
+        'submit_name': _('Delete vertex'),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+

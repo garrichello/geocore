@@ -1,5 +1,5 @@
 $(function() {
-    var simple_form_class_name = '.js-property-form';
+    var simple_form_class_name = '.js-option-form';
 
     // Create property modal
     $(simple_form_class_name).on('click', '.js-add-button', function() { 

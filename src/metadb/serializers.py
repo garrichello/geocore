@@ -1,9 +1,9 @@
 from rest_framework import serializers
 from rest_framework.reverse import reverse
+from rest_framework.renderers import *
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import get_language
 from collections import OrderedDict
-from rest_framework.renderers import *
 
 from .models import *
 
@@ -867,7 +867,7 @@ class TimeStepSerializer(serializers.HyperlinkedModelSerializer):
                                         language=db_lang,
                                         **timestepi18n_data)
 
-        return timesteps
+        return timestep
 
     def update(self, instance, validated_data):
         timestepi18n = instance.timestepi18n_set.filter(language__code=get_language()).get()
@@ -1498,7 +1498,8 @@ class LanguageSerializer(serializers.HyperlinkedModelSerializer):
         return Language.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
-        instance.name_pattern = validated_data.get('name_pattern', instance.name_pattern)
+        instance.name = validated_data.get('name', instance.name)
+        instance.code = validated_data.get('code', instance.code)
         instance.save()
 
         return instance
@@ -1516,3 +1517,433 @@ class LanguageRelatedField(ModifiedRelatedField):
 
     def to_internal_value(self, data):
         return Language.objects.get(pk=data)
+
+
+class ConveyorSerializer(serializers.HyperlinkedModelSerializer):
+    dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:conveyor-detail',
+                                                   read_only=True)
+    class Meta:
+        model = Conveyor
+        fields = ['id', 'dataurl']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def to_representation(self, instance):
+        action = self.context['request'].META.get('HTTP_ACTION')
+        if action == 'options_list' or self.context['request'].GET.get('format') == 'html':
+            result = instance
+        else:
+            result = super().to_representation(instance)
+        return result
+
+    def create(self, validated_data):
+        return Conveyor.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        instance.save()
+
+        return instance
+
+
+class ConveyorRelatedField(ModifiedRelatedField):
+
+    def to_representation(self, value):
+        data = ConveyorSerializer(value, context=self.context).data
+        action = self.context['request'].META.get('HTTP_ACTION')
+        result = data
+        if action == 'update':
+            result = result.get('id', None)
+        return result
+
+    def to_internal_value(self, data):
+        return Conveyor.objects.get(pk=data)
+
+
+class ComputingModuleSerializer(serializers.HyperlinkedModelSerializer):
+    dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:computingmodule-detail',
+                                                   read_only=True)
+    class Meta:
+        model = ComputingModule
+        fields = ['id', 'dataurl', 'name']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Name
+        self.fields['name'].label = _('Computing module name')
+        self.fields['name'].style = {'template': 'metadb/custom_input.html'}
+
+    def to_representation(self, instance):
+        action = self.context['request'].META.get('HTTP_ACTION')
+        if action == 'options_list' or self.context['request'].GET.get('format') == 'html':
+            result = instance
+        else:
+            result = super().to_representation(instance)
+        return result
+
+    def create(self, validated_data):
+        return ComputingModule.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        instance.name = validated_data.get('name', instance.name)
+        instance.save()
+
+        return instance
+
+
+class ComputingModuleRelatedField(ModifiedRelatedField):
+
+    def to_representation(self, value):
+        data = ComputingModuleSerializer(value, context=self.context).data
+        action = self.context['request'].META.get('HTTP_ACTION')
+        result = data
+        if action == 'update':
+            result = result.get('id', None)
+        return result
+
+    def to_internal_value(self, data):
+        return ComputingModule.objects.get(pk=data)
+
+
+class OptionSerializer(serializers.HyperlinkedModelSerializer):
+    dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:option-detail',
+                                                   read_only=True)
+    qset = GuiElement.objects.order_by('name')
+    gui_element = GuiElementRelatedField(queryset=qset)
+
+    class Meta:
+        model = Option
+        fields = ['id', 'dataurl', 'label', 'gui_element']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Label
+        self.fields['label'].label = _('Option label')
+        self.fields['label'].style = {'template': 'metadb/custom_input.html'}
+        # GUI element
+        self.fields['gui_element'].data_url = reverse('metadb:guielement-list')
+        self.fields['gui_element'].label = _('GUI element name')
+        self.fields['gui_element'].style = {'template': 'metadb/custom_select.html'}
+        self.fields['gui_element'].allow_blank = True
+
+    def to_representation(self, instance):
+        action = self.context['request'].META.get('HTTP_ACTION')
+        if action == 'options_list' or self.context['request'].GET.get('format') == 'html':
+            result = instance
+        else:
+            result = super().to_representation(instance)
+        return result
+
+    def create(self, validated_data):
+        return Option.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        instance.label = validated_data.get('label', instance.label)
+        instance.gui_element = validated_data.get('gui_element', instance.gui_element)
+        instance.save()
+
+        return instance
+
+
+class OptionRelatedField(ModifiedRelatedField):
+
+    def to_representation(self, value):
+        data = OptionSerializer(value, context=self.context).data
+        action = self.context['request'].META.get('HTTP_ACTION')
+        result = data
+        if action == 'update':
+            result = result.get('id', None)
+        return result
+
+    def to_internal_value(self, data):
+        return Option.objects.get(pk=data)
+
+
+class OptionValueI18NSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = OptionValueI18N
+        fields = ['id', 'name']
+
+    def to_representation(self, instance):
+        data = instance.filter(language__code=get_language()).get()
+        return super().to_representation(data)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['name'].label = _('Option value name')
+        self.fields['name'].style = {'template': 'metadb/custom_input.html'}
+
+
+class OptionValueSerializer(serializers.HyperlinkedModelSerializer):
+    dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:optionvalue-detail',
+                                                   read_only=True)
+    optionvaluei18n = OptionValueI18NSerializer(source='optionvaluei18n_set', label='')
+
+    class Meta:
+        model = OptionValue
+        fields = ['id', 'dataurl', 'label', 'optionvaluei18n']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['label'].label = _('Option value label')
+        self.fields['label'].style = {'template': 'metadb/custom_input.html'}
+
+    def to_representation(self, instance):
+        action = self.context['request'].META.get('HTTP_ACTION')
+        if action == 'options_list' or self.context['request'].GET.get('format') == 'html':
+            result = instance
+        else:
+            result = super().to_representation(instance)
+        return result
+
+    def create(self, validated_data):
+        optionvaluei18n_data = validated_data.pop('optionvaluei18n_set')
+        optionvalue = OptionValue.objects.create(**validated_data)
+        for db_lang in Language.objects.all():
+            OptionValueI18N.objects.create(option_value=optionvalue,
+                                           language=db_lang,
+                                           **optionvaluei18n_data)
+
+        return optionvalue
+
+    def update(self, instance, validated_data):
+        optionvaluei18n = instance.optionvaluei18n_set.filter(language__code=get_language()).get()
+        optionvaluei18n.name = validated_data['optionvaluei18n_set'].get('name', optionvaluei18n.name)
+        optionvaluei18n.save()
+        instance.label = validated_data.get('label', instance.label)
+        instance.save()
+
+        return instance
+
+
+class OptionValueRelatedField(ModifiedRelatedField):
+
+    def to_representation(self, value):
+        data = OptionValueSerializer(value, context=self.context).data
+        action = self.context['request'].META.get('HTTP_ACTION')
+        result = data
+        if action == 'update':
+            result = result.get('id', None)
+        return result
+
+    def to_internal_value(self, data):
+        return OptionValue.objects.get(pk=data)
+
+
+class VertexSerializer(serializers.HyperlinkedModelSerializer):
+    dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:vertex-detail',
+                                                   read_only=True)
+    qset = ComputingModule.objects.all()
+    computing_module = ComputingModuleRelatedField(queryset=qset)
+    qset = Option.objects.all()
+    condition_option = OptionRelatedField(queryset=qset)
+    qset = OptionValue.objects.all()
+    condition_value = OptionValueRelatedField(queryset=qset)
+
+    class Meta:
+        model = Vertex
+        fields = ['id', 'dataurl', 'computing_module', 'condition_option', 'condition_value']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Computing module
+        self.fields['computing_module'].data_url = reverse('metadb:computingmodule-list')
+        self.fields['computing_module'].label = _('Computing module')
+        self.fields['computing_module'].style = {'template': 'metadb/custom_select.html'}
+        self.fields['computing_module'].allow_blank = True
+        # Condition option
+        self.fields['condition_option'].data_url = reverse('metadb:option-list')
+        self.fields['condition_option'].label = _('Condition option')
+        self.fields['condition_option'].style = {'template': 'metadb/custom_select.html'}
+        self.fields['condition_option'].allow_blank = True
+        # Condition value
+        self.fields['condition_value'].data_url = reverse('metadb:optionvalue-list')
+        self.fields['condition_value'].label = _('Condition value')
+        self.fields['condition_value'].style = {'template': 'metadb/custom_select.html'}
+        self.fields['condition_value'].allow_blank = True
+
+    def to_representation(self, instance):
+        action = self.context['request'].META.get('HTTP_ACTION')
+        if action == 'options_list' or self.context['request'].GET.get('format') == 'html':
+            result = instance
+        else:
+            result = super().to_representation(instance)
+        return result
+
+    def create(self, validated_data):
+        return Vertex.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        instance.computing_module = validated_data.get('computing_module', instance.computing_module)
+        instance.condition_option = validated_data.get('condition_option', instance.condition_option)
+        instance.condition_value = validated_data.get('condition_value', instance.condition_value)
+        instance.save()
+
+        return instance
+
+
+class VertexRelatedField(ModifiedRelatedField):
+
+    def to_representation(self, value):
+        data = VertexSerializer(value, context=self.context).data
+        action = self.context['request'].META.get('HTTP_ACTION')
+        result = data
+        if action == 'update':
+            result = result.get('id', None)
+        return result
+
+    def to_internal_value(self, data):
+        return Vertex.objects.get(pk=data)
+
+
+class DataVariableSerializer(serializers.HyperlinkedModelSerializer):
+    dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:datavariable-detail',
+                                                   read_only=True)
+    qset = Units.objects.order_by('unitsi18n__name')
+    units = UnitsRelatedField(queryset=qset)
+
+    class Meta:
+        model = DataVariable
+        fields = ['id', 'dataurl', 'label', 'description', 'units']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Label
+        self.fields['label'].label = _('Label')
+        self.fields['label'].style = {'template': 'metadb/custom_input.html'}
+        # Description
+        self.fields['description'].label = _('Description')
+        self.fields['description'].style = {'template': 'metadb/custom_input.html'}
+        # Units
+        self.fields['units'].data_url = reverse('metadb:units-list')
+        self.fields['units'].label = _('Measurement units')
+        self.fields['units'].style = {'template': 'metadb/custom_select.html'}
+        self.fields['units'].allow_blank = True
+
+    def to_representation(self, instance):
+        action = self.context['request'].META.get('HTTP_ACTION')
+        if action == 'options_list' or self.context['request'].GET.get('format') == 'html':
+            result = instance
+        else:
+            result = super().to_representation(instance)
+        return result
+
+    def create(self, validated_data):
+        return DataVariable.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        instance.label = validated_data.get('label', instance.label)
+        instance.description = validated_data.get('description', instance.description)
+        instance.units = validated_data.get('units', instance.units)
+        instance.save()
+
+        return instance
+
+
+class DataVariableRelatedField(ModifiedRelatedField):
+
+    def to_representation(self, value):
+        data = DataVariableSerializer(value, context=self.context).data
+        action = self.context['request'].META.get('HTTP_ACTION')
+        result = data
+        if action == 'update':
+            result = result.get('id', None)
+        return result
+
+    def to_internal_value(self, data):
+        return DataVariable.objects.get(pk=data)
+
+
+class EdgeSerializer(serializers.HyperlinkedModelSerializer):
+    dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:edge-detail',
+                                                   read_only=True)
+    qset = Conveyor.objects.all()
+    conveyor = ConveyorRelatedField(queryset=qset)
+    qset = Vertex.objects.all()
+    from_vertex = VertexRelatedField(queryset=qset)
+    qset = Vertex.objects.all()
+    to_vertex = VertexRelatedField(queryset=qset)
+    qset = DataVariable.objects.all()
+    data_variable = DataVariableRelatedField(queryset=qset)
+
+    class Meta:
+        model = Edge
+        fields = ['id', 'dataurl', 'conveyor', 'from_vertex', 'from_output', 'to_vertex', 
+                  'to_input', 'data_variable']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Conveyor
+        self.fields['conveyor'].data_url = reverse('metadb:conveyor-list')
+        self.fields['conveyor'].label = _('Conveyor')
+        self.fields['conveyor'].style = {'template': 'metadb/custom_select.html'}
+        self.fields['conveyor'].allow_blank = True
+        # From vertex
+        self.fields['from_vertex'].data_url = reverse('metadb:vertex-list')
+        self.fields['from_vertex'].label = _('Source vertex')
+        self.fields['from_vertex'].style = {'template': 'metadb/custom_select.html'}
+        self.fields['from_vertex'].allow_blank = True
+        # From output
+        self.fields['from_output'].label = _('Source output')
+        self.fields['from_output'].style = {'template': 'metadb/custom_input.html'}
+        # To vertex
+        self.fields['to_vertex'].data_url = reverse('metadb:vertex-list')
+        self.fields['to_vertex'].label = _('Target vertex')
+        self.fields['to_vertex'].style = {'template': 'metadb/custom_select.html'}
+        self.fields['to_vertex'].allow_blank = True
+        # To input
+        self.fields['to_input'].label = _('Target input')
+        self.fields['to_input'].style = {'template': 'metadb/custom_input.html'}
+        # Data variable
+        self.fields['data_variable'].data_url = reverse('metadb:datavariable-list')
+        self.fields['data_variable'].label = _('Data variable')
+        self.fields['data_variable'].style = {'template': 'metadb/custom_select.html'}
+        self.fields['data_variable'].allow_blank = True
+
+    def to_representation(self, instance):
+        action = self.context['request'].META.get('HTTP_ACTION')
+        if action == 'options_list' or self.context['request'].GET.get('format') == 'html':
+            result = instance
+        else:
+            result = super().to_representation(instance)
+        return result
+
+    def create(self, validated_data):
+        specific_parameter_data = validated_data.pop('specific_parameter')
+        specific_parameter = SpecificParameter.objects.filter(
+            parameter=specific_parameter_data['parameter'],
+            time_step=specific_parameter_data['time_step'],
+            levels_group=specific_parameter_data['levels_group']
+        ).get()
+        data = Data.objects.create(**validated_data, specific_parameter = specific_parameter)
+        return data
+
+    def update(self, instance, validated_data):
+        instance.dataset = validated_data.get('dataset', instance.dataset)
+        specific_parameter_data = validated_data.get('specific_parameter')
+        specific_parameter = SpecificParameter.objects.filter(
+            parameter=specific_parameter_data['parameter'],
+            time_step=specific_parameter_data['time_step'],
+            levels_group=specific_parameter_data['levels_group']
+        ).get()
+        instance.specific_parameter = specific_parameter
+        instance.property = validated_data.get('property', instance.property)
+        instance.property_value = validated_data.get('property_value', instance.property_value)
+        instance.units = validated_data.get('units', instance.units)
+        instance.variable = validated_data.get('variable', instance.variable)
+        instance.file = validated_data.get('file', instance.file)
+        instance.levels_variable = validated_data.get('levels_variable', instance.levels_variable)
+        instance.root_dir = validated_data.get('root_dir', instance.root_dir)
+        instance.scale = validated_data.get('scale', instance.scale)
+        instance.offset = validated_data.get('offset', instance.offset)
+        instance.save()
+
+        return instance

@@ -3,8 +3,6 @@ from rest_framework import routers
 
 from .views import MainView
 
-from .form_loads import *
-
 from .apiviews import *
 from .conveyor_views import (ConveyorCreateView, ConveyorDeleteView,
                                ConveyorUpdateView)
@@ -33,6 +31,12 @@ router.register('levelsvariables', LevelsVariableViewSet, basename='levelsvariab
 router.register('rootdirs', RootDirViewSet)
 router.register('guielements', GuiElementViewSet)
 router.register('languages', LanguageViewSet)
+router.register('conveyors', ConveyorViewSet)
+router.register('computingmodules', ComputingModuleViewSet)
+router.register('options', OptionViewSet)
+router.register('optionvalues', OptionValueViewSet)
+router.register('vertices', VertexViewSet)
+
 
 app_name = 'metadb'
 urlpatterns = [
