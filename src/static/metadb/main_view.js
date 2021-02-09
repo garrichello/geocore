@@ -208,41 +208,39 @@ data_columnsDefs = [
     { width: '55px', targets: 23 },   // Offset
 ]
 
-var conveyor_api_url = $('#tab-conveyor').attr('api-data-url')
-var conveyor_update_url = $('#tab-conveyor').attr('update-data-url').split('99999');
-var conveyor_delete_url = $('#tab-conveyor').attr('delete-data-url').split('99999');
+var edge_api_url = $('#tab-edge').attr('api-data-url')
 
-conveyor_columns = [
+edge_columns = [
     { 'render': function() { return null; } },  // For checkboxes
     { 'render': function (data, type, row, meta) {
         return '<div><button type="button" class="btn btn-warning btn-sm js-update-collection"'
-               + `data-url="${conveyor_update_url[0]}${row.id}${conveyor_update_url[1]}">`
+               + `data-url="${edge_api_url}${row.id}">`
                + '<span class="glyphicon glyphicon-pencil"></span></button></div>&nbsp;'
                + '<div><button type="button" class="btn btn-danger btn-sm js-delete-collection"'
-               + `data-url="${conveyor_delete_url[0]}${row.id}${conveyor_delete_url[1]}">`
+               + `data-url="${edge_api_url}${row.id}">`
                + '<span class="glyphicon glyphicon-trash"></span></button></div>';
     } },  // for buttons
-    { 'data': 'conveyor_id' },
-    { 'data': 'edge_id' },
-    { 'data': 'from_vertex_id' },
-    { 'data': 'from_module' },
-    { 'data': 'from_option' },
-    { 'data': 'from_option_value' },
+    { 'data': 'conveyor.id' },
+    { 'data': 'id' },
+    { 'data': 'from_vertex.id' },
+    { 'data': 'from_vertex.computing_module.name' },
+    { 'data': 'from_vertex.condition_option.label' },
+    { 'data': 'from_vertex.condition_value.label' },
     { 'data': 'from_output' },
-    { 'data': 'to_vertex_id' },
-    { 'data': 'to_module' },
-    { 'data': 'to_option' },
-    { 'data': 'to_option_value' },
+    { 'data': 'to_vertex.id' },
+    { 'data': 'to_vertex.computing_module.name' },
+    { 'data': 'to_vertex.condition_option.label' },
+    { 'data': 'to_vertex.condition_value.label' },
     { 'data': 'to_input' },
-    { 'data': 'data_label' },
-    { 'data': 'data_description' },
-    { 'data': 'units' },
+    { 'data': 'data_variable.label' },
+    { 'data': 'data_variable.description' },
+    { 'data': 'data_variable.units.unitsi18n.name' },
 ]
 
-conveyor_columnsDefs = [
+edge_columnsDefs = [
     { width: '20px', targets: 0, orderable: false, className: 'select-checkbox' }, // Select checkbox
     { width: '45px', targets: 1, orderable: false, }, // Buttons
-    { width: '65px', targets: 2, },   // Conveyor id
+    { width: '65px', targets: 2, },   // edge id
     { width: '55px', targets: 3 },    // Edge id
     { width: '55px', targets: 4 },    // From vertex id
     { width: '115px', targets: 5 },   // From module
@@ -435,15 +433,15 @@ $(document).ready( function () {
     });
     $('#data').DataTable().on('xhr.dt', set_header);
 
-    // Create Conveyor table
-    var conveyorOptions = $.extend(true, {}, commonOptions);
-    conveyorOptions["columnDefs"] = conveyor_columnsDefs.concat(all_columns_defs);
-    conveyorOptions["columns"] = conveyor_columns;
-    conveyorOptions["ajax"] = { 'url': conveyor_api_url, 'type': 'GET', 'dataSrc': 'data' };
-    $('#conveyor').DataTable( conveyorOptions ).on('draw', function() {
-        addUpdDelButtonHandlers.call(this, 'conveyor');
+    // Create Edge table
+    var edgeOptions = $.extend(true, {}, commonOptions);
+    edgeOptions["columnDefs"] = edge_columnsDefs.concat(all_columns_defs);
+    edgeOptions["columns"] = edge_columns;
+    edgeOptions["ajax"] = { 'url': edge_api_url, 'type': 'GET', 'dataSrc': 'data' };
+    $('#edge').DataTable( edgeOptions ).on('draw', function() {
+        addUpdDelButtonHandlers.call(this, 'edge');
     });
-    $('#conveyor').DataTable().on('xhr.dt', set_header);
+    $('#edge').DataTable().on('xhr.dt', set_header);
 
 
     // Create Other tables
