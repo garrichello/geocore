@@ -608,6 +608,139 @@ class DatasetViewSet(BaseViewSet):
     }
 
 
+class DataVariableViewSet(BaseViewSet):
+    """
+    Returns data variables
+    """
+    queryset = DataVariable.objects.all()
+    serializer_class = DataVariableSerializer
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
+    template_name = 'metadb/includes/rest_form.html'
+    options_template_name = 'metadb/hr/dropdown_list_options.html'
+    list_url = 'metadb:datavariable-list'
+    action_url = 'metadb:datavariable-detail'
+
+    table_headers = [
+        ('head_none', 'Id'),
+        ('head_text', _('Data variable label')),
+        ('head_select', _('Units')),
+        ('head_text', _('Data variable description')),
+    ]
+
+    ctx_create = {
+        'method': 'POST',
+        'form_class': 'js-datavariable-form',
+        'title': _("Create a new data variable"),
+        'submit_name': _("Create data variable"),
+        'script': 'metadb/datavariable_form.js',
+        'attributes': [
+            {'name': 'units-url',
+             'value': reverse_lazy('metadb:units-list')},
+        ],
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_update = {
+        'method': 'PUT',
+        'form_class': 'js-datavariable-form',
+        'title': _("Update data variable"),
+        'submit_name': _("Update data variable"),
+        'script': 'metadb/datavariable_form.js',
+        'attributes': [
+            {'name': 'units-url',
+             'value': reverse_lazy('metadb:units-list')},
+        ],
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_delete = {
+        'method': 'DELETE',
+        'form_class': 'js-datavariable-delete-form',
+        'title': _('Confirm data variable delete'),
+        'text': _('Are you sure you want to delete the data variable'),
+        'submit_name': _('Delete data variable'),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+
+class EdgeViewSet(BaseViewSet):
+    """
+    Returns edges
+    """
+    queryset = Edge.objects.all()
+    serializer_class = EdgeSerializer
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
+    template_name = 'metadb/includes/rest_form.html'
+    options_template_name = 'metadb/hr/dropdown_list_options.html'
+    list_url = 'metadb:edge-list'
+    action_url = 'metadb:edge-detail'
+
+    table_headers = [
+        ('head_select', _('Conveyor id')),
+        ('head_none', _('Edge id')),
+        ('head_none', _('Source vertex id')),
+        ('head_select', _('Source module')),
+        ('head_select', _('Source condition option')),
+        ('head_select', _('Source condition value')),
+        ('head_text', _('Source module output')),
+        ('head_none', _('Target vertex id')),
+        ('head_select', _('Target module')),
+        ('head_select', _('Target condition option')),
+        ('head_select', _('Target condition value')),
+        ('head_text', _('Target module input')),
+        ('head_select', _('Data label')),
+        ('head_text', _('Data description')),
+        ('head_select', _('Data units')),
+    ]
+
+    ctx_create = {
+        'method': 'POST',
+        'form_class': 'js-edge-form',
+        'title': _("Create a new edge"),
+        'submit_name': _("Create edge"),
+        'script': 'metadb/edge_form.js',
+        'attributes': [
+            {'name': 'conveyors-url',
+             'value': reverse_lazy('metadb:conveyor-list')},
+            {'name': 'vertices-url',
+             'value': reverse_lazy('metadb:vertex-list')},
+            {'name': 'vertices-url',
+             'value': reverse_lazy('metadb:vertex-list')},
+            {'name': 'datavariables-url',
+             'value': reverse_lazy('metadb:datavariable-list')},
+        ],
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_update = {
+        'method': 'PUT',
+        'form_class': 'js-edge-form',
+        'title': _("Update edge"),
+        'submit_name': _("Update edge"),
+        'script': 'metadb/edge_form.js',
+        'attributes': [
+            {'name': 'conveyors-url',
+             'value': reverse_lazy('metadb:conveyor-list')},
+            {'name': 'vertices-url',
+             'value': reverse_lazy('metadb:vertex-list')},
+            {'name': 'vertices-url',
+             'value': reverse_lazy('metadb:vertex-list')},
+            {'name': 'datavariables-url',
+             'value': reverse_lazy('metadb:datavariable-list')},
+        ],
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_delete = {
+        'method': 'DELETE',
+        'form_class': 'js-edge-delete-form',
+        'title': _('Confirm edge delete'),
+        'text': _('Are you sure you want to delete the edge'),
+        'submit_name': _('Delete edge'),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+
 class FileViewSet(BaseViewSet):
     """
     Returns file name patterns
@@ -1414,7 +1547,7 @@ class SpecificParameterViewSet(BaseViewSet):
         ('head_select', _('Time step')),
         ('head_none', _('Time step label')),
         ('head_none', _('Time step subpath')),
-        ('head_select', _('Levels group units')),
+        ('head_select', _('Levels group measurement unit')),
         ('head_text', _('Levels group description')),
         ('head_text', _('Levels names')),
     ]
@@ -1564,7 +1697,7 @@ class UnitsViewSet(BaseViewSet):
         'method': 'PUT',
         'form_class': 'js-unit-form',
         'title': _("Update measurement unit"),
-        'submit_name': _("Update units"),
+        'submit_name': _("Update unit"),
         'style': {'template_pack': 'rest_framework/vertical/'}
     }
 
@@ -1573,7 +1706,7 @@ class UnitsViewSet(BaseViewSet):
         'form_class': 'js-unit-delete-form',
         'title': _('Confirm measurement unit delete'),
         'text': _('Are you sure you want to delete the unit'),
-        'submit_name': _('Delete units'),
+        'submit_name': _('Delete unit'),
         'style': {'template_pack': 'rest_framework/vertical/'}
     }
 

@@ -1823,7 +1823,7 @@ class DataVariableSerializer(serializers.HyperlinkedModelSerializer):
         self.fields['description'].style = {'template': 'metadb/custom_input.html'}
         # Units
         self.fields['units'].data_url = reverse('metadb:units-list')
-        self.fields['units'].label = _('Measurement units')
+        self.fields['units'].label = _('Measurement unit')
         self.fields['units'].style = {'template': 'metadb/custom_select.html'}
         self.fields['units'].allow_blank = True
 

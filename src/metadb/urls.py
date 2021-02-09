@@ -36,6 +36,8 @@ router.register('computingmodules', ComputingModuleViewSet)
 router.register('options', OptionViewSet)
 router.register('optionvalues', OptionValueViewSet)
 router.register('vertices', VertexViewSet)
+router.register('datavariables', DataVariableViewSet)
+router.register('edges', EdgeViewSet)
 
 
 app_name = 'metadb'
