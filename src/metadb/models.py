@@ -97,6 +97,8 @@ class CollectionI18N(models.Model):
 
 class ComputingModule(models.Model):
     name = models.CharField(max_length=100, blank=True)
+    number_of_inputs = models.IntegerField()
+    number_of_outputs = models.IntegerField()
 
     class Meta:
         managed = False
