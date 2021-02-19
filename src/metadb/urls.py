@@ -4,8 +4,6 @@ from rest_framework import routers
 from .views import MainView
 
 from .apiviews import *
-from .conveyor_views import (ConveyorCreateView, ConveyorDeleteView,
-                               ConveyorUpdateView)
 
 router = routers.DefaultRouter()
 router.register('collections', CollectionViewSet)
@@ -44,9 +42,4 @@ app_name = 'metadb'
 urlpatterns = [
     path('', MainView.as_view(), name='main_view'),
     path('', include(router.urls)),
-
-    path('conveyors/create/', ConveyorCreateView.as_view(), name='conveyor_create'),
-    path('conveyors/', ConveyorApiListView.as_view(), name='conveyor_api'),
-    path('conveyors/<int:pk>/update/', ConveyorUpdateView.as_view(), name='conveyor_update'),
-    path('conveyors/<int:pk>/delete/', ConveyorDeleteView.as_view(), name='conveyor_delete'),
 ]
