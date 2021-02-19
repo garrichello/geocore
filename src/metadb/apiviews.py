@@ -1,13 +1,14 @@
-from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.renderers import *
 from rest_framework import viewsets
+from rest_framework.decorators import action
 from rest_framework.exceptions import MethodNotAllowed
 from django.utils.translation import get_language, gettext_lazy as _
 from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.urls import reverse, reverse_lazy
 from django.http import JsonResponse
+from collections import defaultdict
 
 from .models import *
 from .serializers import *
@@ -57,11 +58,11 @@ class BaseViewSet(viewsets.ModelViewSet):
     }
 
     def list(self, request):
-        action = request.META.get('HTTP_ACTION')
+        http_action = request.META.get('HTTP_ACTION')
         serializer = self.get_serializer(self.get_queryset(), many=True)
         ctx = {'data': serializer.data}
 
-        if action == 'options_list' or request.GET.get('format') == 'html':
+        if http_action == 'options_list' or request.GET.get('format') == 'html':
             result = render(request, self.options_template_name, ctx)
         else:
             if isinstance(request.accepted_renderer, JSONRenderer):
@@ -71,25 +72,25 @@ class BaseViewSet(viewsets.ModelViewSet):
         return result
 
     def retrieve(self, request, pk=None):
-        action = request.META.get('HTTP_ACTION')
-        if action == 'create':
+        http_action = request.META.get('HTTP_ACTION')
+        if http_action == 'create':
             instance = None
-        elif action == 'update' or action == 'delete' or pk is not None:
+        elif http_action == 'update' or http_action == 'delete' or pk is not None:
             instance = self.get_queryset().filter(pk=pk).first()
         else:
-            raise MethodNotAllowed(action, detail='Unknown action')
+            raise MethodNotAllowed(http_action, detail='Unknown action')
         serializer = self.get_serializer(instance)
 
-        if isinstance(request.accepted_renderer, BrowsableAPIRenderer) or action == 'json':
+        if isinstance(request.accepted_renderer, BrowsableAPIRenderer) or http_action == 'json':
             response = Response({'data': serializer.data})
         else:
-            if action == 'create':
+            if http_action == 'create':
                 ctx = self.ctx_create
                 ctx['action'] = reverse(self.list_url)
-            elif action == 'update':
+            elif http_action == 'update':
                 ctx = self.ctx_update
                 ctx['action'] = reverse(self.action_url, kwargs={'pk': pk})
-            elif action == 'delete':
+            elif http_action == 'delete':
                 ctx = self.ctx_delete
                 ctx['label'] = getattr(instance, 'label', instance.pk)
                 ctx['action'] = reverse(self.action_url, kwargs={'pk': pk})
@@ -283,56 +284,6 @@ class ComputingModuleViewSet(BaseViewSet):
     }
 
 
-class ConveyorApiListView(APIView):
-    """
-    Returns conveyors
-    """
-    def get(self, request):
-        language = get_language()
-
-        edges = Edge.objects.all()
-        data = {'data': []}
-        for edge in edges:
-            data['data'].append(
-                {
-                    'conveyor_id': edge.conveyor.id,
-                    'edge_id': edge.id,
-                    'from_vertex_id': edge.from_vertex.id,
-                    'from_module': edge.from_vertex.computing_module.name,
-                    'from_option': edge.from_vertex.condition_option.label,
-                    'from_option_value': edge.from_vertex.condition_value.label,
-                    'from_output': edge.from_output,
-                    'to_vertex_id': edge.to_vertex.id,
-                    'to_module': edge.to_vertex.computing_module.name,
-                    'to_option': edge.to_vertex.condition_option.label,
-                    'to_option_value': edge.to_vertex.condition_value.label,
-                    'to_input': edge.to_input,
-                    'data_label': edge.data_variable.label,
-                    'data_description': edge.data_variable.description,
-                    'units': edge.data_variable.units.unitsi18n_set.filter(language__code=language).get().name,
-                }
-            )
-        data['headers'] = [
-            ('head_select', _('Conveyor id')),
-            ('head_none', _('Edge id')),
-            ('head_none', _('Source vertex id')),
-            ('head_none', _('Source module')),
-            ('head_none', _('Source condition option')),
-            ('head_none', _('Source condition value')),
-            ('head_none', _('Source module output')),
-            ('head_none', _('Target vertex id')),
-            ('head_none', _('Target module')),
-            ('head_none', _('Target condition option')),
-            ('head_none', _('Target condition value')),
-            ('head_none', _('Target module input')),
-            ('head_none', _('Data label')),
-            ('head_none', _('Data description')),
-            ('head_none', _('Data units')),
-        ]
-
-        return Response(data)
-
-
 class ConveyorViewSet(BaseViewSet):
     """
     Returns conveyors
@@ -374,6 +325,59 @@ class ConveyorViewSet(BaseViewSet):
         'style': {'template_pack': 'rest_framework/vertical/'}
     }
 
+    @action(methods=['GET'], detail=True)
+    def graph(self, request, pk=None):
+        edges = Edge.objects.filter(conveyor__id=pk).all()
+        vertices = defaultdict(dict)
+        links = {}
+        link_id = 0
+        for edge in edges:
+            vertices[edge.from_vertex]['downlinks'] = vertices[edge.from_vertex].get('downlinks', [])
+            vertices[edge.from_vertex]['downlinks'].append({'output': edge.from_output, 'vertex': edge.to_vertex})
+            vertices[edge.to_vertex]['uplinks'] = vertices[edge.to_vertex].get('uplinks', [])
+            vertices[edge.to_vertex]['uplinks'].append({'input': edge.to_input, 'vertex': edge.from_vertex})
+            links[str(link_id)] = {
+                'fromOperator': f'vertex_{edge.from_vertex.id}',
+                'fromConnector': f'output_{edge.from_output}',
+                'fromSubConnector': 0,
+                'toOperator': f'vertex_{edge.to_vertex.id}',
+                'toConnector': f'input_{edge.to_input}',
+                'toSubConnector': 0,
+            }
+            link_id += 1
+        operators = {}
+        top = 10
+        left = 10
+        d_left = 100
+        for vertex, data in vertices.items():
+            op_key = f'vertex_{vertex.id}'
+            operators[op_key] = {
+                'top': top,
+                'left': left,
+                'properties': {},
+            }
+            inputs = {}
+            for uplink in data.get('uplinks', {}):
+                input_key = f"input_{uplink['input']}"
+                inputs[input_key] = {
+                    'label': input_key
+                }
+            outputs = {}
+            for downlink in data.get('downlinks', {}):
+                output_key = f"output_{downlink['output']}"
+                outputs[output_key] = {
+                    'label': output_key
+                }
+            operators[op_key]['properties'] = {
+                'title': vertex.computing_module.name,
+                'inputs': inputs,
+                'outputs': outputs,
+            }
+            left += d_left
+
+        result = {'operators': operators, 'links': links}
+        response = JsonResponse(result)
+        return response
 
 class DataViewSet(BaseViewSet):
     """
@@ -1023,7 +1027,7 @@ class LevelsGroupViewSet(BaseViewSet):
     }
 
     def list(self, request):
-        action = request.META.get('HTTP_ACTION')
+        http_action = request.META.get('HTTP_ACTION')
         qset = self.get_queryset()
         parameter_id = request.GET.get('parameterId')
         time_step_id = request.GET.get('timestepId')
@@ -1033,7 +1037,7 @@ class LevelsGroupViewSet(BaseViewSet):
         serializer = self.get_serializer(qset, many=True)
         ctx = {'data': serializer.data}
 
-        if action == 'options_list' or request.GET.get('format') == 'html':
+        if http_action == 'options_list' or request.GET.get('format') == 'html':
             result = render(request, self.options_template_name, ctx)
         else:
             if isinstance(request.accepted_renderer, JSONRenderer):
@@ -1187,8 +1191,6 @@ class OptionValueViewSet(BaseViewSet):
     def __init__(self, *args, **kwargs):
         self.queryset = self.queryset.filter(
             language__code=get_language()).order_by('optionvaluei18n__name')
-
-
 
 
 class OrganizationViewSet(BaseViewSet):
@@ -1650,7 +1652,7 @@ class TimeStepViewSet(BaseViewSet):
 
 
     def list(self, request):
-        action = request.META.get('HTTP_ACTION')
+        http_action = request.META.get('HTTP_ACTION')
         qset = self.get_queryset()
         parameter_id = request.GET.get('parameterId')
         if parameter_id:
@@ -1658,7 +1660,7 @@ class TimeStepViewSet(BaseViewSet):
         serializer = self.get_serializer(qset, many=True)
         ctx = {'data': serializer.data}
 
-        if action == 'options_list' or request.GET.get('format') == 'html':
+        if http_action == 'options_list' or request.GET.get('format') == 'html':
             result = render(request, self.options_template_name, ctx)
         else:
             if isinstance(request.accepted_renderer, JSONRenderer):
