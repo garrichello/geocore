@@ -407,8 +407,24 @@ jQuery(function ($) {
             var shape_path = document.createElementNS("http://www.w3.org/2000/svg", "path");
             shape_path.setAttribute("stroke-width", this.options.linkWidth.toString());
             shape_path.setAttribute("fill", "none");
+            shape_path.setAttribute("id", "path_"+linkId);
             group.appendChild(shape_path);
             linkData.internal.els.path = shape_path;
+
+            var shape_text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            shape_text.setAttribute('class', 'flowchart-operator-connector-label');
+            group.appendChild(shape_text);
+
+            var shape_textPath = document.createElementNS("http://www.w3.org/2000/svg", "textPath");
+            shape_textPath.setAttribute("href", "#path_"+linkId);
+            shape_textPath.setAttribute("startOffset", "50%");
+            shape_textPath.setAttribute("text-anchor", "middle");
+            shape_text.appendChild(shape_textPath);
+
+            var shape_tspan = document.createElementNS("http://www.w3.org/2000/svg", "tspan");
+            shape_tspan.textContent = linkData.label;
+            shape_tspan.setAttribute("dy", "-5");
+            shape_textPath.appendChild(shape_tspan);
 
             var shape_rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
             shape_rect.setAttribute("stroke", "none");
