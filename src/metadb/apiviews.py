@@ -325,6 +325,12 @@ class ConveyorViewSet(BaseViewSet):
         'style': {'template_pack': 'rest_framework/vertical/'}
     }
 
+    def sort_dict(self, in_dict: dict):
+        out_dict = {}
+        for key in sorted(in_dict.keys()):
+            out_dict[key] = in_dict[key]
+        return out_dict
+
     @action(methods=['GET'], detail=True)
     def graph(self, request, pk=None):
         edges = Edge.objects.filter(conveyor__id=pk).all()
@@ -343,6 +349,7 @@ class ConveyorViewSet(BaseViewSet):
                 'toOperator': f'vertex_{edge.to_vertex.id}',
                 'toConnector': f'input_{edge.to_input}',
                 'toSubConnector': 0,
+                'label': edge.data_variable.label,
             }
             link_id += 1
         operators = {}
@@ -370,8 +377,8 @@ class ConveyorViewSet(BaseViewSet):
                 }
             operators[op_key]['properties'] = {
                 'title': vertex.computing_module.name,
-                'inputs': inputs,
-                'outputs': outputs,
+                'inputs': self.sort_dict(inputs),
+                'outputs': self.sort_dict(outputs),
             }
             left += d_left
 
