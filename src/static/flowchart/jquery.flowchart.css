@@ -106,7 +106,7 @@
 .flowchart-operator {
     position: absolute;
     width: auto;
-    border: 1px solid #CCCCCC;
+    border: 2px solid #CCCCCC;
     background: #FAFAFA;
     pointer-events: auto;
 }
@@ -119,9 +119,25 @@
     border-color: #555;
 }
 
+.flowchart-conditional-operator {
+    position: absolute;
+    width: auto;
+    border: 2px dashed #ffbb00;
+    background: #FAFAFA;
+    pointer-events: auto;
+}
+
+.flowchart-conditional-operator.hover {
+    border-color: #daa000;
+}
+
+.flowchart-conditional-operator.selected {
+    border-color: #a77a00;
+}
 
 
-.flowchart-operator .flowchart-operator-title {
+.flowchart-operator .flowchart-operator-title,
+.flowchart-conditional-operator .flowchart-operator-title {
     width: 100%;
     padding: 5px;
     font-weight: bold;
@@ -136,17 +152,21 @@
     font-size: small;
 }
 
-.flowchart-operator .flowchart-operator-inputs-outputs {
+.flowchart-operator .flowchart-operator-inputs-outputs,
+.flowchart-conditional-operator .flowchart-operator-inputs-outputs {
     display: table;
     width: 100%;
     margin-top: 5px;
     margin-bottom: 5px;
 }
 
-.flowchart-operator .flowchart-operator-inputs, .flowchart-default-operator .flowchart-operator-outputs {
+.flowchart-operator .flowchart-operator-inputs,
+.flowchart-default-operator .flowchart-operator-outputs,
+.flowchart-conditional-operator .flowchart-operator-inputs {
     display: table-cell;
     width: 50%;
 }
+
 
 /*
  * flowchart-vertical

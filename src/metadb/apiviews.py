@@ -379,6 +379,8 @@ class ConveyorViewSet(BaseViewSet):
                 'title': vertex.computing_module.name,
                 'inputs': self.sort_dict(inputs),
                 'outputs': self.sort_dict(outputs),
+                'condition_option': vertex.condition_option.label,
+                'condition_value': vertex.condition_value.label,
             }
             left += d_left
 
