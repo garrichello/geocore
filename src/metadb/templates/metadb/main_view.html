@@ -21,7 +21,7 @@
     <div id="language" language={{ language }}></div>
     <h1>{% trans "MetaDB administrative console" %}</h1>
     <div id="main-view" style="margin-left: 10px; margin-right: 10px; ">
-        <ul class="nav nav-tabs" role="tablist">
+        <ul class="nav nav-tabs" role="tablist" id="main-tabs">
             <li class="active">
                 <a href="#tab-collection" data-toggle="tab">{% trans "Collection" %}</a>
             </li>
@@ -38,12 +38,14 @@
                 <a href="#tab-other" data-toggle="tab">{% trans "Other" %}</a>
             </li>
             <li>
+                <a href="#tab-conveyor" data-toggle="tab">{% trans "Conveyor" %}</a>
+            </li>
+            <li>
                 <a href="#tab-edge" data-toggle="tab">{% trans "Edge" %}</a>
             </li>
         </ul>
         <div class="tab-content">
-            <div class="tab-pane active" id="tab-collection"
-                api-data-url="{% url 'metadb:collection-list' %}">
+            <div class="tab-pane active" id="tab-collection" api-data-url="{% url 'metadb:collection-list' %}">
                 <button type="button" 
                         class="btn btn-primary js-create"
                         data-url="{% url 'metadb:collection-detail' -1 %}">
@@ -56,8 +58,7 @@
                 </span>
                 <table id='collection' class="table table-hover table-bordered" width="100%"></table>
             </div>
-            <div class="tab-pane" id="tab-dataset"
-                api-data-url="{% url 'metadb:dataset-list' %}">
+            <div class="tab-pane" id="tab-dataset" api-data-url="{% url 'metadb:dataset-list' %}">
                 <button type="button"
                         class="btn btn-primary js-create"
                         data-url="{% url 'metadb:dataset-detail' -1 %}">
@@ -70,8 +71,7 @@
                 </span>
                 <table id='dataset' class="table table-hover table-bordered" width="100%"></table>
             </div>
-            <div class="tab-pane" id="tab-specpar"
-                api-data-url="{% url 'metadb:specificparameter-list' %}">
+            <div class="tab-pane" id="tab-specpar" api-data-url="{% url 'metadb:specificparameter-list' %}">
                 <button type="button"
                         class="btn btn-primary js-create"
                         data-url="{% url 'metadb:specificparameter-detail' -1 %}">
@@ -84,8 +84,7 @@
                 </span>
                 <table id='specpar' class="table table-hover table-bordered" width="200%"></table>
             </div>
-            <div class="tab-pane" id="tab-data"
-                api-data-url="{% url 'metadb:data-list' %}">
+            <div class="tab-pane" id="tab-data" api-data-url="{% url 'metadb:data-list' %}">
                 <button type="button"
                         class="btn btn-primary js-create"
                         data-url="{% url 'metadb:data-detail' -1 %}">
@@ -128,8 +127,15 @@
                 </span>
                 <table id="other" class="table table-hover table-bordered" width="100%"></table>
             </div>
-            <div class="tab-pane" id="tab-edge"
-                api-data-url="{% url 'metadb:edge-list' %}">
+            <div class="tab-pane" id="tab-conveyor" api-data-url="{% url 'metadb:conveyor-list' %}">
+                <button type="button"
+                        class="btn btn-primary js-create"
+                        data-url="{% url 'metadb:conveyor-detail' -1 %}">
+                    <span class="glyphicon glyphicon-plus"></span> {% trans "Create" %}
+                </button>
+                <table id='conveyor' class="table table-hover table-bordered" width="10%"></table>
+            </div>
+            <div class="tab-pane" id="tab-edge" api-data-url="{% url 'metadb:edge-list' %}">
                 <button type="button"
                         class="btn btn-primary js-create"
                         data-url="{% url 'metadb:edge-detail' -1 %}">
