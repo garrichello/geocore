@@ -673,3 +673,6 @@ class Vertex(models.Model):
     class Meta:
         managed = False
         db_table = 'vertex'
+
+    def __str__(self):
+        return f'{self.computing_module.name}:{self.id}'
