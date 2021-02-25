@@ -534,13 +534,16 @@ jQuery(function ($) {
             var $operator = $('<div class="flowchart-operator"></div>');
             $operator.addClass(infos.class);
 
+            var conditional_title = "";
             if (operatorData.properties.condition_option != "-" &&
                 operatorData.properties.condition_option != undefined) {
                 $operator.addClass("flowchart-conditional-operator");
+                conditional_title = 
+                    `<br>[if ${operatorData.properties.condition_option} == ${operatorData.properties.condition_value}]`;
             }
 
             var $operator_title = $('<div class="flowchart-operator-title"></div>');
-            $operator_title.html(infos.title);
+            $operator_title.html(infos.title+conditional_title);
             $operator_title.appendTo($operator);
 
             var $operator_body = $('<div class="flowchart-operator-body"></div>');
