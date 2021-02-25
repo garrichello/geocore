@@ -1738,11 +1738,11 @@ class OptionValueRelatedField(ModifiedRelatedField):
 class VertexSerializer(serializers.HyperlinkedModelSerializer):
     dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:vertex-detail',
                                                    read_only=True)
-    qset = ComputingModule.objects.all()
+    qset = ComputingModule.objects.order_by('name')
     computing_module = ComputingModuleRelatedField(queryset=qset)
-    qset = Option.objects.all()
+    qset = Option.objects.order_by('label')
     condition_option = OptionRelatedField(queryset=qset)
-    qset = OptionValue.objects.all()
+    qset = OptionValue.objects.order_by('label')
     condition_value = OptionValueRelatedField(queryset=qset)
 
     class Meta:
@@ -1866,11 +1866,11 @@ class EdgeSerializer(serializers.HyperlinkedModelSerializer):
                                                    read_only=True)
     qset = Conveyor.objects.all()
     conveyor = ConveyorRelatedField(queryset=qset)
-    qset = Vertex.objects.all()
+    qset = Vertex.objects.order_by('computing_module__name')
     from_vertex = VertexRelatedField(queryset=qset)
-    qset = Vertex.objects.all()
+    qset = Vertex.objects.order_by('computing_module__name')
     to_vertex = VertexRelatedField(queryset=qset)
-    qset = DataVariable.objects.all()
+    qset = DataVariable.objects.order_by('label')
     data_variable = DataVariableRelatedField(queryset=qset)
 
     class Meta:
