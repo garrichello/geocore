@@ -377,8 +377,8 @@ class ConveyorViewSet(BaseViewSet):
                 }
             operators[op_key]['properties'] = {
                 'title': vertex.computing_module.name,
-                'inputs': self.sort_dict(inputs),
-                'outputs': self.sort_dict(outputs),
+                'inputs': inputs, #self.sort_dict(inputs),
+                'outputs': outputs, #self.sort_dict(outputs),
                 'condition_option': vertex.condition_option.label,
                 'condition_value': vertex.condition_value.label,
             }
@@ -1126,7 +1126,7 @@ class OptionViewSet(BaseViewSet):
         'script': 'metadb/option_form.js',
         'attributes': [
             {'name': 'gui-element-url',
-             'value': reverse_lazy('metadb:form_load_guielements')},
+             'value': reverse_lazy('metadb:guielement-list')},
         ],
         'style': {'template_pack': 'rest_framework/vertical/'}
     }
@@ -1139,7 +1139,7 @@ class OptionViewSet(BaseViewSet):
         'script': 'metadb/option_form.js',
         'attributes': [
             {'name': 'gui-element-url',
-             'value': reverse_lazy('metadb:form_load_guielements')},
+             'value': reverse_lazy('metadb:guielement-list')},
         ],
         'style': {'template_pack': 'rest_framework/vertical/'}
     }
@@ -1158,7 +1158,7 @@ class OptionValueViewSet(BaseViewSet):
     """
     Returns option values
     """
-    queryset = OptionValue.objects.all()
+    queryset = OptionValue.objects.order_by('label')
     serializer_class = OptionValueSerializer
     renderer_classes = [JSONRenderer, BrowsableAPIRenderer, TemplateHTMLRenderer]
     template_name = 'metadb/includes/rest_form.html'
@@ -1196,10 +1196,6 @@ class OptionValueViewSet(BaseViewSet):
         'submit_name': _('Delete option value'),
         'style': {'template_pack': 'rest_framework/vertical/'}
     }
-
-    def __init__(self, *args, **kwargs):
-        self.queryset = self.queryset.filter(
-            language__code=get_language()).order_by('optionvaluei18n__name')
 
 
 class OrganizationViewSet(BaseViewSet):
@@ -1796,11 +1792,11 @@ class VertexViewSet(BaseViewSet):
         'submit_name': _("Create vertex"),
         'script': 'metadb/vertex_form.js',
         'attributes': [
-            {'name': 'computingmodule-url',
+            {'name': 'computingmodules-url',
              'value': reverse_lazy('metadb:computingmodule-list')},
-            {'name': 'option-url',
+            {'name': 'options-url',
              'value': reverse_lazy('metadb:option-list')},
-            {'name': 'optionvalue-url',
+            {'name': 'optionvalues-url',
              'value': reverse_lazy('metadb:optionvalue-list')},
         ],
         'style': {'template_pack': 'rest_framework/vertical/'}
@@ -1813,11 +1809,11 @@ class VertexViewSet(BaseViewSet):
         'submit_name': _("Update vertex"),
         'script': 'metadb/specpar_form.js',
         'attributes': [
-            {'name': 'computingmodule-url',
+            {'name': 'computingmodules-url',
              'value': reverse_lazy('metadb:computingmodule-list')},
-            {'name': 'option-url',
+            {'name': 'options-url',
              'value': reverse_lazy('metadb:option-list')},
-            {'name': 'optionvalue-url',
+            {'name': 'optionvalues-url',
              'value': reverse_lazy('metadb:optionvalue-list')},
         ],
         'style': {'template_pack': 'rest_framework/vertical/'}
@@ -1832,3 +1828,5 @@ class VertexViewSet(BaseViewSet):
         'style': {'template_pack': 'rest_framework/vertical/'}
     }
 
+    def __init__(self, *args, **kwargs):
+        self.queryset = self.queryset.order_by('computing_module__name')
