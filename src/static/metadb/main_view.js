@@ -213,10 +213,10 @@ var edge_api_url = $('#tab-edge').attr('api-data-url')
 edge_columns = [
     { 'render': function() { return null; } },  // For checkboxes
     { 'render': function (data, type, row, meta) {
-        return '<div><button type="button" class="btn btn-warning btn-sm js-update-collection"'
+        return '<div><button type="button" class="btn btn-warning btn-sm js-update-edge"'
                + `data-url="${edge_api_url}${row.id}">`
                + '<span class="glyphicon glyphicon-pencil"></span></button></div>&nbsp;'
-               + '<div><button type="button" class="btn btn-danger btn-sm js-delete-collection"'
+               + '<div><button type="button" class="btn btn-danger btn-sm js-delete-edge"'
                + `data-url="${edge_api_url}${row.id}">`
                + '<span class="glyphicon glyphicon-trash"></span></button></div>';
     } },  // for buttons
