@@ -408,41 +408,56 @@ $(document).ready( function () {
     datasetOptions["columnDefs"] = dataset_columnsDefs.concat(all_columns_defs),
     datasetOptions["columns"] = dataset_columns;
     datasetOptions["ajax"] = { 'url': dataset_api_url, 'type': 'GET', 'dataSrc': 'data' };
-    $('#dataset').DataTable( datasetOptions ).on('draw', function() {
-        addUpdDelButtonHandlers.call(this, 'dataset');
+    $('#main-tabs a[href="#tab-dataset"]').on('click', function() {
+        if (!$.fn.DataTable.isDataTable('#dataset')) {
+            $('#dataset').DataTable( datasetOptions ).on('draw', function() {
+                addUpdDelButtonHandlers.call(this, 'dataset');
+            });
+            $('#dataset').DataTable().on('xhr.dt', set_header);
+        }
     });
-    $('#dataset').DataTable().on('xhr.dt', set_header);
 
     // Create Specific parameter table
     var specparOptions = $.extend(true, {}, commonOptions);
     specparOptions["columnDefs"] = specpar_columnsDefs.concat(all_columns_defs),
     specparOptions["columns"] = specpar_columns;
     specparOptions["ajax"] = { 'url': specpar_api_url, 'type': 'GET', 'dataSrc': 'data' };
-    $('#specpar').DataTable( specparOptions ).on('draw', function() {
-        addUpdDelButtonHandlers.call(this, 'specpar');
+    $('#main-tabs a[href="#tab-specpar"]').on('click', function() {
+        if (!$.fn.DataTable.isDataTable('#specpar')) {
+            $('#specpar').DataTable( specparOptions ).on('draw', function() {
+                addUpdDelButtonHandlers.call(this, 'specpar');
+            });
+            $('#specpar').DataTable().on('xhr.dt', set_header);
+        }
     });
-    $('#specpar').DataTable().on('xhr.dt', set_header);
 
     // Create Data table
     var dataOptions = $.extend(true, {}, commonOptions);  
     dataOptions["columnDefs"] = data_columnsDefs.concat(all_columns_defs),
     dataOptions["columns"] = data_columns;
     dataOptions["ajax"] = { 'url': data_api_url, 'type': 'GET', 'dataSrc': 'data' };
-    $('#data').DataTable( dataOptions ).on('draw', function() {
-        addUpdDelButtonHandlers.call(this, 'data');
+    $('#main-tabs a[href="#tab-data"]').on('click', function() {
+        if (!$.fn.DataTable.isDataTable('#data')) {
+            $('#data').DataTable( dataOptions ).on('draw', function() {
+                addUpdDelButtonHandlers.call(this, 'data');
+            });
+            $('#data').DataTable().on('xhr.dt', set_header);
+        }
     });
-    $('#data').DataTable().on('xhr.dt', set_header);
 
     // Create Edge table
     var edgeOptions = $.extend(true, {}, commonOptions);
     edgeOptions["columnDefs"] = edge_columnsDefs.concat(all_columns_defs);
     edgeOptions["columns"] = edge_columns;
     edgeOptions["ajax"] = { 'url': edge_api_url, 'type': 'GET', 'dataSrc': 'data' };
-    $('#edge').DataTable( edgeOptions ).on('draw', function() {
-        addUpdDelButtonHandlers.call(this, 'edge');
+    $('#main-tabs a[href="#tab-edge"]').on('click', function() {
+        if (!$.fn.DataTable.isDataTable('#edge')) {
+            $('#edge').DataTable( edgeOptions ).on('draw', function() {
+                addUpdDelButtonHandlers.call(this, 'edge');
+            });
+            $('#edge').DataTable().on('xhr.dt', set_header);
+        }
     });
-    $('#edge').DataTable().on('xhr.dt', set_header);
-
 
     // Create Other tables
     function prePostInit() {
