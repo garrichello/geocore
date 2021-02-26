@@ -303,7 +303,7 @@ function add_filters(that) {
         var th = $( second_header[0].cells[id] );
 
         // 'Select all' checkbox is in the first cell always!
-        if (id == 0) {
+/*        if (id == 0) {
             var check_all = $(`<input type="checkbox" id="check-all-${table_id}"></input>`).appendTo(th);
             check_all.on( 'change', function() {
                 if ($(this).is(':checked')) {
@@ -313,7 +313,7 @@ function add_filters(that) {
                 };
             } );
         };
-        
+*/
         var clearButton = $('<button class="close" type="button"><span class="glyphicon glyphicon-remove"></span></button>');
         var input_group = $('<div class="input-group"></div>');
 
