@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>MetaDB administrative console</title>
+
     <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.6.4/css/buttons.dataTables.min.css">
@@ -11,11 +12,26 @@
     <link rel="stylesheet" type="text/css" href="{% static 'metadb/datatables.css'%}">
 
     <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+	<script type="text/javascript" charset="utf8" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script type="text/javascript" charset="utf8" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.6.4/js/dataTables.buttons.min.js"></script>
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap.min.js"></script>
+
+	<!-- Flowchart CSS and JS -->
+	<link rel="stylesheet" type="text/css" href="{% static 'flowchart/jquery.flowchart.css' %}">
+	<script type="text/javascript" charset="utf8" src="{% static 'flowchart/jquery.flowchart.js' %}"></script>
+	<style >
+		.flowchart-container {
+			width: auto;
+			height: 510px;
+			background: white;
+			border: 1px solid #BBB;
+			margin-bottom: 5px;
+            margin-top: 5px;
+		}
+	</style>
 </head>
 <body>
     <div id="language" language={{ language }}></div>
@@ -133,7 +149,18 @@
                         data-url="{% url 'metadb:conveyor-detail' -1 %}">
                     <span class="glyphicon glyphicon-plus"></span> {% trans "Create" %}
                 </button>
-                <table id='conveyor' class="table table-hover table-bordered" width="10%"></table>
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <table id='conveyor' class="table table-hover table-bordered"></table>
+                        </div>
+                        <div class="col-md-9">
+                        	<div id="chart_container">
+		                        <div class="flowchart-container" id="flowchartworkspace"></div>
+	                        </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="tab-pane" id="tab-edge" api-data-url="{% url 'metadb:edge-list' %}">
                 <button type="button"
@@ -154,5 +181,6 @@
 
     <script type="text/javascript" charset="utf8" src="{% static 'metadb/main_forms.js'%}"></script>
     <script type="text/javascript" charset="utf8" src="{% static 'metadb/main_view.js'%}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static 'metadb/conveyor_view.js'%}"></script>
  </body>
 </html>
