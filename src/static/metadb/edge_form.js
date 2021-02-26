@@ -5,9 +5,9 @@ $(function() {
     $(edge_form_class_name).on('click', '.js-add-button', function() {
         var child_modal_id = loadForm2.call(this, 'create');
         $(child_modal_id).on('hidden.bs.modal', function() {
-            if ($('.js-collection-form').length) {
+            if ($('.js-conveyor-form').length) {
                 var form_data = mapFormData('.js-conveyor-form');  // Get conveyor fields
-                loadOptions.call( this, edge_form_class_name, 'id_conveyor_label',
+                loadOptions.call( this, edge_form_class_name, 'id_conveyor',
                     'conveyors-url', form_data['label']
                 );
             };
