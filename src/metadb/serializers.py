@@ -1524,7 +1524,7 @@ class ConveyorSerializer(serializers.HyperlinkedModelSerializer):
                                                    read_only=True)
     class Meta:
         model = Conveyor
-        fields = ['id', 'dataurl']
+        fields = ['id', 'dataurl', 'label']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -1864,7 +1864,7 @@ class DataVariableRelatedField(ModifiedRelatedField):
 class EdgeSerializer(serializers.HyperlinkedModelSerializer):
     dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:edge-detail',
                                                    read_only=True)
-    qset = Conveyor.objects.all()
+    qset = Conveyor.objects.order_by('label')
     conveyor = ConveyorRelatedField(queryset=qset)
     qset = Vertex.objects.order_by('computing_module__name')
     from_vertex = VertexRelatedField(queryset=qset)
