@@ -298,6 +298,7 @@ class ConveyorViewSet(BaseViewSet):
 
     table_headers = [
         {'type': 'head_none', 'caption': _('Id'), 'field': 'id'},
+        {'type': 'head_text', 'caption': _('Label'), 'field': 'label'},
     ]
 
     ctx_create = {
@@ -340,8 +341,10 @@ class ConveyorViewSet(BaseViewSet):
         for edge in edges:
             vertices[edge.from_vertex]['downlinks'] = vertices[edge.from_vertex].get('downlinks', [])
             vertices[edge.from_vertex]['downlinks'].append({'output': edge.from_output, 'vertex': edge.to_vertex})
+            vertices[edge.from_vertex]['position'] = edge.from_vertex_pos
             vertices[edge.to_vertex]['uplinks'] = vertices[edge.to_vertex].get('uplinks', [])
             vertices[edge.to_vertex]['uplinks'].append({'input': edge.to_input, 'vertex': edge.from_vertex})
+            vertices[edge.to_vertex]['position'] = edge.to_vertex_pos
             links[str(link_id)] = {
                 'fromOperator': f'vertex_{edge.from_vertex.id}',
                 'fromConnector': f'output_{edge.from_output}',
@@ -358,6 +361,8 @@ class ConveyorViewSet(BaseViewSet):
         d_left = 100
         for vertex, data in vertices.items():
             op_key = f'vertex_{vertex.id}'
+            if data['position'] is not None:
+                top, left = [int(e) for e in data['position'].split(':')]
             operators[op_key] = {
                 'top': top,
                 'left': left,
