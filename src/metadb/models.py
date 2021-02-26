@@ -142,10 +142,14 @@ class ComputingSystemType(models.Model):
 
 
 class Conveyor(models.Model):
+    label = models.CharField(max_length=145)
 
     class Meta:
         managed = False
         db_table = 'conveyor'
+
+    def __str__(self):
+        return self.label
 
 
 class Data(models.Model):
@@ -216,6 +220,8 @@ class Edge(models.Model):
     to_vertex = models.ForeignKey('Vertex', models.CASCADE, related_name='to_vertex')
     to_input = models.IntegerField()
     data_variable = models.ForeignKey(DataVariable, models.CASCADE)
+    from_vertex_pos = models.CharField(max_length=45, null=True)
+    to_vertex_pos = models.CharField(max_length=45, null=True)
 
     class Meta:
         managed = False
