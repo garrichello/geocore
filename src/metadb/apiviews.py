@@ -341,10 +341,8 @@ class ConveyorViewSet(BaseViewSet):
         for edge in edges:
             vertices[edge.from_vertex]['downlinks'] = vertices[edge.from_vertex].get('downlinks', [])
             vertices[edge.from_vertex]['downlinks'].append({'output': edge.from_output, 'vertex': edge.to_vertex})
-            vertices[edge.from_vertex]['position'] = edge.from_vertex_pos
             vertices[edge.to_vertex]['uplinks'] = vertices[edge.to_vertex].get('uplinks', [])
             vertices[edge.to_vertex]['uplinks'].append({'input': edge.to_input, 'vertex': edge.from_vertex})
-            vertices[edge.to_vertex]['position'] = edge.to_vertex_pos
             links[str(link_id)] = {
                 'fromOperator': f'vertex_{edge.from_vertex.id}',
                 'fromConnector': f'output_{edge.from_output}',
@@ -361,8 +359,11 @@ class ConveyorViewSet(BaseViewSet):
         d_left = 100
         for vertex, data in vertices.items():
             op_key = f'vertex_{vertex.id}'
-            if data['position'] is not None:
-                top, left = [int(e) for e in data['position'].split(':')]
+            coords = ConveyorHasVertex.objects.filter(conveyor__pk=pk, vertex=vertex).get()
+            if coords.vertex_position_top is not None:
+                top = coords.vertex_position_top
+            if coords.vertex_position_left is not None:
+                left = coords.vertex_position_left
             operators[op_key] = {
                 'top': top,
                 'left': left,
