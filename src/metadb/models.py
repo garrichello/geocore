@@ -143,6 +143,7 @@ class ComputingSystemType(models.Model):
 
 class Conveyor(models.Model):
     label = models.CharField(max_length=145)
+    vertex = models.ManyToManyField("Vertex", through='ConveyorHasVertex', related_name='vertex')
 
     class Meta:
         managed = False
@@ -150,6 +151,18 @@ class Conveyor(models.Model):
 
     def __str__(self):
         return self.label
+
+
+class ConveyorHasVertex(models.Model):
+    conveyor = models.ForeignKey('Conveyor', models.CASCADE)
+    vertex = models.ForeignKey('Vertex', models.CASCADE)
+    vertex_position_top = models.IntegerField()
+    vertex_position_left = models.IntegerField()
+
+    class Meta:
+        managed = False
+        db_table = 'conveyor_has_vertex'
+        unique_together = (('conveyor', 'vertex'),)
 
 
 class Data(models.Model):
@@ -675,6 +688,7 @@ class Vertex(models.Model):
     computing_module = models.ForeignKey('ComputingModule', models.CASCADE)
     condition_option = models.ForeignKey('Option', models.CASCADE)
     condition_value = models.ForeignKey('OptionValue', models.CASCADE)
+    conveyor = models.ManyToManyField('Conveyor', through='ConveyorHasVertex', related_name='conveyor')
 
     class Meta:
         managed = False
