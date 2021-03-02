@@ -4,7 +4,7 @@ $(function() {
         if (!$('#'+modal_name).length) {
             var modal = $('<div class="modal fade" tabindex="-1" role="dialog">');
             modal.attr('id', modal_name);
-            var modal_dialog = $('<div class="modal-dialog" role="document">');
+            var modal_dialog = $('<div class="modal-dialog" id="id_modal_dialog">');
             modal_dialog.appendTo(modal);
             var modal_content = $('<div class="modal-content"></div>');
             modal_content.appendTo(modal_dialog);
