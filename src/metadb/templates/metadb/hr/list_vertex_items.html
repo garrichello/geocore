@@ -1,0 +1,7 @@
+{% for e in data %}
+  <a href='#' class="list-group-item js-add-element-button" value="{{ e.pk }}"
+     condition-option="{{ e.condition_option.label }}" 
+     condition-value="{{ e.condition_value.label }}">
+     {{ e }}
+  </a>
+{% endfor %}
