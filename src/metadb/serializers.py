@@ -1565,7 +1565,7 @@ class ComputingModuleSerializer(serializers.HyperlinkedModelSerializer):
                                                    read_only=True)
     class Meta:
         model = ComputingModule
-        fields = ['id', 'dataurl', 'name']
+        fields = ['id', 'dataurl', 'name', 'number_of_inputs', 'number_of_outputs']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -1573,6 +1573,12 @@ class ComputingModuleSerializer(serializers.HyperlinkedModelSerializer):
         # Name
         self.fields['name'].label = _('Computing module name')
         self.fields['name'].style = {'template': 'metadb/custom_input.html'}
+        # Number of inputs
+        self.fields['number_of_inputs'].label = _('Number of inputa')
+        self.fields['number_of_inputs'].style = {'template': 'metadb/custom_input.html'}
+        # Number of outputs
+        self.fields['number_of_outputs'].label = _('Number of outputa')
+        self.fields['number_of_outputs'].style = {'template': 'metadb/custom_input.html'}
 
     def to_representation(self, instance):
         action = self.context['request'].META.get('HTTP_ACTION')
