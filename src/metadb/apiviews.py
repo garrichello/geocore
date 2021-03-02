@@ -291,7 +291,7 @@ class ConveyorViewSet(BaseViewSet):
     queryset = Conveyor.objects.all()
     serializer_class = ConveyorSerializer
     renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
-    template_name = 'metadb/includes/rest_form.html'
+    template_name = 'metadb/includes/conveyor_form.html'
     options_template_name = 'metadb/hr/dropdown_list_options.html'
     list_url = 'metadb:conveyor-list'
     action_url = 'metadb:conveyor-detail'
@@ -306,6 +306,13 @@ class ConveyorViewSet(BaseViewSet):
         'form_class': 'js-conveyor-form',
         'title': _("Create a new conveyor"),
         'submit_name': _("Create conveyor"),
+        'script': 'metadb/conveyor_form.js',
+        'attributes': [
+            {'name': 'vertices-url',
+             'value': reverse_lazy('metadb:vertex-list')},
+            {'name': 'datavariables-url',
+             'value': reverse_lazy('metadb:datavariable-list')},
+        ],
         'style': {'template_pack': 'rest_framework/vertical/'}
     }
 
@@ -1777,9 +1784,9 @@ class VertexViewSet(BaseViewSet):
     """
     queryset = Vertex.objects.all()
     serializer_class = VertexSerializer
-    renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer, TemplateHTMLRenderer]
     template_name = 'metadb/includes/rest_form.html'
-    options_template_name = 'metadb/hr/dropdown_list_options.html'
+    options_template_name = 'metadb/hr/list_vertex_items.html'
     list_url = 'metadb:vertex-list'
     action_url = 'metadb:vertex-detail'
 
@@ -1833,6 +1840,25 @@ class VertexViewSet(BaseViewSet):
         'submit_name': _('Delete vertex'),
         'style': {'template_pack': 'rest_framework/vertical/'}
     }
+
+    # This action allows to get only essential properties of the vertices. Fast.
+    @action(methods=['GET'], detail=False)
+    def light(self, request, pk=None):
+        vertices = self.get_queryset()
+        if pk is not None:
+            vertices = vertices.filter(pk=pk)
+
+        data = []
+        for vertex in vertices:
+            data.append({'id': vertex.id,
+                         'computing_module': {'name': vertex.computing_module.name},
+                         'condition_option': {'label': vertex.condition_option.label},
+                         'condition_value': {'label': vertex.condition_value.label},
+                        })
+
+        result = {'data': data}
+        response = JsonResponse(result)
+        return response
 
     def __init__(self, *args, **kwargs):
         self.queryset = self.queryset.order_by('computing_module__name')
