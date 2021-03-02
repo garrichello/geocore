@@ -695,4 +695,7 @@ class Vertex(models.Model):
         db_table = 'vertex'
 
     def __str__(self):
-        return f'{self.computing_module.name}:{self.id}'
+        result = f'{self.computing_module.name}'
+        if self.condition_option.label != '-':
+            result += f' [{self.condition_option.label}={self.condition_value.label}]'
+        return  result
