@@ -340,9 +340,20 @@ jQuery(function ($) {
             return color;
         },
 
+        getLinkData: function (linkId) {
+            var linkData = this.data.links[linkId];
+            return linkData;
+        },
+
         setLinkMainColor: function (linkId, color) {
             this.data.links[linkId].color = color;
             this.callbackEvent('afterChange', ['link_change_main_color']);
+        },
+
+        setLinkData: function (linkId, linkData) {
+            this.data.links[linkId] = linkData;
+            this.redrawLinksLayer();
+            this.callbackEvent('afterChange', ['link_data_change']);
         },
 
         _drawLink: function (linkId) {
