@@ -380,13 +380,13 @@ class ConveyorViewSet(BaseViewSet):
             for uplink in data.get('uplinks', {}):
                 input_key = f"input_{uplink['input']}"
                 inputs[input_key] = {
-                    'label': input_key
+                    'label': input_key if uplink['input'] != 0 else "options"
                 }
             outputs = {}
             for downlink in data.get('downlinks', {}):
                 output_key = f"output_{downlink['output']}"
                 outputs[output_key] = {
-                    'label': output_key
+                    'label': output_key if downlink['output'] != 0 else "options"
                 }
             operators[op_key]['properties'] = {
                 'title': vertex.computing_module.name,
@@ -687,7 +687,8 @@ class DataVariableViewSet(BaseViewSet):
         'submit_name': _('Delete data variable'),
         'style': {'template_pack': 'rest_framework/vertical/'}
     }
-
+    def __init__(self, *args, **kwargs):
+        self.queryset = self.queryset.order_by('label')
 
 class EdgeViewSet(BaseViewSet):
     """
