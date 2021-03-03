@@ -24,8 +24,8 @@ var datavariableOptions = {
     ],    
 };
 
-var makeListItem = function(id, moduleName, conditionOption, conditionValue) {
-    var classes = "list-group-item js-add-element-button";
+var makeVertexItem = function(id, moduleName, conditionOption, conditionValue) {
+    var classes = "list-group-item js-add-vertex-button";
     var condition = '';
     if (conditionValue != '-') {
         condition = `[if ${conditionOption}=${conditionValue}]`
@@ -54,10 +54,34 @@ var loadVerticesNames = function() {
                 var conditionOption = v.condition_option.label
                 var conditionValue = v.condition_value.label
                 $('#available_vertices_list').append(
-                    makeListItem(v.id, moduleName, conditionOption, conditionValue));
+                    makeVertexItem(v.id, moduleName, conditionOption, conditionValue));
             }) 
         }
     } );
+};
+
+var makeDataVariableItem = function(id, label) {
+    var classes = "list-group-item js-add-link-button disabled";
+    var listItem = $(`<a href="#" class="${classes}" value="${id}">${label}</a>`);
+    return listItem;
+}
+
+var loadDataVariablesNames = function() {
+    $.ajax( { 
+        url: datavariable_api_url,
+        type: 'get',
+        headers: {
+            'ACTION': 'json',
+        },
+        success: function (data) {
+            $('#available_datavariables_list').empty();
+            $.each(data.data, function(i, v) {
+                $('#available_datavariables_list').append(
+                    makeDataVariableItem(v.id, v.label));
+            });
+        }
+    } );
+    
 };
 
 var addOperator = function(vertexId, vertexName, conditionOption, conditionValue) {
@@ -76,21 +100,29 @@ var addOperator = function(vertexId, vertexName, conditionOption, conditionValue
                 outputs: {},
                 condition_option: conditionOption,
                 condition_value: conditionValue,
+                autoInputs: false,
+                autoOutputs: false,
             };
-            if (data.data.computing_module.name == 'START') {
-                properties.outputs['output_0'] = {label: 'options'};
-                properties.outputs['output_1'] = {label: 'output 1'};
-            } else if (data.data.computing_module.name == 'FINISH') {
+            var nInputs = data.data.computing_module.number_of_inputs;
+            var nOutputs = data.data.computing_module.number_of_outputs;
+            if (nInputs == null) {
                 properties.inputs['input_1'] = {label: 'input 1'};
+                properties.autoInputs = true;
             } else {
-                nInputs = data.data.computing_module.number_of_inputs;
-                properties.inputs['input_0'] = {label: 'options'};
+                if (nInputs > 0 && nOutputs > 0) {
+                    properties.inputs['input_0'] = {label: 'options'};
+                }
                 for (i = 1; i < nInputs+1; i++) {
                     properties.inputs[`input_${i}`] = {
                         label: `input ${i}`,
                     }
                 }
-                nOutputs = data.data.computing_module.number_of_outputs;
+            }
+            if (nOutputs == null) {
+                properties.outputs['output_0'] = {label: 'options'};
+                properties.outputs['output_1'] = {label: 'output 1'};
+                properties.autoOutputs = true;
+            } else {
                 for (i = 1; i < nOutputs+1; i++) {
                     properties.outputs[`output_${i}`] = {
                         label: `output ${i}`,
@@ -116,7 +148,14 @@ var addVertex = function(obj) {
     $(obj).remove();
 };
 
-var sortVertices = function(listId) {
+var assignDataVariable = function(obj) {
+    var linkId = $flowchart.flowchart('getSelectedLinkId');
+    var linkData = $flowchart.flowchart('getLinkData', linkId);
+    linkData['label'] = obj.text;
+    $flowchart.flowchart('setLinkData', linkId, linkData);
+}
+
+var sortList = function(listId) {
     var mylist = $(listId);
     var listitems = mylist.children('a').get();
     listitems.sort(function(a, b) {
@@ -136,12 +175,15 @@ $(document).ready( function () {
             if ($('.js-vertex-form').length) {
                 loadVerticesNames();
             };
+            if ($('.js-datavariable-form').length) {
+                loadDataVariablesNames();
+            };
             $(child_modal_id).remove();
         })
     });
 
-    // Remove button
-    $(conveyor_form_class_name).on('click', '.js-del-button', function() {
+    // Remove vertex button
+    $(conveyor_form_class_name).on('click', '.js-del-vertex-button', function() {
         operatorId = $flowchart.flowchart('getSelectedOperatorId');
         operatorData = $flowchart.flowchart('getOperatorData', operatorId);
         vertexId = operatorData.properties.id;
@@ -149,40 +191,70 @@ $(document).ready( function () {
         conditionOption = operatorData.properties.condition_option
         conditionValue = operatorData.properties.condition_value
         $('#available_vertices_list').append(
-            makeListItem(vertexId, moduleName, conditionOption, conditionValue));
+            makeVertexItem(vertexId, moduleName, conditionOption, conditionValue));
         $flowchart.flowchart('deleteSelected');
-        sortVertices('#available_vertices_list');
+        sortList('#available_vertices_list');
+    });
+
+    // Remove link button
+    $(conveyor_form_class_name).on('click', '.js-del-link-button', function() {
+        $flowchart.flowchart('deleteSelected');
     });
 
     // Add vertex to graph
-    $(conveyor_form_class_name).on('click', '.js-add-element-button', function() {
+    $(conveyor_form_class_name).on('click', '.js-add-vertex-button', function() {
         addVertex(this);
     });
 
+    // Assign data variable to link
+    $(conveyor_form_class_name).on('click', '.js-add-link-button', function() {
+        assignDataVariable(this);
+    });
+
+
     $flowchart.flowchart({
         onOperatorSelect: function(operatorId) {
-            $('.js-del-button').attr('disabled', false);
+            $('.js-del-vertex-button').attr('disabled', false);
             return true;
         },
         onOperatorUnselect: function() {
-            $('.js-del-button').attr('disabled', true);
+            $('.js-del-vertex-button').attr('disabled', true);
             return true;
         },
         onLinkSelect: function(linkId) {
-
+            $('.js-del-link-button').attr('disabled', false);
+            $('#available_datavariables_list *').each( function(i, v) {
+                $(v).removeClass('disabled');
+            });
             return true;
         },
         onLinkUnselect: function() {
-
+            $('.js-del-link-button').attr('disabled', true);
+            $('#available_datavariables_list *').each( function(i, v) {
+                $(v).addClass('disabled');
+            });
             return true;
-        }
+        },
+        onLinkCreate: function(linkId, linkData) {
+            var operatorData = $flowchart.flowchart('getOperatorData', linkData.fromOperator);
+            if (operatorData.properties.autoOutputs) {
+                pos = parseInt(linkData.fromConnector.split('_')[1], 10) + 1;
+                operatorData.properties.outputs[`output_${pos}`] = {label: `output ${pos}`};
+                $flowchart.flowchart('setOperatorData', linkData.fromOperator, operatorData);
+            };
+
+            var operatorData = $flowchart.flowchart('getOperatorData', linkData.toOperator);
+            if (operatorData.properties.autoInputs) {
+                pos = parseInt(linkData.toConnector.split('_')[1], 10) + 1;
+                operatorData.properties.inputs[`input_${pos}`] = {label: `input ${pos}`};
+                $flowchart.flowchart('setOperatorData', linkData.toOperator, operatorData);
+            };
+            return true;
+        },
     });
 
     loadVerticesNames();
-
-    // Create data variable table
-    datavariableOptions["ajax"] = { 'url': datavariable_api_url, 'type': 'GET', 'dataSrc': 'data' };
-    var table = $('#conveyor-datavariable').DataTable( datavariableOptions );
+    loadDataVariablesNames();
 
     // Apply the plugin on a standard, empty div...
     $flowchart.flowchart({
