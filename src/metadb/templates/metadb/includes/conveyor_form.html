@@ -11,13 +11,13 @@
             padding-right: 0px;
         }
         .top-buffer {
-            padding-top: 10px;
+            padding-top: 20px;
         }
         .bottom-buffer {
             padding-bottom: 10px;
         }
         .list-group {
-            height: 150px; 
+            height: 169px; 
             overflow-y: auto; 
             padding-left: 0; 
             border-style: solid;
@@ -30,27 +30,37 @@
     <div class="container-fluid">
     <div class="row">
         <div class="col-md-3 align-self-end">
+
+            <div class="row">
+                <label>{% trans "Vertices" %}</label>
+            </div>
             <div class="row">
                 <div class="list-group" id="available_vertices_list"></div>
             </div>
-
             <div class="row">
                 <button type="button" class="btn btn-primary js-add-button" data-url={% url 'metadb:vertex-detail' -1 %}>
                     <span class="glyphicon glyphicon-plus"></span>{% trans " Add new" %}
                 </button>
-                <button type="button" class="btn btn-danger js-del-button pull-right" disabled>
-                    {% trans "Remove" %}
+                <button type="button" class="btn btn-danger js-del-vertex-button pull-right" disabled>
+                    {% trans "Remove vertex" %}
                 </button>
             </div>
 
-<!--            <div class="row top-buffer bottom-buffer">
-                <table id='conveyor-datavariable' class="table table-hover table-bordered"></table>
+            <div class="row top-buffer">
+                <label>{% trans "Links" %}</label>
             </div>
             <div class="row">
-                <button type="button" class="btn btn-primary js-add-vertex pull-right">
-                    {% trans "Assign data variable to link" %}
+                <div class="list-group" id="available_datavariables_list"></div>
+            </div>
+            <div class="row">
+                <button type="button" class="btn btn-primary js-add-button" data-url={% url 'metadb:datavariable-detail' -1 %}>
+                    <span class="glyphicon glyphicon-plus"></span>{% trans " Add new" %}
                 </button>
-            </div> -->
+                <button type="button" class="btn btn-danger js-del-link-button pull-right" disabled>
+                    {% trans "Remove link" %}
+                </button>
+            </div>
+
         </div>
         <div class="col-md-9">
             <div id="conveyor_container">
