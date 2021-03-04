@@ -9,6 +9,7 @@ from django.template.loader import render_to_string
 from django.urls import reverse, reverse_lazy
 from django.http import JsonResponse
 from collections import defaultdict
+import json
 
 from .models import *
 from .serializers import *
@@ -321,6 +322,13 @@ class ConveyorViewSet(BaseViewSet):
         'form_class': 'js-conveyor-form',
         'title': _("Update conveyor"),
         'submit_name': _("Update conveyor"),
+        'script': 'metadb/conveyor_form.js',
+        'attributes': [
+            {'name': 'vertices-url',
+             'value': reverse_lazy('metadb:vertex-list')},
+            {'name': 'datavariables-url',
+             'value': reverse_lazy('metadb:datavariable-list')},
+        ],
         'style': {'template_pack': 'rest_framework/vertical/'}
     }
 
@@ -340,7 +348,7 @@ class ConveyorViewSet(BaseViewSet):
         return out_dict
 
     @action(methods=['GET'], detail=True)
-    def graph(self, request, pk=None):
+    def retrieve_graph(self, request, pk=None):
         edges = Edge.objects.filter(conveyor__id=pk).all()
         vertices = defaultdict(dict)
         links = {}
@@ -398,6 +406,50 @@ class ConveyorViewSet(BaseViewSet):
             left += d_left
 
         result = {'operators': operators, 'links': links}
+        response = JsonResponse(result)
+        return response
+
+    @action(methods=['POST'], detail=False)
+    def create_graph(self, request):
+
+        data = json.loads(request.data['data'])
+
+        conveyor_label = data['conveyorLabel']
+        operators = data['operators']
+        links = data['links']
+        all_links_has_ids = all(['datavariable_id' in v for v in links.values()])
+
+        form_is_valid = False
+        if not conveyor_label or not operators or not links or not all_links_has_ids:
+            form_is_valid = False
+        else:
+            # Create a new conveyor instance
+            conveyor_serializer = self.get_serializer(data={'label': conveyor_label})
+            if conveyor_serializer.is_valid():
+                conveyor = conveyor_serializer.save()
+                # Link conveyor to vertices
+                for operator in operators.values():
+                    chv = ConveyorHasVertex()
+                    chv.conveyor = conveyor
+                    chv.vertex_id = operator['properties']['vertex_id']
+                    chv.vertex_position_top = operator['top']
+                    chv.vertex_position_left = operator['left']
+                    chv.save()
+                # Add edges
+                for link in links.values():
+                    edge = Edge()
+                    edge.conveyor = conveyor
+                    edge.from_vertex_id = link['fromOperator'].split('_')[1]
+                    edge.from_output = link['fromConnector'].split('_')[1]
+                    edge.to_vertex_id = link['toOperator'].split('_')[1]
+                    edge.to_input = link['toConnector'].split('_')[1]
+                    edge.data_variable_id = link['datavariable_id']
+                    edge.save()
+            else:
+                form_is_valid = False
+            
+
+        result = {'data': {'form_is_valid': form_is_valid}}
         response = JsonResponse(result)
         return response
 
