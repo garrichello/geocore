@@ -428,7 +428,6 @@ jQuery(function ($) {
 
             var shape_textPath = document.createElementNS("http://www.w3.org/2000/svg", "textPath");
             shape_textPath.setAttribute("href", "#path_"+this.globalId+"_"+linkId);
-            console.log(document.__flowchartNumber);
             shape_textPath.setAttribute("startOffset", "50%");
             shape_textPath.setAttribute("text-anchor", "middle");
             shape_text.appendChild(shape_textPath);

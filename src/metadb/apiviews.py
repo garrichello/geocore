@@ -448,7 +448,6 @@ class ConveyorViewSet(BaseViewSet):
                     edge.save()
             else:
                 form_is_valid = False
-            
 
         result = {'data': {'form_is_valid': form_is_valid}}
         response = JsonResponse(result)
