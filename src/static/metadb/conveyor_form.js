@@ -3,7 +3,7 @@ var vertex_api_url = $(conveyor_form_class_name).attr('vertices-url')
 var datavariable_api_url = $(conveyor_form_class_name).attr('datavariables-url')
     
 // Create graph container
-var $flowchart = $('#conveyor-workspace');
+var $flowchart = $('#conveyor_editor');
 // Apply the plugin on a standard, empty div...
 $flowchart.flowchart({
     data: {},

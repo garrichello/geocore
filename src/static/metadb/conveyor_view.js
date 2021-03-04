@@ -47,7 +47,7 @@ var loadGraph = function(url, $flowchart) {
 
 $(document).ready( function () {
 // Create graph container
-    var $flowchart = $('#flowchartworkspace');
+    var $flowchart = $('#conveyor_preview');
 
     // Create conveyors table
     var conveyorOptions = $.extend(true, {}, commonOptions);
