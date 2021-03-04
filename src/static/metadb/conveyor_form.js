@@ -181,7 +181,7 @@ saveConveyor = function(e) {
     var form = $(this);
     var modal_id = '#'+getModalName('parent');
     var data = $flowchart.flowchart('getData');
-    if (form.attr['method'] == 'POST') {
+    if (form.attr('method') == 'POST') {
         var url = form.attr('action')+'create_graph/'
     } else {
         var url = form.attr('action')+'update_graph/'
@@ -193,7 +193,7 @@ saveConveyor = function(e) {
         data: {'data': JSON.stringify(data)},
         dataType: 'json',
         success: function(data) {
-            if (data.form_is_valid) {
+            if (data.data.form_is_valid) {
                 $.fn.dataTable.tables( {visible: false, api: true} ).ajax.reload();
                 $(modal_id).modal('hide');
             }
