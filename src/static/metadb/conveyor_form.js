@@ -4,6 +4,17 @@ var datavariable_api_url = $(conveyor_form_class_name).attr('datavariables-url')
     
 // Create graph container
 var $flowchart = $('#conveyor-workspace');
+// Apply the plugin on a standard, empty div...
+$flowchart.flowchart({
+    data: {},
+    linkWidth: 3,
+    distanceFromArrow: 0,
+    defaultSelectedLinkColor: '#000055',
+    grid: 10,
+    multipleLinksOnInput: true,
+    multipleLinksOnOutput: true,
+    canUserEditLinks: true,
+});
 
 var datavariableOptions = {
     sDom: 'tr',
@@ -170,10 +181,15 @@ saveConveyor = function(e) {
     var form = $(this);
     var modal_id = '#'+getModalName('parent');
     var data = $flowchart.flowchart('getData');
+    if (form.attr['method'] == 'POST') {
+        var url = form.attr('action')+'create_graph/'
+    } else {
+        var url = form.attr('action')+'update_graph/'
+    }
     data['conveyorLabel'] = $('#id_label').val();
     $.ajax({
         type: form.attr('method'),
-        url: form.attr('action')+'create_graph/',
+        url: url,
         data: {'data': JSON.stringify(data)},
         dataType: 'json',
         success: function(data) {
@@ -289,17 +305,8 @@ $(document).ready( function () {
 
     loadVerticesNames();
     loadDataVariablesNames();
-
-    // Apply the plugin on a standard, empty div...
-    $flowchart.flowchart({
-        data: {},
-        linkWidth: 3,
-        distanceFromArrow: 0,
-        defaultSelectedLinkColor: '#000055',
-        grid: 10,
-        multipleLinksOnInput: true,
-        multipleLinksOnOutput: true,
-        canUserEditLinks: true,
-    });
-
+    
+    if ($(conveyor_form_class_name).attr('method') == 'PUT') {
+        loadGraph($(conveyor_form_class_name).attr('action')+'retrieve_graph/', $flowchart);
+    }
 } );
