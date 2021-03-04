@@ -1529,6 +1529,10 @@ class ConveyorSerializer(serializers.HyperlinkedModelSerializer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+        # Label
+        self.fields['label'].label = _('Label')
+        self.fields['label'].style = {'template': 'metadb/custom_input.html'}
+
     def to_representation(self, instance):
         action = self.context['request'].META.get('HTTP_ACTION')
         if action == 'options_list' or self.context['request'].GET.get('format') == 'html':
