@@ -59,12 +59,13 @@ $(document).ready( function () {
         if (!$.fn.DataTable.isDataTable('#conveyor')) {
             $('#conveyor').DataTable( conveyorOptions ).on('draw', function() {
                 addUpdDelButtonHandlers.call(this, 'conveyor');
+                $flowchart.flowchart('setData', {});
             });
             var table = $('#conveyor').DataTable();
             table.on('xhr.dt', set_header2);
             table.on('select', function( e, dt, type, indexes ) {
                 if (type == 'row') {
-                    var url = table.rows(indexes).data().pluck('dataurl')[0]+'graph/';
+                    var url = table.rows(indexes).data().pluck('dataurl')[0]+'retrieve_graph/';
                     $.ajax({
                         type: "get",
                         url: url,
