@@ -233,8 +233,6 @@ class Edge(models.Model):
     to_vertex = models.ForeignKey('Vertex', models.CASCADE, related_name='to_vertex')
     to_input = models.IntegerField()
     data_variable = models.ForeignKey(DataVariable, models.CASCADE)
-    from_vertex_pos = models.CharField(max_length=45, null=True)
-    to_vertex_pos = models.CharField(max_length=45, null=True)
 
     class Meta:
         managed = False
