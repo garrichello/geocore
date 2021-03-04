@@ -25,7 +25,7 @@ var datavariableOptions = {
 };
 
 var makeVertexItem = function(id, moduleName, conditionOption, conditionValue) {
-    var classes = "list-group-item js-add-vertex-button";
+    var classes = "list-group-item js-add-vertex";
     var condition = '';
     if (conditionValue != '-') {
         condition = `[if ${conditionOption}=${conditionValue}]`
@@ -61,7 +61,7 @@ var loadVerticesNames = function() {
 };
 
 var makeDataVariableItem = function(id, label) {
-    var classes = "list-group-item js-add-link-button disabled";
+    var classes = "list-group-item js-add-datavariable disabled";
     var listItem = $(`<a href="#" class="${classes}" value="${id}">${label}</a>`);
     return listItem;
 }
@@ -84,7 +84,7 @@ var loadDataVariablesNames = function() {
     
 };
 
-var addOperator = function(vertexId, vertexName, conditionOption, conditionValue) {
+var addOperator = function(vertexId, moduleName, conditionOption, conditionValue) {
     var operatorId = 'operator_' + vertexId;
     $.ajax( {
         url: vertex_api_url + vertexId + '/',
@@ -94,8 +94,8 @@ var addOperator = function(vertexId, vertexName, conditionOption, conditionValue
         },
         success: function(data) {
             var properties = {
-                id: vertexId,
-                title: vertexName,
+                vertex_id: vertexId,
+                title: moduleName,
                 inputs: {},
                 outputs: {},
                 condition_option: conditionOption,
@@ -140,11 +140,11 @@ var addOperator = function(vertexId, vertexName, conditionOption, conditionValue
 };
 
 var addVertex = function(obj) {
-    var vertexName = obj.getAttribute('module-name');
+    var moduleName = obj.getAttribute('module-name');
     var vertexId = obj.getAttribute('value');
     var conditionOption = obj.getAttribute('condition-option');
     var conditionValue = obj.getAttribute('condition-value');
-    addOperator(vertexId, vertexName, conditionOption, conditionValue);
+    addOperator(vertexId, moduleName, conditionOption, conditionValue);
     $(obj).remove();
 };
 
@@ -152,6 +152,7 @@ var assignDataVariable = function(obj) {
     var linkId = $flowchart.flowchart('getSelectedLinkId');
     var linkData = $flowchart.flowchart('getLinkData', linkId);
     linkData['label'] = obj.text;
+    linkData['datavariable_id'] = obj.getAttribute('value');
     $flowchart.flowchart('setLinkData', linkId, linkData);
 }
 
@@ -163,6 +164,33 @@ var sortList = function(listId) {
     })
     $.each(listitems, function(idx, itm) { mylist.append(itm); });        
 }
+
+saveConveyor = function(e) {
+    e.stopImmediatePropagation();
+    var form = $(this);
+    var modal_id = '#'+getModalName('parent');
+    var data = $flowchart.flowchart('getData');
+    data['conveyorLabel'] = $('#id_label').val();
+    $.ajax({
+        type: form.attr('method'),
+        url: form.attr('action')+'create_graph/',
+        data: {'data': JSON.stringify(data)},
+        dataType: 'json',
+        success: function(data) {
+            if (data.form_is_valid) {
+                $.fn.dataTable.tables( {visible: false, api: true} ).ajax.reload();
+                $(modal_id).modal('hide');
+            }
+            else {
+                console.log('Error in form!');
+            }
+        },
+        error: function(xhr, errmsg, err) {
+            console.error('Error occured when saving conveyor data');
+        },
+    });
+    return false;
+};
 
 $(document).ready( function () {
 
@@ -202,15 +230,21 @@ $(document).ready( function () {
     });
 
     // Add vertex to graph
-    $(conveyor_form_class_name).on('click', '.js-add-vertex-button', function() {
+    $(conveyor_form_class_name).on('click', '.js-add-vertex', function() {
         addVertex(this);
     });
 
     // Assign data variable to link
-    $(conveyor_form_class_name).on('click', '.js-add-link-button', function() {
+    $(conveyor_form_class_name).on('click', '.js-add-datavariable', function() {
         assignDataVariable(this);
     });
 
+    // New Submit event handler
+    $(conveyor_form_class_name).off('submit');
+    $(conveyor_form_class_name).on('submit', function(e) {
+        saveConveyor.call(this, e);
+        return false; 
+    });
 
     $flowchart.flowchart({
         onOperatorSelect: function(operatorId) {
