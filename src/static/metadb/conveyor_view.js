@@ -31,23 +31,24 @@ conveyor_columnsDefs = [
     { width: '75%', targets: 2 },  // Label
 ]
 
-var loadGraph = function(url) {
+var loadGraph = function(url, $flowchart) {
     $.ajax({
         type: "get",
         url: url,
         dataType: 'json',
         success: function(data) {
-            console.log(data);
-            return data;
+            $flowchart.flowchart('setData', data);
         },
         error: function(xhr, errmsg, err) {
             console.error('Error occured when loading graph data');
-            return {};
         }
-    });
+    });              
 };
 
 $(document).ready( function () {
+// Create graph container
+    var $flowchart = $('#flowchartworkspace');
+
     // Create conveyors table
     var conveyorOptions = $.extend(true, {}, commonOptions);
     conveyorOptions["columnDefs"] = conveyor_columnsDefs.concat(all_columns_defs);
@@ -66,25 +67,11 @@ $(document).ready( function () {
             table.on('select', function( e, dt, type, indexes ) {
                 if (type == 'row') {
                     var url = table.rows(indexes).data().pluck('dataurl')[0]+'retrieve_graph/';
-                    $.ajax({
-                        type: "get",
-                        url: url,
-                        dataType: 'json',
-                        success: function(data) {
-                            $flowchart.flowchart('setData', data);
-                        },
-                        error: function(xhr, errmsg, err) {
-                            console.error('Error occured when loading graph data');
-                        }
-                    });              
+                    loadGraph(url, $flowchart);
                 }
             });
         }
     });
-
-    // Create graph container
-    var $flowchart = $('#flowchartworkspace');
-    var $container = $flowchart.parent();
 
     // Apply the plugin on a standard, empty div...
     $flowchart.flowchart({
