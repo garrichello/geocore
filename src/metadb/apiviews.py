@@ -366,6 +366,7 @@ class ConveyorViewSet(BaseViewSet):
                 'toConnector': f'input_{edge.to_input}',
                 'toSubConnector': 0,
                 'label': edge.data_variable.label,
+                'datavariable_id': edge.data_variable.id,
             }
             link_id += 1
         operators = {}
@@ -419,12 +420,57 @@ class ConveyorViewSet(BaseViewSet):
         links = data['links']
         all_links_has_ids = all(['datavariable_id' in v for v in links.values()])
 
-        form_is_valid = False
+        form_is_valid = True
         if not conveyor_label or not operators or not links or not all_links_has_ids:
             form_is_valid = False
         else:
             # Create a new conveyor instance
             conveyor_serializer = self.get_serializer(data={'label': conveyor_label})
+            if conveyor_serializer.is_valid():
+                conveyor = conveyor_serializer.save()
+                # Link conveyor to vertices
+                for operator in operators.values():
+                    chv = ConveyorHasVertex()
+                    chv.conveyor = conveyor
+                    chv.vertex_id = operator['properties']['vertex_id']
+                    chv.vertex_position_top = operator['top']
+                    chv.vertex_position_left = operator['left']
+                    chv.save()
+                # Add edges
+                for link in links.values():
+                    edge = Edge()
+                    edge.conveyor = conveyor
+                    edge.from_vertex_id = link['fromOperator'].split('_')[1]
+                    edge.from_output = link['fromConnector'].split('_')[1]
+                    edge.to_vertex_id = link['toOperator'].split('_')[1]
+                    edge.to_input = link['toConnector'].split('_')[1]
+                    edge.data_variable_id = link['datavariable_id']
+                    edge.save()
+            else:
+                form_is_valid = False
+            
+
+        result = {'data': {'form_is_valid': form_is_valid}}
+        response = JsonResponse(result)
+        return response
+
+    @action(methods=['PUT'], detail=True)
+    def update_graph(self, request, pk=None):
+
+        data = json.loads(request.data['data'])
+
+        conveyor_label = data['conveyorLabel']
+        operators = data['operators']
+        links = data['links']
+        all_links_has_ids = all(['datavariable_id' in v for v in links.values()])
+
+        form_is_valid = True
+        if not conveyor_label or not operators or not links or not all_links_has_ids:
+            form_is_valid = False
+        else:
+            # Use an existing conveyor instance
+            instance = self.get_object()
+            conveyor_serializer = self.get_serializer(data={'label': conveyor_label}, instance=instance)
             if conveyor_serializer.is_valid():
                 conveyor = conveyor_serializer.save()
                 # Link conveyor to vertices
