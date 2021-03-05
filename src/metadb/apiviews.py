@@ -341,11 +341,15 @@ class ConveyorViewSet(BaseViewSet):
         'style': {'template_pack': 'rest_framework/vertical/'}
     }
 
-    def sort_dict(self, in_dict: dict):
+    def _sort_dict(self, in_dict: dict):
         out_dict = {}
         for key in sorted(in_dict.keys()):
             out_dict[key] = in_dict[key]
         return out_dict
+
+    def _num(self, numbered_name: str) -> int:
+        ''' Cut off number of a name given in a form: name_#. '''
+        return int(numbered_name.split('_')[1])
 
     @action(methods=['GET'], detail=True)
     def retrieve_graph(self, request, pk=None):
@@ -400,8 +404,8 @@ class ConveyorViewSet(BaseViewSet):
                 }
             operators[op_key]['properties'] = {
                 'title': vertex.computing_module.name,
-                'inputs': inputs, #self.sort_dict(inputs),
-                'outputs': outputs, #self.sort_dict(outputs),
+                'inputs': inputs, #self._sort_dict(inputs),
+                'outputs': outputs, #self._sort_dict(outputs),
                 'condition_option': vertex.condition_option.label,
                 'condition_value': vertex.condition_value.label,
             }
@@ -473,32 +477,71 @@ class ConveyorViewSet(BaseViewSet):
             conveyor_serializer = self.get_serializer(data={'label': conveyor_label}, instance=instance)
             if conveyor_serializer.is_valid():
                 # Update conveyor
-                conveyor_serializer.save()
-                # Update list of vertices in conveyor
-                vertices_in_db = set([obj.vertex for obj in ConveyorHasVertex.objects.filter(conveyor=instance)])
-                vertices_in_graph = set([Vertex.objects.get(pk=op['vertex_id']) for op in operators.values()])
-                vertices_to_add = vertices_in_graph - vertices_in_db
-                vertices_to_delete = vertices_in_db - vertices_in_graph
-                for operator in operators.values():
+                conveyor = conveyor_serializer.save()
+                # Get lists of vertices in db and modified graph
+                vertices_in_db_set = set([obj.vertex for obj in ConveyorHasVertex.objects.filter(conveyor=instance)])
+                vertices_in_graph = {Vertex.objects.get(pk=op['vertex_id']): {'top': op['top'], 
+                                                                              'left': op['left']
+                                                                             } for op in operators.values()}
+                vertices_in_graph_set = set(vertices_in_graph.keys())
+                # Delete removed vertices from db
+                vertices_to_delete = vertices_in_db_set - vertices_in_graph_set
+                for vertex in vertices_to_delete:
+                    ConveyorHasVertex.objects.filter(conveyor=instance,
+                                                     vertex=vertex).delete()
+                # Add inserted vertices into db
+                vertices_to_insert = vertices_in_graph_set - vertices_in_db_set
+                for vertex in vertices_to_insert:
                     chv = ConveyorHasVertex()
                     chv.conveyor = instance
-                    chv.vertex_id = operator['properties']['vertex_id']
-                    chv.vertex_position_top = operator['top']
-                    chv.vertex_position_left = operator['left']
+                    chv.vertex = vertex
+                    chv.vertex_position_top = vertices_in_graph[vertex]['top']
+                    chv.vertex_position_left = vertices_in_graph[vertex]['left']
                     chv.save()
-                # Add edges
-                for link in links.values():
-                    edge = Edge()
-                    edge.conveyor = instance
-                    edge.from_vertex_id = link['fromOperator'].split('_')[1]
-                    edge.from_output = link['fromConnector'].split('_')[1]
-                    edge.to_vertex_id = link['toOperator'].split('_')[1]
-                    edge.to_input = link['toConnector'].split('_')[1]
-                    edge.data_variable_id = link['datavariable_id']
-                    edge.save()
+                # Update remaining vertices in db
+                vertices_to_update = vertices_in_graph_set & vertices_in_db_set
+                for vertex in vertices_to_update:
+                    chv = ConveyorHasVertex.objects.filter(conveyor=instance,
+                                                           vertex=vertex).get()
+                    chv.vertex_position_top = vertices_in_graph[vertex]['top']
+                    chv.vertex_position_left = vertices_in_graph[vertex]['left']
+                    chv.save()
+                # Get edges in db and modified graph
+                edges_in_graph = {(self._num(link['fromOperator']),
+                                       self._num(link['fromConnector']),
+                                       self._num(link['toOperator']),
+                                       self._num(link['toConnector'])): {
+                                           'data_variable_id': link['datavariable_id']
+                                       } for link in links.values()}
+                edges_in_graph_set = set(edges_in_graph.keys())
+                edges_in_db = {(edge.from_vertex_id,
+                                edge.from_output,
+                                edge.to_vertex_id,
+                                edge.to_input): edge for edge in Edge.objects.filter(conveyor=instance)}
+                edges_in_db_set = set(edges_in_db.keys())
+                # Delete removed edges from db
+                edges_to_delete = edges_in_db_set - edges_in_graph_set
+                for edge in edges_to_delete:
+                    edges_in_db[edge].delete()
+                # Add inserted vertices into db
+                edges_to_insert = edges_in_graph_set - edges_in_db_set
+                for edge in edges_to_insert:
+                    new_edge = Edge()
+                    new_edge.conveyor = instance
+                    new_edge.from_vertex_id = edge[0]
+                    new_edge.from_output = edge[1]
+                    new_edge.to_vertex_id = edge[2]
+                    new_edge.to_input = edge[3]
+                    new_edge.data_variable_id = edges_in_graph[edge]['data_variable_id']
+                    new_edge.save()
+                # Update remaining edges in db
+                edges_to_update = edges_in_graph_set & edges_in_db_set
+                for edge in edges_to_update:
+                    edges_in_db[edge].data_variable_id = edges_in_graph[edge]['data_variable_id']
+                    edges_in_db[edge].save()
+
             else:
                 form_is_valid = False
-            
 
         result = {'data': {'form_is_valid': form_is_valid}}
         response = JsonResponse(result)

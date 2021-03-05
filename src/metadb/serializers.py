@@ -1545,6 +1545,7 @@ class ConveyorSerializer(serializers.HyperlinkedModelSerializer):
         return Conveyor.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
+        instance.label = validated_data.get('label', instance.label)
         instance.save()
 
         return instance
