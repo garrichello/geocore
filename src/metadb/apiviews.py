@@ -383,6 +383,7 @@ class ConveyorViewSet(BaseViewSet):
             operators[op_key] = {
                 'top': top,
                 'left': left,
+                'vertex_id': vertex.id,
                 'properties': {},
             }
             inputs = {}
@@ -432,7 +433,7 @@ class ConveyorViewSet(BaseViewSet):
                 for operator in operators.values():
                     chv = ConveyorHasVertex()
                     chv.conveyor = conveyor
-                    chv.vertex_id = operator['properties']['vertex_id']
+                    chv.vertex_id = operator['vertex_id']
                     chv.vertex_position_top = operator['top']
                     chv.vertex_position_left = operator['left']
                     chv.save()
@@ -471,11 +472,16 @@ class ConveyorViewSet(BaseViewSet):
             instance = self.get_object()
             conveyor_serializer = self.get_serializer(data={'label': conveyor_label}, instance=instance)
             if conveyor_serializer.is_valid():
-                conveyor = conveyor_serializer.save()
-                # Link conveyor to vertices
+                # Update conveyor
+                conveyor_serializer.save()
+                # Update list of vertices in conveyor
+                vertices_in_db = set([obj.vertex for obj in ConveyorHasVertex.objects.filter(conveyor=instance)])
+                vertices_in_graph = set([Vertex.objects.get(pk=op['vertex_id']) for op in operators.values()])
+                vertices_to_add = vertices_in_graph - vertices_in_db
+                vertices_to_delete = vertices_in_db - vertices_in_graph
                 for operator in operators.values():
                     chv = ConveyorHasVertex()
-                    chv.conveyor = conveyor
+                    chv.conveyor = instance
                     chv.vertex_id = operator['properties']['vertex_id']
                     chv.vertex_position_top = operator['top']
                     chv.vertex_position_left = operator['left']
@@ -483,7 +489,7 @@ class ConveyorViewSet(BaseViewSet):
                 # Add edges
                 for link in links.values():
                     edge = Edge()
-                    edge.conveyor = conveyor
+                    edge.conveyor = instance
                     edge.from_vertex_id = link['fromOperator'].split('_')[1]
                     edge.from_output = link['fromConnector'].split('_')[1]
                     edge.to_vertex_id = link['toOperator'].split('_')[1]
