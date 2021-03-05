@@ -105,7 +105,6 @@ var addOperator = function(vertexId, moduleName, conditionOption, conditionValue
         },
         success: function(data) {
             var properties = {
-                vertex_id: vertexId,
                 title: moduleName,
                 inputs: {},
                 outputs: {},
@@ -143,6 +142,7 @@ var addOperator = function(vertexId, moduleName, conditionOption, conditionValue
             var operatorData = {
                 top: ($flowchart.height() / 2) - 30,
                 left: ($flowchart.width() / 2) - 100 + (vertexId * 10),
+                vertex_id: vertexId,
                 properties: properties,
             }
             $flowchart.flowchart('createOperator', operatorId, operatorData);
