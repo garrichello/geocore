@@ -1,3 +1,6 @@
+import json
+from collections import defaultdict
+
 from rest_framework.response import Response
 from rest_framework.renderers import *
 from rest_framework import viewsets
@@ -8,8 +11,6 @@ from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.urls import reverse, reverse_lazy
 from django.http import JsonResponse
-from collections import defaultdict
-import json
 
 from .models import *
 from .serializers import *
@@ -429,15 +430,25 @@ class ConveyorViewSet(BaseViewSet):
         conveyor_label = data['conveyorLabel']
         operators = data['operators']
         links = data['links']
-        all_links_has_ids = all(['datavariable_id' in v for v in links.values()])
+        all_links_has_ids = True
+        for link in links.values():
+            if 'datavariable_id' not in link:
+                all_links_has_ids = False
+                link['color'] = "#ff0000"
 
-        form_is_valid = True
-        if not conveyor_label or not operators or not links or not all_links_has_ids:
-            form_is_valid = False
-        else:
-            # Create a new conveyor instance
-            conveyor_serializer = self.get_serializer(data={'label': conveyor_label})
-            if conveyor_serializer.is_valid():
+        form_is_valid = False
+        errors = []
+
+        # Create a new conveyor instance
+        conveyor_serializer = self.get_serializer(data={'label': conveyor_label})
+        if conveyor_serializer.is_valid():
+            if not operators:
+                errors.append(_('Graph may not be empty'))
+            elif not links:
+                errors.append(_('Graph must be connected'))
+            elif not all_links_has_ids:
+                errors.append(_('All links must be assigned to data variables'))
+            else:
                 conveyor = conveyor_serializer.save()
                 # Link conveyor to vertices
                 for operator in operators.values():
@@ -457,10 +468,12 @@ class ConveyorViewSet(BaseViewSet):
                     edge.to_input = link['toConnector'].split('_')[1]
                     edge.data_variable_id = link['datavariable_id']
                     edge.save()
-            else:
-                form_is_valid = False
 
-        result = {'data': {'form_is_valid': form_is_valid}}
+                form_is_valid = True
+        else:
+            errors.append(_("Conveyor label may not be blank!"))
+
+        result = {'data': data, 'form_is_valid': form_is_valid, 'errors': errors}
         response = JsonResponse(result)
         return response
 
@@ -470,16 +483,26 @@ class ConveyorViewSet(BaseViewSet):
         conveyor_label = data['conveyorLabel']
         operators = data['operators']
         links = data['links']
-        all_links_has_ids = all(['datavariable_id' in v for v in links.values()])
+        all_links_has_ids = True
+        for link in links.values():
+            if 'datavariable_id' not in link:
+                all_links_has_ids = False
+                link['color'] = "#ff0000"
 
-        form_is_valid = True
-        if not conveyor_label or not operators or not links or not all_links_has_ids:
-            form_is_valid = False
-        else:
-            # Use an existing conveyor instance
-            instance = self.get_object()
-            conveyor_serializer = self.get_serializer(data={'label': conveyor_label}, instance=instance)
-            if conveyor_serializer.is_valid():
+        form_is_valid = False
+        errors = []
+
+        # Use an existing conveyor instance
+        instance = self.get_object()
+        conveyor_serializer = self.get_serializer(data={'label': conveyor_label}, instance=instance)
+        if conveyor_serializer.is_valid():
+            if not operators:
+                errors.append(_('Graph may not be empty'))
+            elif not links:
+                errors.append(_('Graph must be connected'))
+            elif not all_links_has_ids:
+                errors.append(_('All links must be assigned to data variables'))
+            else:
                 # Update conveyor
                 conveyor_serializer.save()
                 # Get lists of vertices in db and modified graph
@@ -544,10 +567,11 @@ class ConveyorViewSet(BaseViewSet):
                     edges_in_db[edge].data_variable_id = edges_in_graph[edge]['data_variable_id']
                     edges_in_db[edge].save()
 
-            else:
-                form_is_valid = False
+                form_is_valid = True
+        else:
+            errors.append(_("Conveyor label may not be blank! (Or DB is damaged)"))
 
-        result = {'data': {'form_is_valid': form_is_valid}}
+        result = {'data': data, 'form_is_valid': form_is_valid, 'errors': errors}
         response = JsonResponse(result)
         return response
 

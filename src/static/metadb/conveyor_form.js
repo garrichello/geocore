@@ -190,13 +190,16 @@ saveConveyor = function(e) {
         url: form.attr('action'),
         data: {'data': JSON.stringify(data)},
         dataType: 'json',
-        success: function(data) {
-            if (data.data.form_is_valid) {
+        success: function(response) {
+            if (response.form_is_valid) {
                 $.fn.dataTable.tables( {visible: false, api: true} ).ajax.reload();
                 $(modal_id).modal('hide');
             }
             else {
-                console.log('Error in form!');
+                $.each(response.errors, function(i, v) {
+                    alert(v);
+                })
+                $flowchart.flowchart('setData', response.data);
             }
         },
         error: function(xhr, errmsg, err) {
