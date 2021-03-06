@@ -351,8 +351,7 @@ class ConveyorViewSet(BaseViewSet):
         ''' Cut off number of a name given in a form: name_#. '''
         return int(numbered_name.split('_')[1])
 
-    @action(methods=['GET'], detail=True)
-    def retrieve_graph(self, request, pk=None):
+    def _retrieve_graph(self, request, pk=None):
         edges = Edge.objects.filter(conveyor__id=pk).all()
         vertices = defaultdict(dict)
         links = {}
@@ -415,9 +414,16 @@ class ConveyorViewSet(BaseViewSet):
         response = JsonResponse(result)
         return response
 
-    @action(methods=['POST'], detail=False)
-    def create_graph(self, request):
+    def retrieve(self, request, pk=None):
+        http_action = request.META.get('HTTP_ACTION')
+        if http_action == 'graph':
+            result = self._retrieve_graph(request, pk)
+        else:
+            result = super().retrieve(request, pk)
 
+        return result
+
+    def create(self, request, *args, **kwargs):
         data = json.loads(request.data['data'])
 
         conveyor_label = data['conveyorLabel']
@@ -458,9 +464,7 @@ class ConveyorViewSet(BaseViewSet):
         response = JsonResponse(result)
         return response
 
-    @action(methods=['PUT'], detail=True)
-    def update_graph(self, request, pk=None):
-
+    def update(self, request, *args, **kwargs):
         data = json.loads(request.data['data'])
 
         conveyor_label = data['conveyorLabel']
@@ -477,7 +481,7 @@ class ConveyorViewSet(BaseViewSet):
             conveyor_serializer = self.get_serializer(data={'label': conveyor_label}, instance=instance)
             if conveyor_serializer.is_valid():
                 # Update conveyor
-                conveyor = conveyor_serializer.save()
+                conveyor_serializer.save()
                 # Get lists of vertices in db and modified graph
                 vertices_in_db_set = set([obj.vertex for obj in ConveyorHasVertex.objects.filter(conveyor=instance)])
                 vertices_in_graph = {Vertex.objects.get(pk=op['vertex_id']): {'top': op['top'], 

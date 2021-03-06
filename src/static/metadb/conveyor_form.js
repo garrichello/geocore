@@ -181,15 +181,10 @@ saveConveyor = function(e) {
     var form = $(this);
     var modal_id = '#'+getModalName('parent');
     var data = $flowchart.flowchart('getData');
-    if (form.attr('method') == 'POST') {
-        var url = form.attr('action')+'create_graph/'
-    } else {
-        var url = form.attr('action')+'update_graph/'
-    }
     data['conveyorLabel'] = $('#id_label').val();
     $.ajax({
         type: form.attr('method'),
-        url: url,
+        url: form.attr('action'),
         data: {'data': JSON.stringify(data)},
         dataType: 'json',
         success: function(data) {
@@ -305,8 +300,5 @@ $(document).ready( function () {
 
     loadVerticesNames();
     loadDataVariablesNames();
-    
-    if ($(conveyor_form_class_name).attr('method') == 'PUT') {
-        loadGraph($(conveyor_form_class_name).attr('action')+'retrieve_graph/', $flowchart);
-    }
+    loadGraph($(conveyor_form_class_name).attr('action'), $flowchart);
 } );

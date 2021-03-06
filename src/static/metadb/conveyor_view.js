@@ -34,6 +34,9 @@ conveyor_columnsDefs = [
 var loadGraph = function(url, $flowchart) {
     $.ajax({
         type: "get",
+        headers: {
+            'ACTION': 'graph',
+        },
         url: url,
         dataType: 'json',
         success: function(data) {
@@ -66,7 +69,7 @@ $(document).ready( function () {
             table.on('xhr.dt', set_header2);
             table.on('select', function( e, dt, type, indexes ) {
                 if (type == 'row') {
-                    var url = table.rows(indexes).data().pluck('dataurl')[0]+'retrieve_graph/';
+                    var url = table.rows(indexes).data().pluck('dataurl')[0];
                     loadGraph(url, $flowchart);
                 }
             });
