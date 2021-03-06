@@ -51,7 +51,7 @@ var makeVertexItem = function(id, moduleName, conditionOption, conditionValue) {
     return listItem;
 };
 
-var loadVerticesNames = function() {
+var loadVerticesNames = function(refreshList=false) {
     $.ajax( { 
         url: vertex_api_url+'light/',
         type: 'get',
@@ -66,7 +66,10 @@ var loadVerticesNames = function() {
                 var conditionValue = v.condition_value.label
                 $('#available_vertices_list').append(
                     makeVertexItem(v.id, moduleName, conditionOption, conditionValue));
-            }) 
+            });
+            if (!refreshList) {
+                loadGraph($(conveyor_form_class_name).attr('action'), $flowchart);
+            }
         }
     } );
 };
@@ -156,7 +159,7 @@ var addVertex = function(obj) {
     var conditionOption = obj.getAttribute('condition-option');
     var conditionValue = obj.getAttribute('condition-value');
     addOperator(vertexId, moduleName, conditionOption, conditionValue);
-    $(obj).remove();
+    //$(obj).remove();
 };
 
 var assignDataVariable = function(obj) {
@@ -212,7 +215,7 @@ $(document).ready( function () {
         var child_modal_id = loadForm2.call(this, 'create');
         $(child_modal_id).on('hidden.bs.modal', function() {
             if ($('.js-vertex-form').length) {
-                loadVerticesNames();
+                loadVerticesNames(true);
             };
             if ($('.js-datavariable-form').length) {
                 loadDataVariablesNames();
@@ -225,7 +228,7 @@ $(document).ready( function () {
     $(conveyor_form_class_name).on('click', '.js-del-vertex-button', function() {
         operatorId = $flowchart.flowchart('getSelectedOperatorId');
         operatorData = $flowchart.flowchart('getOperatorData', operatorId);
-        vertexId = operatorData.properties.id;
+        vertexId = operatorData.vertex_id;
         moduleName = operatorData.properties.title;
         conditionOption = operatorData.properties.condition_option
         conditionValue = operatorData.properties.condition_value
@@ -266,6 +269,11 @@ $(document).ready( function () {
             $('.js-del-vertex-button').attr('disabled', true);
             return true;
         },
+        onOperatorCreate: function(operatorId, operatorData, fullElement) {
+            $(`.js-add-vertex[value="${operatorData.vertex_id}"]`).remove();
+            console.log(operatorData.vertex_id);
+            return true
+        },
         onLinkSelect: function(linkId) {
             $('.js-del-link-button').attr('disabled', false);
             $('#available_datavariables_list *').each( function(i, v) {
@@ -298,7 +306,6 @@ $(document).ready( function () {
         },
     });
 
-    loadVerticesNames();
+    loadVerticesNames(false);
     loadDataVariablesNames();
-    loadGraph($(conveyor_form_class_name).attr('action'), $flowchart);
 } );
