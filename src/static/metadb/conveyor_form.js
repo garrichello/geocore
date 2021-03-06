@@ -271,7 +271,6 @@ $(document).ready( function () {
         },
         onOperatorCreate: function(operatorId, operatorData, fullElement) {
             $(`.js-add-vertex[value="${operatorData.vertex_id}"]`).remove();
-            console.log(operatorData.vertex_id);
             return true
         },
         onLinkSelect: function(linkId) {
