@@ -185,6 +185,104 @@ class AccumulationModeViewSet(BaseViewSet):
     }
 
 
+class ArgumentsGroupViewSet(BaseViewSet):
+    """
+    Returns arguments groups
+    """
+    queryset = ArgumentsGroup.objects.all().order_by('name')
+    serializer_class = ArgumentsGroupSerializer
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer, TemplateHTMLRenderer]
+    template_name = 'metadb/includes/rest_form.html'
+    options_template_name = 'metadb/hr/dropdown_list_options.html'
+    list_url = 'metadb:argumentsgroup-list'
+    action_url = 'metadb:argumentsgroup-detail'
+
+    table_headers = [
+        {'type': 'head_none', 'caption': _('Id'), 'field': 'id'},
+        {'type': 'head_text', 'caption': _('Name'), 'field': 'name'},
+        {'type': 'head_text', 'caption': _('Description'), 'field': 'description'},
+        {'type': 'head_select', 'caption': _('Argument type'), 'field': 'argument_type'},
+    ]
+
+    ctx_create = {
+        'method': 'POST',
+        'form_class': 'js-arggroup-form',
+        'title': _("Create a new arguments group"),
+        'submit_name': _("Create arguments group"),
+        'script': 'metadb/arggroup_form.js',
+        'attributes': [
+            {'name': 'argtype-url',
+             'value': reverse_lazy('metadb:argumenttype-list')}
+        ],
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_update = {
+        'method': 'PUT',
+        'form_class': 'js-arggroup-form',
+        'title': _("Update arguments group"),
+        'submit_name': _("Update arguments group"),
+        'script': 'metadb/arggroup_form.js',
+        'attributes': [
+            {'name': 'argtype-url',
+             'value': reverse_lazy('metadb:argumenttype-list')}
+        ],
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_delete = {
+        'method': 'DELETE',
+        'form_class': 'js-arggroup-delete-form',
+        'title': _('Confirm arguments group delete'),
+        'text': _('Are you sure you want to delete the arguments group'),
+        'submit_name': _('Delete arguments group'),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+
+class ArgumentTypeViewSet(BaseViewSet):
+    """
+    Returns argument types
+    """
+    queryset = ArgumentType.objects.all().order_by('label')
+    serializer_class = ArgumentTypeSerializer
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer, TemplateHTMLRenderer]
+    template_name = 'metadb/includes/rest_form.html'
+    options_template_name = 'metadb/hr/dropdown_list_options.html'
+    list_url = 'metadb:argumenttype-list'
+    action_url = 'metadb:argumenttype-detail'
+
+    table_headers = [
+        {'type': 'head_none', 'caption': _('Id'), 'field': 'id'},
+        {'type': 'head_text', 'caption': _('Label'), 'field': 'label'},
+    ]
+
+    ctx_create = {
+        'method': 'POST',
+        'form_class': 'js-argtype-form',
+        'title': _("Create a new argument type"),
+        'submit_name': _("Create argument type"),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_update = {
+        'method': 'PUT',
+        'form_class': 'js-argtype-form',
+        'title': _("Update argument type"),
+        'submit_name': _("Update argument type"),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_delete = {
+        'method': 'DELETE',
+        'form_class': 'js-argtype-delete-form',
+        'title': _('Confirm argument type delete'),
+        'text': _('Are you sure you want to delete the argument type'),
+        'submit_name': _('Delete argument type'),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+
 class CollectionViewSet(BaseViewSet):
     """
     Returns collections
@@ -239,6 +337,69 @@ class CollectionViewSet(BaseViewSet):
         'title': _('Confirm collection delete'),
         'text': _('Are you sure you want to delete the collection'),
         'submit_name': _('Delete collection'),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+
+class CombinationViewSet(BaseViewSet):
+    """
+    Returns option-value combinations
+    """
+    queryset = Combination.objects.order_by('option__label')
+    serializer_class = CombinationSerializer
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer, TemplateHTMLRenderer]
+    template_name = 'metadb/includes/rest_form.html'
+    options_template_name = 'metadb/hr/dropdown_list_options.html'
+    list_url = 'metadb:combination-list'
+    action_url = 'metadb:combination-detail'
+
+    table_headers = [
+        {'type': 'head_none', 'caption': _('Id'), 'field': 'id'},
+        {'type': 'head_text', 'caption': _('Option label'), 'field': 'option.label'},
+        {'type': 'head_text', 'caption': _('Option value label'), 'field': 'option_value.label'},
+        {'type': 'head_text', 'caption': _('Condition combination'), 'field': 'condition'},
+    ]
+
+    ctx_create = {
+        'method': 'POST',
+        'form_class': 'js-combination-form',
+        'title': _("Create a new option-value combination"),
+        'submit_name': _("Create combination"),
+        'script': 'metadb/combination_form.js',
+        'attributes': [
+            {'name': 'options-url',
+             'value': reverse_lazy('metadb:option-list')},
+            {'name': 'optionvalues-url',
+             'value': reverse_lazy('metadb:optionvalue-list')},
+            {'name': 'conditions-url',
+             'value': reverse_lazy('metadb:combination-list')},
+        ],
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_update = {
+        'method': 'PUT',
+        'form_class': 'js-combination-form',
+        'title': _("Update option-value combination"),
+        'submit_name': _("Update combination"),
+        'script': 'metadb/combination_form.js',
+        'attributes': [
+            {'name': 'options-url',
+             'value': reverse_lazy('metadb:option-list')},
+            {'name': 'optionvalues-url',
+             'value': reverse_lazy('metadb:optionvalue-list')},
+            {'name': 'conditions-url',
+             'value': reverse_lazy('metadb:condition-list')},
+        ],
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_delete = {
+        'method': 'DELETE',
+        'form_class': 'js-combination-delete-form',
+        'title': _('Confirm option-value combination delete'),
+        'text': _('Are you sure you want to delete the option-value combination'),
+        'submit_name': _('Delete combination'),
         'style': {'template_pack': 'rest_framework/vertical/'}
     }
 
@@ -406,8 +567,8 @@ class ConveyorViewSet(BaseViewSet):
                 'title': vertex.computing_module.name,
                 'inputs': inputs, #self._sort_dict(inputs),
                 'outputs': outputs, #self._sort_dict(outputs),
-                'condition_option': vertex.condition_option.label,
-                'condition_value': vertex.condition_value.label,
+                'condition_option': vertex.condition_combination.option.label if vertex.condition_combination else None,
+                'condition_value': vertex.condition_combination.option_value.label if vertex.condition_combination else None,
             }
             left += d_left
 
@@ -1302,8 +1463,8 @@ class OptionViewSet(BaseViewSet):
     table_headers = [
         {'type': 'head_none', 'caption': _('Id'), 'field': 'id'},
         {'type': 'head_text', 'caption': _('Label'), 'field': 'label'},
-        {'type': 'head_text', 'caption': _('GUI element name'), 'field': 'gui_element.name'},
-        {'type': 'head_text', 'caption': _('GUI element caption'), 'field': 'gui_element.guielementi18n.caption'},
+#        {'type': 'head_text', 'caption': _('GUI element name'), 'field': 'gui_element.name'},
+#        {'type': 'head_text', 'caption': _('GUI element caption'), 'field': 'gui_element.guielementi18n.caption'},
     ]
 
     ctx_create = {
@@ -1311,11 +1472,11 @@ class OptionViewSet(BaseViewSet):
         'form_class': 'js-option-form',
         'title': _("Create a new option"),
         'submit_name': _("Create option"),
-        'script': 'metadb/option_form.js',
-        'attributes': [
-            {'name': 'gui-element-url',
-             'value': reverse_lazy('metadb:guielement-list')},
-        ],
+#        'script': 'metadb/option_form.js',
+#        'attributes': [
+#            {'name': 'gui-element-url',
+#             'value': reverse_lazy('metadb:guielement-list')},
+#        ],
         'style': {'template_pack': 'rest_framework/vertical/'}
     }
 
@@ -1324,11 +1485,11 @@ class OptionViewSet(BaseViewSet):
         'form_class': 'js-option-form',
         'title': _("Update option"),
         'submit_name': _("Update option"),
-        'script': 'metadb/option_form.js',
-        'attributes': [
-            {'name': 'gui-element-url',
-             'value': reverse_lazy('metadb:guielement-list')},
-        ],
+#        'script': 'metadb/option_form.js',
+#        'attributes': [
+#            {'name': 'gui-element-url',
+#             'value': reverse_lazy('metadb:guielement-list')},
+#        ],
         'style': {'template_pack': 'rest_framework/vertical/'}
     }
 
@@ -1491,6 +1652,69 @@ class ParameterViewSet(BaseViewSet):
     def __init__(self, *args, **kwargs):
         self.queryset = self.queryset.filter(
             language__code=get_language()).order_by('parameteri18n__name')
+
+
+class ProcessorViewSet(BaseViewSet):
+    """
+    Returns processors
+    """
+    queryset = Processor.objects.all()
+    serializer_class = ProcessorSerializer
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer, TemplateHTMLRenderer]
+    template_name = 'metadb/includes/rest_form.html'
+    options_template_name = 'metadb/hr/dropdown_list_options.html'
+    list_url = 'metadb:processor-list'
+    action_url = 'metadb:processor-detail'
+
+    table_headers = [
+        ('head_none', _('Processor id')),
+        ('head_select', _('Is visible')),
+        ('head_text', _('Processor name')),
+        ('head_none', _('Arguments selected by user')),
+        ('head_select', _('Conveyor name')),
+        ('head_select', _('Arguments group')),
+        ('head_select', _('Options')),
+        ('head_select', _('Time period types')),
+    ]
+
+    ctx_create = {
+        'method': 'POST',
+        'form_class': 'js-processor-form',
+        'title': _("Create a new processor"),
+        'submit_name': _("Create processor"),
+        'script': 'metadb/processor_form.js',
+        'attributes': [
+            {'name': 'accmodes-url',
+             'value': reverse_lazy('metadb:accumulationmode-list')}
+        ],
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_update = {
+        'method': 'PUT',
+        'form_class': 'js-processor-form',
+        'title': _("Update processor"),
+        'submit_name': _("Update processor"),
+        'script': 'metadb/processor_form.js',
+        'attributes': [
+            {'name': 'accmodes-url',
+             'value': reverse_lazy('metadb:accumulationmode-list')}
+        ],
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_delete = {
+        'method': 'DELETE',
+        'form_class': 'js-processor-delete-form',
+        'title': _('Confirm processor delete'),
+        'text': _('Are you sure you want to delete the processor'),
+        'submit_name': _('Delete processor'),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    def __init__(self, *args, **kwargs):
+        self.queryset = self.queryset.filter(
+            language__code=get_language()).order_by('processori18n__name')
 
 
 class PropertyViewSet(BaseViewSet):
@@ -1722,6 +1946,60 @@ class ScenarioViewSet(BaseViewSet):
     }
 
 
+class SettingViewSet(BaseViewSet):
+    """
+    Returns settings
+    """
+    queryset = Setting.objects.order_by('label')
+    serializer_class = SettingSerializer
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer, TemplateHTMLRenderer]
+    template_name = 'metadb/includes/rest_form.html'
+    options_template_name = 'metadb/hr/dropdown_list_options.html'
+    list_url = 'metadb:setting-list'
+    action_url = 'metadb:setting-detail'
+
+    table_headers = [
+        {'type': 'head_none', 'caption': _('Id'), 'field': 'id'},
+        {'type': 'head_text', 'caption': _('Label'), 'field': 'label'},
+        {'type': 'head_text', 'caption': _('GUI Element'), 'field': 'gui_element'},
+    ]
+
+    ctx_create = {
+        'method': 'POST',
+        'form_class': 'js-setting-form',
+        'title': _("Create a new setting"),
+        'submit_name': _("Create setting"),
+        'script': 'metadb/setting_form.js',
+        'attributes': [
+            {'name': 'guielements-url',
+             'value': reverse_lazy('metadb:guielement-list')}
+        ],
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_update = {
+        'method': 'PUT',
+        'form_class': 'js-setting-form',
+        'title': _("Update setting"),
+        'submit_name': _("Update setting"),
+        'script': 'metadb/setting_form.js',
+        'attributes': [
+            {'name': 'guielements-url',
+             'value': reverse_lazy('metadb:guielement-list')}
+        ],
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_delete = {
+        'method': 'DELETE',
+        'form_class': 'js-setting-delete-form',
+        'title': _('Confirm setting delete'),
+        'text': _('Are you sure you want to delete the setting'),
+        'submit_name': _('Delete setting'),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+
 class SpecificParameterViewSet(BaseViewSet):
     """
     Returns specific parameters
@@ -1793,6 +2071,54 @@ class SpecificParameterViewSet(BaseViewSet):
         'submit_name': _('Delete specific parameter'),
         'style': {'template_pack': 'rest_framework/vertical/'}
     }
+
+
+class TimePeriodTypeViewSet(BaseViewSet):
+    """
+    Returns time period types
+    """
+    queryset = TimePeriodType.objects.all()
+    serializer_class = TimePeriodTypeSerializer
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer, TemplateHTMLRenderer]
+    template_name = 'metadb/includes/rest_form.html'
+    options_template_name = 'metadb/hr/dropdown_list_options.html'
+    list_url = 'metadb:timeperiodtype-list'
+    action_url = 'metadb:timeperiodtype-detail'
+
+    table_headers = [
+        {'type': 'head_none', 'caption': _('Id'), 'field': 'id'},
+        {'type': 'head_text', 'caption': _('Name of constant'), 'field': 'const_name'},
+        {'type': 'head_text', 'caption': _('Time period type name'), 'field': 'timeperiodtypei18n.name'},
+    ]
+
+    ctx_create = {
+        'method': 'POST',
+        'form_class': 'js-timeperiodtype-form',
+        'title': _("Create a new time period type"),
+        'submit_name': _("Create time period type"),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_update = {
+        'method': 'PUT',
+        'form_class': 'js-timeperiodtype-form',
+        'title': _("Update time period type"),
+        'submit_name': _("Update time period type"),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_delete = {
+        'method': 'DELETE',
+        'form_class': 'js-timeperiodtype-delete-form',
+        'title': _('Confirm time period type'),
+        'text': _('Are you sure you want to delete the time period type'),
+        'submit_name': _('Delete time period type'),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    def __init__(self, *args, **kwargs):
+        self.queryset = self.queryset.filter(
+            language__code=get_language()).order_by('timeperiodtypei18n__name')
 
 
 class TimeStepViewSet(BaseViewSet):
@@ -1968,9 +2294,7 @@ class VertexViewSet(BaseViewSet):
     table_headers = [
         ('head_none', 'Id'),
         ('head_select', _('Computing module')),
-        ('head_select', _('Option label')),
-        ('head_select', _('GUI element')),
-        ('head_none', _('Option value')),
+        ('head_select', _('Condition option-value combination')),
     ]
 
     ctx_create = {
@@ -1982,10 +2306,8 @@ class VertexViewSet(BaseViewSet):
         'attributes': [
             {'name': 'computingmodules-url',
              'value': reverse_lazy('metadb:computingmodule-list')},
-            {'name': 'options-url',
-             'value': reverse_lazy('metadb:option-list')},
-            {'name': 'optionvalues-url',
-             'value': reverse_lazy('metadb:optionvalue-list')},
+            {'name': 'combinations-url',
+             'value': reverse_lazy('metadb:combination-list')},
         ],
         'style': {'template_pack': 'rest_framework/vertical/'}
     }
@@ -1999,10 +2321,8 @@ class VertexViewSet(BaseViewSet):
         'attributes': [
             {'name': 'computingmodules-url',
              'value': reverse_lazy('metadb:computingmodule-list')},
-            {'name': 'options-url',
-             'value': reverse_lazy('metadb:option-list')},
-            {'name': 'optionvalues-url',
-             'value': reverse_lazy('metadb:optionvalue-list')},
+            {'name': 'combinations-url',
+             'value': reverse_lazy('metadb:combination-list')},
         ],
         'style': {'template_pack': 'rest_framework/vertical/'}
     }
@@ -2025,10 +2345,11 @@ class VertexViewSet(BaseViewSet):
 
         data = []
         for vertex in vertices:
+            vcc = vertex.condition_combination
             data.append({'id': vertex.id,
                          'computing_module': {'name': vertex.computing_module.name},
-                         'condition_option': {'label': vertex.condition_option.label},
-                         'condition_value': {'label': vertex.condition_value.label},
+                         'condition_option': {'label': vcc.option.label if vcc else None},
+                         'condition_value': {'label': vcc.option_value.label if vcc else None},
                         })
 
         result = {'data': data}

@@ -12,16 +12,10 @@ $(function() {
                 );
                 console.log(form_data['name']);
             };
-            if ($('.js-option-form').length) {
-                var form_data = mapFormData('.js-option-form');  // Get option fields
-                loadOptions.call(this, vertex_form_class_name, 'id_condition_option',
-                    'options-url', form_data['label']
-                );
-            };
-            if ($('.js-optionvalue-form').length) {
-                var form_data = mapFormData('.js-optionvalue-form');  // Get option value fields
-                loadOptions.call(this, vertex_form_class_name, 'id_condition_value',
-                    'optionvalues-url', form_data['label']
+            if ($('.js-combination-form').length) {
+                var form_data = mapFormData('.js-combination-form');  // Get combination fields
+                loadOptions.call(this, vertex_form_class_name, 'id_condition_combination',
+                    'combinations-url', form_data['option']
                 );
             };
             $(child_modal_id).remove();

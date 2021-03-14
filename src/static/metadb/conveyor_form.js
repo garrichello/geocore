@@ -39,7 +39,7 @@ var makeVertexItem = function(id, moduleName, conditionOption, conditionValue) {
     var classes = "list-group-item js-add-vertex";
     var condition = '';
     if (conditionValue != '-') {
-        condition = `[if ${conditionOption}=${conditionValue}]`
+        condition = `[if ${conditionOption} == ${conditionValue}]`
     };
     var listItem = $(
     `<a href="#" class="${classes}" value="${id}"
