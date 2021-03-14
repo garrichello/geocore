@@ -95,6 +95,26 @@ class CollectionI18N(models.Model):
         return self.name
 
 
+class Combination(models.Model):
+    option = models.ForeignKey('Option', models.CASCADE)
+    option_value = models.ForeignKey('OptionValue', models.CASCADE)
+    condition = models.ForeignKey('self', models.CASCADE, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'combination'
+        unique_together = (('option', 'option_value', 'condition'),)
+
+    def __str__(self):
+        if self.option.label != '-':
+            result = f'{self.option.label}={self.option_value.label}'
+        else:
+            result = '-'
+        if self.condition.option.label != '-':
+            result += f' [if {self.condition}]'
+        return result
+
+
 class ComputingModule(models.Model):
     name = models.CharField(max_length=100, blank=True)
     number_of_inputs = models.IntegerField()
@@ -362,7 +382,6 @@ class LevelsGroupHasLevel(models.Model):
 
 
 class Option(models.Model):
-    gui_element = models.ForeignKey('GuiElement', models.CASCADE)
     label = models.CharField(max_length=45, blank=True)
 
     class Meta:
@@ -465,12 +484,12 @@ class ParameterI18N(models.Model):
 
 class Processor(models.Model):
     is_visible = models.IntegerField()
-    arguments_selected_by_user = models.IntegerField(blank=True)
+    arguments_selected_by_user = models.IntegerField()
     conveyor = models.ForeignKey('Conveyor', models.CASCADE)
     arguments_group = models.ManyToManyField('ArgumentsGroup', through='ProcessorHasArguments', related_name='arguments_group')
     language = models.ManyToManyField('Language', through='ProcessorI18N')
-    option = models.ManyToManyField('Option', through='ProcessorHasOptions')
     time_period_type = models.ManyToManyField('TimePeriodType', through='ProcessorHasTimePeriodType')
+    setting = models.ManyToManyField('Setting', through='ProcessorHasSetting')
 
     class Meta:
         managed = False
@@ -488,16 +507,14 @@ class ProcessorHasArguments(models.Model):
         unique_together = (('processor', 'arguments_group', 'argument_position'),)
 
 
-class ProcessorHasOptions(models.Model):
-    processor = models.ForeignKey('Processor', models.CASCADE)
-    option = models.ForeignKey('Option', models.CASCADE)
-    option_value = models.ForeignKey('OptionValue', models.CASCADE)
-    condition = models.ForeignKey('self', models.CASCADE)
+class ProcessorHasSetting(models.Model):
+    processor = models.ForeignKey(Processor, models.CASCADE)
+    setting = models.ForeignKey('Setting', models.CASCADE)
 
     class Meta:
         managed = False
-        db_table = 'processor_has_options'
-        unique_together = (('processor', 'option', 'option_value'),)
+        db_table = 'processor_has_setting'
+        unique_together = (('processor', 'setting'),)
 
 
 class ProcessorHasTimePeriodType(models.Model):
@@ -582,6 +599,28 @@ class Scenario(models.Model):
     def __str__(self):
         return self.name
 
+class Setting(models.Model):
+    label = models.CharField(max_length=45, blank=True, null=True)
+    gui_element = models.ForeignKey('GuiElement', models.CASCADE)
+    combination = models.ManyToManyField('Combination', through='SettingHasCombination')
+
+    class Meta:
+        managed = False
+        db_table = 'setting'
+
+    def __str__(self):
+        return self.label
+
+
+class SettingHasCombination(models.Model):
+    setting = models.ForeignKey('Setting', models.CASCADE)
+    combination = models.ForeignKey('Combination', models.CASCADE)
+
+    class Meta:
+        managed = False
+        db_table = 'setting_has_combination'
+        unique_together = (('setting', 'combination'),)
+
 
 class SpecificParameter(models.Model):
     parameter = models.ForeignKey('Parameter', models.CASCADE)
@@ -606,6 +645,9 @@ class TimePeriodType(models.Model):
     class Meta:
         managed = False
         db_table = 'time_period_type'
+
+    def __str__(self):
+        return self.timeperiodtypei18n_set.filter(language__code=get_language()).get().name
 
 
 class TimePeriodTypeI18N(models.Model):
@@ -684,8 +726,7 @@ class Variable(models.Model):
 
 class Vertex(models.Model):
     computing_module = models.ForeignKey('ComputingModule', models.CASCADE)
-    condition_option = models.ForeignKey('Option', models.CASCADE)
-    condition_value = models.ForeignKey('OptionValue', models.CASCADE)
+    condition_combination = models.ForeignKey('Combination', models.CASCADE, blank=True, null=True)
     conveyor = models.ManyToManyField('Conveyor', through='ConveyorHasVertex', related_name='conveyor')
 
     class Meta:
@@ -694,6 +735,6 @@ class Vertex(models.Model):
 
     def __str__(self):
         result = f'{self.computing_module.name}'
-        if self.condition_option.label != '-':
-            result += f' [{self.condition_option.label}={self.condition_value.label}]'
+        if self.condition_combination.option.label != '-':
+            result += f' [if {self.condition_combination.option.label} == {self.condition_combination.option_value.label}]'
         return  result
