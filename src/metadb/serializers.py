@@ -2193,18 +2193,39 @@ class TimePeriodTypeSerializer(serializers.HyperlinkedModelSerializer):
     def update(self, instance, validated_data):
         return None
 
+class SettingHasCombinationSerializer(serializers.HyperlinkedModelSerializer):
+    qset = Combination.objects.all()
+    combination = CombinationRelatedField(queryset=qset)
+    class Meta:
+        model = SettingHasCombination
+        fields = ['index', 'combination']
+
+
+class SettingHasCombinationRelatedField(ModifiedRelatedField):
+
+    def to_representation(self, value):
+        data = SettingHasCombinationSerializer(value, context=self.context).data
+        action = self.context['request'].META.get('HTTP_ACTION')
+        result = data
+        if action == 'update':
+            result = result.get('id', None)
+        return result
+
+    def to_internal_value(self, data):
+        return SettingHasCombination.objects.get(pk=data)
+
 
 class SettingSerializer(serializers.HyperlinkedModelSerializer):
     dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:setting-detail',
                                                    read_only=True)
     qset = GuiElement.objects.order_by('name')
     gui_element = GuiElementRelatedField(queryset=qset)
-    qset = Combination.objects.order_by('option__label')
-    combination = CombinationRelatedField(queryset=qset, many=True)
+    qset = SettingHasCombination.objects.all()
+    combinations = SettingHasCombinationRelatedField(queryset=qset, source='setting_combinations', many=True)
 
     class Meta:
         model = Setting
-        fields = ['id', 'dataurl', 'label', 'gui_element', 'combination']
+        fields = ['id', 'dataurl', 'label', 'gui_element', 'combinations']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -2217,6 +2238,10 @@ class SettingSerializer(serializers.HyperlinkedModelSerializer):
         self.fields['gui_element'].label = _('GUI element name')
         self.fields['gui_element'].style = {'template': 'metadb/custom_select.html'}
         self.fields['gui_element'].allow_blank = True
+        # Combinations
+        self.fields['combinations'].data_url = reverse('metadb:combination-list')
+        self.fields['combinations'].label = _('Option-value combinations')
+        self.fields['combinations'].style = {'template': 'metadb/custom_select_multiple.html'}
 
     def to_representation(self, instance):
         action = self.context['request'].META.get('HTTP_ACTION')
@@ -2230,6 +2255,7 @@ class SettingSerializer(serializers.HyperlinkedModelSerializer):
         return Setting.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
+        raise 'Not implemented yet!'
         instance.label = validated_data.get('label', instance.label)
         instance.gui_element = validated_data.get('gui_element', instance.gui_element)
         instance.save()

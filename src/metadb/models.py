@@ -613,14 +613,17 @@ class Setting(models.Model):
 
 
 class SettingHasCombination(models.Model):
-    setting = models.ForeignKey('Setting', models.CASCADE)
-    combination = models.ForeignKey('Combination', models.CASCADE)
+    setting = models.ForeignKey('Setting', models.CASCADE, related_name='setting_combinations')
+    combination = models.ForeignKey('Combination', models.CASCADE, related_name='combination_settings')
+    index = models.IntegerField()
 
     class Meta:
         managed = False
         db_table = 'setting_has_combination'
         unique_together = (('setting', 'combination'),)
 
+    def __str__(self):
+        return f'{self.combination}'
 
 class SpecificParameter(models.Model):
     parameter = models.ForeignKey('Parameter', models.CASCADE)
