@@ -497,14 +497,18 @@ class Processor(models.Model):
 
 
 class ProcessorHasArguments(models.Model):
-    processor = models.ForeignKey('Processor', models.CASCADE)
-    arguments_group = models.ForeignKey('ArgumentsGroup', models.CASCADE)
+    processor = models.ForeignKey('Processor', models.CASCADE, related_name='processor_arguments')
+    arguments_group = models.ForeignKey('ArgumentsGroup', models.CASCADE, related_name='argument_processors')
     argument_position = models.IntegerField()
 
     class Meta:
         managed = False
         db_table = 'processor_has_arguments'
         unique_together = (('processor', 'arguments_group', 'argument_position'),)
+
+    def __str__(self):
+        processor_name = self.processor.processori18n_set.filter(language__code=get_language()).get().name
+        return f'{processor_name} => ({self.arguments_group})'
 
 
 class ProcessorHasSetting(models.Model):

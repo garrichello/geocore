@@ -2324,14 +2324,37 @@ class OptionAndValuesRelatedField(ModifiedRelatedField):
     def to_internal_value(self, data):
         return OptionValue.objects.get(pk=data)
 
+
+class ProcessorHasArgumentsSerializer(serializers.HyperlinkedModelSerializer):
+    qset = ArgumentsGroup.objects.all()
+    arguments_group = ArgumentsGroupRelatedField(queryset=qset)
+    class Meta:
+        model = ProcessorHasArguments
+        fields = ['argument_position', 'arguments_group']
+
+
+class ProcessorHasArgumentsRelatedField(ModifiedRelatedField):
+
+    def to_representation(self, value):
+        data = ProcessorHasArgumentsSerializer(value, context=self.context).data
+        action = self.context['request'].META.get('HTTP_ACTION')
+        result = data
+        if action == 'update':
+            result = result.get('id', None)
+        return result
+
+    def to_internal_value(self, data):
+        return ProcessorHasArguments.objects.get(pk=data)
+
+
 class ProcessorSerializer(serializers.HyperlinkedModelSerializer):
     dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:processor-detail',
                                                    read_only=True)
     processori18n = ProcessorI18NSerializer(source='processori18n_set', label='')
     qset = Conveyor.objects.order_by('label')
     conveyor = ConveyorRelatedField(queryset=qset)
-    qset = ArgumentsGroup.objects.order_by('name')
-    arguments_group = ArgumentsGroupRelatedField(queryset=qset, many=True)
+    qset = ProcessorHasArguments.objects.all()
+    arguments = ProcessorHasArgumentsRelatedField(queryset=qset, many=True, source='processor_arguments')
     qset = Setting.objects.order_by('label')
     setting = SettingRelatedField(queryset=qset, many=True)
     qset = TimePeriodType.objects.order_by('timeperiodtypei18n__name')
@@ -2340,7 +2363,7 @@ class ProcessorSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Processor
         fields = ['id', 'dataurl', 'is_visible', 'processori18n', 'conveyor', 'setting',
-                  'time_period_type', 'arguments_selected_by_user', 'arguments_group']
+                  'time_period_type', 'arguments_selected_by_user', 'arguments']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -2365,10 +2388,10 @@ class ProcessorSerializer(serializers.HyperlinkedModelSerializer):
         # Number of arguments given by a user
         self.fields['arguments_selected_by_user'].label = _('Number of arguments given by user')
         self.fields['arguments_selected_by_user'].style = {'template': 'metadb/custom_input.html'}
-        # Arguments group
-        self.fields['arguments_group'].data_url = reverse('metadb:argumentsgroup-list')
-        self.fields['arguments_group'].label = _('Arguments group')
-        self.fields['arguments_group'].style = {'template': 'metadb/custom_select_multiple.html'}
+        # Arguments
+        self.fields['arguments'].data_url = reverse('metadb:argumentsgroup-list')
+        self.fields['arguments'].label = _('Arguments')
+        self.fields['arguments'].style = {'template': 'metadb/custom_select_multiple.html'}
 
     def to_representation(self, instance):
         action = self.context['request'].META.get('HTTP_ACTION')
