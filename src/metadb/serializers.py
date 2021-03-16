@@ -2093,19 +2093,45 @@ class ProcessorRelatedField(ModifiedRelatedField):
     pass
 
 
+class ArgumentsGroupHasProcessorSerializer(serializers.HyperlinkedModelSerializer):
+    qset = Processor.objects.all()
+    processor = ProcessorRelatedField(queryset=qset)
+    qset = Combination.objects.all()
+    override_combination = CombinationRelatedField(queryset=qset, many=True)
+
+    class Meta:
+        model = ArgumentsGroupHasProcessor
+        fields = ['id', 'processor', 'override_combination']
+
+
+class ArgumentsGroupHasProcessorRelatedField(ModifiedRelatedField):
+
+    def to_representation(self, value):
+        data = ArgumentsGroupHasProcessorSerializer(value, context=self.context).data
+        action = self.context['request'].META.get('HTTP_ACTION')
+        result = data
+        if action == 'update':
+            result = result.get('id', None)
+        return result
+
+    def to_internal_value(self, data):
+        return ArgumentsGroupHasProcessor.objects.get(pk=data)
+
+
+
 class ArgumentsGroupSerializer(serializers.HyperlinkedModelSerializer):
     dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:argumentsgroup-detail',
                                                    read_only=True)
     qset = ArgumentType.objects.order_by('label')
     argument_type = ArgumentTypeRelatedField(queryset=qset)
-    qset = Processor.objects.all()
-    processor = ProcessorRelatedField(queryset=qset, many=True)
+    qset = ArgumentsGroupHasProcessor.objects.all()
+    processors = ArgumentsGroupHasProcessorRelatedField(queryset=qset, many=True, source='argumentgroup_processors')
     qset = SpecificParameter.objects.all()
     specific_parameter = SpecificParameterRelatedField(queryset=qset, many=True)
 
     class Meta:
         model = ArgumentsGroup
-        fields = ['id', 'dataurl', 'name', 'description', 'argument_type', 'processor', 'specific_parameter'] # 'processor']
+        fields = ['id', 'dataurl', 'name', 'description', 'argument_type', 'processors', 'specific_parameter'] # 'processor']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
