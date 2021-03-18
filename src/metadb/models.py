@@ -489,11 +489,14 @@ class Processor(models.Model):
     arguments_group = models.ManyToManyField('ArgumentsGroup', through='ProcessorHasArguments', related_name='arguments_group')
     language = models.ManyToManyField('Language', through='ProcessorI18N')
     time_period_type = models.ManyToManyField('TimePeriodType', through='ProcessorHasTimePeriodType')
-    setting = models.ManyToManyField('Setting', through='ProcessorHasSetting')
+    settings = models.ManyToManyField('Setting', through='ProcessorHasSetting')
 
     class Meta:
         managed = False
         db_table = 'processor'
+
+    def __str__(self):
+        return self.processori18n_set.filter(language__code=get_language()).get().name
 
 
 class ProcessorHasArguments(models.Model):
