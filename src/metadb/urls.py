@@ -42,6 +42,7 @@ router.register('timeperiodtypes', TimePeriodTypeViewSet)
 router.register('processors', ProcessorViewSet)
 router.register('combinations', CombinationViewSet)
 router.register('settings', SettingViewSet)
+router.register('argumentsgrouphasprocessors', ArgumentsGroupHasProcessorViewSet)
 
 
 app_name = 'metadb'
