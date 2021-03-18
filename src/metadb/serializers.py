@@ -2245,10 +2245,21 @@ class TimePeriodTypeSerializer(serializers.HyperlinkedModelSerializer):
         return result
 
     def create(self, validated_data):
-        return None
+        timeperiodtypei18n_data = validated_data.pop('timeperiodtypei18n_set')
+        instance = TimePeriodType.objects.create(**validated_data)
+        for db_lang in Language.objects.all():
+            TimePeriodTypeI18N.objects.create(time_period_type=instance,
+                                              language=db_lang,
+                                              **timeperiodtypei18n_data)
+        return instance
 
     def update(self, instance, validated_data):
-        return None
+        instance.const_name = validated_data.get('const_name', instance.const_name)
+        timeperiodtypei18n = instance.timeperiodtypei18n_set.filter(language__code=get_language()).get()
+        timeperiodtypei18n.name = validated_data['timeperiodtypei18n_set'].get('name', timeperiodtypei18n.name)
+        timeperiodtypei18n.save()
+        instance.save()
+        return instance
 
 class SettingHasCombinationSerializer(serializers.HyperlinkedModelSerializer):
     qset = Combination.objects.all()
