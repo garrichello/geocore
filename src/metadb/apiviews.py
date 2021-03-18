@@ -211,7 +211,7 @@ class ArgumentsGroupViewSet(BaseViewSet):
         'submit_name': _("Create arguments group"),
         'script': 'metadb/arggroup_form.js',
         'attributes': [
-            {'name': 'argtype-url',
+            {'name': 'argtypes-url',
              'value': reverse_lazy('metadb:argumenttype-list')}
         ],
         'style': {'template_pack': 'rest_framework/vertical/'}
@@ -224,7 +224,7 @@ class ArgumentsGroupViewSet(BaseViewSet):
         'submit_name': _("Update arguments group"),
         'script': 'metadb/arggroup_form.js',
         'attributes': [
-            {'name': 'argtype-url',
+            {'name': 'argtypes-url',
              'value': reverse_lazy('metadb:argumenttype-list')}
         ],
         'style': {'template_pack': 'rest_framework/vertical/'}
@@ -236,6 +236,65 @@ class ArgumentsGroupViewSet(BaseViewSet):
         'title': _('Confirm arguments group delete'),
         'text': _('Are you sure you want to delete the arguments group'),
         'submit_name': _('Delete arguments group'),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+
+class ArgumentsGroupHasProcessorViewSet(BaseViewSet):
+    """
+    Returns arguments groups
+    """
+    queryset = ArgumentsGroupHasProcessor.objects.all()
+    serializer_class = ArgumentsGroupHasProcessorSerializer
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer, TemplateHTMLRenderer]
+    template_name = 'metadb/includes/rest_form.html'
+    options_template_name = 'metadb/hr/dropdown_list_options.html'
+    list_url = 'metadb:argumentsgrouphasprocessor-list'
+    action_url = 'metadb:argumentsgrouphasprocessor-detail'
+
+    table_headers = [
+        {'type': 'head_none', 'caption': _('Id'), 'field': 'id'},
+        {'type': 'head_text', 'caption': _('Name'), 'field': 'name'},
+        {'type': 'head_select', 'caption': _('Processor'), 'field': 'processor'},
+        {'type': 'head_select', 'caption': _('Override combinations'), 'field': 'override_combination'},
+    ]
+
+    ctx_create = {
+        'method': 'POST',
+        'form_class': 'js-arggrouphasproc-form',
+        'title': _("Create a new link arguments group - processor"),
+        'submit_name': _("Create link"),
+        'script': 'metadb/arggrouphasproc_form.js',
+        'attributes': [
+            {'name': 'processors-url',
+             'value': reverse_lazy('metadb:processor-list')},
+            {'name': 'combinations-url',
+             'value': reverse_lazy('metadb:combination-list')}
+        ],
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_update = {
+        'method': 'PUT',
+        'form_class': 'js-arggrouphasproc-form',
+        'title': _("Update the link arguments group - processor"),
+        'submit_name': _("Update link"),
+        'script': 'metadb/arggrouphasproc_form.js',
+        'attributes': [
+            {'name': 'processors-url',
+             'value': reverse_lazy('metadb:processor-list')},
+            {'name': 'combinations-url',
+             'value': reverse_lazy('metadb:combination-list')}
+        ],
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_delete = {
+        'method': 'DELETE',
+        'form_class': 'js-arggrouphasproc-delete-form',
+        'title': _('Confirm arguments group - processor link delete'),
+        'text': _('Are you sure you want to delete the link arguments group - processor'),
+        'submit_name': _('Delete link'),
         'style': {'template_pack': 'rest_framework/vertical/'}
     }
 
