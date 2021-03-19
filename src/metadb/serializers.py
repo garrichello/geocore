@@ -10,7 +10,8 @@ from .models import *
 
 
 class ModifiedRelatedField(serializers.RelatedField):
-
+    serializer = None
+    model = None
     # Below code is copied from rest_framework.serializers.RelatedField
     # because we need to override the keys in the return value
     def get_choices(self, cutoff=None):
@@ -32,6 +33,23 @@ class ModifiedRelatedField(serializers.RelatedField):
             )
             for item in queryset
         ])
+
+    def get_serializer(self):
+        return self.serializer
+
+    def get_model(self):
+        return self.model
+
+    def to_representation(self, value):
+        data = self.get_serializer()(value, context=self.context).data
+        action = self.context['request'].META.get('HTTP_ACTION')
+        result = data
+        if action == 'update':
+            result = result.get('id', None)
+        return result
+
+    def to_internal_value(self, data):
+        return self.get_model().objects.get(pk=data)
 
 
 class OrganizationI18NSerializer(serializers.ModelSerializer):
@@ -2126,14 +2144,14 @@ class ArgumentsGroupSerializer(serializers.HyperlinkedModelSerializer):
     argument_type = ArgumentTypeRelatedField(queryset=qset)
 #    qset = ArgumentsGroupHasProcessor.objects.all()
 #    processors = ArgumentsGroupHasProcessorRelatedField(queryset=qset, many=True, source='argumentgroup_processors')
-    qset = Processor.objects.all()
-    processor = ProcessorRelatedField(queryset=qset, many=True)
-    qset = SpecificParameter.objects.all()
-    specific_parameter = SpecificParameterRelatedField(queryset=qset, many=True)
+#    qset = Processor.objects.all()
+#    processor = ProcessorRelatedField(queryset=qset, many=True)
+#    qset = SpecificParameter.objects.all()
+#    specific_parameter = SpecificParameterRelatedField(queryset=qset, many=True)
 
     class Meta:
         model = ArgumentsGroup
-        fields = ['id', 'dataurl', 'name', 'description', 'argument_type', 'processor', 'specific_parameter'] # 'processor']
+        fields = ['id', 'dataurl', 'name', 'description', 'argument_type'] #, 'processor', 'specific_parameter'] # 'processor']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -2153,13 +2171,13 @@ class ArgumentsGroupSerializer(serializers.HyperlinkedModelSerializer):
         self.fields['argument_type'].style = {'template': 'metadb/custom_select.html'}
         self.fields['argument_type'].data_url = reverse('metadb:argumenttype-list')
         # Processor
-        self.fields['processor'].label = _('Processor')
-        self.fields['processor'].style = {'template': 'metadb/custom_select_multiple.html'}
-        self.fields['processor'].data_url = reverse('metadb:processor-list')
+#        self.fields['processor'].label = _('Processor')
+#        self.fields['processor'].style = {'template': 'metadb/custom_select_multiple.html'}
+#        self.fields['processor'].data_url = reverse('metadb:processor-list')
         # Specific parameter
-        self.fields['specific_parameter'].label = _('Specific parameter')
-        self.fields['specific_parameter'].style = {'template': 'metadb/custom_select_multiple.html'}
-        self.fields['specific_parameter'].data_url = reverse('metadb:specificparameter-list')
+#        self.fields['specific_parameter'].label = _('Specific parameter')
+#        self.fields['specific_parameter'].style = {'template': 'metadb/custom_select_multiple.html'}
+#        self.fields['specific_parameter'].data_url = reverse('metadb:specificparameter-list')
 
     def to_representation(self, instance):
         action = self.context['request'].META.get('HTTP_ACTION')
@@ -2261,12 +2279,78 @@ class TimePeriodTypeSerializer(serializers.HyperlinkedModelSerializer):
         instance.save()
         return instance
 
+
+class SettingSerializer(serializers.HyperlinkedModelSerializer):
+    dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:setting-detail',
+                                                   read_only=True)
+    qset = GuiElement.objects.order_by('name')
+    gui_element = GuiElementRelatedField(queryset=qset)
+
+    class Meta:
+        model = Setting
+        fields = ['id', 'dataurl', 'label', 'gui_element']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Label
+        self.fields['label'].label = _('Label')
+        self.fields['label'].style = {'template': 'metadb/custom_input.html'}
+        # GUI element
+        self.fields['gui_element'].data_url = reverse('metadb:guielement-list')
+        self.fields['gui_element'].label = _('GUI element name')
+        self.fields['gui_element'].style = {'template': 'metadb/custom_select.html'}
+        self.fields['gui_element'].allow_blank = True
+
+    def to_representation(self, instance):
+        action = self.context['request'].META.get('HTTP_ACTION')
+        if action == 'options_list' or self.context['request'].GET.get('format') == 'html':
+            result = instance
+        else:
+            result = super().to_representation(instance)
+        return result
+
+    def create(self, validated_data):
+        return Setting.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        instance.label = validated_data.get('label', instance.label)
+        instance.gui_element = validated_data.get('gui_element', instance.gui_element)
+        instance.save()
+        return instance
+
+
+class SettingRelatedField(ModifiedRelatedField):
+
+    def to_representation(self, value):
+        data = SettingSerializer(value, context=self.context).data
+        action = self.context['request'].META.get('HTTP_ACTION')
+        result = data
+        if action == 'update':
+            result = result.get('id', None)
+        return result
+
+    def to_internal_value(self, data):
+        return Setting.objects.get(pk=data)
+
+
 class SettingHasCombinationSerializer(serializers.HyperlinkedModelSerializer):
     qset = Combination.objects.all()
     combination = CombinationRelatedField(queryset=qset)
     class Meta:
         model = SettingHasCombination
         fields = ['index', 'combination']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Label
+        self.fields['index'].label = _('Index')
+        self.fields['index'].style = {'template': 'metadb/custom_input.html'}
+        # Combination
+        self.fields['combination'].data_url = reverse('metadb:combination-list')
+        self.fields['combination'].label = _('Option-value combinations')
+        self.fields['combination'].style = {'template': 'metadb/custom_select_multiple.html'}
 
 
 class SettingHasCombinationRelatedField(ModifiedRelatedField):
@@ -2283,7 +2367,7 @@ class SettingHasCombinationRelatedField(ModifiedRelatedField):
         return SettingHasCombination.objects.get(pk=data)
 
 
-class SettingSerializer(serializers.HyperlinkedModelSerializer):
+class SettingFullSerializer(serializers.HyperlinkedModelSerializer):
     dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:setting-detail',
                                                    read_only=True)
     qset = GuiElement.objects.order_by('name')
@@ -2320,20 +2404,33 @@ class SettingSerializer(serializers.HyperlinkedModelSerializer):
         return result
 
     def create(self, validated_data):
-        return Setting.objects.create(**validated_data)
+        combinations = validated_data.pop('setting_combinations')
+        instance = Setting.objects.create(**validated_data)
+        for i, val in enumerate(combinations):
+            shc = SettingHasCombination.objects.create(setting=instance,
+                                                       combination=val.combination,
+                                                       index=i)
+            shc.save()
+        return instance
 
     def update(self, instance, validated_data):
-        raise 'Not implemented yet!'
+        combinations = validated_data.pop('setting_combinations')
         instance.label = validated_data.get('label', instance.label)
         instance.gui_element = validated_data.get('gui_element', instance.gui_element)
+        SettingHasCombination.objects.filter(setting=instance).delete()
+        for i, val in enumerate(combinations):
+            shc = SettingHasCombination.objects.create(setting=instance,
+                                                       combination=val.combination,
+                                                       index=i)
+            shc.save()
         instance.save()
         return instance
 
 
-class SettingRelatedField(ModifiedRelatedField):
+class SettingFullRelatedField(ModifiedRelatedField):
 
     def to_representation(self, value):
-        data = SettingSerializer(value, context=self.context).data
+        data = SettingFullSerializer(value, context=self.context).data
         action = self.context['request'].META.get('HTTP_ACTION')
         result = data
         if action == 'update':
@@ -2422,7 +2519,7 @@ class ProcessorSerializer(serializers.HyperlinkedModelSerializer):
     qset = Conveyor.objects.order_by('label')
     conveyor = ConveyorRelatedField(queryset=qset)
     qset = ProcessorHasArguments.objects.all()
-#    arguments = ProcessorHasArgumentsRelatedField(queryset=qset, many=True, source='processor_arguments')
+    arguments = ProcessorHasArgumentsRelatedField(queryset=qset, many=True, source='processor_arguments')
     qset = Setting.objects.order_by('label')
     settings = SettingRelatedField(queryset=qset, many=True)
     qset = TimePeriodType.objects.order_by('timeperiodtypei18n__name')
@@ -2431,7 +2528,7 @@ class ProcessorSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Processor
         fields = ['id', 'dataurl', 'is_visible', 'processori18n', 'conveyor', 'settings',
-                  'time_period_type', 'arguments_selected_by_user'] #, 'arguments']
+                  'time_period_type', 'arguments_selected_by_user', 'arguments']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -2457,9 +2554,9 @@ class ProcessorSerializer(serializers.HyperlinkedModelSerializer):
         self.fields['arguments_selected_by_user'].label = _('Number of arguments given by user')
         self.fields['arguments_selected_by_user'].style = {'template': 'metadb/custom_input.html'}
         # Arguments
-#        self.fields['arguments'].data_url = reverse('metadb:argumentsgroup-list')
-#        self.fields['arguments'].label = _('Arguments')
-#        self.fields['arguments'].style = {'template': 'metadb/custom_select_multiple.html'}
+        self.fields['arguments'].data_url = reverse('metadb:argumentsgroup-list')
+        self.fields['arguments'].label = _('Arguments')
+        self.fields['arguments'].style = {'template': 'metadb/custom_select_multiple.html'}
 
     def to_representation(self, instance):
         action = self.context['request'].META.get('HTTP_ACTION')

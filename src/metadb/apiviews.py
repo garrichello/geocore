@@ -2059,6 +2059,125 @@ class SettingViewSet(BaseViewSet):
     }
 
 
+class SettingFullViewSet(BaseViewSet):
+    """
+    Returns full settings
+    """
+    queryset = Setting.objects.order_by('label')
+    serializer_class = SettingFullSerializer
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer, TemplateHTMLRenderer]
+    template_name = 'metadb/includes/rest_form.html'
+    options_template_name = 'metadb/hr/dropdown_list_options.html'
+    list_url = 'metadb:settingfull-list'
+    action_url = 'metadb:settingfull-detail'
+
+    table_headers = [
+        {'type': 'head_none', 'caption': _('Id'), 'field': 'id'},
+        {'type': 'head_text', 'caption': _('Label'), 'field': 'label'},
+        {'type': 'head_text', 'caption': _('GUI Element'), 'field': 'gui_element'},
+        {'type': 'head_text', 'caption': _('Combinations'), 'field': 'combinations'},
+    ]
+
+    ctx_create = {
+        'method': 'POST',
+        'form_class': 'js-settingfull-form',
+        'title': _("Create a new setting"),
+        'submit_name': _("Create setting"),
+        'script': 'metadb/settingfull_form.js',
+        'attributes': [
+            {'name': 'guielements-url',
+             'value': reverse_lazy('metadb:guielement-list')},
+            {'name': 'combinations-url',
+             'value': reverse_lazy('metadb:combination-list')},
+        ],
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_update = {
+        'method': 'PUT',
+        'form_class': 'js-settingfull-form',
+        'title': _("Update setting"),
+        'submit_name': _("Update setting"),
+        'script': 'metadb/settingfull_form.js',
+        'attributes': [
+            {'name': 'guielements-url',
+             'value': reverse_lazy('metadb:guielement-list')},
+            {'name': 'combinations-url',
+             'value': reverse_lazy('metadb:combination-list')},
+        ],
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_delete = {
+        'method': 'DELETE',
+        'form_class': 'js-settingfull-delete-form',
+        'title': _('Confirm setting delete'),
+        'text': _('Are you sure you want to delete the setting'),
+        'submit_name': _('Delete setting'),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+
+class SettingHasCombinationViewSet(BaseViewSet):
+    """
+    Returns links beyween settings and option-value combination
+    """
+    queryset = SettingHasCombination.objects.all()
+    serializer_class = SettingHasCombinationSerializer
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer, TemplateHTMLRenderer]
+    template_name = 'metadb/includes/rest_form.html'
+    options_template_name = 'metadb/hr/dropdown_list_options.html'
+    list_url = 'metadb:settinghascombination-list'
+    action_url = 'metadb:settinghascombination-detail'
+
+    table_headers = [
+        {'type': 'head_none', 'caption': _('Id'), 'field': 'id'},
+        {'type': 'head_text', 'caption': _('Name'), 'field': 'name'},
+        {'type': 'head_select', 'caption': _('Settings'), 'field': 'setting'},
+        {'type': 'head_select', 'caption': _('Option-value combinations'), 'field': 'combination'},
+        {'type': 'head_text', 'caption': _('Index'), 'field': 'index'},
+    ]
+
+    ctx_create = {
+        'method': 'POST',
+        'form_class': 'js-settinghascombination-form',
+        'title': _("Create a new link setting - combination"),
+        'submit_name': _("Create link"),
+        'script': 'metadb/settinghascombination_form.js',
+        'attributes': [
+            {'name': 'settings-url',
+             'value': reverse_lazy('metadb:setting-list')},
+            {'name': 'combinations-url',
+             'value': reverse_lazy('metadb:combination-list')}
+        ],
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_update = {
+        'method': 'PUT',
+        'form_class': 'js-settinghascombination-form',
+        'title': _("Update the linksetting - combination"),
+        'submit_name': _("Update link"),
+        'script': 'metadb/settinghascombination_form.js',
+        'attributes': [
+            {'name': 'settings-url',
+             'value': reverse_lazy('metadb:setting-list')},
+            {'name': 'combinations-url',
+             'value': reverse_lazy('metadb:combination-list')}
+        ],
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_delete = {
+        'method': 'DELETE',
+        'form_class': 'js-settinghascombination-delete-form',
+        'title': _('Confirm setting - combination link delete'),
+        'text': _('Are you sure you want to delete the link setting - combination'),
+        'submit_name': _('Delete link'),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+
 class SpecificParameterViewSet(BaseViewSet):
     """
     Returns specific parameters
