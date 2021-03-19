@@ -10,8 +10,9 @@ from .models import *
 
 
 class ModifiedRelatedField(serializers.RelatedField):
-    serializer = None
+    serializer = lambda value, context: None
     model = None
+    data_field = None
     # Below code is copied from rest_framework.serializers.RelatedField
     # because we need to override the keys in the return value
     def get_choices(self, cutoff=None):
@@ -43,7 +44,7 @@ class ModifiedRelatedField(serializers.RelatedField):
     def to_representation(self, value):
         data = self.get_serializer()(value, context=self.context).data
         action = self.context['request'].META.get('HTTP_ACTION')
-        result = data
+        result = data[self.data_field] if self.data_field else data
         if action == 'update':
             result = result.get('id', None)
         return result
@@ -113,17 +114,8 @@ class OrganizationSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class OrganizationRelatedField(ModifiedRelatedField):
-
-    def to_representation(self, value):
-        data = OrganizationSerializer(value, context=self.context).data
-        action = self.context['request'].META.get('HTTP_ACTION')
-        result = data
-        if action == 'update':
-            result = result.get('id', None)
-        return result
-
-    def to_internal_value(self, data):
-        return Organization.objects.get(pk=data)
+    serializer = OrganizationSerializer
+    model = Organization
 
 
 class CollectionI18NSerializer(serializers.ModelSerializer):
@@ -199,17 +191,9 @@ class CollectionSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class CollectionRelatedField(ModifiedRelatedField):
-
-    def to_representation(self, value):
-        data = CollectionSerializer(value, context=self.context).data
-        action = self.context['request'].META.get('HTTP_ACTION')
-        result = data['label']
-        if action == 'update':
-            result = data.get('id', None)
-        return result
-
-    def to_internal_value(self, data):
-        return Collection.objects.get(pk=data)
+    serializer = CollectionSerializer
+    model = Collection
+    data_field = 'label'
 
 
 class ScenarioSerializer(serializers.HyperlinkedModelSerializer):
@@ -247,17 +231,8 @@ class ScenarioSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class ScenarioRelatedField(ModifiedRelatedField):
-
-    def to_representation(self, value):
-        data = ScenarioSerializer(value, context=self.context).data
-        action = self.context['request'].META.get('HTTP_ACTION')
-        result = data
-        if action == 'update':
-            result = data.get('id', None)
-        return result
-
-    def to_internal_value(self, data):
-        return Scenario.objects.get(pk=data)
+    serializer = ScenarioSerializer
+    model = Scenario
 
 
 class ResolutionSerializer(serializers.HyperlinkedModelSerializer):
@@ -295,17 +270,8 @@ class ResolutionSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class ResolutionRelatedField(ModifiedRelatedField):
-
-    def to_representation(self, value):
-        data = ResolutionSerializer(value, context=self.context).data
-        action = self.context['request'].META.get('HTTP_ACTION')
-        result = data
-        if action == 'update':
-            result = data.get('id', None)
-        return result
-
-    def to_internal_value(self, data):
-        return Resolution.objects.get(pk=data)
+    serializer = ResolutionSerializer
+    model = Resolution
 
 
 class DataKindSerializer(serializers.HyperlinkedModelSerializer):
@@ -340,17 +306,9 @@ class DataKindSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class DataKindRelatedField(ModifiedRelatedField):
-
-    def to_representation(self, value):
-        data = DataKindSerializer(value, context=self.context).data
-        action = self.context['request'].META.get('HTTP_ACTION')
-        result = data['name']
-        if action == 'update':
-            result = data.get('id', None)
-        return result
-
-    def to_internal_value(self, data):
-        return DataKind.objects.get(pk=data)
+    serializer = DataKindSerializer
+    model = DataKind
+    data_field = 'name'
 
 
 class FileTypeSerializer(serializers.HyperlinkedModelSerializer):
@@ -385,17 +343,9 @@ class FileTypeSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class FileTypeRelatedField(ModifiedRelatedField):
-
-    def to_representation(self, value):
-        data = FileTypeSerializer(value, context=self.context).data
-        action = self.context['request'].META.get('HTTP_ACTION')
-        result = data['name']
-        if action == 'update':
-            result = data.get('id', None)
-        return result
-
-    def to_internal_value(self, data):
-        return FileType.objects.get(pk=data)
+    serializer = FileTypeSerializer
+    model = FileType
+    data_field = 'name'
 
 
 class DatasetSerializer(serializers.HyperlinkedModelSerializer):
@@ -486,17 +436,9 @@ class DatasetSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class DatasetRelatedField(ModifiedRelatedField):
+    serializer = DatasetSerializer
+    model = Dataset
 
-    def to_representation(self, value):
-        data = DatasetSerializer(value, context=self.context).data
-        action = self.context['request'].META.get('HTTP_ACTION')
-        result = data
-        if action == 'update':
-            result = data.get('id', None)
-        return result
-
-    def to_internal_value(self, data):
-        return Dataset.objects.get(pk=data)
 
 class AccumulationModeSerializer(serializers.HyperlinkedModelSerializer):
     dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:accumulationmode-detail',
@@ -510,7 +452,6 @@ class AccumulationModeSerializer(serializers.HyperlinkedModelSerializer):
 
         self.fields['name'].label = _('Accumulation mode')
         self.fields['name'].style = {'template': 'metadb/custom_input.html'}
-
 
     def to_representation(self, instance):
         action = self.context['request'].META.get('HTTP_ACTION')
@@ -530,17 +471,10 @@ class AccumulationModeSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class AccumulationModeRelatedField(ModifiedRelatedField):
+    serializer = AccumulationModeSerializer
+    model = AccumulationMode
+    data_field = 'name'
 
-    def to_representation(self, value):
-        data = AccumulationModeSerializer(value, context=self.context).data
-        action = self.context['request'].META.get('HTTP_ACTION')
-        result = data['name']
-        if action == 'update':
-            result = data.get('id', None)
-        return result
-
-    def to_internal_value(self, data):
-        return AccumulationMode.objects.get(pk=data)
 
 class ParameterI18NSerializer(serializers.ModelSerializer):
 
@@ -613,17 +547,8 @@ class ParameterSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class ParameterRelatedField(ModifiedRelatedField):
-
-    def to_representation(self, value):
-        data = ParameterSerializer(value, context=self.context).data
-        action = self.context['request'].META.get('HTTP_ACTION')
-        result = data
-        if action == 'update':
-            result = result.get('id', None)
-        return result
-
-    def to_internal_value(self, data):
-        return Parameter.objects.get(pk=data)
+    serializer = ParameterSerializer
+    model = Parameter
 
 
 class UnitsI18NSerializer(serializers.ModelSerializer):
@@ -683,17 +608,8 @@ class UnitsSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class UnitsRelatedField(ModifiedRelatedField):
-
-    def to_representation(self, value):
-        data = UnitsSerializer(value, context=self.context).data
-        action = self.context['request'].META.get('HTTP_ACTION')
-        result = data
-        if action == 'update':
-            result = result.get('id', None)
-        return result
-
-    def to_internal_value(self, data):
-        return Units.objects.get(pk=data)
+    serializer = UnitsSerializer
+    model = Units
 
 
 class LevelI18NSerializer(serializers.ModelSerializer):
@@ -757,17 +673,8 @@ class LevelSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class LevelRelatedField(ModifiedRelatedField):
-
-    def to_representation(self, value):
-        data = LevelSerializer(value, context=self.context).data
-        action = self.context['request'].META.get('HTTP_ACTION')
-        result = data
-        if action == 'update':
-            result = result.get('id', None)
-        return result
-
-    def to_internal_value(self, data):
-        return Level.objects.get(pk=data)
+    serializer = LevelSerializer
+    model = Level
 
 
 class LevelsGroupSerializer(serializers.HyperlinkedModelSerializer):
@@ -823,17 +730,8 @@ class LevelsGroupSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class LevelsGroupRelatedField(ModifiedRelatedField):
-
-    def to_representation(self, value):
-        data = LevelsGroupSerializer(value, context=self.context).data
-        action = self.context['request'].META.get('HTTP_ACTION')
-        result = data
-        if action == 'update':
-            result = result.get('id', None)
-        return result
-
-    def to_internal_value(self, data):
-        return LevelsGroup.objects.get(pk=data)
+    serializer = LevelsGroupSerializer
+    model = LevelsGroup
 
 
 class TimeStepI18NSerializer(serializers.ModelSerializer):
@@ -898,17 +796,8 @@ class TimeStepSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class TimeStepRelatedField(ModifiedRelatedField):
-
-    def to_representation(self, value):
-        data = TimeStepSerializer(value, context=self.context).data
-        action = self.context['request'].META.get('HTTP_ACTION')
-        result = data
-        if action == 'update':
-            result = result.get('id', None)
-        return result
-
-    def to_internal_value(self, data):
-        return TimeStep.objects.get(pk=data)
+    serializer = TimeStepSerializer
+    model = TimeStep
 
 
 class SpecificParameterSerializer(serializers.HyperlinkedModelSerializer):
@@ -965,17 +854,8 @@ class SpecificParameterSerializer(serializers.HyperlinkedModelSerializer):
         return instance
 
 class SpecificParameterRelatedField(ModifiedRelatedField):
-
-    def to_representation(self, value):
-        data = SpecificParameterSerializer(value, context=self.context).data
-        action = self.context['request'].META.get('HTTP_ACTION')
-        result = data
-        if action == 'update':
-            result = result.get('id', None)
-        return result
-
-    def to_internal_value(self, data):
-        return SpecificParameter.objects.get(pk=data)
+    serializer = SpecificParameterSerializer
+    model = SpecificParameter
 
 
 class GuiElementI18NSerializer(serializers.ModelSerializer):
@@ -1039,17 +919,8 @@ class GuiElementSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class GuiElementRelatedField(ModifiedRelatedField):
-
-    def to_representation(self, value):
-        data = GuiElementSerializer(value, context=self.context).data
-        action = self.context['request'].META.get('HTTP_ACTION')
-        result = data
-        if action == 'update':
-            result = result.get('id', None)
-        return result
-
-    def to_internal_value(self, data):
-        return GuiElement.objects.get(pk=data)
+    serializer = GuiElementSerializer
+    model = GuiElement
 
 
 class PropertySerializer(serializers.HyperlinkedModelSerializer):
@@ -1094,17 +965,8 @@ class PropertySerializer(serializers.HyperlinkedModelSerializer):
 
 
 class PropertyRelatedField(ModifiedRelatedField):
-
-    def to_representation(self, value):
-        data = PropertySerializer(value, context=self.context).data
-        action = self.context['request'].META.get('HTTP_ACTION')
-        result = data
-        if action == 'update':
-            result = result.get('id', None)
-        return result
-
-    def to_internal_value(self, data):
-        return Property.objects.get(pk=data)
+    serializer = PropertySerializer
+    model = Property
 
 
 class PropertyValueSerializer(serializers.HyperlinkedModelSerializer):
@@ -1140,17 +1002,8 @@ class PropertyValueSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class PropertyValueRelatedField(ModifiedRelatedField):
-
-    def to_representation(self, value):
-        data = PropertyValueSerializer(value, context=self.context).data
-        action = self.context['request'].META.get('HTTP_ACTION')
-        result = data
-        if action == 'update':
-            result = result.get('id', None)
-        return result
-
-    def to_internal_value(self, data):
-        return PropertyValue.objects.get(pk=data)
+    serializer = PropertyValueSerializer
+    model = PropertyValue
 
 
 class VariableSerializer(serializers.HyperlinkedModelSerializer):
@@ -1186,17 +1039,8 @@ class VariableSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class VariableRelatedField(ModifiedRelatedField):
-
-    def to_representation(self, value):
-        data = VariableSerializer(value, context=self.context).data
-        action = self.context['request'].META.get('HTTP_ACTION')
-        result = data
-        if action == 'update':
-            result = result.get('id', None)
-        return result
-
-    def to_internal_value(self, data):
-        return Variable.objects.get(pk=data)
+    serializer = VariableSerializer
+    model = Variable
 
 
 class LevelsVariableSerializer(serializers.HyperlinkedModelSerializer):
@@ -1232,17 +1076,8 @@ class LevelsVariableSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class LevelsVariableRelatedField(ModifiedRelatedField):
-
-    def to_representation(self, value):
-        data = VariableSerializer(value, context=self.context).data
-        action = self.context['request'].META.get('HTTP_ACTION')
-        result = data
-        if action == 'update':
-            result = result.get('id', None)
-        return result
-
-    def to_internal_value(self, data):
-        return Variable.objects.get(pk=data)
+    serializer = VariableSerializer
+    model = Variable
 
 
 class FileSerializer(serializers.HyperlinkedModelSerializer):
@@ -1278,17 +1113,8 @@ class FileSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class FileRelatedField(ModifiedRelatedField):
-
-    def to_representation(self, value):
-        data = FileSerializer(value, context=self.context).data
-        action = self.context['request'].META.get('HTTP_ACTION')
-        result = data
-        if action == 'update':
-            result = result.get('id', None)
-        return result
-
-    def to_internal_value(self, data):
-        return File.objects.get(pk=data)
+    serializer = FileSerializer
+    model = File
 
 
 class RootDirSerializer(serializers.HyperlinkedModelSerializer):
@@ -1324,17 +1150,8 @@ class RootDirSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class RootDirRelatedField(ModifiedRelatedField):
-
-    def to_representation(self, value):
-        data = RootDirSerializer(value, context=self.context).data
-        action = self.context['request'].META.get('HTTP_ACTION')
-        result = data
-        if action == 'update':
-            result = result.get('id', None)
-        return result
-
-    def to_internal_value(self, data):
-        return RootDir.objects.get(pk=data)
+    serializer = RootDirSerializer
+    model = RootDir
 
 
 class DataSerializer(serializers.HyperlinkedModelSerializer):
@@ -1367,8 +1184,8 @@ class DataSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Data
-        fields = ['id', 'dataurl', 'dataset', 'parameter', 'time_step', 'levels_group', 
-                  'variable', 'units', 'levels_variable', 'property', 'property_value', 
+        fields = ['id', 'dataurl', 'dataset', 'parameter', 'time_step', 'levels_group',
+                  'variable', 'units', 'levels_variable', 'property', 'property_value',
                   'file', 'root_dir', 'scale', 'offset']
 
     def __init__(self, *args, **kwargs):
@@ -1446,7 +1263,6 @@ class DataSerializer(serializers.HyperlinkedModelSerializer):
         self.fields['offset'].style = {'template': 'metadb/custom_input.html'}
         self.fields['offset'].initial = 0.0
 
-
     def to_representation(self, instance):
         action = self.context['request'].META.get('HTTP_ACTION')
         if action == 'options_list' or self.context['request'].GET.get('format') == 'html':
@@ -1484,7 +1300,6 @@ class DataSerializer(serializers.HyperlinkedModelSerializer):
         instance.scale = validated_data.get('scale', instance.scale)
         instance.offset = validated_data.get('offset', instance.offset)
         instance.save()
-
         return instance
 
 
@@ -1520,22 +1335,12 @@ class LanguageSerializer(serializers.HyperlinkedModelSerializer):
         instance.name = validated_data.get('name', instance.name)
         instance.code = validated_data.get('code', instance.code)
         instance.save()
-
         return instance
 
 
 class LanguageRelatedField(ModifiedRelatedField):
-
-    def to_representation(self, value):
-        data = LanguageSerializer(value, context=self.context).data
-        action = self.context['request'].META.get('HTTP_ACTION')
-        result = data
-        if action == 'update':
-            result = result.get('id', None)
-        return result
-
-    def to_internal_value(self, data):
-        return Language.objects.get(pk=data)
+    serializer = LanguageSerializer
+    model = Language
 
 
 class ConveyorSerializer(serializers.HyperlinkedModelSerializer):
@@ -1571,17 +1376,8 @@ class ConveyorSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class ConveyorRelatedField(ModifiedRelatedField):
-
-    def to_representation(self, value):
-        data = ConveyorSerializer(value, context=self.context).data
-        action = self.context['request'].META.get('HTTP_ACTION')
-        result = data
-        if action == 'update':
-            result = result.get('id', None)
-        return result
-
-    def to_internal_value(self, data):
-        return Conveyor.objects.get(pk=data)
+    serializer = ConveyorSerializer
+    model = Conveyor
 
 
 class ComputingModuleSerializer(serializers.HyperlinkedModelSerializer):
@@ -1618,22 +1414,12 @@ class ComputingModuleSerializer(serializers.HyperlinkedModelSerializer):
     def update(self, instance, validated_data):
         instance.name = validated_data.get('name', instance.name)
         instance.save()
-
         return instance
 
 
 class ComputingModuleRelatedField(ModifiedRelatedField):
-
-    def to_representation(self, value):
-        data = ComputingModuleSerializer(value, context=self.context).data
-        action = self.context['request'].META.get('HTTP_ACTION')
-        result = data
-        if action == 'update':
-            result = result.get('id', None)
-        return result
-
-    def to_internal_value(self, data):
-        return ComputingModule.objects.get(pk=data)
+    serializer = ComputingModuleSerializer
+    model = ComputingModule
 
 
 class OptionSerializer(serializers.HyperlinkedModelSerializer):
@@ -1651,7 +1437,6 @@ class OptionSerializer(serializers.HyperlinkedModelSerializer):
         self.fields['label'].label = _('Option label')
         self.fields['label'].style = {'template': 'metadb/custom_input.html'}
 
-
     def to_representation(self, instance):
         action = self.context['request'].META.get('HTTP_ACTION')
         if action == 'options_list' or self.context['request'].GET.get('format') == 'html':
@@ -1666,22 +1451,12 @@ class OptionSerializer(serializers.HyperlinkedModelSerializer):
     def update(self, instance, validated_data):
         instance.label = validated_data.get('label', instance.label)
         instance.save()
-
         return instance
 
 
 class OptionRelatedField(ModifiedRelatedField):
-
-    def to_representation(self, value):
-        data = OptionSerializer(value, context=self.context).data
-        action = self.context['request'].META.get('HTTP_ACTION')
-        result = data
-        if action == 'update':
-            result = result.get('id', None)
-        return result
-
-    def to_internal_value(self, data):
-        return Option.objects.get(pk=data)
+    serializer = OptionSerializer
+    model = Option
 
 
 class OptionValueI18NSerializer(serializers.ModelSerializer):
@@ -1740,22 +1515,12 @@ class OptionValueSerializer(serializers.HyperlinkedModelSerializer):
         optionvaluei18n.save()
         instance.label = validated_data.get('label', instance.label)
         instance.save()
-
         return instance
 
 
 class OptionValueRelatedField(ModifiedRelatedField):
-
-    def to_representation(self, value):
-        data = OptionValueSerializer(value, context=self.context).data
-        action = self.context['request'].META.get('HTTP_ACTION')
-        result = data
-        if action == 'update':
-            result = result.get('id', None)
-        return result
-
-    def to_internal_value(self, data):
-        return OptionValue.objects.get(pk=data)
+    serializer = OptionValueSerializer
+    model = OptionValue
 
 
 class ConditionCombinationSerializer(serializers.HyperlinkedModelSerializer):
@@ -1775,17 +1540,8 @@ class ConditionCombinationSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class ConditionCombinationRelatedField(ModifiedRelatedField):
-
-    def to_representation(self, value):
-        data = ConditionCombinationSerializer(value, context=self.context).data
-        action = self.context['request'].META.get('HTTP_ACTION')
-        result = data
-        if action == 'update':
-            result = result.get('id', None)
-        return result
-
-    def to_internal_value(self, data):
-        return Combination.objects.get(pk=data)
+    serializer = ConditionCombinationSerializer
+    model = Combination
 
 
 class CombinationSerializer(serializers.HyperlinkedModelSerializer):
@@ -1828,7 +1584,6 @@ class CombinationSerializer(serializers.HyperlinkedModelSerializer):
             result = super().to_representation(instance)
         return result
 
-
     def create(self, validated_data):
         return Combination.objects.create(**validated_data)
 
@@ -1837,22 +1592,12 @@ class CombinationSerializer(serializers.HyperlinkedModelSerializer):
         instance.option_value = validated_data.get('option_value', instance.option_value)
         instance.condition = validated_data.get('condition', instance.condition)
         instance.save()
-
         return instance
 
 
 class CombinationRelatedField(ModifiedRelatedField):
-
-    def to_representation(self, value):
-        data = CombinationSerializer(value, context=self.context).data
-        action = self.context['request'].META.get('HTTP_ACTION')
-        result = data
-        if action == 'update':
-            result = result.get('id', None)
-        return result
-
-    def to_internal_value(self, data):
-        return Combination.objects.get(pk=data)
+    serializer = CombinationSerializer
+    model = Combination
 
 
 class VertexSerializer(serializers.HyperlinkedModelSerializer):
@@ -1902,17 +1647,8 @@ class VertexSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class VertexRelatedField(ModifiedRelatedField):
-
-    def to_representation(self, value):
-        data = VertexSerializer(value, context=self.context).data
-        action = self.context['request'].META.get('HTTP_ACTION')
-        result = data
-        if action == 'update':
-            result = result.get('id', None)
-        return result
-
-    def to_internal_value(self, data):
-        return Vertex.objects.get(pk=data)
+    serializer = VertexSerializer
+    model = Vertex
 
 
 class DataVariableSerializer(serializers.HyperlinkedModelSerializer):
@@ -1956,22 +1692,12 @@ class DataVariableSerializer(serializers.HyperlinkedModelSerializer):
         instance.description = validated_data.get('description', instance.description)
         instance.units = validated_data.get('units', instance.units)
         instance.save()
-
         return instance
 
 
 class DataVariableRelatedField(ModifiedRelatedField):
-
-    def to_representation(self, value):
-        data = DataVariableSerializer(value, context=self.context).data
-        action = self.context['request'].META.get('HTTP_ACTION')
-        result = data
-        if action == 'update':
-            result = result.get('id', None)
-        return result
-
-    def to_internal_value(self, data):
-        return DataVariable.objects.get(pk=data)
+    serializer = DataVariableSerializer
+    model = DataVariable
 
 
 class EdgeSerializer(serializers.HyperlinkedModelSerializer):
@@ -1988,7 +1714,7 @@ class EdgeSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Edge
-        fields = ['id', 'dataurl', 'conveyor', 'from_vertex', 'from_output', 'to_vertex', 
+        fields = ['id', 'dataurl', 'conveyor', 'from_vertex', 'from_output', 'to_vertex',
                   'to_input', 'data_variable']
 
     def __init__(self, *args, **kwargs):
@@ -2095,17 +1821,8 @@ class ArgumentTypeSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class ArgumentTypeRelatedField(ModifiedRelatedField):
-
-    def to_representation(self, value):
-        data = ArgumentTypeSerializer(value, context=self.context).data
-        action = self.context['request'].META.get('HTTP_ACTION')
-        result = data
-        if action == 'update':
-            result = result.get('id', None)
-        return result
-
-    def to_internal_value(self, data):
-        return ArgumentType.objects.get(pk=data)
+    serializer = ArgumentTypeSerializer
+    model = ArgumentType
 
 
 class ProcessorRelatedField(ModifiedRelatedField):
@@ -2124,17 +1841,8 @@ class ArgumentsGroupHasProcessorSerializer(serializers.HyperlinkedModelSerialize
 
 
 class ArgumentsGroupHasProcessorRelatedField(ModifiedRelatedField):
-
-    def to_representation(self, value):
-        data = ArgumentsGroupHasProcessorSerializer(value, context=self.context).data
-        action = self.context['request'].META.get('HTTP_ACTION')
-        result = data
-        if action == 'update':
-            result = result.get('id', None)
-        return result
-
-    def to_internal_value(self, data):
-        return ArgumentsGroupHasProcessor.objects.get(pk=data)
+    serializer = ArgumentsGroupHasProcessorSerializer
+    model = ArgumentsGroupHasProcessor
 
 
 class ArgumentsGroupSerializer(serializers.HyperlinkedModelSerializer):
@@ -2208,17 +1916,8 @@ class ArgumentsGroupSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class ArgumentsGroupRelatedField(ModifiedRelatedField):
-
-    def to_representation(self, value):
-        data = ArgumentsGroupSerializer(value, context=self.context).data
-        action = self.context['request'].META.get('HTTP_ACTION')
-        result = data
-        if action == 'update':
-            result = result.get('id', None)
-        return result
-
-    def to_internal_value(self, data):
-        return ArgumentsGroup.objects.get(pk=data)
+    serializer = ArgumentsGroupSerializer
+    model = ArgumentsGroup
 
 
 class TimePeriodTypeI18NSerializer(serializers.ModelSerializer):
@@ -2321,17 +2020,8 @@ class SettingSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class SettingRelatedField(ModifiedRelatedField):
-
-    def to_representation(self, value):
-        data = SettingSerializer(value, context=self.context).data
-        action = self.context['request'].META.get('HTTP_ACTION')
-        result = data
-        if action == 'update':
-            result = result.get('id', None)
-        return result
-
-    def to_internal_value(self, data):
-        return Setting.objects.get(pk=data)
+    serializer = SettingSerializer
+    model = Setting
 
 
 class SettingHasCombinationSerializer(serializers.HyperlinkedModelSerializer):
@@ -2354,17 +2044,8 @@ class SettingHasCombinationSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class SettingHasCombinationRelatedField(ModifiedRelatedField):
-
-    def to_representation(self, value):
-        data = SettingHasCombinationSerializer(value, context=self.context).data
-        action = self.context['request'].META.get('HTTP_ACTION')
-        result = data
-        if action == 'update':
-            result = result.get('id', None)
-        return result
-
-    def to_internal_value(self, data):
-        return SettingHasCombination.objects.get(pk=data)
+    serializer = SettingHasCombinationSerializer
+    model = SettingHasCombination
 
 
 class SettingFullSerializer(serializers.HyperlinkedModelSerializer):
@@ -2428,17 +2109,8 @@ class SettingFullSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class SettingFullRelatedField(ModifiedRelatedField):
-
-    def to_representation(self, value):
-        data = SettingFullSerializer(value, context=self.context).data
-        action = self.context['request'].META.get('HTTP_ACTION')
-        result = data
-        if action == 'update':
-            result = result.get('id', None)
-        return result
-
-    def to_internal_value(self, data):
-        return Setting.objects.get(pk=data)
+    serializer = SettingFullSerializer
+    model = Setting
 
 
 class TimePeriodTypeRelatedField(ModifiedRelatedField):
@@ -2477,17 +2149,8 @@ class ProcessorI18NSerializer(serializers.ModelSerializer):
 
 
 class OptionAndValuesRelatedField(ModifiedRelatedField):
-
-    def to_representation(self, value):
-        data = OptionValueSerializer(value, context=self.context).data
-        action = self.context['request'].META.get('HTTP_ACTION')
-        result = data
-        if action == 'update':
-            result = result.get('id', None)
-        return result
-
-    def to_internal_value(self, data):
-        return OptionValue.objects.get(pk=data)
+    serializer = OptionValueSerializer
+    model = OptionValue
 
 
 class ProcessorHasArgumentsSerializer(serializers.HyperlinkedModelSerializer):
@@ -2499,17 +2162,8 @@ class ProcessorHasArgumentsSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class ProcessorHasArgumentsRelatedField(ModifiedRelatedField):
-
-    def to_representation(self, value):
-        data = ProcessorHasArgumentsSerializer(value, context=self.context).data
-        action = self.context['request'].META.get('HTTP_ACTION')
-        result = data
-        if action == 'update':
-            result = result.get('id', None)
-        return result
-
-    def to_internal_value(self, data):
-        return ProcessorHasArguments.objects.get(pk=data)
+    serializer = ProcessorHasArgumentsSerializer
+    model = ProcessorHasArguments
 
 
 class ProcessorSerializer(serializers.HyperlinkedModelSerializer):
