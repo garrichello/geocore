@@ -240,6 +240,71 @@ class ArgumentsGroupViewSet(BaseViewSet):
     }
 
 
+class ArgumentsGroupFullViewSet(BaseViewSet):
+    """
+    Returns arguments groups full info
+    """
+    queryset = ArgumentsGroup.objects.all().order_by('name')
+    serializer_class = ArgumentsGroupFullSerializer
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer, TemplateHTMLRenderer]
+    template_name = 'metadb/includes/rest_form.html'
+    options_template_name = 'metadb/hr/dropdown_list_options.html'
+    list_url = 'metadb:argumentsgroup-list'
+    action_url = 'metadb:argumentsgroup-detail'
+
+    table_headers = [
+        {'type': 'head_none', 'caption': _('Id'), 'field': 'id'},
+        {'type': 'head_text', 'caption': _('Name'), 'field': 'name'},
+        {'type': 'head_text', 'caption': _('Description'), 'field': 'description'},
+        {'type': 'head_select', 'caption': _('Argument type'), 'field': 'argument_type'},
+        {'type': 'head_select', 'caption': _('Processor'), 'field': 'processors'},
+        {'type': 'head_select', 'caption': _('Specific parameter'), 'field': 'specific_parameter'},
+    ]
+
+    ctx_create = {
+        'method': 'POST',
+        'form_class': 'js-arggroupfull-form',
+        'title': _("Create a new arguments group"),
+        'submit_name': _("Create arguments group"),
+        'script': 'metadb/arggroupfull_form.js',
+        'attributes': [
+            {'name': 'argtypes-url',
+             'value': reverse_lazy('metadb:argumenttype-list')},
+            {'name': 'processors-url',
+             'value': reverse_lazy('metadb:processor-list')},
+            {'name': 'specificparameters-url',
+             'value': reverse_lazy('metadb:specificparameter-list')},
+        ],
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_update = {
+        'method': 'PUT',
+        'form_class': 'js-arggroupfull-form',
+        'title': _("Update arguments group"),
+        'submit_name': _("Update arguments group"),
+        'script': 'metadb/arggroupfull_form.js',
+        'attributes': [
+            {'name': 'argtypes-url',
+             'value': reverse_lazy('metadb:argumenttype-list')},
+            {'name': 'processors-url',
+             'value': reverse_lazy('metadb:processor-list')},
+            {'name': 'specificparameters-url',
+             'value': reverse_lazy('metadb:specificparameter-list')},
+        ],
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_delete = {
+        'method': 'DELETE',
+        'form_class': 'js-arggroupfull-delete-form',
+        'title': _('Confirm arguments group delete'),
+        'text': _('Are you sure you want to delete the arguments group'),
+        'submit_name': _('Delete arguments group'),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+
 class ArgumentsGroupHasProcessorViewSet(BaseViewSet):
     """
     Returns arguments groups
@@ -2068,8 +2133,8 @@ class SettingFullViewSet(BaseViewSet):
     renderer_classes = [JSONRenderer, BrowsableAPIRenderer, TemplateHTMLRenderer]
     template_name = 'metadb/includes/rest_form.html'
     options_template_name = 'metadb/hr/dropdown_list_options.html'
-    list_url = 'metadb:settingfull-list'
-    action_url = 'metadb:settingfull-detail'
+    list_url = 'metadb:setting-list'
+    action_url = 'metadb:setting-detail'
 
     table_headers = [
         {'type': 'head_none', 'caption': _('Id'), 'field': 'id'},

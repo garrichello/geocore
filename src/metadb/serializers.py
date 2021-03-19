@@ -1874,10 +1874,6 @@ class ArgumentsGroupSerializer(serializers.HyperlinkedModelSerializer):
         self.fields['argument_type'].label = _('Argument type')
         self.fields['argument_type'].style = {'template': 'metadb/custom_select.html'}
         self.fields['argument_type'].data_url = reverse('metadb:argumenttype-list')
-        # Argument type
-        self.fields['argument_type'].label = _('Argument type')
-        self.fields['argument_type'].style = {'template': 'metadb/custom_select.html'}
-        self.fields['argument_type'].data_url = reverse('metadb:argumenttype-list')
         # Processor
 #        self.fields['processor'].label = _('Processor')
 #        self.fields['processor'].style = {'template': 'metadb/custom_select_multiple.html'}
@@ -1886,6 +1882,72 @@ class ArgumentsGroupSerializer(serializers.HyperlinkedModelSerializer):
 #        self.fields['specific_parameter'].label = _('Specific parameter')
 #        self.fields['specific_parameter'].style = {'template': 'metadb/custom_select_multiple.html'}
 #        self.fields['specific_parameter'].data_url = reverse('metadb:specificparameter-list')
+
+    def to_representation(self, instance):
+        action = self.context['request'].META.get('HTTP_ACTION')
+        if action == 'options_list' or self.context['request'].GET.get('format') == 'html':
+            result = instance
+        else:
+            result = super().to_representation(instance)
+        return result
+
+    def create(self, validated_data):
+        processors = validated_data.pop('processor')
+        specific_parameters = validated_data.pop('specific_parameter')
+        instance = ArgumentsGroup.objects.create(**validated_data)
+        instance.processor.set(processors)
+        instance.specific_parameter.set(specific_parameters)
+        return instance
+
+    def update(self, instance, validated_data):
+        processors = validated_data.pop('processor')
+        specific_parameters = validated_data.pop('specific_parameter')
+        instance.name = validated_data.get('name', instance.name)
+        instance.description = validated_data.get('description', instance.description)
+        instance.argument_type = validated_data.get('argument_type', instance.argument_type)
+        instance.processor.set(processors)
+        instance.specific_parameter.set(specific_parameters)
+        instance.save()
+        return instance
+
+
+class ArgumentsGroupFullSerializer(serializers.HyperlinkedModelSerializer):
+    dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:argumentsgroup-detail',
+                                                   read_only=True)
+    qset = ArgumentType.objects.order_by('label')
+    argument_type = ArgumentTypeRelatedField(queryset=qset)
+#    qset = ArgumentsGroupHasProcessor.objects.all()
+#    processors = ArgumentsGroupHasProcessorRelatedField(queryset=qset, many=True, source='argumentgroup_processors')
+    qset = Processor.objects.all()
+    processor = ProcessorRelatedField(queryset=qset, many=True)
+    qset = SpecificParameter.objects.all()
+    specific_parameter = SpecificParameterRelatedField(queryset=qset, many=True)
+
+    class Meta:
+        model = ArgumentsGroup
+        fields = ['id', 'dataurl', 'name', 'description', 'argument_type', 'processor', 'specific_parameter'] # 'processor']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Label
+        self.fields['name'].label = _('Name')
+        self.fields['name'].style = {'template': 'metadb/custom_input.html'}
+        # Description
+        self.fields['description'].label = _('Description')
+        self.fields['description'].style = {'template': 'metadb/custom_input.html'}
+        # Argument type
+        self.fields['argument_type'].label = _('Argument type')
+        self.fields['argument_type'].style = {'template': 'metadb/custom_select.html'}
+        self.fields['argument_type'].data_url = reverse('metadb:argumenttype-list')
+        # Processor
+        self.fields['processor'].label = _('Processor')
+        self.fields['processor'].style = {'template': 'metadb/custom_select_multiple.html'}
+        self.fields['processor'].data_url = reverse('metadb:processor-list')
+        # Specific parameter
+        self.fields['specific_parameter'].label = _('Specific parameter')
+        self.fields['specific_parameter'].style = {'template': 'metadb/custom_select_multiple.html'}
+        self.fields['specific_parameter'].data_url = reverse('metadb:specificparameter-list')
 
     def to_representation(self, instance):
         action = self.context['request'].META.get('HTTP_ACTION')
