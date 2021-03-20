@@ -1911,21 +1911,26 @@ class ArgumentsGroupSerializer(serializers.HyperlinkedModelSerializer):
         return instance
 
 
+class ArgumentsGroupRelatedField(ModifiedRelatedField):
+    serializer = ArgumentsGroupSerializer
+    model = ArgumentsGroup
+
+
 class ArgumentsGroupFullSerializer(serializers.HyperlinkedModelSerializer):
     dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:argumentsgroup-detail',
                                                    read_only=True)
     qset = ArgumentType.objects.order_by('label')
     argument_type = ArgumentTypeRelatedField(queryset=qset)
-#    qset = ArgumentsGroupHasProcessor.objects.all()
-#    processors = ArgumentsGroupHasProcessorRelatedField(queryset=qset, many=True, source='argumentgroup_processors')
-    qset = Processor.objects.all()
-    processor = ProcessorRelatedField(queryset=qset, many=True)
+    qset = ArgumentsGroupHasProcessor.objects.all()
+    processors = ArgumentsGroupHasProcessorRelatedField(queryset=qset, many=True, source='argumentgroup_processors')
+#    qset = Processor.objects.all()
+#    processor = ProcessorRelatedField(queryset=qset, many=True)
     qset = SpecificParameter.objects.all()
     specific_parameter = SpecificParameterRelatedField(queryset=qset, many=True)
 
     class Meta:
         model = ArgumentsGroup
-        fields = ['id', 'dataurl', 'name', 'description', 'argument_type', 'processor', 'specific_parameter'] # 'processor']
+        fields = ['id', 'dataurl', 'name', 'description', 'argument_type', 'processors', 'specific_parameter'] # 'processor']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -1941,9 +1946,9 @@ class ArgumentsGroupFullSerializer(serializers.HyperlinkedModelSerializer):
         self.fields['argument_type'].style = {'template': 'metadb/custom_select.html'}
         self.fields['argument_type'].data_url = reverse('metadb:argumenttype-list')
         # Processor
-        self.fields['processor'].label = _('Processor')
-        self.fields['processor'].style = {'template': 'metadb/custom_select_multiple.html'}
-        self.fields['processor'].data_url = reverse('metadb:processor-list')
+        self.fields['processors'].label = _('Processor')
+        self.fields['processors'].style = {'template': 'metadb/custom_select_multiple.html'}
+        self.fields['processors'].data_url = reverse('metadb:processor-list')
         # Specific parameter
         self.fields['specific_parameter'].label = _('Specific parameter')
         self.fields['specific_parameter'].style = {'template': 'metadb/custom_select_multiple.html'}
@@ -1975,11 +1980,6 @@ class ArgumentsGroupFullSerializer(serializers.HyperlinkedModelSerializer):
         instance.specific_parameter.set(specific_parameters)
         instance.save()
         return instance
-
-
-class ArgumentsGroupRelatedField(ModifiedRelatedField):
-    serializer = ArgumentsGroupSerializer
-    model = ArgumentsGroup
 
 
 class TimePeriodTypeI18NSerializer(serializers.ModelSerializer):
@@ -2220,7 +2220,7 @@ class ProcessorHasArgumentsSerializer(serializers.HyperlinkedModelSerializer):
     arguments_group = ArgumentsGroupRelatedField(queryset=qset)
     class Meta:
         model = ProcessorHasArguments
-        fields = ['argument_position', 'arguments_group']
+        fields = ['id', 'argument_position', 'arguments_group']
 
 
 class ProcessorHasArgumentsRelatedField(ModifiedRelatedField):
@@ -2234,17 +2234,17 @@ class ProcessorSerializer(serializers.HyperlinkedModelSerializer):
     processori18n = ProcessorI18NSerializer(source='processori18n_set', label='')
     qset = Conveyor.objects.order_by('label')
     conveyor = ConveyorRelatedField(queryset=qset)
-    qset = ProcessorHasArguments.objects.all()
+    qset = ProcessorHasArguments.objects.order_by('argument_position')
     arguments = ProcessorHasArgumentsRelatedField(queryset=qset, many=True, source='processor_arguments')
     qset = Setting.objects.order_by('label')
     settings = SettingRelatedField(queryset=qset, many=True)
     qset = TimePeriodType.objects.order_by('timeperiodtypei18n__name')
-    time_period_type = TimePeriodTypeRelatedField(queryset=qset, many=True)
+    time_period_types = TimePeriodTypeRelatedField(queryset=qset, many=True)
 
     class Meta:
         model = Processor
         fields = ['id', 'dataurl', 'is_visible', 'processori18n', 'conveyor', 'settings',
-                  'time_period_type', 'arguments_selected_by_user', 'arguments']
+                  'time_period_types', 'arguments_selected_by_user', 'arguments']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -2263,9 +2263,9 @@ class ProcessorSerializer(serializers.HyperlinkedModelSerializer):
         self.fields['settings'].label = _('Settings')
         self.fields['settings'].style = {'template': 'metadb/custom_select_multiple.html'}
         # Time period type
-        self.fields['time_period_type'].data_url = reverse('metadb:timeperiodtype-list')
-        self.fields['time_period_type'].label = _('Time period type')
-        self.fields['time_period_type'].style = {'template': 'metadb/custom_select_multiple.html'}
+        self.fields['time_period_types'].data_url = reverse('metadb:timeperiodtype-list')
+        self.fields['time_period_types'].label = _('Time period type')
+        self.fields['time_period_types'].style = {'template': 'metadb/custom_select_multiple.html'}
         # Number of arguments given by a user
         self.fields['arguments_selected_by_user'].label = _('Number of arguments given by user')
         self.fields['arguments_selected_by_user'].style = {'template': 'metadb/custom_input.html'}
@@ -2283,6 +2283,7 @@ class ProcessorSerializer(serializers.HyperlinkedModelSerializer):
         return result
 
     def create(self, validated_data):
+        raise ValueError('Not implemented yet')
         parameteri18n_data = validated_data.pop('parameteri18n_set')
         parameter = Parameter.objects.create(**validated_data)
         for db_lang in Language.objects.all():
@@ -2293,6 +2294,7 @@ class ProcessorSerializer(serializers.HyperlinkedModelSerializer):
         return parameter
 
     def update(self, instance, validated_data):
+        raise ValueError('Not implemented yet')
         instance.is_visible = validated_data.get('is_visible', instance.is_visible)
         instance.accumulation_mode = validated_data.get('accumulation_mode', instance.accumulation_mode)
         parameteri18n = instance.parameteri18n_set.filter(language__code=get_language()).get()

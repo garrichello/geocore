@@ -1794,11 +1794,13 @@ class ProcessorViewSet(BaseViewSet):
         ('head_none', _('Processor id')),
         ('head_select', _('Is visible')),
         ('head_text', _('Processor name')),
-        ('head_none', _('Arguments selected by user')),
-        ('head_select', _('Conveyor name')),
-        ('head_select', _('Arguments group')),
-        ('head_select', _('Options')),
+        ('head_text', _('Processor description')),
+        ('head_text', _('Processor reference')),
+        ('head_select', _('Conveyor label')),
+        ('head_select', _('Settings')),
         ('head_select', _('Time period types')),
+        ('head_none', _('Arguments selected by user')),
+        ('head_select', _('Arguments')),
     ]
 
     ctx_create = {
