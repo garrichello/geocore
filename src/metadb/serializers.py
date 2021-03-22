@@ -1825,41 +1825,18 @@ class ArgumentTypeRelatedField(ModifiedRelatedField):
     model = ArgumentType
 
 
-class ProcessorRelatedField(ModifiedRelatedField):
-    pass
-
-
-class ArgumentsGroupHasProcessorSerializer(serializers.HyperlinkedModelSerializer):
-    qset = Processor.objects.all()
-    processor = ProcessorRelatedField(queryset=qset)
-    qset = Combination.objects.all()
-    override_combination = CombinationRelatedField(queryset=qset, many=True)
-
-    class Meta:
-        model = ArgumentsGroupHasProcessor
-        fields = ['id', 'processor', 'override_combination']
-
-
-class ArgumentsGroupHasProcessorRelatedField(ModifiedRelatedField):
-    serializer = ArgumentsGroupHasProcessorSerializer
-    model = ArgumentsGroupHasProcessor
-
-
 class ArgumentsGroupSerializer(serializers.HyperlinkedModelSerializer):
     dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:argumentsgroup-detail',
                                                    read_only=True)
+    fulldataurl = serializers.HyperlinkedIdentityField(view_name='metadb:fullargumentsgroup-detail',
+                                                   read_only=True)
     qset = ArgumentType.objects.order_by('label')
     argument_type = ArgumentTypeRelatedField(queryset=qset)
-#    qset = ArgumentsGroupHasProcessor.objects.all()
-#    processors = ArgumentsGroupHasProcessorRelatedField(queryset=qset, many=True, source='argumentgroup_processors')
-#    qset = Processor.objects.all()
-#    processor = ProcessorRelatedField(queryset=qset, many=True)
-#    qset = SpecificParameter.objects.all()
-#    specific_parameter = SpecificParameterRelatedField(queryset=qset, many=True)
+
 
     class Meta:
         model = ArgumentsGroup
-        fields = ['id', 'dataurl', 'name', 'description', 'argument_type'] #, 'processor', 'specific_parameter'] # 'processor']
+        fields = ['id', 'dataurl', 'fulldataurl', 'name', 'description', 'argument_type']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -1874,14 +1851,7 @@ class ArgumentsGroupSerializer(serializers.HyperlinkedModelSerializer):
         self.fields['argument_type'].label = _('Argument type')
         self.fields['argument_type'].style = {'template': 'metadb/custom_select.html'}
         self.fields['argument_type'].data_url = reverse('metadb:argumenttype-list')
-        # Processor
-#        self.fields['processor'].label = _('Processor')
-#        self.fields['processor'].style = {'template': 'metadb/custom_select_multiple.html'}
-#        self.fields['processor'].data_url = reverse('metadb:processor-list')
-        # Specific parameter
-#        self.fields['specific_parameter'].label = _('Specific parameter')
-#        self.fields['specific_parameter'].style = {'template': 'metadb/custom_select_multiple.html'}
-#        self.fields['specific_parameter'].data_url = reverse('metadb:specificparameter-list')
+
 
     def to_representation(self, instance):
         action = self.context['request'].META.get('HTTP_ACTION')
@@ -1914,72 +1884,6 @@ class ArgumentsGroupSerializer(serializers.HyperlinkedModelSerializer):
 class ArgumentsGroupRelatedField(ModifiedRelatedField):
     serializer = ArgumentsGroupSerializer
     model = ArgumentsGroup
-
-
-class ArgumentsGroupFullSerializer(serializers.HyperlinkedModelSerializer):
-    dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:argumentsgroup-detail',
-                                                   read_only=True)
-    qset = ArgumentType.objects.order_by('label')
-    argument_type = ArgumentTypeRelatedField(queryset=qset)
-    qset = ArgumentsGroupHasProcessor.objects.all()
-    processors = ArgumentsGroupHasProcessorRelatedField(queryset=qset, many=True, source='argumentgroup_processors')
-#    qset = Processor.objects.all()
-#    processor = ProcessorRelatedField(queryset=qset, many=True)
-    qset = SpecificParameter.objects.all()
-    specific_parameter = SpecificParameterRelatedField(queryset=qset, many=True)
-
-    class Meta:
-        model = ArgumentsGroup
-        fields = ['id', 'dataurl', 'name', 'description', 'argument_type', 'processors', 'specific_parameter'] # 'processor']
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        # Label
-        self.fields['name'].label = _('Name')
-        self.fields['name'].style = {'template': 'metadb/custom_input.html'}
-        # Description
-        self.fields['description'].label = _('Description')
-        self.fields['description'].style = {'template': 'metadb/custom_input.html'}
-        # Argument type
-        self.fields['argument_type'].label = _('Argument type')
-        self.fields['argument_type'].style = {'template': 'metadb/custom_select.html'}
-        self.fields['argument_type'].data_url = reverse('metadb:argumenttype-list')
-        # Processor
-        self.fields['processors'].label = _('Processor')
-        self.fields['processors'].style = {'template': 'metadb/custom_select_multiple.html'}
-        self.fields['processors'].data_url = reverse('metadb:processor-list')
-        # Specific parameter
-        self.fields['specific_parameter'].label = _('Specific parameter')
-        self.fields['specific_parameter'].style = {'template': 'metadb/custom_select_multiple.html'}
-        self.fields['specific_parameter'].data_url = reverse('metadb:specificparameter-list')
-
-    def to_representation(self, instance):
-        action = self.context['request'].META.get('HTTP_ACTION')
-        if action == 'options_list' or self.context['request'].GET.get('format') == 'html':
-            result = instance
-        else:
-            result = super().to_representation(instance)
-        return result
-
-    def create(self, validated_data):
-        processors = validated_data.pop('processor')
-        specific_parameters = validated_data.pop('specific_parameter')
-        instance = ArgumentsGroup.objects.create(**validated_data)
-        instance.processor.set(processors)
-        instance.specific_parameter.set(specific_parameters)
-        return instance
-
-    def update(self, instance, validated_data):
-        processors = validated_data.pop('processor')
-        specific_parameters = validated_data.pop('specific_parameter')
-        instance.name = validated_data.get('name', instance.name)
-        instance.description = validated_data.get('description', instance.description)
-        instance.argument_type = validated_data.get('argument_type', instance.argument_type)
-        instance.processor.set(processors)
-        instance.specific_parameter.set(specific_parameters)
-        instance.save()
-        return instance
 
 
 class TimePeriodTypeI18NSerializer(serializers.ModelSerializer):
@@ -2044,12 +1948,14 @@ class TimePeriodTypeSerializer(serializers.HyperlinkedModelSerializer):
 class SettingSerializer(serializers.HyperlinkedModelSerializer):
     dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:setting-detail',
                                                    read_only=True)
+    fulldataurl = serializers.HyperlinkedIdentityField(view_name='metadb:fullsetting-detail',
+                                                   read_only=True)
     qset = GuiElement.objects.order_by('name')
     gui_element = GuiElementRelatedField(queryset=qset)
 
     class Meta:
         model = Setting
-        fields = ['id', 'dataurl', 'label', 'gui_element']
+        fields = ['id', 'dataurl', 'fulldataurl', 'label', 'gui_element']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -2110,11 +2016,9 @@ class SettingHasCombinationRelatedField(ModifiedRelatedField):
     model = SettingHasCombination
 
 
-class SettingFullSerializer(serializers.HyperlinkedModelSerializer):
-    dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:setting-detail',
+class SettingFullSerializer(SettingSerializer):
+    dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:fullsetting-detail',
                                                    read_only=True)
-    qset = GuiElement.objects.order_by('name')
-    gui_element = GuiElementRelatedField(queryset=qset)
     qset = SettingHasCombination.objects.all()
     combinations = SettingHasCombinationRelatedField(queryset=qset, source='setting_combinations', many=True)
 
@@ -2125,26 +2029,10 @@ class SettingFullSerializer(serializers.HyperlinkedModelSerializer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        # Label
-        self.fields['label'].label = _('Label')
-        self.fields['label'].style = {'template': 'metadb/custom_input.html'}
-        # GUI element
-        self.fields['gui_element'].data_url = reverse('metadb:guielement-list')
-        self.fields['gui_element'].label = _('GUI element name')
-        self.fields['gui_element'].style = {'template': 'metadb/custom_select.html'}
-        self.fields['gui_element'].allow_blank = True
         # Combinations
         self.fields['combinations'].data_url = reverse('metadb:combination-list')
         self.fields['combinations'].label = _('Option-value combinations')
         self.fields['combinations'].style = {'template': 'metadb/custom_select_multiple.html'}
-
-    def to_representation(self, instance):
-        action = self.context['request'].META.get('HTTP_ACTION')
-        if action == 'options_list' or self.context['request'].GET.get('format') == 'html':
-            result = instance
-        else:
-            result = super().to_representation(instance)
-        return result
 
     def create(self, validated_data):
         combinations = validated_data.pop('setting_combinations')
@@ -2231,6 +2119,8 @@ class ProcessorHasArgumentsRelatedField(ModifiedRelatedField):
 class ProcessorSerializer(serializers.HyperlinkedModelSerializer):
     dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:processor-detail',
                                                    read_only=True)
+    fulldataurl = serializers.HyperlinkedIdentityField(view_name='metadb:fullprocessor-detail',
+                                                   read_only=True)
     processori18n = ProcessorI18NSerializer(source='processori18n_set', label='')
     qset = Conveyor.objects.order_by('label')
     conveyor = ConveyorRelatedField(queryset=qset)
@@ -2243,8 +2133,8 @@ class ProcessorSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Processor
-        fields = ['id', 'dataurl', 'is_visible', 'processori18n', 'conveyor', 'settings',
-                  'time_period_types', 'arguments_selected_by_user', 'arguments']
+        fields = ['id', 'dataurl', 'fulldataurl', 'is_visible', 'processori18n', 'conveyor', 
+                  'settings', 'time_period_types', 'arguments_selected_by_user', 'arguments']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -2304,16 +2194,80 @@ class ProcessorSerializer(serializers.HyperlinkedModelSerializer):
         return instance
 
 
-def to_representation(self, value):
-    data = ProcessorSerializer(value, context=self.context).data
-    action = self.context['request'].META.get('HTTP_ACTION')
-    result = data
-    if action == 'update':
-        result = result.get('id', None)
-    return result
+class ProcessorRelatedField(ModifiedRelatedField):
+    serializer = ProcessorSerializer
+    model = Processor
 
-def to_internal_value(self, data):
-    return Processor.objects.get(pk=data)
 
-ProcessorRelatedField.to_representation = to_representation
-ProcessorRelatedField.to_internal_value = to_internal_value
+class ArgumentsGroupHasProcessorSerializer(serializers.HyperlinkedModelSerializer):
+    qset = Processor.objects.all()
+    processor = ProcessorRelatedField(queryset=qset)
+    qset = Combination.objects.all()
+    override_combination = CombinationRelatedField(queryset=qset, many=True)
+
+    class Meta:
+        model = ArgumentsGroupHasProcessor
+        fields = ['id', 'processor', 'override_combination']
+
+
+class ArgumentsGroupHasProcessorRelatedField(ModifiedRelatedField):
+    serializer = ArgumentsGroupHasProcessorSerializer
+    model = ArgumentsGroupHasProcessor
+
+
+class ArgumentsGroupFullSerializer(ArgumentsGroupSerializer):
+    dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:fullargumentsgroup-detail',
+                                                   read_only=True)
+    qset = ArgumentsGroupHasProcessor.objects.all()
+    processors = ArgumentsGroupHasProcessorRelatedField(queryset=qset, many=True, source='argumentgroup_processors')
+    qset = SpecificParameter.objects.all()
+    specific_parameter = SpecificParameterRelatedField(queryset=qset, many=True)
+
+    class Meta:
+        model = ArgumentsGroup
+        fields = ['id', 'dataurl', 'name', 'description', 'argument_type', 'processors', 'specific_parameter']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Processor
+        self.fields['processors'].label = _('Processor')
+        self.fields['processors'].style = {'template': 'metadb/custom_select_multiple.html'}
+        self.fields['processors'].data_url = reverse('metadb:processor-list')
+        # Specific parameter
+        self.fields['specific_parameter'].label = _('Specific parameter')
+        self.fields['specific_parameter'].style = {'template': 'metadb/custom_select_multiple.html'}
+        self.fields['specific_parameter'].data_url = reverse('metadb:specificparameter-list')
+
+
+class ArgumentsGroupFullRelatedField(ModifiedRelatedField):
+    serializer = ArgumentsGroupFullSerializer
+    model = ArgumentsGroup
+
+
+class ProcessorHasArgumentsFullSerializer(serializers.HyperlinkedModelSerializer):
+    qset = ArgumentsGroup.objects.all()
+    arguments_group = ArgumentsGroupFullRelatedField(queryset=qset)
+    class Meta:
+        model = ProcessorHasArguments
+        fields = ['id', 'argument_position', 'arguments_group']
+
+
+class ProcessorHasArgumentsFullRelatedField(ModifiedRelatedField):
+    serializer = ProcessorHasArgumentsFullSerializer
+    model = ProcessorHasArguments
+
+
+class ProcessorFullSerializer(ProcessorSerializer):
+    dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:fullprocessor-detail',
+                                                   read_only=True)
+    qset = ProcessorHasArguments.objects.order_by('argument_position')
+    arguments = ProcessorHasArgumentsFullRelatedField(queryset=qset, many=True, source='processor_arguments')
+    qset = Setting.objects.order_by('label')
+    settings = SettingFullRelatedField(queryset=qset, many=True)
+    qset = TimePeriodType.objects.order_by('timeperiodtypei18n__name')
+
+    class Meta:
+        model = Processor
+        fields = ['id', 'dataurl', 'is_visible', 'processori18n', 'conveyor', 
+                  'settings', 'time_period_types', 'arguments_selected_by_user', 'arguments']

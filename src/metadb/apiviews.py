@@ -249,8 +249,8 @@ class ArgumentsGroupFullViewSet(BaseViewSet):
     renderer_classes = [JSONRenderer, BrowsableAPIRenderer, TemplateHTMLRenderer]
     template_name = 'metadb/includes/rest_form.html'
     options_template_name = 'metadb/hr/dropdown_list_options.html'
-    list_url = 'metadb:argumentsgroup-list'
-    action_url = 'metadb:argumentsgroup-detail'
+    list_url = 'metadb:fullargumentsgroup-list'
+    action_url = 'metadb:fullargumentsgroup-detail'
 
     table_headers = [
         {'type': 'head_none', 'caption': _('Id'), 'field': 'id'},
@@ -1843,6 +1843,71 @@ class ProcessorViewSet(BaseViewSet):
             language__code=get_language()).order_by('processori18n__name')
 
 
+class ProcessorFullViewSet(BaseViewSet):
+    """
+    Returns full processors info
+    """
+    queryset = Processor.objects.all()
+    serializer_class = ProcessorFullSerializer
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer, TemplateHTMLRenderer]
+    template_name = 'metadb/includes/rest_form.html'
+    options_template_name = 'metadb/hr/dropdown_list_options.html'
+    list_url = 'metadb:fullprocessor-list'
+    action_url = 'metadb:fullprocessor-detail'
+
+    table_headers = [
+        ('head_none', _('Processor id')),
+        ('head_select', _('Is visible')),
+        ('head_text', _('Processor name')),
+        ('head_text', _('Processor description')),
+        ('head_text', _('Processor reference')),
+        ('head_select', _('Conveyor label')),
+        ('head_select', _('Settings')),
+        ('head_select', _('Time period types')),
+        ('head_none', _('Arguments selected by user')),
+        ('head_select', _('Arguments')),
+    ]
+
+    ctx_create = {
+        'method': 'POST',
+        'form_class': 'js-processor-form',
+        'title': _("Create a new processor"),
+        'submit_name': _("Create processor"),
+        'script': 'metadb/processor_form.js',
+        'attributes': [
+            {'name': 'accmodes-url',
+             'value': reverse_lazy('metadb:accumulationmode-list')}
+        ],
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_update = {
+        'method': 'PUT',
+        'form_class': 'js-processor-form',
+        'title': _("Update processor"),
+        'submit_name': _("Update processor"),
+        'script': 'metadb/processor_form.js',
+        'attributes': [
+            {'name': 'accmodes-url',
+             'value': reverse_lazy('metadb:accumulationmode-list')}
+        ],
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_delete = {
+        'method': 'DELETE',
+        'form_class': 'js-processor-delete-form',
+        'title': _('Confirm processor delete'),
+        'text': _('Are you sure you want to delete the processor'),
+        'submit_name': _('Delete processor'),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    def __init__(self, *args, **kwargs):
+        self.queryset = self.queryset.filter(
+            language__code=get_language()).order_by('processori18n__name')
+
+
 class PropertyViewSet(BaseViewSet):
     """
     Returns properties
@@ -2135,8 +2200,8 @@ class SettingFullViewSet(BaseViewSet):
     renderer_classes = [JSONRenderer, BrowsableAPIRenderer, TemplateHTMLRenderer]
     template_name = 'metadb/includes/rest_form.html'
     options_template_name = 'metadb/hr/dropdown_list_options.html'
-    list_url = 'metadb:setting-list'
-    action_url = 'metadb:setting-detail'
+    list_url = 'metadb:fullsetting-list'
+    action_url = 'metadb:fullsetting-detail'
 
     table_headers = [
         {'type': 'head_none', 'caption': _('Id'), 'field': 'id'},

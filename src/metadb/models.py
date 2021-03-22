@@ -486,9 +486,9 @@ class Processor(models.Model):
     is_visible = models.IntegerField()
     arguments_selected_by_user = models.IntegerField()
     conveyor = models.ForeignKey('Conveyor', models.CASCADE)
-    arguments_group = models.ManyToManyField('ArgumentsGroup', through='ProcessorHasArguments', related_name='arguments_group')
+    arguments_groups = models.ManyToManyField('ArgumentsGroup', through='ProcessorHasArguments', related_name='arguments_group')
     language = models.ManyToManyField('Language', through='ProcessorI18N')
-    time_period_type = models.ManyToManyField('TimePeriodType', through='ProcessorHasTimePeriodType')
+    time_period_types = models.ManyToManyField('TimePeriodType', through='ProcessorHasTimePeriodType')
     settings = models.ManyToManyField('Setting', through='ProcessorHasSetting')
 
     class Meta:
