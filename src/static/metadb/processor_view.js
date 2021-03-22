@@ -113,7 +113,7 @@ function showDetails(row) {
             var argumentsText = '';
             data.data.arguments.forEach(argument => {
                 argumentsText += '<tr><td> Input '+argument.argument_position+': '+argument.arguments_group.name+
-                                 ' ('+argument.arguments_group.argument_type.label+') = [';
+                                 ' ('+argument.arguments_group.argument_type.label+') = [ ';
                 var specparsText = Array();
                 argument.arguments_group.specific_parameter.forEach(specpar => {
                     var text = specpar.parameter.parameteri18n.name+' every '+
@@ -126,7 +126,7 @@ function showDetails(row) {
                     var text = processor.processor.processori18n.name;
                     processorsText.push(text);
                 });
-                argumentsText += specparsText.join('; ')+processorsText.join('; ')+']</td></tr>';
+                argumentsText += specparsText.join('; ')+processorsText.join('; ')+' ]</td></tr>';
             });
 
             var details = '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
