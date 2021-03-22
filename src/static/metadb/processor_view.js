@@ -67,6 +67,83 @@ processor_columnsDefs = [
     { width: '185px', targets: 11 },   // arguments
 ]
 
+function format(data) {
+    var settings = '<tr>'+data.data.label+'</tr>';
+    data.data.combinations.forEach(element => {
+        var comb = element.index+': '+element.combination.option.label+' = '+element.combination.option_value.optionvaluei18n.name;
+        var cond = '';
+        if (element.combination.condition.option.label != '-') {
+            cond = ' [if '+element.combination.condition.option.label+' == '+element.combination.condition.option_value.optionvaluei18n.name+']';
+        };
+        console.log(' '+comb+cond);
+    });
+    return settings;
+}
+
+function showDetails(row) {
+    var data = row.data();
+    
+    $.ajax({
+        type: "get",
+        headers: {
+            'ACTION': 'json',
+        },
+        url: data.fulldataurl,  // get full info of the selected processor
+        dataType: 'json',
+        beforeSend: () => {
+            $('#processor_processing').show();
+        },
+        complete: () => {
+            $('#processor_processing').hide();        },
+        success: (data) => {
+            var settingsText = '';
+            data.data.settings.forEach(setting => {
+                settingsText += '<tr><td>'+setting.label+' = { ';
+                var combinationsText = Array();
+                setting.combinations.forEach(element => {
+                    var comb = element.index+': '+element.combination.option.label+'='+element.combination.option_value.label;
+                    var cond = '';
+                    if (element.combination.condition.option.label != '-') {
+                        cond = ' | '+element.combination.condition.option.label+'=='+element.combination.condition.option_value.label;
+                    };
+                    combinationsText.push(comb + cond);
+                });
+                settingsText = settingsText + combinationsText.join(', ') + ' }</td></tr>';
+            });
+            var argumentsText = '';
+            data.data.arguments.forEach(argument => {
+                argumentsText += '<tr><td> Input '+argument.argument_position+': '+argument.arguments_group.name+
+                                 ' ('+argument.arguments_group.argument_type.label+') = [';
+                var specparsText = Array();
+                argument.arguments_group.specific_parameter.forEach(specpar => {
+                    var text = specpar.parameter.parameteri18n.name+' every '+
+                               specpar.time_step.timestepi18n.name+' at '+
+                               specpar.levels_group.description;
+                    specparsText.push(text);
+                });
+                var processorsText = Array();
+                argument.arguments_group.processors.forEach(processor => {
+                    var text = processor.processor.processori18n.name;
+                    processorsText.push(text);
+                });
+                argumentsText += specparsText.join('; ')+processorsText.join('; ')+']</td></tr>';
+            });
+
+            var details = '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
+                '<tr>'+
+                    '<td><b>Settings:</b></td>'+
+                '</tr>'+
+                settingsText+
+                '<tr>'+
+                    '<td><b>Arguments:</b></td>'+
+                '</tr>'+
+                argumentsText+
+                '</table>';
+            row.child( details ).show();
+        },
+    });
+}
+
 $(document).ready( function () {
     // Create processor table
     var processorOptions = $.extend(true, {}, commonOptions);
@@ -75,10 +152,26 @@ $(document).ready( function () {
     processorOptions["ajax"] = { 'url': processor_api_url, 'type': 'GET', 'dataSrc': 'data' };
     $('#main-tabs a[href="#tab-processor"]').on('click', function() {
         if (!$.fn.DataTable.isDataTable('#processor')) {
-            $('#processor').DataTable( processorOptions ).on('draw', function() {
+            var table = $('#processor').DataTable( processorOptions );
+            table.on('draw', function() {
                 addUpdDelButtonHandlers.call(this, 'processor');
             });
-            $('#processor').DataTable().on('xhr.dt', set_header);
+            table.on('xhr.dt', set_header);
+            $('#processor').on('click', 'tr', (e) => {
+                var tr = $(e.currentTarget);
+                var row = table.row(tr);
+
+                if ( row.child.isShown() ) {
+                    // This row is already open - close it
+                    row.child.hide();
+                    tr.removeClass('shown');
+                }
+                else {
+                    // Open this row
+                    showDetails(row);
+                    tr.addClass('shown');
+                }
+            });
         }
     });
 })
