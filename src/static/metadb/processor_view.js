@@ -158,18 +158,20 @@ $(document).ready( function () {
             });
             table.on('xhr.dt', set_header);
             $('#processor').on('click', 'tr', (e) => {
-                var tr = $(e.currentTarget);
-                var row = table.row(tr);
-
-                if ( row.child.isShown() ) {
-                    // This row is already open - close it
-                    row.child.hide();
-                    tr.removeClass('shown');
-                }
-                else {
-                    // Open this row
-                    showDetails(row);
-                    tr.addClass('shown');
+                if($(e.target).hasClass('dt-center')) {
+                    var tr = $(e.currentTarget);
+                    var row = table.row(tr);
+    
+                    if ( row.child.isShown() ) {
+                        // This row is already open - close it
+                        row.child.hide();
+                        tr.removeClass('shown');
+                    }
+                    else {
+                        // Open this row
+                        showDetails(row);
+                        tr.addClass('shown');
+                    }    
                 }
             });
         }
