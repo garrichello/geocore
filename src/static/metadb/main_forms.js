@@ -93,9 +93,9 @@ $(function() {
         return form_data;
     };
 
-    loadOptions = function(form_name, select_name, data_url, option_name='') {
+    loadOptions = function(form_name, select_name, data_url, option_name='', parent=true) {
         var form = $(form_name);
-        var modal_id = '#'+getModalName('parent');
+        var modal_id = '#'+getModalName(parent ? 'parent' : '');
 
         if (option_name.length) {
             $.ajax( {
