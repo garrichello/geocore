@@ -973,6 +973,19 @@ class DataViewSet(BaseViewSet):
     }
 
 
+class ConveyorFullViewSet(BaseViewSet):
+    """
+    Returns conveyors with edges
+    """
+    queryset = Conveyor.objects.all()
+    serializer_class = ConveyorFullSerializer
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
+    template_name = 'metadb/includes/rest_form.html'
+    options_template_name = 'metadb/hr/dropdown_list_options.html'
+    list_url = 'metadb:fullconveyor-list'
+    action_url = 'metadb:fullconveyor-detail'
+
+
 class DataKindViewSet(BaseViewSet):
     """
     Returns data kinds
@@ -1785,7 +1798,7 @@ class ProcessorViewSet(BaseViewSet):
     queryset = Processor.objects.all()
     serializer_class = ProcessorSerializer
     renderer_classes = [JSONRenderer, BrowsableAPIRenderer, TemplateHTMLRenderer]
-    template_name = 'metadb/includes/rest_form.html'
+    template_name = 'metadb/includes/processor_form.html'
     options_template_name = 'metadb/hr/dropdown_list_options.html'
     list_url = 'metadb:processor-list'
     action_url = 'metadb:processor-detail'
@@ -1810,8 +1823,18 @@ class ProcessorViewSet(BaseViewSet):
         'submit_name': _("Create processor"),
         'script': 'metadb/processor_form.js',
         'attributes': [
-            {'name': 'accmodes-url',
-             'value': reverse_lazy('metadb:accumulationmode-list')}
+            {'name': 'conveyors-url',
+             'value': reverse_lazy('metadb:conveyor-list')},
+            {'name': 'settings-url',
+             'value': reverse_lazy('metadb:setting-list')},
+            {'name': 'timeperiodtypes-url',
+             'value': reverse_lazy('metadb:timeperiodtype-list')},
+            {'name': 'argumentsgroups-url',
+             'value': reverse_lazy('metadb:argumentsgroup-list')},
+            {'name': 'fullconveyors-url',
+             'value': reverse_lazy('metadb:fullconveyor-list')},
+            {'name': 'fullargumentsgroups-url',
+             'value': reverse_lazy('metadb:fullargumentsgroup-list')},
         ],
         'style': {'template_pack': 'rest_framework/vertical/'}
     }
@@ -1823,8 +1846,18 @@ class ProcessorViewSet(BaseViewSet):
         'submit_name': _("Update processor"),
         'script': 'metadb/processor_form.js',
         'attributes': [
-            {'name': 'accmodes-url',
-             'value': reverse_lazy('metadb:accumulationmode-list')}
+            {'name': 'conveyors-url',
+             'value': reverse_lazy('metadb:conveyor-list')},
+            {'name': 'settings-url',
+             'value': reverse_lazy('metadb:setting-list')},
+            {'name': 'timeperiodtypes-url',
+             'value': reverse_lazy('metadb:timeperiodtype-list')},
+            {'name': 'argumentsgroups-url',
+             'value': reverse_lazy('metadb:argumentsgroup-list')},
+            {'name': 'fullconveyors-url',
+             'value': reverse_lazy('metadb:fullconveyor-list')},
+            {'name': 'fullargumentsgroups-url',
+             'value': reverse_lazy('metadb:fullargumentsgroup-list')},
         ],
         'style': {'template_pack': 'rest_framework/vertical/'}
     }
