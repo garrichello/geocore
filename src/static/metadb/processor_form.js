@@ -5,7 +5,7 @@ $(function() {
 
     var emptyForm = $('<div class="form-inline arguments-line">'+
                       '<div class="form-control arguments-position" style="width:5%"></div> '+
-                      '<select class="form-control arguments-group" name="arguments_group" '+
+                      '<select multiple class="form-control arguments-group" name="arguments_group" '+
                       'style="width: 86%"><option value="" selected>--------</option></select></div>');
     var addButton = $('<button type="button" class="btn btn-primary js-add-button" '+
                       `data-url="${fullargumentsgroup_url}"> `+
