@@ -1346,9 +1346,11 @@ class LanguageRelatedField(ModifiedRelatedField):
 class ConveyorSerializer(serializers.HyperlinkedModelSerializer):
     dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:conveyor-detail',
                                                    read_only=True)
+    fulldataurl = serializers.HyperlinkedIdentityField(view_name='metadb:fullconveyor-detail',
+                                                   read_only=True)
     class Meta:
         model = Conveyor
-        fields = ['id', 'dataurl', 'label']
+        fields = ['id', 'dataurl', 'fulldataurl', 'label']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -1788,6 +1790,21 @@ class EdgeSerializer(serializers.HyperlinkedModelSerializer):
         return instance
 
 
+class EdgeRelatedField(ModifiedRelatedField):
+    serializer = EdgeSerializer
+    model = Edge
+
+
+class ConveyorFullSerializer(ConveyorSerializer):
+    dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:fullconveyor-detail',
+                                                   read_only=True)
+    edges = EdgeRelatedField(many=True, read_only=True, source='edge_set')
+
+    class Meta:
+        model = Conveyor
+        fields = ['id', 'dataurl', 'label', 'edges']
+
+
 class ArgumentTypeSerializer(serializers.HyperlinkedModelSerializer):
     dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:argumenttype-detail',
                                                    read_only=True)
@@ -2094,7 +2111,7 @@ class ProcessorI18NSerializer(serializers.ModelSerializer):
         self.fields['name'].style = {'template': 'metadb/custom_input.html'}
         self.fields['description'].label = _('Processor short description')
         self.fields['description'].style = {'template': 'metadb/custom_input.html'}
-        self.fields['reference'].label = _('Detailed description reference/URL')
+        self.fields['reference'].label = _('Reference / URL')
         self.fields['reference'].style = {'template': 'metadb/custom_input.html'}
 
 
@@ -2124,8 +2141,8 @@ class ProcessorSerializer(serializers.HyperlinkedModelSerializer):
     processori18n = ProcessorI18NSerializer(source='processori18n_set', label='')
     qset = Conveyor.objects.order_by('label')
     conveyor = ConveyorRelatedField(queryset=qset)
-    qset = ProcessorHasArguments.objects.order_by('argument_position')
-    arguments = ProcessorHasArgumentsRelatedField(queryset=qset, many=True, source='processor_arguments')
+    arguments = ProcessorHasArgumentsRelatedField(many=True, source='processor_arguments', 
+                                                  read_only=True)
     qset = Setting.objects.order_by('label')
     settings = SettingRelatedField(queryset=qset, many=True)
     qset = TimePeriodType.objects.order_by('timeperiodtypei18n__name')
@@ -2269,5 +2286,5 @@ class ProcessorFullSerializer(ProcessorSerializer):
 
     class Meta:
         model = Processor
-        fields = ['id', 'dataurl', 'is_visible', 'processori18n', 'conveyor', 
+        fields = ['id', 'dataurl', 'is_visible', 'processori18n', 'conveyor',
                   'settings', 'time_period_types', 'arguments_selected_by_user', 'arguments']
