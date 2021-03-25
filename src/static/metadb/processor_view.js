@@ -111,6 +111,9 @@ function showDetails(row) {
                 settingsText = settingsText + combinationsText.join(', ') + ' }</td></tr>';
             });
             var argumentsText = '';
+            data.data.arguments.sort((a, b) => {
+                return a.argument_position - b.argument_position;
+            })
             data.data.arguments.forEach(argument => {
                 argumentsText += '<tr><td> Input '+argument.argument_position+': '+argument.arguments_group.name+
                                  ' ('+argument.arguments_group.argument_type.label+') = [ ';
