@@ -43,7 +43,7 @@ class ArgumentsGroup(models.Model):
         db_table = 'arguments_group'
 
     def __str__(self):
-        return self.name
+        return f'{self.name} ({self.argument_type})'
 
 
 class ArgumentsGroupHasProcessor(models.Model):
@@ -483,7 +483,7 @@ class ParameterI18N(models.Model):
 
 
 class Processor(models.Model):
-    is_visible = models.IntegerField()
+    is_visible = models.BooleanField(default=True)
     arguments_selected_by_user = models.IntegerField()
     conveyor = models.ForeignKey('Conveyor', models.CASCADE)
     arguments_groups = models.ManyToManyField('ArgumentsGroup', through='ProcessorHasArguments', related_name='arguments_group')
