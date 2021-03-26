@@ -1797,7 +1797,7 @@ class ProcessorViewSet(BaseViewSet):
     """
     queryset = Processor.objects.all()
     serializer_class = ProcessorSerializer
-    renderer_classes = [JSONRenderer, BrowsableAPIRenderer, TemplateHTMLRenderer]
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
     template_name = 'metadb/includes/processor_form.html'
     options_template_name = 'metadb/hr/dropdown_list_options.html'
     list_url = 'metadb:processor-list'

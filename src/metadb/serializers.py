@@ -2189,24 +2189,65 @@ class ProcessorSerializer(serializers.HyperlinkedModelSerializer):
             result = super().to_representation(instance)
         return result
 
-    def create(self, validated_data):
-        raise ValueError('Not implemented yet')
-        parameteri18n_data = validated_data.pop('parameteri18n_set')
-        parameter = Parameter.objects.create(**validated_data)
-        for db_lang in Language.objects.all():
-            ParameterI18N.objects.create(parameter=parameter,
-                                          language=db_lang,
-                                          **parameteri18n_data)
+    def to_internal_value(self, data):
+        result = super().to_internal_value(data)
+        # Add arguments groups to the result since these data are generated client-side
+        result['arguments_groups'] = {}
+        for key in data.keys():
+            if 'arguments_group' in key:
+                idx = key.split('_')[-1]  # Get index of the group
+                result['arguments_groups'][idx] = list(
+                    ArgumentsGroup.objects.filter(pk__in=data.getlist(key)))
+        return result
 
-        return parameter
+    def create(self, validated_data):
+        arguments_groups = validated_data.pop('arguments_groups')
+        settings_data = validated_data.pop('settings')
+        time_period_types = validated_data.pop('time_period_types')
+        processori18n_data = validated_data.pop('processori18n_set')
+
+        instance = Processor.objects.create(**validated_data)
+
+        for db_lang in Language.objects.all():
+            ProcessorI18N.objects.create(processor=instance,
+                                         language=db_lang,
+                                         **processori18n_data)
+        instance.time_period_types.set(time_period_types)
+        instance.settings.set(settings_data)
+        for argument_position, arguments_group_set in arguments_groups.items():
+            for arguments_group in arguments_group_set:
+                ProcessorHasArguments.objects.create(processor=instance,
+                                                     arguments_group=arguments_group,
+                                                     argument_position=argument_position)
+        return instance
 
     def update(self, instance, validated_data):
-        raise ValueError('Not implemented yet')
+        arguments_groups = validated_data.pop('arguments_groups')
+        settings_data = validated_data.pop('settings')
+        time_period_types = validated_data.pop('time_period_types')
+        processori18n_data = validated_data.pop('processori18n_set')
+
         instance.is_visible = validated_data.get('is_visible', instance.is_visible)
-        instance.accumulation_mode = validated_data.get('accumulation_mode', instance.accumulation_mode)
-        parameteri18n = instance.parameteri18n_set.filter(language__code=get_language()).get()
-        parameteri18n.name = validated_data['parameteri18n_set'].get('name', parameteri18n.name)
-        parameteri18n.save()
+        instance.conveyor = validated_data.get('conveyor', instance.conveyor)
+        instance.arguments_selected_by_user = validated_data.get('arguments_selected_by_user', 
+                                                                 instance.arguments_selected_by_user)
+
+        processori18n = instance.processori18n_set.filter(language__code=get_language()).get()
+        processori18n.name = processori18n_data.get('name', processori18n.name)
+        processori18n.description = processori18n_data.get('description', processori18n.description)
+        processori18n.reference = processori18n_data.get('reference', processori18n.reference)
+        processori18n.save()
+
+        instance.time_period_types.set(time_period_types)
+        instance.settings.set(settings_data)
+        ProcessorHasArguments.objects.filter(processor=instance).delete()
+        for argument_position, arguments_group_set in arguments_groups.items():
+            for arguments_group in arguments_group_set:
+                ProcessorHasArguments.objects.create(processor=instance,
+                                                     arguments_group=arguments_group,
+                                                     argument_position=argument_position)
+
+
         instance.save()
         return instance
 

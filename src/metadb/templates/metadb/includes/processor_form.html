@@ -1,9 +1,10 @@
 {% extends 'metadb/includes/rest_form.html' %}
-{% load i18n %}
+{% load i18n rest_framework %}
 
 {% block addinclude %}
 
-<div class="form-group" id="id_list_of_arguments" placeholder="{% trans "Select a conveyor first..." %}">
+<div class="form-group" id="id_list_of_arguments" 
+     placeholder="{% trans 'Select a conveyor first...' %}" arguments="{{ form.arguments.value }}">
     <label>{% trans "Arguments group" %}</label>
 </div>
 
