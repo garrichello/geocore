@@ -93,11 +93,11 @@ $(function() {
         return form_data;
     };
 
-    loadOptions = function(form_name, select_name, data_url, option_name='', parent=true) {
+    loadOptions = function(form_name, select_name, data_url, option_names=[], parent=true) {
         var form = $(form_name);
         var modal_id = '#'+getModalName(parent ? 'parent' : '');
-
-        if (option_name.length) {
+        var option_names = $.type(option_names) === 'array' ? option_names : Array(option_names);
+        if (option_names.length) {
             $.ajax( {
                 type: 'get',
                 headers: {
@@ -107,7 +107,7 @@ $(function() {
                 success: function (data) {
                     $(`${modal_id} #${select_name}`).html(data);
                     $(`${modal_id} #${select_name} option`).filter(function() {
-                        return $(this).text() === option_name;
+                        return $.inArray( $(this).text(), option_names ) !== -1;
                     }).attr('selected', true);  // Select given entry in the select
                     if ($(`${modal_id} #${select_name} option`).length == 2) {
                         $(`${modal_id} #${select_name}`).prop("selectedIndex", 1);
