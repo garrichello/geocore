@@ -1,10 +1,10 @@
 $(function() {
 
-    var addModal = function(modal_name) {
+    var addModal = function(modal_name, dialog_id) {
         if (!$('#'+modal_name).length) {
             var modal = $('<div class="modal fade" tabindex="-1" role="dialog">');
             modal.attr('id', modal_name);
-            var modal_dialog = $('<div class="modal-dialog" id="id_modal_dialog">');
+            var modal_dialog = $(`<div class="modal-dialog" id="${dialog_id}">`);
             modal_dialog.appendTo(modal);
             var modal_content = $('<div class="modal-content"></div>');
             modal_content.appendTo(modal_dialog);
@@ -32,10 +32,10 @@ $(function() {
         return 'modal-dynamic-'+idx;
     };
 
-    loadForm2 = function (action=None) {
+    loadForm2 = function (action=None, dialog_id='id_modal_dialog') {
         var btn = $(this);
         var modal_name = getModalName();
-        addModal(modal_name);
+        addModal(modal_name, dialog_id);
         var modal_id = '#'+modal_name;
         $.ajax({
             type: "get",
@@ -112,6 +112,7 @@ $(function() {
                     if ($(`${modal_id} #${select_name} option`).length == 2) {
                         $(`${modal_id} #${select_name}`).prop("selectedIndex", 1);
                     }
+                    $(`${modal_id} #${select_name}`).trigger('change');
                 }
             } );
         }
@@ -140,8 +141,9 @@ $(function() {
     };
 
     // Create button
-    $('.js-create').click(function() { 
-        var modal_id = loadForm2.call(this, 'create');
+    $('.js-create').click(function() {
+        var dialog_id = $(this).attr('dialog-id');
+        var modal_id = loadForm2.call(this, 'create', dialog_id);
         $(modal_id).on('hidden.bs.modal', function() {
             $(modal_id).remove();  // Keep DOM clean!
         })
