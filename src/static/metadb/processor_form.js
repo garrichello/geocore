@@ -24,13 +24,17 @@ $(function() {
         }
         $('#id_list_of_arguments').append(newForm);
         var argGrpNames = Array();
-        processor_data.arguments.filter((el) => {
-            return el.argument_position == idx;
-        }).forEach(element => {
-            var name = element.arguments_group.name;
-            var type = element.arguments_group.argument_type.label;
-            argGrpNames.push(`${name} (${type})`);
-        });
+        if (processor_data.arguments) {
+            processor_data.arguments.filter((el) => {
+                return el.argument_position == idx;
+            }).forEach(element => {
+                var name = element.arguments_group.name;
+                var type = element.arguments_group.argument_type.label;
+                argGrpNames.push(`${name} (${type})`);
+            });
+        } else {
+            argGrpNames.push(' ');  // non-blank to trigger options loading
+        };
         loadOptions(processor_form_class_name, 'id_arguments_group_'+idx, 
                     'argumentsgroups-url', argGrpNames, parent=true);
     };
@@ -47,11 +51,11 @@ $(function() {
             dataType: "json",
             success: function (data) {
                 for (var i=0; i<count; i++) {
-                    addArgumentsGroupsSelector(data.data, addAddButton=(i==0));
+                    addArgumentsGroupsSelector(data.data);
                 }                        
             }
         });
-    }
+    };
 
     $(processor_form_class_name+' #id_conveyor').on('change', function(e) {
         var conveyor_id = this.value;
@@ -83,7 +87,7 @@ $(function() {
 
     // + buttons handling
     $(processor_form_class_name).on('click', '.js-add-button', function() {
-        var child_modal_id = loadForm2.call(this, 'create');
+        var child_modal_id = loadForm2.call(this, 'create', 'id_conveyor_dialog');
         $(child_modal_id).on('hidden.bs.modal', function() {
             if ($('.js-conveyor-form').length) {
                 var form_data = mapFormData('.js-conveyor-form');  // Get conveyor fields
@@ -91,10 +95,16 @@ $(function() {
                     'conveyors-url', form_data['label']
                 );
             };
-            if ($('.js-datavariable-form').length) {
-                var form_data = mapFormData('.js-datavariable-form');  // Get data variable fields
-                loadOptions.call(this, processor_form_class_name, 'id_data_variable',
-                    'datavariables-url', form_data['label']
+            if ($('.js-setting-form').length) {
+                var form_data = mapFormData('.js-setting-form');  // Get setting fields
+                loadOptions.call(this, processor_form_class_name, 'id_settings',
+                    'settings-url', form_data['label']
+                );
+            };
+            if ($('.js-timeperiodtype-form').length) {
+                var form_data = mapFormData('.js-timeperiodtype-form');  // Get time period type fields
+                loadOptions.call(this, processor_form_class_name, 'id_time_period_types',
+                    'timeperiodtypes-url', form_data['timeperiodtypei18n.name']
                 );
             };
             $(child_modal_id).remove();
