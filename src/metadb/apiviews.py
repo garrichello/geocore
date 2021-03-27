@@ -206,7 +206,7 @@ class ArgumentsGroupViewSet(BaseViewSet):
         {'type': 'head_none', 'caption': _('Id'), 'field': 'id'},
         {'type': 'head_text', 'caption': _('Name'), 'field': 'name'},
         {'type': 'head_text', 'caption': _('Description'), 'field': 'description'},
-        {'type': 'head_select', 'caption': _('Argument type'), 'field': 'argument_type'},
+        {'type': 'head_select', 'caption': _('Argument type'), 'field': 'argument_type.label'},
     ]
 
     ctx_create = {
@@ -486,7 +486,8 @@ class CombinationViewSet(BaseViewSet):
         {'type': 'head_none', 'caption': _('Id'), 'field': 'id'},
         {'type': 'head_text', 'caption': _('Option label'), 'field': 'option.label'},
         {'type': 'head_text', 'caption': _('Option value label'), 'field': 'option_value.label'},
-        {'type': 'head_text', 'caption': _('Condition combination'), 'field': 'condition'},
+        {'type': 'head_text', 'caption': _('Condition option'), 'field': 'condition.option.label'},
+        {'type': 'head_text', 'caption': _('Condition value'), 'field': 'condition.option_value.label'},
     ]
 
     ctx_create = {
@@ -518,7 +519,7 @@ class CombinationViewSet(BaseViewSet):
             {'name': 'optionvalues-url',
              'value': reverse_lazy('metadb:optionvalue-list')},
             {'name': 'conditions-url',
-             'value': reverse_lazy('metadb:condition-list')},
+             'value': reverse_lazy('metadb:combination-list')},
         ],
         'style': {'template_pack': 'rest_framework/vertical/'}
     }
@@ -548,6 +549,9 @@ class ComputingModuleViewSet(BaseViewSet):
     table_headers = [
         {'type': 'head_none', 'caption': _('Id'), 'field': 'id'},
         {'type': 'head_text', 'caption': _('Name'), 'field': 'name'},
+        {'type': 'head_text', 'caption': _('Number of inputs'), 'field': 'number_of_inputs'},
+        {'type': 'head_text', 'caption': _('Number of inputs'), 'field': 'number_of_outputs'},
+        {'type': 'head_text', 'caption': _('Description'), 'field': 'description'},
     ]
 
     ctx_create = {
@@ -865,118 +869,6 @@ class ConveyorViewSet(BaseViewSet):
         response = JsonResponse(result)
         return response
 
-class DataViewSet(BaseViewSet):
-    """
-    Returns data
-    """
-    queryset = Data.objects.all()
-    serializer_class = DataSerializer
-    renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
-    template_name = 'metadb/includes/rest_form.html'
-    options_template_name = 'metadb/hr/dropdown_list_options.html'
-    list_url = 'metadb:data-list'
-    action_url = 'metadb:data-detail'
-
-    table_headers = [
-        ('head_none', 'Id'),
-        ('head_none', _('Dataset visibility')),
-        ('head_select', _('Collection label')),
-        ('head_select', _('Resolution')),
-        ('head_select', _('Scenario')),
-        ('head_none', _('Parameter visibility')),
-        ('head_select', _('Parameter')),
-        ('head_select', _('Time step')),
-        ('head_text', _('Levels group')),
-        ('head_text', _('Levels names')),
-        ('head_none', _('Levels variable')),
-        ('head_select', _('Variable name')),
-        ('head_select', _('Units')),
-        ('head_none', _('Propery label')),
-        ('head_none', _('Property value')),
-        ('head_text', _('Root directory')),
-        ('head_text', _('Scenario subpath')),
-        ('head_text', _('Resolution subpath')),
-        ('head_text', _('Time step subpath')),
-        ('head_none', _('File name pattern')),
-        ('head_none', _('Scale')),
-        ('head_none', _('Offset')),
-    ]
-
-    ctx_create = {
-        'method': 'POST',
-        'form_class': 'js-data-form',
-        'title': _("Create a new data"),
-        'submit_name': _("Create data"),
-        'script': 'metadb/data_form.js',
-        'attributes': [
-            {'name': 'datasets-url',
-             'value': reverse_lazy('metadb:dataset-list')},
-            {'name': 'parameters-url',
-             'value': reverse_lazy('metadb:parameter-list')},
-            {'name': 'timesteps-url',
-             'value': reverse_lazy('metadb:timestep-list')},
-            {'name': 'levelsgroups-url',
-             'value': reverse_lazy('metadb:levelsgroup-list')},
-            {'name': 'levels-variables-url',
-             'value': reverse_lazy('metadb:levelsvariable-list')},
-            {'name': 'variables-url',
-             'value': reverse_lazy('metadb:variable-list')},
-            {'name': 'units-url',
-             'value': reverse_lazy('metadb:units-list')},
-            {'name': 'properties-url',
-             'value': reverse_lazy('metadb:property-list')},
-            {'name': 'property-values-url',
-             'value': reverse_lazy('metadb:propertyvalue-list')},
-            {'name': 'root-dirs-url',
-             'value': reverse_lazy('metadb:rootdir-list')},
-            {'name': 'files-url',
-             'value': reverse_lazy('metadb:file-list')},
-        ],
-        'style': {'template_pack': 'rest_framework/vertical/'}
-    }
-
-    ctx_update = {
-        'method': 'PUT',
-        'form_class': 'js-data-form',
-        'title': _("Update data"),
-        'submit_name': _("Update data"),
-        'script': 'metadb/data_form.js',
-        'attributes': [
-            {'name': 'datasets-url',
-             'value': reverse_lazy('metadb:dataset-list')},
-            {'name': 'parameters-url',
-             'value': reverse_lazy('metadb:parameter-list')},
-            {'name': 'timesteps-url',
-             'value': reverse_lazy('metadb:timestep-list')},
-            {'name': 'levelsgroups-url',
-             'value': reverse_lazy('metadb:levelsgroup-list')},
-            {'name': 'levels-variables-url',
-             'value': reverse_lazy('metadb:levelsvariable-list')},
-            {'name': 'variables-url',
-             'value': reverse_lazy('metadb:variable-list')},
-            {'name': 'units-url',
-             'value': reverse_lazy('metadb:units-list')},
-            {'name': 'properties-url',
-             'value': reverse_lazy('metadb:property-list')},
-            {'name': 'property-values-url',
-             'value': reverse_lazy('metadb:propertyvalue-list')},
-            {'name': 'root-dirs-url',
-             'value': reverse_lazy('metadb:rootdir-list')},
-            {'name': 'files-url',
-             'value': reverse_lazy('metadb:file-list')},
-        ],
-        'style': {'template_pack': 'rest_framework/vertical/'}
-    }
-
-    ctx_delete = {
-        'method': 'DELETE',
-        'form_class': 'js-data-delete-form',
-        'title': _('Confirm data delete'),
-        'text': _('Are you sure you want to delete the data record'),
-        'submit_name': _('Delete data'),
-        'style': {'template_pack': 'rest_framework/vertical/'}
-    }
-
 
 class ConveyorFullViewSet(BaseViewSet):
     """
@@ -1124,10 +1016,10 @@ class DataVariableViewSet(BaseViewSet):
     action_url = 'metadb:datavariable-detail'
 
     table_headers = [
-        ('head_none', 'Id'),
-        ('head_text', _('Data variable label')),
-        ('head_select', _('Units')),
-        ('head_text', _('Data variable description')),
+        {'type': 'head_none', 'caption': _('Id'), 'field': 'id'},
+        {'type': 'head_text', 'caption': _('Data variable label'), 'field': 'label'},
+        {'type': 'head_text', 'caption': _('Units'), 'field': 'units.unitsi18n.name'},
+        {'type': 'head_text', 'caption': _('Data variable description'), 'field': 'description'},
     ]
 
     ctx_create = {
@@ -1166,6 +1058,120 @@ class DataVariableViewSet(BaseViewSet):
     }
     def __init__(self, *args, **kwargs):
         self.queryset = self.queryset.order_by('label')
+
+
+class DataViewSet(BaseViewSet):
+    """
+    Returns data
+    """
+    queryset = Data.objects.all()
+    serializer_class = DataSerializer
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
+    template_name = 'metadb/includes/rest_form.html'
+    options_template_name = 'metadb/hr/dropdown_list_options.html'
+    list_url = 'metadb:data-list'
+    action_url = 'metadb:data-detail'
+
+    table_headers = [
+        ('head_none', 'Id'),
+        ('head_none', _('Dataset visibility')),
+        ('head_select', _('Collection label')),
+        ('head_select', _('Resolution')),
+        ('head_select', _('Scenario')),
+        ('head_none', _('Parameter visibility')),
+        ('head_select', _('Parameter')),
+        ('head_select', _('Time step')),
+        ('head_text', _('Levels group')),
+        ('head_text', _('Levels names')),
+        ('head_none', _('Levels variable')),
+        ('head_select', _('Variable name')),
+        ('head_select', _('Units')),
+        ('head_none', _('Propery label')),
+        ('head_none', _('Property value')),
+        ('head_text', _('Root directory')),
+        ('head_text', _('Scenario subpath')),
+        ('head_text', _('Resolution subpath')),
+        ('head_text', _('Time step subpath')),
+        ('head_none', _('File name pattern')),
+        ('head_none', _('Scale')),
+        ('head_none', _('Offset')),
+    ]
+
+    ctx_create = {
+        'method': 'POST',
+        'form_class': 'js-data-form',
+        'title': _("Create a new data"),
+        'submit_name': _("Create data"),
+        'script': 'metadb/data_form.js',
+        'attributes': [
+            {'name': 'datasets-url',
+             'value': reverse_lazy('metadb:dataset-list')},
+            {'name': 'parameters-url',
+             'value': reverse_lazy('metadb:parameter-list')},
+            {'name': 'timesteps-url',
+             'value': reverse_lazy('metadb:timestep-list')},
+            {'name': 'levelsgroups-url',
+             'value': reverse_lazy('metadb:levelsgroup-list')},
+            {'name': 'levels-variables-url',
+             'value': reverse_lazy('metadb:levelsvariable-list')},
+            {'name': 'variables-url',
+             'value': reverse_lazy('metadb:variable-list')},
+            {'name': 'units-url',
+             'value': reverse_lazy('metadb:units-list')},
+            {'name': 'properties-url',
+             'value': reverse_lazy('metadb:property-list')},
+            {'name': 'property-values-url',
+             'value': reverse_lazy('metadb:propertyvalue-list')},
+            {'name': 'root-dirs-url',
+             'value': reverse_lazy('metadb:rootdir-list')},
+            {'name': 'files-url',
+             'value': reverse_lazy('metadb:file-list')},
+        ],
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_update = {
+        'method': 'PUT',
+        'form_class': 'js-data-form',
+        'title': _("Update data"),
+        'submit_name': _("Update data"),
+        'script': 'metadb/data_form.js',
+        'attributes': [
+            {'name': 'datasets-url',
+             'value': reverse_lazy('metadb:dataset-list')},
+            {'name': 'parameters-url',
+             'value': reverse_lazy('metadb:parameter-list')},
+            {'name': 'timesteps-url',
+             'value': reverse_lazy('metadb:timestep-list')},
+            {'name': 'levelsgroups-url',
+             'value': reverse_lazy('metadb:levelsgroup-list')},
+            {'name': 'levels-variables-url',
+             'value': reverse_lazy('metadb:levelsvariable-list')},
+            {'name': 'variables-url',
+             'value': reverse_lazy('metadb:variable-list')},
+            {'name': 'units-url',
+             'value': reverse_lazy('metadb:units-list')},
+            {'name': 'properties-url',
+             'value': reverse_lazy('metadb:property-list')},
+            {'name': 'property-values-url',
+             'value': reverse_lazy('metadb:propertyvalue-list')},
+            {'name': 'root-dirs-url',
+             'value': reverse_lazy('metadb:rootdir-list')},
+            {'name': 'files-url',
+             'value': reverse_lazy('metadb:file-list')},
+        ],
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_delete = {
+        'method': 'DELETE',
+        'form_class': 'js-data-delete-form',
+        'title': _('Confirm data delete'),
+        'text': _('Are you sure you want to delete the data record'),
+        'submit_name': _('Delete data'),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
 
 class EdgeViewSet(BaseViewSet):
     """
@@ -2183,14 +2189,14 @@ class SettingViewSet(BaseViewSet):
     serializer_class = SettingSerializer
     renderer_classes = [JSONRenderer, BrowsableAPIRenderer, TemplateHTMLRenderer]
     template_name = 'metadb/includes/rest_form.html'
-    options_template_name = 'metadb/hr/dropdown_list_options.html'
+    options_template_name = 'metadb/hr/dropdown_list_options_noblank.html'
     list_url = 'metadb:setting-list'
     action_url = 'metadb:setting-detail'
 
     table_headers = [
         {'type': 'head_none', 'caption': _('Id'), 'field': 'id'},
         {'type': 'head_text', 'caption': _('Label'), 'field': 'label'},
-        {'type': 'head_text', 'caption': _('GUI Element'), 'field': 'gui_element'},
+        {'type': 'head_text', 'caption': _('GUI Element'), 'field': 'gui_element.name'},
     ]
 
     ctx_create = {
@@ -2244,8 +2250,9 @@ class SettingFullViewSet(BaseViewSet):
     table_headers = [
         {'type': 'head_none', 'caption': _('Id'), 'field': 'id'},
         {'type': 'head_text', 'caption': _('Label'), 'field': 'label'},
-        {'type': 'head_text', 'caption': _('GUI Element'), 'field': 'gui_element'},
-        {'type': 'head_text', 'caption': _('Combinations'), 'field': 'combinations'},
+        {'type': 'head_text', 'caption': _('GUI Element'), 'field': 'gui_element.name'},
+        {'type': 'head_text', 'caption': _('Option label'), 'field': 'combinations',
+                                                            'subfield': 'combination.string'},
     ]
 
     ctx_create = {
@@ -2429,7 +2436,7 @@ class TimePeriodTypeViewSet(BaseViewSet):
     serializer_class = TimePeriodTypeSerializer
     renderer_classes = [JSONRenderer, BrowsableAPIRenderer, TemplateHTMLRenderer]
     template_name = 'metadb/includes/rest_form.html'
-    options_template_name = 'metadb/hr/dropdown_list_options.html'
+    options_template_name = 'metadb/hr/dropdown_list_options_noblank.html'
     list_url = 'metadb:timeperiodtype-list'
     action_url = 'metadb:timeperiodtype-detail'
 

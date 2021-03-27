@@ -54,7 +54,7 @@ class ComputingModuleSerializer(serializers.HyperlinkedModelSerializer):
                                                    read_only=True)
     class Meta:
         model = ComputingModule
-        fields = ['id', 'dataurl', 'name', 'number_of_inputs', 'number_of_outputs']
+        fields = ['id', 'dataurl', 'name', 'number_of_inputs', 'number_of_outputs', 'description']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -63,11 +63,14 @@ class ComputingModuleSerializer(serializers.HyperlinkedModelSerializer):
         self.fields['name'].label = _('Computing module name')
         self.fields['name'].style = {'template': 'metadb/custom_input.html'}
         # Number of inputs
-        self.fields['number_of_inputs'].label = _('Number of inputa')
+        self.fields['number_of_inputs'].label = _('Number of inputs')
         self.fields['number_of_inputs'].style = {'template': 'metadb/custom_input.html'}
         # Number of outputs
-        self.fields['number_of_outputs'].label = _('Number of outputa')
+        self.fields['number_of_outputs'].label = _('Number of outputs')
         self.fields['number_of_outputs'].style = {'template': 'metadb/custom_input.html'}
+        # Description
+        self.fields['description'].label = _('Description')
+        self.fields['description'].style = {'template': 'metadb/custom_textarea.html'}
 
     def to_representation(self, instance):
         action = self.context['request'].META.get('HTTP_ACTION')
@@ -223,10 +226,11 @@ class CombinationSerializer(serializers.HyperlinkedModelSerializer):
     option_value = OptionValueRelatedField(queryset=qset)
     qset = Combination.objects.all()
     condition = ConditionCombinationRelatedField(queryset=qset)
+    string = serializers.SerializerMethodField()
 
     class Meta:
         model = Combination
-        fields = ['id', 'dataurl', 'option', 'option_value', 'condition']
+        fields = ['id', 'dataurl', 'string', 'option', 'option_value', 'condition']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -244,6 +248,9 @@ class CombinationSerializer(serializers.HyperlinkedModelSerializer):
         self.fields['condition'].style = {'template': 'metadb/custom_select.html'}
         self.fields['condition'].allow_blank = False
         self.fields['condition'].no_add_btn = True
+
+    def get_string(self, obj):
+        return obj.__str__()
 
     def to_representation(self, instance):
         action = self.context['request'].META.get('HTTP_ACTION')

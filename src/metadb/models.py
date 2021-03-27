@@ -120,6 +120,7 @@ class ComputingModule(models.Model):
     name = models.CharField(max_length=100, blank=True)
     number_of_inputs = models.IntegerField()
     number_of_outputs = models.IntegerField()
+    description = models.CharField(max_length=245, blank=True)
 
     class Meta:
         managed = False
