@@ -13,8 +13,13 @@ from django.urls import reverse, reverse_lazy
 from django.http import JsonResponse
 
 from .models import *
-from .serializers import *
-
+from .serializers import LanguageSerializer
+from .serializers_collection import *
+from .serializers_dataset import *
+from .serializers_specparam import *
+from .serializers_data import *
+from .serializers_conveyor import *
+from .serializers_processor import *
 
 class BaseViewSet(viewsets.ModelViewSet):
     """
@@ -792,7 +797,7 @@ class ConveyorViewSet(BaseViewSet):
                 conveyor_serializer.save()
                 # Get lists of vertices in db and modified graph
                 vertices_in_db_set = set([obj.vertex for obj in ConveyorHasVertex.objects.filter(conveyor=instance)])
-                vertices_in_graph = {Vertex.objects.get(pk=op['vertex_id']): {'top': op['top'], 
+                vertices_in_graph = {Vertex.objects.get(pk=op['vertex_id']): {'top': op['top'],
                                                                               'left': op['left']
                                                                              } for op in operators.values()}
                 vertices_in_graph_set = set(vertices_in_graph.keys())
