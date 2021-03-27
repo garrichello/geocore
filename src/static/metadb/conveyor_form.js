@@ -211,7 +211,7 @@ saveConveyor = function(e) {
 
 $(document).ready( function () {
 
-    $('#id_modal_dialog').addClass('modal-dialog-wide');
+    $('#id_conveyor_dialog').addClass('modal-dialog-wide');
 
     // Add new vertex button
     $(conveyor_form_class_name).on('click', '.js-add-button', function() {
