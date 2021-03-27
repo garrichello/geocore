@@ -497,7 +497,7 @@ $(document).ready( function () {
 
     var delister = function(data, field_idx) {
         // Here we extract items from an Array of dictionaries came from the server as a JSON.
-        // In rare cases a field contains a list of structures (dictionaries) with items.
+        // In rare cases a field contains a LIST of structures (dictionaries) with items.
         // Items can be borrowed deep in the nested dictionary structure.
         // subfield field in the JSON helps to reach for these items.
         $.each(data.data, (i, e) => {  // loop over rows
