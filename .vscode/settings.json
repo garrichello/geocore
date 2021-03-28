@@ -11,11 +11,15 @@
     "python.linting.pylintArgs": [
         "--load-plugins",
         "pylint_django",
-        "--django-settings-module",
-        "geocore.settings.development",
+//        "--django-settings-module",
+//        "geocore.settings.development",
         "--disable=W0401",
         "--disable=W0614",
         "--max-line-length=150",
+        "--disable=unused-argument",
+        "--disable=missing-module-docstring",
+        "--disable=missing-class-docstring",
+        "--disable=missing-function-docstring",
     ],
     "python.testing.unittestArgs": [
         "-v",
