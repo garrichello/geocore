@@ -484,10 +484,10 @@ class CombinationViewSet(BaseViewSet):
 
     table_headers = [
         {'type': 'head_none', 'caption': _('Id'), 'field': 'id'},
-        {'type': 'head_text', 'caption': _('Option label'), 'field': 'option.label'},
-        {'type': 'head_text', 'caption': _('Option value label'), 'field': 'option_value.label'},
-        {'type': 'head_text', 'caption': _('Condition option'), 'field': 'condition.option.label'},
-        {'type': 'head_text', 'caption': _('Condition value'), 'field': 'condition.option_value.label'},
+        {'type': 'head_select', 'caption': _('Option label'), 'field': 'option.label'},
+        {'type': 'head_select', 'caption': _('Option value label'), 'field': 'option_value.label'},
+        {'type': 'head_select', 'caption': _('Condition option'), 'field': 'condition.option.label'},
+        {'type': 'head_select', 'caption': _('Condition value'), 'field': 'condition.option_value.label'},
     ]
 
     ctx_create = {
