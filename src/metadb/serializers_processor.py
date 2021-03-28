@@ -222,7 +222,7 @@ class SettingHasCombinationSerializer(serializers.HyperlinkedModelSerializer):
     combination = CombinationRelatedField(queryset=qset)
     class Meta:
         model = SettingHasCombination
-        fields = ['index', 'combination']
+        fields = ['id', 'index', 'combination']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
