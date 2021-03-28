@@ -460,16 +460,15 @@ $(document).ready( function () {
     });
 
     // Create Other tables
-    function prePostInit() {
-        var table = $(this).DataTable();
-        for (var i = 3; i < table.columns().header().length; i++) {
-            $(table.columns(i).header()).addClass('head_text');
+    function prePostInit(table, headers) {
+        instance = table.settings()[0].oInstance;
+        for (var i = 2; i < table.columns().header().length; i++) {
+            $(table.columns(i).header()).addClass(headers[i-2].type);
         }
-        postInit.call(this);
+        postInit.call(instance);
     }
 
     var otherOptions = {
-        initComplete: prePostInit,
         sDom: 'tri',
         orderCellsTop: true,
         paginate: false,
@@ -507,7 +506,7 @@ $(document).ready( function () {
                     $.each(data.data[i][v], (l, m) => {  // loop over items
                         items.push(dwell(m, data.headers[field_idx[v]].subfield));  // group
                     })
-                    data.data[i][v] = items; // replace original dict with the array
+                    data.data[i][v] = items.join(';<br>'); // replace original dict with the array
                 };
             })
         });
@@ -543,6 +542,7 @@ $(document).ready( function () {
             { width: 45, targets: 1, orderable: false, }, // Buttons
         ]
         var odt = $('#other').DataTable( otherOptions );
+        prePostInit(odt, data.headers);
         odt.on('draw', function() {
             addUpdDelButtonHandlers.call(this, 'other');
         });
