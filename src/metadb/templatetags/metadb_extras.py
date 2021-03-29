@@ -10,3 +10,6 @@ def print_static(name):
             return f.read()
     except IOError:
         return ''
+    except TypeError:
+        print('Warning! File '+name+' is absent!')
+        return ''
