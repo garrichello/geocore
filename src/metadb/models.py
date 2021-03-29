@@ -56,6 +56,11 @@ class ArgumentsGroupHasProcessor(models.Model):
         db_table = 'arguments_group_has_processor'
         unique_together = (('arguments_group', 'processor'),)
 
+    def __str__(self):
+        processor = self.processor.processori18n_set.filter(language__code=get_language()).get().name
+        arg_group = self.arguments_group.name
+        return f'{arg_group} has {processor}'
+
 
 class ArgumentsGroupHasSpecificParameter(models.Model):
     arguments_group = models.ForeignKey('ArgumentsGroup', models.CASCADE)
