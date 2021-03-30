@@ -484,7 +484,7 @@ class ArgumentsGroupHasProcessorRelatedField(ModifiedRelatedField):
 class ArgumentsGroupFullSerializer(ArgumentsGroupSerializer):
     dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:fullargumentsgroup-detail',
                                                    read_only=True)
-    qset = Processor.objects.all()
+    qset = Processor.objects.order_by('processori18n__name')
     processor = ProcessorRelatedField(queryset=qset, many=True) #, source='argumentgroup_processors')
     qset = SpecificParameter.objects.all()
     specific_parameter = SpecificParameterRelatedField(queryset=qset, many=True)
