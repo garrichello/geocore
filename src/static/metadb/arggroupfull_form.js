@@ -30,7 +30,6 @@ $(function() {
             };
             if ($('.js-specpar-form').length) {
                 var form_data = mapFormData('.js-specpar-form');  // Get specific parameter fields
-                console.log(form_data);
                 loadOptions.call(this, arggroupfull_form_class_name, 'id_specific_parameter',
                     'specificparameters-url', form_data['string']
                 );
