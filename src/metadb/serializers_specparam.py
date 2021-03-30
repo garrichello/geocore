@@ -400,6 +400,9 @@ class SpecificParameterSerializer(serializers.HyperlinkedModelSerializer):
         self.fields['time_step'].label = _('Time step')
         self.fields['time_step'].style = {'template': 'metadb/custom_select.html'}
         self.fields['time_step'].allow_blank = True
+        # String
+        self.fields['string'].hidden = True
+        self.fields['string'].label = 'string'
 
     def get_string(self, obj):
         return obj.__str__()
