@@ -125,7 +125,7 @@ function showDetails(row) {
                     specparsText.push(text);
                 });
                 var processorsText = Array();
-                argument.arguments_group.processors.forEach(processor => {
+                argument.arguments_group.processor.forEach(processor => {
                     var text = processor.processor.processori18n.name;
                     processorsText.push(text);
                 });

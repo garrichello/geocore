@@ -484,22 +484,22 @@ class ArgumentsGroupHasProcessorRelatedField(ModifiedRelatedField):
 class ArgumentsGroupFullSerializer(ArgumentsGroupSerializer):
     dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:fullargumentsgroup-detail',
                                                    read_only=True)
-    qset = ArgumentsGroupHasProcessor.objects.all()
-    processors = ArgumentsGroupHasProcessorRelatedField(queryset=qset, many=True, source='argumentgroup_processors')
+    qset = Processor.objects.all()
+    processor = ProcessorRelatedField(queryset=qset, many=True) #, source='argumentgroup_processors')
     qset = SpecificParameter.objects.all()
     specific_parameter = SpecificParameterRelatedField(queryset=qset, many=True)
 
     class Meta:
         model = ArgumentsGroup
-        fields = ['id', 'dataurl', 'name', 'description', 'argument_type', 'processors', 'specific_parameter']
+        fields = ['id', 'dataurl', 'name', 'description', 'argument_type', 'processor', 'specific_parameter']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         # Processor
-        self.fields['processors'].label = _('Processor')
-        self.fields['processors'].style = {'template': 'metadb/custom_select_multiple.html'}
-        self.fields['processors'].data_url = reverse('metadb:processor-list')
+        self.fields['processor'].label = _('Processor')
+        self.fields['processor'].style = {'template': 'metadb/custom_select_multiple.html'}
+        self.fields['processor'].data_url = reverse('metadb:processor-list')
         # Specific parameter
         self.fields['specific_parameter'].label = _('Specific parameter')
         self.fields['specific_parameter'].style = {'template': 'metadb/custom_select_multiple.html'}
