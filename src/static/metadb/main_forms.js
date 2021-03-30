@@ -124,8 +124,9 @@ $(function() {
     
         // Update button
         $(`.js-update-${tab_name}`).off('click');
-        $(`.js-update-${tab_name}`).click(function() { 
-            var modal_id = loadForm2.call(this, 'update');
+        $(`.js-update-${tab_name}`).click(function() {
+            var dialog_id = $(this).closest('div.tab-pane').attr('dialog-id');
+            var modal_id = loadForm2.call(this, 'update', dialog_id);
             $(modal_id).on('hidden.bs.modal', function() {
                 $(modal_id).remove();  // Keep DOM clean!
             });  
@@ -142,7 +143,7 @@ $(function() {
 
     // Create button
     $('.js-create').click(function() {
-        var dialog_id = $(this).attr('dialog-id');
+        var dialog_id = $(this).closest('div.tab-pane').attr('dialog-id');
         var modal_id = loadForm2.call(this, 'create', dialog_id);
         $(modal_id).on('hidden.bs.modal', function() {
             $(modal_id).remove();  // Keep DOM clean!

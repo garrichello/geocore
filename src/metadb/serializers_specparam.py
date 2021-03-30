@@ -40,7 +40,7 @@ class AccumulationModeSerializer(serializers.HyperlinkedModelSerializer):
 class AccumulationModeRelatedField(ModifiedRelatedField):
     serializer = AccumulationModeSerializer
     model = AccumulationMode
-    #data_field = 'name'
+#    data_field = 'name'
 
 
 class ParameterI18NSerializer(serializers.ModelSerializer):
@@ -400,6 +400,9 @@ class SpecificParameterSerializer(serializers.HyperlinkedModelSerializer):
         self.fields['time_step'].label = _('Time step')
         self.fields['time_step'].style = {'template': 'metadb/custom_select.html'}
         self.fields['time_step'].allow_blank = True
+        # String
+        self.fields['string'].hidden = True
+        self.fields['string'].label = 'string'
 
     def get_string(self, obj):
         return obj.__str__()

@@ -11,5 +11,5 @@ def print_static(name):
     except IOError:
         return ''
     except TypeError:
-        print('Warning! File '+name+' is absent!')
+        print(f'Warning! Form JS-file {name} is absent!')
         return ''

@@ -262,10 +262,10 @@ class ArgumentsGroupFullViewSet(BaseViewSet):
         {'type': 'head_text', 'caption': _('Name'), 'field': 'name'},
         {'type': 'head_text', 'caption': _('Description'), 'field': 'description'},
         {'type': 'head_select', 'caption': _('Argument type'), 'field': 'argument_type.label'},
-        {'type': 'head_select', 'caption': _('Processor'), 'field': 'processors',
-                                                           'subfield': 'processor.processori18n.name'},
+        {'type': 'head_select', 'caption': _('Processor'), 'field': 'processor',
+                                                           'subfield': 'processori18n.name'},
         {'type': 'head_select', 'caption': _('Specific parameter'), 'field': 'specific_parameter',
-                                                                    'subfield': 'string' },
+                                                                    'subfield': 'string'},
     ]
 
     ctx_create = {

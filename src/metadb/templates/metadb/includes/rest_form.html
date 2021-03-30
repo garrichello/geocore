@@ -17,6 +17,9 @@
     <div class="modal-body">
         {% if method != 'DELETE' %}
             {% for field in form %}
+                {% if field.hidden %}
+                    <input type="hidden" name="{{ field.label}}" id="id_{{ field.label}}">
+                {% endif %}
                 {% if not field.read_only %}
                     {% render_field field style=style %}
                 {% endif %}
