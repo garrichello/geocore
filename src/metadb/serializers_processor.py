@@ -349,7 +349,7 @@ class ProcessorSerializer(serializers.HyperlinkedModelSerializer):
     processori18n = ProcessorI18NSerializer(source='processori18n_set', label='')
     qset = Conveyor.objects.order_by('label')
     conveyor = ConveyorRelatedField(queryset=qset)
-    arguments = ProcessorHasArgumentsRelatedField(many=True, source='processor_arguments', 
+    arguments = ProcessorHasArgumentsRelatedField(many=True, source='processor_arguments',
                                                   read_only=True)
     qset = Setting.objects.order_by('label')
     settings = SettingRelatedField(queryset=qset, many=True)
@@ -358,7 +358,7 @@ class ProcessorSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Processor
-        fields = ['id', 'dataurl', 'fulldataurl', 'is_visible', 'processori18n', 'conveyor', 
+        fields = ['id', 'dataurl', 'fulldataurl', 'is_visible', 'processori18n', 'conveyor',
                   'settings', 'time_period_types', 'arguments_selected_by_user', 'arguments']
 
     def __init__(self, *args, **kwargs):
@@ -437,7 +437,7 @@ class ProcessorSerializer(serializers.HyperlinkedModelSerializer):
 
         instance.is_visible = validated_data.get('is_visible', instance.is_visible)
         instance.conveyor = validated_data.get('conveyor', instance.conveyor)
-        instance.arguments_selected_by_user = validated_data.get('arguments_selected_by_user', 
+        instance.arguments_selected_by_user = validated_data.get('arguments_selected_by_user',
                                                                  instance.arguments_selected_by_user)
 
         processori18n = instance.processori18n_set.filter(language__code=get_language()).get()
