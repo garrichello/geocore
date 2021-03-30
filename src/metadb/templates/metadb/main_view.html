@@ -126,6 +126,7 @@
                         <input type="radio" name="data-choice" class="js-data-choice" 
                         api-data-url="{% url choice.api_url %}" 
                         create-data-url="{% url choice.create_api_url -1 %}"
+                        {% if forloop.counter0 == 0 %}checked="checked"{% endif %}
                         ></input>
                         {{ choice.title }}
                     </label>
