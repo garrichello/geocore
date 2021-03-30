@@ -11,8 +11,8 @@
     "python.linting.pylintArgs": [
         "--load-plugins",
         "pylint_django",
-//        "--django-settings-module",
-//        "geocore.settings.development",
+        "--django-settings-module",
+        "geocore.settings.development",
         "--disable=W0401",
         "--disable=W0614",
         "--max-line-length=150",
