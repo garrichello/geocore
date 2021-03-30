@@ -584,4 +584,9 @@ $(document).ready( function () {
         $('#create-other-btn').attr('data-url', $(this).attr('create-data-url'));
     });
 
+    // Other tab
+    $('#main-tabs a[href="#tab-other"]').on('click', function() {
+        $('.js-data-choice[checked=checked]').trigger('click');
+    });
+
 } );
