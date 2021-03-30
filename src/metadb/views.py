@@ -10,8 +10,8 @@ class MainView(View):
         choices = [
             {'title': _('Accumulation mode'), 'api_url': app_prfx+'accumulationmode-list',
                 'create_api_url': app_prfx+'accumulationmode-detail'},
-            {'title': _('Arguments group'), 'api_url': app_prfx+'argumentsgroup-list',
-                'create_api_url': app_prfx+'argumentsgroup-detail'},
+            {'title': _('Arguments group'), 'api_url': app_prfx+'fullargumentsgroup-list',
+                'create_api_url': app_prfx+'fullargumentsgroup-detail'},
             {'title': _('Argument type'), 'api_url': app_prfx+'argumenttype-list',
                 'create_api_url': app_prfx+'argumenttype-detail'},
             {'title': _('Combination'), 'api_url': app_prfx+'combination-list',
