@@ -40,7 +40,7 @@ class AccumulationModeSerializer(serializers.HyperlinkedModelSerializer):
 class AccumulationModeRelatedField(ModifiedRelatedField):
     serializer = AccumulationModeSerializer
     model = AccumulationMode
-    data_field = 'name'
+#    data_field = 'name'
 
 
 class ParameterI18NSerializer(serializers.ModelSerializer):
@@ -376,10 +376,11 @@ class SpecificParameterSerializer(serializers.HyperlinkedModelSerializer):
     levels_group = LevelsGroupRelatedField(queryset=qset)
     qset = TimeStep.objects.all()
     time_step = TimeStepRelatedField(queryset=qset)
+    string = serializers.SerializerMethodField()
 
     class Meta:
         model = SpecificParameter
-        fields = ['id', 'dataurl', 'parameter', 'time_step', 'levels_group']
+        fields = ['id', 'dataurl', 'string', 'parameter', 'time_step', 'levels_group']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -400,6 +401,8 @@ class SpecificParameterSerializer(serializers.HyperlinkedModelSerializer):
         self.fields['time_step'].style = {'template': 'metadb/custom_select.html'}
         self.fields['time_step'].allow_blank = True
 
+    def get_string(self, obj):
+        return obj.__str__()
 
     def to_representation(self, instance):
         action = self.context['request'].META.get('HTTP_ACTION')

@@ -121,7 +121,7 @@ class DataKindSerializer(serializers.HyperlinkedModelSerializer):
 class DataKindRelatedField(ModifiedRelatedField):
     serializer = DataKindSerializer
     model = DataKind
-    data_field = 'name'
+#    data_field = 'name'
 
 
 class FileTypeSerializer(serializers.HyperlinkedModelSerializer):
@@ -158,26 +158,26 @@ class FileTypeSerializer(serializers.HyperlinkedModelSerializer):
 class FileTypeRelatedField(ModifiedRelatedField):
     serializer = FileTypeSerializer
     model = FileType
-    data_field = 'name'
+#    data_field = 'name'
 
 
 class DatasetSerializer(serializers.HyperlinkedModelSerializer):
     dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:dataset-detail',
                                                    read_only=True)
     qset = Collection.objects.order_by('label')
-    collection_label = CollectionRelatedField(queryset=qset, source='collection')
+    collection = CollectionRelatedField(queryset=qset)
     qset = Scenario.objects.order_by('name')
     scenario = ScenarioRelatedField(queryset=qset)
     qset = Resolution.objects.order_by('name')
     resolution = ResolutionRelatedField(queryset=qset)
     qset = DataKind.objects.order_by('name')
-    data_kind_name = DataKindRelatedField(queryset=qset, source='data_kind')
+    data_kind = DataKindRelatedField(queryset=qset) #, source='data_kind')
     qset = FileType.objects.order_by('name')
-    file_type_name = FileTypeRelatedField(queryset=qset, source='file_type')
+    file_type = FileTypeRelatedField(queryset=qset) #, source='file_type')
     class Meta:
         model = Dataset
-        fields = ['id', 'dataurl', 'is_visible', 'collection_label', 'resolution',
-                  'scenario', 'data_kind_name', 'file_type_name', 'time_start',
+        fields = ['id', 'dataurl', 'is_visible', 'collection', 'resolution',
+                  'scenario', 'data_kind', 'file_type', 'time_start',
                   'time_end', 'description']
 
     def __init__(self, *args, **kwargs):
@@ -188,10 +188,10 @@ class DatasetSerializer(serializers.HyperlinkedModelSerializer):
         self.fields['is_visible'].style = {'template': 'metadb/custom_checkbox.html'}
         self.fields['is_visible'].initial = True
         # Collection label
-        self.fields['collection_label'].data_url = reverse('metadb:collection-list')
-        self.fields['collection_label'].label = _('Collection label')
-        self.fields['collection_label'].style = {'template': 'metadb/custom_select.html'}
-        self.fields['collection_label'].allow_blank = True
+        self.fields['collection'].data_url = reverse('metadb:collection-list')
+        self.fields['collection'].label = _('Collection label')
+        self.fields['collection'].style = {'template': 'metadb/custom_select.html'}
+        self.fields['collection'].allow_blank = True
         # Horizontal resolution
         self.fields['resolution'].data_url = reverse('metadb:resolution-list')
         self.fields['resolution'].label = _('Horizontal resolution')
@@ -203,15 +203,15 @@ class DatasetSerializer(serializers.HyperlinkedModelSerializer):
         self.fields['scenario'].style = {'template': 'metadb/custom_select.html'}
         self.fields['scenario'].allow_blank = True
         # Data kind
-        self.fields['data_kind_name'].data_url = reverse('metadb:datakind-list')
-        self.fields['data_kind_name'].label = _('Data kind')
-        self.fields['data_kind_name'].style = {'template': 'metadb/custom_select.html'}
-        self.fields['data_kind_name'].allow_blank = True
+        self.fields['data_kind'].data_url = reverse('metadb:datakind-list')
+        self.fields['data_kind'].label = _('Data kind')
+        self.fields['data_kind'].style = {'template': 'metadb/custom_select.html'}
+        self.fields['data_kind'].allow_blank = True
         # File type
-        self.fields['file_type_name'].data_url = reverse('metadb:filetype-list')
-        self.fields['file_type_name'].label = _('File type')
-        self.fields['file_type_name'].style = {'template': 'metadb/custom_select.html'}
-        self.fields['file_type_name'].allow_blank = True
+        self.fields['file_type'].data_url = reverse('metadb:filetype-list')
+        self.fields['file_type'].label = _('File type')
+        self.fields['file_type'].style = {'template': 'metadb/custom_select.html'}
+        self.fields['file_type'].allow_blank = True
         # Time start
         self.fields['time_start'].label = _('Start date')
         self.fields['time_start'].style = {'template': 'metadb/custom_input.html'}

@@ -148,4 +148,4 @@ class CollectionSerializer(serializers.HyperlinkedModelSerializer):
 class CollectionRelatedField(ModifiedRelatedField):
     serializer = CollectionSerializer
     model = Collection
-    data_field = 'label'
+#    data_field = 'label'
