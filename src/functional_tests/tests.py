@@ -194,10 +194,10 @@ class FullScaleTest(unittest.TestCase):
         parameter_form = self.browser.find_element_by_class_name(form_class)
         # Then John types:
         #  'Fogness' into a textbox Name,
-        self.wait_and_type(form_class, 'id_name', 'Fogness')
+        self.wait_and_type(form_class, 'id_parameteri18n.name', 'Fogness')
         # John wants to select an accumulation mode, but finds out that the one he needs is absent.
         # So he decides to add it and clicks '+' button next to the Accumulation mode dropdown list
-        self.wait_and_click_add_btn('/en/metadb/accmodes/create/')
+        self.wait_and_click_add_btn('/en/metadb/accumulationmodes/-1/')
 
         # John adds a new organization
         self.add_1_element('js-accmode-form', 'id_name', 'mult')
@@ -218,22 +218,22 @@ class FullScaleTest(unittest.TestCase):
         self.wait_and_type(form_class, 'id_description', 'Delta levels')
         # John wants to select an measurement unit, but finds out that the one he needs is absent.
         # So he decides to add it and clicks '+' button next to the Measurement unit dropdown list
-        self.wait_and_click_add_btn('/en/metadb/units/create/')
+        self.wait_and_click_add_btn('/en/metadb/units/-1/')
 
         # John adds a unit
-        self.add_1_element('js-unit-form', 'id_name', 'Hz')
-        self.wait_and_assert_select_after_submit(form_class, 'id_unitsi18n', 'Hz')
+        self.add_1_element('js-unit-form', 'id_unitsi18n.name', 'Hz')
+        self.wait_and_assert_select_after_submit(form_class, 'id_units', 'Hz')
 
         # John wants to select levels, but finds out that the ones he needs are absent.
         # So he decides to add them and clicks '+' button next to the Select levels label
         # John adds a level
-        self.wait_and_click_add_btn('/en/metadb/levels/create/')
-        self.add_2_elements('js-level-form', 'id_label', '46', 'id_name', '46th')
+        self.wait_and_click_add_btn('/en/metadb/levels/-1/')
+        self.add_2_elements('js-level-form', 'id_label', '46', 'id_leveli18n.name', '46th')
         self.wait_and_assert_list_after_submit(form_class, 'available_levels_list', '46')
 
         # John adds another level
-        self.wait_and_click_add_btn('/en/metadb/levels/create/')
-        self.add_2_elements('js-level-form', 'id_label', '79', 'id_name', '79th')
+        self.wait_and_click_add_btn('/en/metadb/levels/-1/')
+        self.add_2_elements('js-level-form', 'id_label', '79', 'id_leveli18n.name', '79th')
         self.wait_and_assert_list_after_submit(form_class, 'available_levels_list', '79')
 
         # Now John sees new levels in a list of available levels and clicks them
@@ -309,7 +309,7 @@ class FullScaleTest(unittest.TestCase):
         self.add_collection()
 
         # John waits until the all enterd data apperars in the data table
-        WebDriverWait(self.browser, 10).until(
+        WebDriverWait(self.browser, 20).until(
             EC.presence_of_element_located((By.XPATH,
             '//table[@id="collection"]/tbody/tr/td[contains(text(), "JohnCol")]'))
         )
@@ -372,14 +372,14 @@ class FullScaleTest(unittest.TestCase):
         self.wait_and_click_add_btn('/en/metadb/resolutions/-1/')
 
         self.add_2_elements('js-resolution-form', 'id_name', '0.13x0.13', 'id_subpath1', '0.13x0.13/')
-        self.wait_and_assert_select_after_submit(form_class, 'id_resolution_name', '0.13x0.13')
+        self.wait_and_assert_select_after_submit(form_class, 'id_resolution', '0.13x0.13')
 
         # John wants to select a scenario, but finds out that the needed one is absent
         # So he decides to add it and clicks '+' button next to the Scenario dropdown list.
         self.wait_and_click_add_btn('/en/metadb/scenarios/-1/')
 
         self.add_2_elements('js-scenario-form', 'id_name', 'Specific', 'id_subpath0', 'specific/')
-        self.wait_and_assert_select_after_submit(form_class, 'id_scenario_name', 'Specific')
+        self.wait_and_assert_select_after_submit(form_class, 'id_scenario', 'Specific')
 
         # John wants to select a data kind, but finds out that the needed one is absent
         # So he decides to add it and clicks '+' button next to the Data kind dropdown list.
@@ -598,28 +598,28 @@ class FullScaleTest(unittest.TestCase):
 
         # John wants to select a meteorological parameter, but finds out that the needed one is absent
         # So he decides to add it and clicks '+' button next to the Parameter dropdown list.
-        self.wait_and_click_add_btn('/en/metadb/parameters/create/')
+        self.wait_and_click_add_btn('/en/metadb/parameters/-1/')
 
         # John adds a parameter
         self.add_parameter()
-        self.wait_and_assert_select_after_submit(form_class, 'id_parameteri18n', 'Fogness')
+        self.wait_and_assert_select_after_submit(form_class, 'id_parameter', 'Fogness')
 
         # John wants to select a time step, but finds out that the needed one is absent.
         # So he decides to add it and clicks '+' button next to the Time step dropdown list.
-        self.wait_and_click_add_btn('/en/metadb/timesteps/create/')
+        self.wait_and_click_add_btn('/en/metadb/timesteps/-1/')
 
         # John adds a time step
-        self.add_3_elements('js-timestep-form', 'id_label', '5h', 'id_name', '5 hours',
+        self.add_3_elements('js-timestep-form', 'id_label', '5h', 'id_timestepi18n.name', '5 hours',
                             'id_subpath2', '5h/')
-        self.wait_and_assert_select_after_submit(form_class, 'id_time_stepi18n', '5 hours')
+        self.wait_and_assert_select_after_submit(form_class, 'id_time_step', '5 hours')
 
         # John wants to select a levels group, but finds out that the needed one is absent.
         # So he decides to add it and clicks '+' button next to the Levels group dropdown list.
-        self.wait_and_click_add_btn('/en/metadb/levelsgroups/create/')
+        self.wait_and_click_add_btn('/en/metadb/levelsgroups/-1/')
 
         # John adds a levels group
         self.add_levels_group()
-        self.wait_and_assert_select_after_submit(form_class, 'id_lvs_group', 'Delta levels')
+        self.wait_and_assert_select_after_submit(form_class, 'id_levels_group', 'Delta levels')
 
         # When he clicks Create specific parameter modal window closes and Parameter table updates.
         specpar_form.submit()
