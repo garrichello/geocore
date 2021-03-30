@@ -10,3 +10,6 @@ def print_static(name):
             return f.read()
     except IOError:
         return ''
+    except TypeError:
+        print(f'Warning! Form JS-file {name} is absent!')
+        return ''
