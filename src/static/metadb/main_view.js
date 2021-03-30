@@ -478,6 +478,7 @@ $(document).ready( function () {
         scrollCollapse: true,
         order: [[ 2, 'asc' ]],
         processing: true,
+        autoWidth: true,
         language: {
             'loadingRecords': '&nbsp',
             'processing': '<div class="spinner"></div>'
@@ -505,7 +506,10 @@ $(document).ready( function () {
                     var items = Array();  // here we will store the Array items
                     $.each(data.data[i][v], (l, m) => {  // loop over items
                         items.push(dwell(m, data.headers[field_idx[v]].subfield));  // group
-                    })
+                    });
+                    if (items.length == 0) {  // Empty array replaced with '-'-value
+                        items[0] = '-';
+                    };
                     data.data[i][v] = items.join(';<br>'); // replace original dict with the array
                 };
             })
