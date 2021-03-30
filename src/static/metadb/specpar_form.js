@@ -1,8 +1,11 @@
 $(function() {
     var specpar_form_class_name = '.js-specpar-form';
     var modal_id = '#'+getModalName();
+    var parameterName = '';
+    var timeStepName = '';
+    var levelsGroupName = '';
 
-    var loadLvsNamesChain = function(form_name) {
+/*    var loadLvsNamesChain = function(form_name) {
         var form = $(form_name);
         var lvsgroupId = $(modal_id+' #id_lvs_group').val();
 
@@ -17,8 +20,27 @@ $(function() {
             }
         } );
     };
+*/
+    function setString() {
+        $(specpar_form_class_name+' #id_string').attr('value', `${parameterName} @ ${levelsGroupName} / ${timeStepName}`);
+    }
 
-    $(modal_id+' #id_lvs_group').change( function() { loadLvsNamesChain(specpar_form_class_name); } );
+//    $(modal_id+' #id_lvs_group').change( function() { loadLvsNamesChain(specpar_form_class_name); } );
+
+    $(modal_id+' #id_parameter').on('change', (e) => {
+        parameterName = $(e.target).find('option:selected').text();
+        setString();
+    });
+
+    $(modal_id+' #id_time_step').on('change', (e) => {
+        timeStepName = $(e.target).find('option:selected').text();
+        setString();
+    });
+
+    $(modal_id+' #id_levels_group').on('change', (e) => {
+        levelsGroupName = $(e.target).find('option:selected').text();
+        setString();
+    });
 
     // + buttons handling
     $(specpar_form_class_name).on('click', '.js-add-button', function() {
