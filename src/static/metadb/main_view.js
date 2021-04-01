@@ -208,7 +208,7 @@ data_columnsDefs = [
     { width: '55px', targets: 23 },   // Offset
 ]
 
-var edge_api_url = $('#tab-edge').attr('api-data-url')
+/*var edge_api_url = $('#tab-edge').attr('api-data-url')
 
 edge_columns = [
     { 'render': function() { return null; } },  // For checkboxes
@@ -255,7 +255,7 @@ edge_columnsDefs = [
     { width: '135px', targets: 14 },   // Data label
     { width: '135px', targets: 15 },   // Data description
     { width: '75px', targets: 16 },   // Units
-]
+]*/
 
 commonOptions = {
     initComplete: postInit,
@@ -446,7 +446,7 @@ $(document).ready( function () {
     });
 
     // Create Edge table
-    var edgeOptions = $.extend(true, {}, commonOptions);
+/*    var edgeOptions = $.extend(true, {}, commonOptions);
     edgeOptions["columnDefs"] = edge_columnsDefs.concat(all_columns_defs);
     edgeOptions["columns"] = edge_columns;
     edgeOptions["ajax"] = { 'url': edge_api_url, 'type': 'GET', 'dataSrc': 'data' };
@@ -458,7 +458,7 @@ $(document).ready( function () {
             $('#edge').DataTable().on('xhr.dt', set_header);
         }
     });
-
+*/
     // Create Other tables
     function prePostInit(table, headers) {
         instance = table.settings()[0].oInstance;
