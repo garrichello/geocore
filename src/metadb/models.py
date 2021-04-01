@@ -49,6 +49,7 @@ class ArgumentsGroup(models.Model):
 class ArgumentsGroupHasProcessor(models.Model):
     arguments_group = models.ForeignKey('ArgumentsGroup', models.CASCADE, related_name='argumentgroup_processors')
     processor = models.ForeignKey('Processor', models.CASCADE, related_name='processor_argumentgroups')
+    override_combination = models.ManyToManyField('Combination', through='OptionsOverride')
 
     class Meta:
         managed = False
