@@ -258,14 +258,20 @@ class ArgumentsGroupFullViewSet(BaseViewSet):
     action_url = 'metadb:fullargumentsgroup-detail'
 
     table_headers = [
-        {'type': 'head_none', 'caption': _('Id'), 'field': 'id'},
-        {'type': 'head_text', 'caption': _('Name'), 'field': 'name'},
-        {'type': 'head_text', 'caption': _('Description'), 'field': 'description'},
-        {'type': 'head_select', 'caption': _('Argument type'), 'field': 'argument_type.label'},
-        {'type': 'head_select', 'caption': _('Processor'), 'field': 'processor',
-                                                           'subfield': 'processori18n.name'},
-        {'type': 'head_select', 'caption': _('Specific parameter'), 'field': 'specific_parameter',
-                                                                    'subfield': 'string'},
+#        {'type': 'head_none', 'caption': _('Id'), 'field': 'id'},
+#        {'type': 'head_text', 'caption': _('Name'), 'field': 'name'},
+#        {'type': 'head_text', 'caption': _('Description'), 'field': 'description'},
+#        {'type': 'head_select', 'caption': _('Argument type'), 'field': 'argument_type.label'},
+#        {'type': 'head_select', 'caption': _('Processor'), 'field': 'processor',
+#                                                           'subfield': 'processor.processori18n.name'},
+#        {'type': 'head_select', 'caption': _('Specific parameter'), 'field': 'specific_parameter',
+#                                                                    'subfield': 'string'},
+        ('head_none', 'Id'),
+        ('head_text', _('Name')),
+        ('head_text', _('Description')),
+        ('head_select', _('Argument type')),
+        ('head_text', _('Processor')),
+        ('head_text', _('Specific parameter')),
     ]
 
     ctx_create = {
@@ -883,6 +889,69 @@ class ConveyorFullViewSet(BaseViewSet):
     options_template_name = 'metadb/hr/dropdown_list_options.html'
     list_url = 'metadb:fullconveyor-list'
     action_url = 'metadb:fullconveyor-detail'
+
+
+class DataArgumentsGroupViewSet(BaseViewSet):
+    """
+    Returns data arguments groups info
+    """
+    queryset = ArgumentsGroup.objects.filter(argument_type__label='data').order_by('name')
+    serializer_class = DataArgumentsGroupSerializer
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer, TemplateHTMLRenderer]
+    template_name = 'metadb/includes/rest_form.html'
+    options_template_name = 'metadb/hr/dropdown_list_options.html'
+    list_url = 'metadb:dataargumentsgroup-list'
+    action_url = 'metadb:dataargumentsgroup-detail'
+
+    table_headers = [
+#        {'type': 'head_none', 'caption': _('Id'), 'field': 'id'},
+#        {'type': 'head_text', 'caption': _('Name'), 'field': 'name'},
+#        {'type': 'head_text', 'caption': _('Description'), 'field': 'description'},
+#        {'type': 'head_select', 'caption': _('Argument type'), 'field': 'argument_type.label'},
+#        {'type': 'head_select', 'caption': _('Processor'), 'field': 'processor',
+#                                                           'subfield': 'processor.processori18n.name'},
+#        {'type': 'head_select', 'caption': _('Specific parameter'), 'field': 'specific_parameter',
+#                                                                    'subfield': 'string'},
+        ('head_none', 'Id'),
+        ('head_text', _('Group name')),
+        ('head_text', _('Group description')),
+        ('head_text', _('Specific parameter')),
+    ]
+
+    ctx_create = {
+        'method': 'POST',
+        'form_class': 'js-dataarggroup-form',
+        'title': _("Create a new data arguments group"),
+        'submit_name': _("Create data arguments group"),
+        'script': 'metadb/dataarggroup_form.js',
+        'attributes': [
+            {'name': 'specificparameters-url',
+             'value': reverse_lazy('metadb:specificparameter-list')},
+        ],
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_update = {
+        'method': 'PUT',
+        'form_class': 'js-dataarggroup-form',
+        'title': _("Update data arguments group"),
+        'submit_name': _("Update data arguments group"),
+        'script': 'metadb/dataarggroup_form.js',
+        'attributes': [
+            {'name': 'specificparameters-url',
+             'value': reverse_lazy('metadb:specificparameter-list')},
+        ],
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_delete = {
+        'method': 'DELETE',
+        'form_class': 'js-dataarggroup-delete-form',
+        'title': _('Confirm data arguments group delete'),
+        'text': _('Are you sure you want to delete the data arguments group'),
+        'submit_name': _('Delete data arguments group'),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
 
 
 class DataKindViewSet(BaseViewSet):
@@ -1598,6 +1667,65 @@ class LevelsVariableViewSet(BaseViewSet):
     }
 
 
+class OptionsOverrideViewSet(BaseViewSet):
+    """
+    Returns overriding option values for processors in groupds
+    """
+    queryset = OptionsOverride.objects.all()
+    serializer_class = OptionsOverrideSerializer
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer, TemplateHTMLRenderer]
+    template_name = 'metadb/includes/rest_form.html'
+    options_template_name = 'metadb/hr/dropdown_list_options.html'
+    list_url = 'metadb:optionsoverride-list'
+    action_url = 'metadb:optionsoverride-detail'
+
+    table_headers = [
+        {'type': 'head_none', 'caption': _('Id'), 'field': 'id'},
+        {'type': 'head_select', 'caption': _('Is visible'), 'field': 'is_visible'},
+        {'type': 'head_text', 'caption': _('Arguments group has processor'), 'field': 'arguments_group_has_processor'},
+        {'type': 'head_text', 'caption': _('Combination'), 'field': 'combination'},
+    ]
+
+    ctx_create = {
+        'method': 'POST',
+        'form_class': 'js-optionsoverride-form',
+        'title': _("Create a new options override"),
+        'submit_name': _("Create options override"),
+        'script': 'metadb/optionsoverride_form.js',
+        'attributes': [
+            {'name': 'arggrphasprocs-url',
+             'value': reverse_lazy('metadb:argumentsgrouphasprocessor-list')},
+            {'name': 'combinations-url',
+             'value': reverse_lazy('metadb:combination-list')},
+        ],
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_update = {
+        'method': 'PUT',
+        'form_class': 'js-optionsoverride-form',
+        'title': _("Update options override"),
+        'submit_name': _("Update options override"),
+        'script': 'metadb/optionsoverride_form.js',
+        'attributes': [
+            {'name': 'arggrphasprocs-url',
+             'value': reverse_lazy('metadb:argumentsgrouphasprocessor-list')},
+            {'name': 'combinations-url',
+             'value': reverse_lazy('metadb:combination-list')},
+        ],
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_delete = {
+        'method': 'DELETE',
+        'form_class': 'js-optionsoverride-delete-form',
+        'title': _('Confirm options override delete'),
+        'text': _('Are you sure you want to delete the options override'),
+        'submit_name': _('Delete options override'),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+
 class OptionViewSet(BaseViewSet):
     """
     Returns options
@@ -1802,6 +1930,69 @@ class ParameterViewSet(BaseViewSet):
     def __init__(self, *args, **kwargs):
         self.queryset = self.queryset.filter(
             language__code=get_language()).order_by('parameteri18n__name')
+
+
+class ProcArgumentsGroupViewSet(BaseViewSet):
+    """
+    Returns processors arguments groups info
+    """
+    queryset = ArgumentsGroup.objects.filter(argument_type__label='processor').order_by('name')
+    serializer_class = ProcArgumentsGroupSerializer
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer, TemplateHTMLRenderer]
+    template_name = 'metadb/includes/rest_form.html'
+    options_template_name = 'metadb/hr/dropdown_list_options.html'
+    list_url = 'metadb:procargumentsgroup-list'
+    action_url = 'metadb:procargumentsgroup-detail'
+
+    table_headers = [
+#        {'type': 'head_none', 'caption': _('Id'), 'field': 'id'},
+#        {'type': 'head_text', 'caption': _('Name'), 'field': 'name'},
+#        {'type': 'head_text', 'caption': _('Description'), 'field': 'description'},
+#        {'type': 'head_select', 'caption': _('Argument type'), 'field': 'argument_type.label'},
+#        {'type': 'head_select', 'caption': _('Processor'), 'field': 'processor',
+#                                                           'subfield': 'processor.processori18n.name'},
+#        {'type': 'head_select', 'caption': _('Specific parameter'), 'field': 'specific_parameter',
+#                                                                    'subfield': 'string'},
+        ('head_none', 'Id'),
+        ('head_text', _('Group name')),
+        ('head_text', _('Group description')),
+        ('head_none', _('Processor name')),
+    ]
+
+    ctx_create = {
+        'method': 'POST',
+        'form_class': 'js-procarggroup-form',
+        'title': _("Create a new processors arguments group"),
+        'submit_name': _("Create arguments group"),
+        'script': 'metadb/procarggroup_form.js',
+        'attributes': [
+            {'name': 'processors-url',
+             'value': reverse_lazy('metadb:processor-list')},
+        ],
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_update = {
+        'method': 'PUT',
+        'form_class': 'js-procarggroup-form',
+        'title': _("Update processors arguments group"),
+        'submit_name': _("Update arguments group"),
+        'script': 'metadb/procarggroup_form.js',
+        'attributes': [
+            {'name': 'processors-url',
+             'value': reverse_lazy('metadb:processor-list')},
+        ],
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
+
+    ctx_delete = {
+        'method': 'DELETE',
+        'form_class': 'js-procarggroup-delete-form',
+        'title': _('Confirm processors arguments group delete'),
+        'text': _('Are you sure you want to delete the processors arguments group'),
+        'submit_name': _('Delete arguments group'),
+        'style': {'template_pack': 'rest_framework/vertical/'}
+    }
 
 
 class ProcessorViewSet(BaseViewSet):

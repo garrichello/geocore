@@ -6,7 +6,7 @@ from django.utils.translation import get_language
 
 from .serializers_data import GuiElementRelatedField
 from .serializers_conveyor import ( CombinationRelatedField, OptionValueSerializer,
-                                    ConveyorRelatedField)
+                                    ConveyorRelatedField, CombinationRelatedField)
 from .serializers_specparam import SpecificParameterRelatedField
 
 from .models import *
@@ -484,8 +484,8 @@ class ArgumentsGroupHasProcessorRelatedField(ModifiedRelatedField):
 class ArgumentsGroupFullSerializer(ArgumentsGroupSerializer):
     dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:fullargumentsgroup-detail',
                                                    read_only=True)
-    qset = Processor.objects.order_by('processori18n__name')
-    processor = ProcessorRelatedField(queryset=qset, many=True) #, source='argumentgroup_processors')
+    qset = ArgumentsGroupHasProcessor.objects.all() #order_by('processori18n__name')
+    processor = ArgumentsGroupHasProcessorRelatedField(queryset=qset, many=True, source='argumentgroup_processors')
     qset = SpecificParameter.objects.all()
     specific_parameter = SpecificParameterRelatedField(queryset=qset, many=True)
 
@@ -537,3 +537,67 @@ class ProcessorFullSerializer(ProcessorSerializer):
         model = Processor
         fields = ['id', 'dataurl', 'is_visible', 'processori18n', 'conveyor',
                   'settings', 'time_period_types', 'arguments_selected_by_user', 'arguments']
+
+
+class OptionsOverrideSerializer(serializers.HyperlinkedModelSerializer):
+    dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:optionsoverride-detail',
+                                                   read_only=True)
+
+    qset = ArgumentsGroupHasProcessor.objects.all()
+    arguments_group_has_processor = ArgumentsGroupHasProcessorRelatedField(queryset=qset)
+    qset = Combination.objects.all()
+    combination = CombinationRelatedField(queryset=qset)
+
+    class Meta:
+        model = OptionsOverride
+        fields = ['id', 'dataurl', 'arguments_group_has_processor', 'combination']
+
+
+class DataArgumentsGroupSerializer(ArgumentsGroupSerializer):
+    dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:dataargumentsgroup-detail',
+                                                   read_only=True)
+    argument_type = ArgumentTypeRelatedField(read_only=True)
+    qset = SpecificParameter.objects.all()
+    specific_parameter = SpecificParameterRelatedField(queryset=qset, many=True)
+
+    class Meta:
+        model = ArgumentsGroup
+        fields = ['id', 'dataurl', 'name', 'description', 'argument_type', 'specific_parameter']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Specific parameter
+        self.fields['specific_parameter'].label = _('Specific parameter')
+        self.fields['specific_parameter'].style = {'template': 'metadb/custom_select_multiple.html'}
+        self.fields['specific_parameter'].data_url = reverse('metadb:specificparameter-list')
+
+
+class DataArgumentsGroupRelatedField(ModifiedRelatedField):
+    serializer = DataArgumentsGroupSerializer
+    model = ArgumentsGroup
+
+
+class ProcArgumentsGroupSerializer(ArgumentsGroupSerializer):
+    dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:procargumentsgroup-detail',
+                                                   read_only=True)
+    argument_type = ArgumentTypeRelatedField(read_only=True)
+    qset = ArgumentsGroupHasProcessor.objects.all() #order_by('processori18n__name')
+    processor = ArgumentsGroupHasProcessorRelatedField(queryset=qset, many=True, source='argumentgroup_processors')
+
+    class Meta:
+        model = ArgumentsGroup
+        fields = ['id', 'dataurl', 'name', 'description', 'argument_type', 'processor']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Processor
+        self.fields['processor'].label = _('Processor')
+        self.fields['processor'].style = {'template': 'metadb/custom_select_multiple.html'}
+        self.fields['processor'].data_url = reverse('metadb:processor-list')
+
+
+class ProcArgumentsGroupRelatedField(ModifiedRelatedField):
+    serializer = ProcArgumentsGroupSerializer
+    model = ArgumentsGroup

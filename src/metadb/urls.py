@@ -40,6 +40,8 @@ router.register('edges', EdgeViewSet)
 router.register('argumenttypes', ArgumentTypeViewSet)
 router.register('argumentsgroups', ArgumentsGroupViewSet)
 router.register('fullargumentsgroups', ArgumentsGroupFullViewSet, basename='fullargumentsgroup')
+router.register('dataargumentsgroups', DataArgumentsGroupViewSet, basename='dataargumentsgroup')
+router.register('procargumentsgroups', ProcArgumentsGroupViewSet, basename='procargumentsgroup')
 router.register('timeperiodtypes', TimePeriodTypeViewSet)
 router.register('processors', ProcessorViewSet)
 router.register('fullprocessors', ProcessorFullViewSet, basename='fullprocessor')
@@ -48,6 +50,7 @@ router.register('settings', SettingViewSet)
 router.register('fullsettings', SettingFullViewSet, basename='fullsetting')
 router.register('argumentsgrouphasprocessors', ArgumentsGroupHasProcessorViewSet)
 router.register('settinghascombinations', SettingHasCombinationViewSet)
+router.register('optionsoverrides', OptionsOverrideViewSet)
 
 
 app_name = 'metadb'
