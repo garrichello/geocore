@@ -248,6 +248,8 @@ class CombinationSerializer(serializers.HyperlinkedModelSerializer):
         self.fields['condition'].style = {'template': 'metadb/custom_select.html'}
         self.fields['condition'].allow_blank = False
         self.fields['condition'].no_add_btn = True
+        self.fields['string'].hidden = True
+        self.fields['string'].label = 'string'
 
     def get_string(self, obj):
         return obj.__str__()

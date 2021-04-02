@@ -1,5 +1,36 @@
 $(function() {
     var combination_form_class_name = '.js-combination-form';
+    var modal_id = '#'+getModalName();
+    var optionLabel = '';
+    var optionValue = '';
+    var condition = '';
+
+    function setString() {
+        var stringVal = '-';
+        if (optionLabel != '-') {
+            stringVal = `${optionLabel}=${optionValue}`;
+        };
+        if (condition != '') {
+            stringVal = stringVal + ` [if ${condition}]`;
+        }
+        $(combination_form_class_name+' #id_string').attr('value', stringVal);
+    }
+
+    $(modal_id+' #id_option').on('change', (e) => {
+        optionLabel = $(e.target).find('option:selected').text();
+        setString();
+    });
+
+    $(modal_id+' #id_option_value').on('change', (e) => {
+        optionValue = $(e.target).find('option:selected').text();
+        setString();
+    });
+
+    $(modal_id+' #id_condition').on('change', (e) => {
+        condition = $(e.target).find('option:selected').text();
+        setString();
+    });
+
 
     // + buttons handling
     $(combination_form_class_name).on('click', '.js-add-button', function() {
