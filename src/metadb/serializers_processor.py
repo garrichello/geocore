@@ -589,7 +589,7 @@ class OptionsOverrideSerializer(serializers.HyperlinkedModelSerializer):
     arguments_group = ArgumentsGroupRelatedField(queryset=qset, source='arguments_group_has_processor.arguments_group')
     qset = Processor.objects.order_by('processori18n__name')
     processor = ProcessorLightRelatedField(queryset=qset, source='arguments_group_has_processor.processor')
-    qset = Combination.objects.all()
+    qset = Combination.objects.order_by('option__label')
     combination = CombinationRelatedField(queryset=qset)
 
     class Meta:
