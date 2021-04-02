@@ -10,20 +10,12 @@ procarggroup_columns = [
                + `data-url="${procarggroup_api_url}${row.id}">`
                + '<span class="glyphicon glyphicon-trash"></span></button></div>';
     } },  // for buttons
-    { 'data': 'id' },
-    { 'data': 'name' },
-    { 'data': 'description' },
-/*    { 'data': function(data, type, row, meta) {
-        var processors = Array();
-        data.processor.forEach(element => {
-            processors.push(element.processor.processori18n.name);
-        });
-        if (data.processor.length == 0) {
-            processors.push('-');
-        };
-        return processors.join('; <br>');
-    } },*/
-    { 'render': function(data, type, row, meta) {
+    { 'data': 'arguments_group.id' },
+    { 'data': 'arguments_group.name' },
+    { 'data': 'arguments_group.description' },
+    { 'data': 'processor.processori18n.name' },
+    { 'data': 'combination.string' },
+/*    { 'render': function(data, type, row, meta) {
         var procTable = $('<table style="border: #ddd" frame="void" rules="rows"></table>');
         row.processor.forEach(element => {
             var tr = $('<tr>');
@@ -36,7 +28,7 @@ procarggroup_columns = [
             procTable.append(tr);
         });
         return $('<div>').append(procTable).html();
-    } },
+    } },*/
 ]
 
 procarggroup_columnsDefs = [
@@ -45,7 +37,8 @@ procarggroup_columnsDefs = [
     { width: '65px', targets: 2, },   // id
     { width: '105px', targets: 3 },    // name
     { width: '175px', targets: 4 },   // description
-    { width: '475px', targets: 5 },   // processors
+    { width: '275px', targets: 5 },   // processor
+    { width: '200px', targets: 6 },   // combination
 ]
 
 $(document).ready( function () {
