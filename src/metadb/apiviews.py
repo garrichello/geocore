@@ -1680,10 +1680,21 @@ class OptionsOverrideViewSet(BaseViewSet):
     action_url = 'metadb:optionsoverride-detail'
 
     table_headers = [
-        {'type': 'head_none', 'caption': _('Id'), 'field': 'id'},
-        {'type': 'head_select', 'caption': _('Is visible'), 'field': 'is_visible'},
-        {'type': 'head_text', 'caption': _('Arguments group has processor'), 'field': 'arguments_group_has_processor'},
-        {'type': 'head_text', 'caption': _('Combination'), 'field': 'combination'},
+#        {'type': 'head_none', 'caption': _('Group id'),
+#         'field': 'arguments_group_has_processor.arguments_group.id'},
+#        {'type': 'head_text', 'caption': _('Group name'),
+#         'field': 'arguments_group_has_processor.arguments_group.name'},
+#        {'type': 'head_text', 'caption': _('Group description'),
+#         'field': 'arguments_group_has_processor.arguments_group.description'},
+#        {'type': 'head_text', 'caption': _('Processor'),
+#         'field': 'arguments_group_has_processor.processor.processori18n.name'},
+#        {'type': 'head_text', 'caption': _('Overriding option'),
+#         'field': 'combination.string'},
+        ('head_text', _('Group id')),
+        ('head_select', _('Group name')),
+        ('head_text', _('Group description')),
+        ('head_select', _('Processor name')),
+        ('head_text', _('Overriding option')),
     ]
 
     ctx_create = {
@@ -1693,8 +1704,10 @@ class OptionsOverrideViewSet(BaseViewSet):
         'submit_name': _("Create options override"),
         'script': 'metadb/optionsoverride_form.js',
         'attributes': [
-            {'name': 'arggrphasprocs-url',
-             'value': reverse_lazy('metadb:argumentsgrouphasprocessor-list')},
+            {'name': 'argumentsgroups-url',
+             'value': reverse_lazy('metadb:argumentsgroup-list')},
+            {'name': 'processors-url',
+             'value': reverse_lazy('metadb:processor-list')},
             {'name': 'combinations-url',
              'value': reverse_lazy('metadb:combination-list')},
         ],
@@ -1708,8 +1721,10 @@ class OptionsOverrideViewSet(BaseViewSet):
         'submit_name': _("Update options override"),
         'script': 'metadb/optionsoverride_form.js',
         'attributes': [
-            {'name': 'arggrphasprocs-url',
-             'value': reverse_lazy('metadb:argumentsgrouphasprocessor-list')},
+            {'name': 'argumentsgroups-url',
+             'value': reverse_lazy('metadb:argumentsgroup-list')},
+            {'name': 'processors-url',
+             'value': reverse_lazy('metadb:processor-list')},
             {'name': 'combinations-url',
              'value': reverse_lazy('metadb:combination-list')},
         ],
