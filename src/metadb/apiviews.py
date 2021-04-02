@@ -385,7 +385,7 @@ class ArgumentTypeViewSet(BaseViewSet):
     serializer_class = ArgumentTypeSerializer
     renderer_classes = [JSONRenderer, BrowsableAPIRenderer, TemplateHTMLRenderer]
     template_name = 'metadb/includes/rest_form.html'
-    options_template_name = 'metadb/hr/dropdown_list_options.html'
+    options_template_name = 'metadb/hr/dropdown_list_options_noblank.html'
     list_url = 'metadb:argumenttype-list'
     action_url = 'metadb:argumenttype-detail'
 
@@ -486,7 +486,7 @@ class CombinationViewSet(BaseViewSet):
     serializer_class = CombinationSerializer
     renderer_classes = [JSONRenderer, BrowsableAPIRenderer, TemplateHTMLRenderer]
     template_name = 'metadb/includes/rest_form.html'
-    options_template_name = 'metadb/hr/dropdown_list_options.html'
+    options_template_name = 'metadb/hr/dropdown_list_options_noblank.html'
     list_url = 'metadb:combination-list'
     action_url = 'metadb:combination-detail'
 
@@ -1700,12 +1700,12 @@ class OptionsOverrideViewSet(BaseViewSet):
     ctx_create = {
         'method': 'POST',
         'form_class': 'js-optionsoverride-form',
-        'title': _("Create a new options override"),
-        'submit_name': _("Create options override"),
+        'title': _("Create a new overriding option"),
+        'submit_name': _("Create overriding option"),
         'script': 'metadb/optionsoverride_form.js',
         'attributes': [
             {'name': 'argumentsgroups-url',
-             'value': reverse_lazy('metadb:argumentsgroup-list')},
+             'value': reverse_lazy('metadb:procargumentsgroup-list')},
             {'name': 'processors-url',
              'value': reverse_lazy('metadb:processor-list')},
             {'name': 'combinations-url',
@@ -1717,8 +1717,8 @@ class OptionsOverrideViewSet(BaseViewSet):
     ctx_update = {
         'method': 'PUT',
         'form_class': 'js-optionsoverride-form',
-        'title': _("Update options override"),
-        'submit_name': _("Update options override"),
+        'title': _("Update overriding option"),
+        'submit_name': _("Update overriding option"),
         'script': 'metadb/optionsoverride_form.js',
         'attributes': [
             {'name': 'argumentsgroups-url',
@@ -1955,7 +1955,7 @@ class ProcArgumentsGroupViewSet(BaseViewSet):
     serializer_class = ProcArgumentsGroupSerializer
     renderer_classes = [JSONRenderer, BrowsableAPIRenderer, TemplateHTMLRenderer]
     template_name = 'metadb/includes/rest_form.html'
-    options_template_name = 'metadb/hr/dropdown_list_options.html'
+    options_template_name = 'metadb/hr/dropdown_list_options_noblank.html'
     list_url = 'metadb:procargumentsgroup-list'
     action_url = 'metadb:procargumentsgroup-detail'
 
@@ -2018,7 +2018,7 @@ class ProcessorViewSet(BaseViewSet):
     serializer_class = ProcessorSerializer
     renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
     template_name = 'metadb/includes/processor_form.html'
-    options_template_name = 'metadb/hr/dropdown_list_options.html'
+    options_template_name = 'metadb/hr/dropdown_list_options_noblank.html'
     list_url = 'metadb:processor-list'
     action_url = 'metadb:processor-detail'
 
