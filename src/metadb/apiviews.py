@@ -198,7 +198,7 @@ class ArgumentsGroupViewSet(BaseViewSet):
     serializer_class = ArgumentsGroupSerializer
     renderer_classes = [JSONRenderer, BrowsableAPIRenderer, TemplateHTMLRenderer]
     template_name = 'metadb/includes/rest_form.html'
-    options_template_name = 'metadb/hr/dropdown_list_options.html'
+    options_template_name = 'metadb/hr/dropdown_list_options_noblank.html'
     list_url = 'metadb:argumentsgroup-list'
     action_url = 'metadb:argumentsgroup-detail'
 
@@ -899,7 +899,7 @@ class DataArgumentsGroupViewSet(BaseViewSet):
     serializer_class = DataArgumentsGroupSerializer
     renderer_classes = [JSONRenderer, BrowsableAPIRenderer, TemplateHTMLRenderer]
     template_name = 'metadb/includes/rest_form.html'
-    options_template_name = 'metadb/hr/dropdown_list_options.html'
+    options_template_name = 'metadb/hr/dropdown_list_options_noblank.html'
     list_url = 'metadb:dataargumentsgroup-list'
     action_url = 'metadb:dataargumentsgroup-detail'
 
