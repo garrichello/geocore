@@ -341,6 +341,30 @@ class ProcessorHasArgumentsRelatedField(ModifiedRelatedField):
     model = ProcessorHasArguments
 
 
+class ProcessorLightSerializer(serializers.HyperlinkedModelSerializer):
+    processori18n = ProcessorI18NSerializer(source='processori18n_set', label='')
+
+    class Meta:
+        model = Processor
+        fields = ['id', 'processori18n']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def to_representation(self, instance):
+        action = self.context['request'].META.get('HTTP_ACTION')
+        if action == 'options_list' or self.context['request'].GET.get('format') == 'html':
+            result = instance
+        else:
+            result = super().to_representation(instance)
+        return result
+
+
+class ProcessorLightRelatedField(ModifiedRelatedField):
+    serializer = ProcessorLightSerializer
+    model = Processor
+
+
 class ProcessorSerializer(serializers.HyperlinkedModelSerializer):
     dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:processor-detail',
                                                    read_only=True)
@@ -466,6 +490,22 @@ class ProcessorRelatedField(ModifiedRelatedField):
 
 
 class ArgumentsGroupHasProcessorSerializer(serializers.HyperlinkedModelSerializer):
+    qset = ArgumentsGroup.objects.all()
+    arguments_group = ArgumentsGroupRelatedField(queryset=qset)
+    qset = Processor.objects.all()
+    processor = ProcessorRelatedField(queryset=qset)
+
+    class Meta:
+        model = ArgumentsGroupHasProcessor
+        fields = ['id', 'arguments_group', 'processor']
+
+
+class ArgumentsGroupHasProcessorRelatedField(ModifiedRelatedField):
+    serializer = ArgumentsGroupHasProcessorSerializer
+    model = ArgumentsGroupHasProcessor
+
+
+class ArgumentsGroupHasProcessorFullSerializer(serializers.HyperlinkedModelSerializer):
     qset = Processor.objects.all()
     processor = ProcessorRelatedField(queryset=qset)
     qset = Combination.objects.all()
@@ -476,8 +516,8 @@ class ArgumentsGroupHasProcessorSerializer(serializers.HyperlinkedModelSerialize
         fields = ['id', 'processor', 'override_combination']
 
 
-class ArgumentsGroupHasProcessorRelatedField(ModifiedRelatedField):
-    serializer = ArgumentsGroupHasProcessorSerializer
+class ArgumentsGroupHasProcessorFullRelatedField(ModifiedRelatedField):
+    serializer = ArgumentsGroupHasProcessorFullSerializer
     model = ArgumentsGroupHasProcessor
 
 
@@ -485,7 +525,7 @@ class ArgumentsGroupFullSerializer(ArgumentsGroupSerializer):
     dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:fullargumentsgroup-detail',
                                                    read_only=True)
     qset = ArgumentsGroupHasProcessor.objects.all() #order_by('processori18n__name')
-    processor = ArgumentsGroupHasProcessorRelatedField(queryset=qset, many=True, source='argumentgroup_processors')
+    processor = ArgumentsGroupHasProcessorFullRelatedField(queryset=qset, many=True, source='argumentgroup_processors')
     qset = SpecificParameter.objects.all()
     specific_parameter = SpecificParameterRelatedField(queryset=qset, many=True)
 
@@ -543,14 +583,34 @@ class OptionsOverrideSerializer(serializers.HyperlinkedModelSerializer):
     dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:optionsoverride-detail',
                                                    read_only=True)
 
-    qset = ArgumentsGroupHasProcessor.objects.all()
-    arguments_group_has_processor = ArgumentsGroupHasProcessorRelatedField(queryset=qset)
+#    qset = ArgumentsGroupHasProcessor.objects.all()
+#    arguments_group_has_processor = ArgumentsGroupHasProcessorRelatedField(queryset=qset)
+    qset = ArgumentsGroup.objects.filter(argument_type__label='processor')
+    arguments_group = ArgumentsGroupRelatedField(queryset=qset, source='arguments_group_has_processor.arguments_group')
+    qset = Processor.objects.order_by('processori18n__name')
+    processor = ProcessorLightRelatedField(queryset=qset, source='arguments_group_has_processor.processor')
     qset = Combination.objects.all()
     combination = CombinationRelatedField(queryset=qset)
 
     class Meta:
         model = OptionsOverride
-        fields = ['id', 'dataurl', 'arguments_group_has_processor', 'combination']
+        fields = ['id', 'dataurl', 'arguments_group', 'processor', 'combination']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Arguments group
+        self.fields['arguments_group'].label = _('Arguments group')
+        self.fields['arguments_group'].style = {'template': 'metadb/custom_select.html'}
+        self.fields['arguments_group'].data_url = reverse('metadb:argumentsgroup-list')
+        # Processor
+        self.fields['processor'].label = _('Processor')
+        self.fields['processor'].style = {'template': 'metadb/custom_select.html'}
+        self.fields['processor'].data_url = reverse('metadb:processor-list')
+        # Combination
+        self.fields['combination'].label = _('Overriding combination')
+        self.fields['combination'].style = {'template': 'metadb/custom_select.html'}
+        self.fields['combination'].data_url = reverse('metadb:combination-list')
 
 
 class DataArgumentsGroupSerializer(ArgumentsGroupSerializer):
@@ -583,7 +643,7 @@ class ProcArgumentsGroupSerializer(ArgumentsGroupSerializer):
                                                    read_only=True)
     argument_type = ArgumentTypeRelatedField(read_only=True)
     qset = ArgumentsGroupHasProcessor.objects.all() #order_by('processori18n__name')
-    processor = ArgumentsGroupHasProcessorRelatedField(queryset=qset, many=True, source='argumentgroup_processors')
+    processor = ArgumentsGroupHasProcessorFullRelatedField(queryset=qset, many=True, source='argumentgroup_processors')
 
     class Meta:
         model = ArgumentsGroup
