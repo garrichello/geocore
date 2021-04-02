@@ -87,21 +87,21 @@ class ArgumentsGroupSerializer(serializers.HyperlinkedModelSerializer):
         return result
 
     def create(self, validated_data):
-        processors = validated_data.pop('processor')
-        specific_parameters = validated_data.pop('specific_parameter')
+#        processors = validated_data.pop('processor')
+#        specific_parameters = validated_data.pop('specific_parameter')
         instance = ArgumentsGroup.objects.create(**validated_data)
-        instance.processor.set(processors)
-        instance.specific_parameter.set(specific_parameters)
+#        instance.processor.set(processors)
+#        instance.specific_parameter.set(specific_parameters)
         return instance
 
     def update(self, instance, validated_data):
-        processors = validated_data.pop('processor')
-        specific_parameters = validated_data.pop('specific_parameter')
+#        processors = validated_data.pop('processor')
+#        specific_parameters = validated_data.pop('specific_parameter')
         instance.name = validated_data.get('name', instance.name)
         instance.description = validated_data.get('description', instance.description)
         instance.argument_type = validated_data.get('argument_type', instance.argument_type)
-        instance.processor.set(processors)
-        instance.specific_parameter.set(specific_parameters)
+#        instance.processor.set(processors)
+#        instance.specific_parameter.set(specific_parameters)
         instance.save()
         return instance
 
@@ -612,6 +612,25 @@ class OptionsOverrideSerializer(serializers.HyperlinkedModelSerializer):
         self.fields['combination'].style = {'template': 'metadb/custom_select.html'}
         self.fields['combination'].data_url = reverse('metadb:combination-list')
 
+    def create(self, validated_data):
+        aghp_val = validated_data.pop('arguments_group_has_processor')
+        aghp_instance = ArgumentsGroupHasProcessor.objects.create(
+            arguments_group=aghp_val['arguments_group'],
+            processor=aghp_val['processor'])
+        instance = OptionsOverride.objects.create(
+            arguments_group_has_processor = aghp_instance,
+            **validated_data)
+        return instance
+
+    def update(self, instance, validated_data):
+        specific_parameters = validated_data.pop('specific_parameter')
+        instance.name = validated_data.get('name', instance.name)
+        instance.description = validated_data.get('description', instance.description)
+        instance.argument_type = validated_data.get('argument_type', instance.argument_type)
+        instance.specific_parameter.set(specific_parameters)
+        instance.save()
+        return instance
+
 
 class DataArgumentsGroupSerializer(ArgumentsGroupSerializer):
     dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:dataargumentsgroup-detail',
@@ -631,6 +650,22 @@ class DataArgumentsGroupSerializer(ArgumentsGroupSerializer):
         self.fields['specific_parameter'].label = _('Specific parameter')
         self.fields['specific_parameter'].style = {'template': 'metadb/custom_select_multiple.html'}
         self.fields['specific_parameter'].data_url = reverse('metadb:specificparameter-list')
+
+    def create(self, validated_data):
+        specific_parameters = validated_data.pop('specific_parameter')
+        validated_data['argument_type_id'] = ArgumentType.objects.filter(label='data').get().id
+        instance = ArgumentsGroup.objects.create(**validated_data)
+        instance.specific_parameter.set(specific_parameters)
+        return instance
+
+    def update(self, instance, validated_data):
+        specific_parameters = validated_data.pop('specific_parameter')
+        instance.name = validated_data.get('name', instance.name)
+        instance.description = validated_data.get('description', instance.description)
+        instance.argument_type = validated_data.get('argument_type', instance.argument_type)
+        instance.specific_parameter.set(specific_parameters)
+        instance.save()
+        return instance
 
 
 class DataArgumentsGroupRelatedField(ModifiedRelatedField):
