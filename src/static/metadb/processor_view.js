@@ -8,7 +8,10 @@ processor_columns = [
                + '<span class="glyphicon glyphicon-pencil"></span></button></div>&nbsp;'
                + '<div><button type="button" class="btn btn-danger btn-sm js-delete-processor"'
                + `data-url="${processor_api_url}${row.id}">`
-               + '<span class="glyphicon glyphicon-trash"></span></button></div>';
+               + '<span class="glyphicon glyphicon-trash"></span></button></div>&nbsp;'
+               + '<div><button type="button" class="btn btn-info btn-sm js-info-processor"'
+               + `data-url="${processor_api_url}${row.id}">`
+               + '<span class="glyphicon glyphicon-info-sign"></span></button></div>';
     } },  // for buttons
     { 'data': 'id' },
     { 'data': 'is_visible' },
@@ -82,7 +85,7 @@ function format(data) {
 
 function showDetails(row) {
     var data = row.data();
-    
+
     $.ajax({
         type: "get",
         headers: {
@@ -160,23 +163,21 @@ $(document).ready( function () {
                 addUpdDelButtonHandlers.call(this, 'processor');
             });
             table.on('xhr.dt', set_header);
-            $('#processor').on('click', 'tr', (e) => {
-                if($(e.target).hasClass('dt-center')) {
-                    var tr = $(e.currentTarget);
-                    var row = table.row(tr);
-    
-                    if ( row.child.isShown() ) {
-                        // This row is already open - close it
-                        row.child.hide();
-                        tr.removeClass('shown');
-                    }
-                    else {
-                        // Open this row
-                        showDetails(row);
-                        tr.addClass('shown');
-                    }    
-                }
-            });
         }
+        $('#processor').on('click', '.js-info-processor', (e) => {
+            var tr = $(e.currentTarget).closest('tr');
+            var row = table.row(tr);
+
+            if ( row.child.isShown() ) {
+                // This row is already open - close it
+                row.child.hide();
+                tr.removeClass('shown');
+            }
+            else {
+                // Open this row
+                showDetails(row);
+                tr.addClass('shown');
+            }
+        });
     });
 })
