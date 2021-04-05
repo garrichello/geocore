@@ -1903,7 +1903,7 @@ class ParameterViewSet(BaseViewSet):
     table_headers = [
         {'type': 'head_none', 'caption': _('Id'), 'field': 'id'},
         {'type': 'head_select', 'caption': _('Is visible'), 'field': 'is_visible'},
-        {'type': 'head_text', 'caption': _('Accumulation mode'), 'field': 'accumulation_mode'},
+        {'type': 'head_text', 'caption': _('Accumulation mode'), 'field': 'accumulation_mode.name'},
         {'type': 'head_text', 'caption': _('Name'), 'field': 'parameteri18n.name'},
     ]
 
