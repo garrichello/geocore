@@ -11,7 +11,7 @@ processor_columns = [
                + '<span class="glyphicon glyphicon-trash"></span></button></div>&nbsp;'
                + '<div><button type="button" class="btn btn-info btn-sm js-info-processor"'
                + `data-url="${processor_api_url}${row.id}">`
-               + '<span class="glyphicon glyphicon-info-sign"></span></button></div>';
+               + '<span class="glyphicon glyphicon-chevron-down"></span></button></div>';
     } },  // for buttons
     { 'data': 'id' },
     { 'data': 'is_visible' },
@@ -165,16 +165,22 @@ $(document).ready( function () {
             table.on('xhr.dt', set_header);
         }
         $('#processor').on('click', '.js-info-processor', (e) => {
-            var tr = $(e.currentTarget).closest('tr');
+            var button = $(e.currentTarget);
+            var span
+            var tr = button.closest('tr');
             var row = table.row(tr);
 
             if ( row.child.isShown() ) {
                 // This row is already open - close it
+                button.find('.glyphicon').removeClass('glyphicon-chevron-up');
+                button.find('.glyphicon').addClass('glyphicon-chevron-down');
                 row.child.hide();
                 tr.removeClass('shown');
             }
             else {
                 // Open this row
+                button.find('.glyphicon').removeClass('glyphicon-chevron-down');
+                button.find('.glyphicon').addClass('glyphicon-chevron-up');
                 showDetails(row);
                 tr.addClass('shown');
             }
