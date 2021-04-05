@@ -1,212 +1,13 @@
-all_columns_defs = [
-    { className: ' dt-center', targets: '_all', }
-]
+"use strict";
 
-var collection_api_url = $('#tab-collection').attr('api-data-url')
+var all_columns_defs = [
+    { className: ' dt-center', targets: '_all' }
+];
 
-collection_columns = [
-    { 'render': function() { return null; } },  // For checkboxes
-    { 'render': function (data, type, row, meta) {
-        return '<div><button type="button" class="btn btn-warning btn-sm js-update-collection"'
-               + `data-url="${collection_api_url}${row.id}/">`
-               + '<span class="glyphicon glyphicon-pencil"></span></button></div>&nbsp;'
-               + '<div><button type="button" class="btn btn-danger btn-sm js-delete-collection"'
-               + `data-url="${collection_api_url}${row.id}/">`
-               + '<span class="glyphicon glyphicon-trash"></span></button></div>';
-    } },  // for buttons
-    { 'data': 'id' },
-    { 'data': 'label' },
-    { 'data': 'collectioni18n.name' },
-    { 'data': 'collectioni18n.description' },
-    { 'data': 'organization.organizationi18n.name' },
-    { 'data': 'organization.url' },
-    { 'data': 'url' },
-]
 
-collection_columnsDefs = [
-    { width: '20px', targets: 0, orderable: false, className: 'select-checkbox' }, // Select checkbox
-    { width: '45px', targets: 1, orderable: false, }, // Buttons
-    { width: '5%', targets: 2 },  // Id
-    { width: '11%', targets: 3 },  // Label
-    { width: '14%', targets: 4 },  // Name
-    { width: '20%', targets: 5 },  // Description
-    { width: '12%', targets: 6 },  // Organization
-    { width: '15%', targets: 7,  // Urganization URL
-      render: (data) => `<a href="${data}" target="_blank">${data}</a>`,
-    },
-    { width: '15%', targets: 8,  // URL
-      render: (data) => `<a href="${data}" target="_blank">${data}</a>`,
-    },
-]
 
-var dataset_api_url = $('#tab-dataset').attr('api-data-url');
 
-dataset_columns = [
-    { 'render': function() { return null; } }, // For checkboxes
-    { 'render': function (data, type, row, meta) {
-        return '<div><button type="button" class="btn btn-warning btn-sm js-update-dataset"'
-               + `data-url="${dataset_api_url}${row.id}/">`
-               + '<span class="glyphicon glyphicon-pencil"></span></button></div>&nbsp;'
-               + '<div><button type="button" class="btn btn-danger btn-sm js-delete-dataset"'
-               + `data-url="${dataset_api_url}${row.id}/">`
-               + '<span class="glyphicon glyphicon-trash"></span></button></div>';
-    } },  // for buttons
-    { 'data': 'id' },
-    { 'data': 'is_visible' },
-    { 'data': 'collection.label' },
-    { 'data': 'resolution.name' },
-    { 'data': 'scenario.name' },
-    { 'data': 'data_kind.name' },
-    { 'data': 'file_type.name' },
-    { 'data': 'time_start' },
-    { 'data': 'time_end' },
-    { 'data': 'description' },
-]
 
-dataset_columnsDefs = [
-    { width: '20px', targets: 0, orderable: false, className: 'select-checkbox' },  // Select checkbox
-    { width: '45px', targets: 1, orderable: false, },  // Buttons
-    { width: '5%', targets: 2 },  // Id
-    { width: '45px', targets: 3,   // Is visible
-      render: (data) => {
-          return data == 0 ? "" : '<span class="glyphicon glyphicon-ok"></span>';
-      }, 
-    },
-    { width: '11%', targets: 4 },  // Collection label
-    { width: '10%', targets: 5 },  // Resolution
-    { width: '15%', targets: 6 },  // Scenario
-    { width: '7%', targets: 7 },   //Data kind
-    { width: '7%', targets: 8 },   // File type
-    { width: '8%', targets: 9 },  // Time start
-    { width: '8%', targets: 10 },  // Time end
-    { width: '15%', targets: 11 },  // Description
-]
-
-var specpar_api_url = $('#tab-specpar').attr('api-data-url');
-
-specpar_columns = [
-    { 'render': function() { return null; } }, // For checkboxes
-    { 'render': function (data, type, row, meta) {
-        return '<div><button type="button" class="btn btn-warning btn-sm js-update-specpar"'
-               + `data-url="${specpar_api_url}${row.id}">`
-               + '<span class="glyphicon glyphicon-pencil"></span></button></div>&nbsp;'
-               + '<div><button type="button" class="btn btn-danger btn-sm js-delete-specpar"'
-               + `data-url="${specpar_api_url}${row.id}">`
-               + '<span class="glyphicon glyphicon-trash"></span></button></div>';
-    } },  // for buttons
-    { 'data': 'id' },
-    { 'data': 'parameter.is_visible' },
-    { 'data': 'parameter.parameteri18n.name' },
-    { 'data': 'parameter.accumulation_mode.name' },
-    { 'data': 'time_step.timestepi18n.name' },
-    { 'data': 'time_step.label' },
-    { 'data': 'time_step.subpath2' },
-    { 'data': 'levels_group.units.unitsi18n.name' },
-    { 'data': 'levels_group.description' },
-    { 'data': function(data, type, row, meta) {
-        levels = Array();
-        data.levels_group.levels.forEach(element => {
-            levels.push(element.leveli18n.name);
-        });
-        return levels.join();
-    } },
-]
-
-specpar_columnsDefs = [
-    { width: '20px', targets: 0, orderable: false, className: 'select-checkbox' },  // Select checkbox
-    { width: '45px', targets: 1, orderable: false, },  // Buttons
-    { width: '25px', targets: 2 },  // Id
-    { width: '45px', targets: 3,   // Is visible
-      render: (data) => {
-          return data == 0 ? "" : '<span class="glyphicon glyphicon-ok"></span>';
-      }, 
-    },
-    { width: '95px', targets: 4 },   // Parameter name
-    { width: '95px', targets: 5 },   // Accumulation mode
-    { width: '95px', targets: 6 },   // Time step name
-    { width: '95px', targets: 7 },   // Time step label
-    { width: '95px', targets: 8 },   // Time step subpath
-    { width: '95px', targets: 9 },   // Levels group
-    { width: '95px', targets: 10 },  // Levels group description
-    { width: '175px', targets: 11 },  // Levels
-]
-
-var data_api_url = $('#tab-data').attr('api-data-url');
-
-data_columns = [
-    { 'render': function() { return null; } }, // For checkboxes
-    { 'render': function (data, type, row, meta) {
-        return '<div><button type="button" class="btn btn-warning btn-sm js-update-data"'
-               + `data-url="${data_api_url}${row.id}">`
-               + '<span class="glyphicon glyphicon-pencil"></span></button></div>&nbsp;'
-               + '<div><button type="button" class="btn btn-danger btn-sm js-delete-data"'
-               + `data-url="${data_api_url}${row.id}">`
-               + '<span class="glyphicon glyphicon-trash"></span></button></div>';
-    } },
-    { 'data': 'id' },
-    { 'data': 'dataset.is_visible' },
-    { 'data': 'dataset.collection.label' },
-    { 'data': 'dataset.resolution.name' },
-    { 'data': 'dataset.scenario.name' },
-    { 'data': 'parameter.is_visible' },
-    { 'data': 'parameter.parameteri18n.name' },
-    { 'data': 'time_step.timestepi18n.name' },
-    { 'data': 'levels_group.description' },
-    { 'data': function(data, type, row, meta) {
-        levels = Array();
-        data.levels_group.levels.forEach(element => {
-            levels.push(element.leveli18n.name);
-        });
-        return levels.join();
-    } },
-    { 'data': 'levels_variable.name' },
-    { 'data': 'variable.name' },
-    { 'data': 'units.unitsi18n.name' },
-    { 'data': 'property.label' },
-    { 'data': 'property_value.label' },
-    { 'data': 'root_dir.name' },
-    { 'data': 'dataset.scenario.subpath0' },
-    { 'data': 'dataset.resolution.subpath1' },
-    { 'data': 'time_step.subpath2' },
-    { 'data': 'file.name_pattern' },
-    { 'data': 'scale' },
-    { 'data': 'offset' },
-]
-
-data_columnsDefs = [
-    { width: '20px', targets: 0, orderable: false, className: 'select-checkbox' },  // Select checkbox
-    { width: '45px', targets: 1, orderable: false, },  // Buttons
-    { width: '25px', targets: 2 },    // Id
-    { width: '55px', targets: 3,   // Is dataset visible
-      render: (data) => {
-          return data == 0 ? "" : '<span class="glyphicon glyphicon-ok"></span>';
-      }, 
-    },
-    { width: '95px', targets: 4, },   // Collection label
-    { width: '75px', targets: 5 },    // Resolution
-    { width: '95px', targets: 6 },    // Scenario
-    { width: '65px', targets: 7,   // Is parameter visible
-      render: (data) => {
-          return data == 0 ? "" : '<span class="glyphicon glyphicon-ok"></span>';
-      }, 
-    },
-    { width: '95px', targets: 8 },    // Parameter
-    { width: '75px', targets: 9 },    // Time step
-    { width: '95px', targets: 10 },   // Levels group
-    { width: '175px', targets: 11 },  // Levels names
-    { width: '55px', targets: 12 },   // Levels variable
-    { width: '95px', targets: 13 },    // Variable name
-    { width: '55px', targets: 14 },   // Units
-    { width: '85px', targets: 15 },   // Property label
-    { width: '85px', targets: 16 },   // Property value
-    { width: '165px', targets: 17 },   // Root dir
-    { width: '75px', targets: 18 },   // Subpath0
-    { width: '75px', targets: 19 },   // Subpath1
-    { width: '75px', targets: 20 },   // Subpath2
-    { width: '165px', targets: 21 },  // File pattern
-    { width: '55px', targets: 22 },   // Scale
-    { width: '55px', targets: 23 },   // Offset
-]
 
 /*var edge_api_url = $('#tab-edge').attr('api-data-url')
 
@@ -257,12 +58,12 @@ edge_columnsDefs = [
     { width: '75px', targets: 16 },   // Units
 ]*/
 
-commonOptions = {
+var commonOptions = {
     initComplete: postInit,
     sDom: 'tri',
     orderCellsTop: true,
     paginate: false,
-    select: {style: 'multi', selector: 'td:first-child',},
+    select: {style: 'multi', selector: 'td:first-child'},
     scrollY: 400,
     scrollX: true,
     scrollCollapse: true,
@@ -273,16 +74,16 @@ commonOptions = {
     language: {
         'loadingRecords': '&nbsp',
         'processing': '<div class="spinner"></div>'
-    } 
+    }
 };
 
-function make_empty_row(table) {  
+function make_empty_row(table) {
     // Add an empty row for filters in the table header
     var n_col = table.columns().header().length; // Number of columns in table
     var empty_row = $('<tr></tr>');
-    for (var i = 0; i < n_col; i++) {
-        var classList = $(table.table().header().rows[0].cells[i]).attr('class');
-        var th = $('<th></th>');
+    for (let i = 0; i < n_col; i+=1) {
+        let classList = $(table.table().header().rows[0].cells[i]).attr('class');
+        let th = $('<th></th>');
         th.addClass(classList).removeClass('sorting').removeClass('sorting_asc');
         empty_row.append(th);
     };
@@ -293,7 +94,7 @@ function add_filters(that) {
     // Add filters to the table header
     var table = that.api();
     var second_header = make_empty_row(table);
-    table_id = that.attr('id');
+    var table_id = that.attr('id');
     $( table.table().header() ).append(second_header);
 
     // Loop over columns and add filters to corresponding cells in the second header row
@@ -342,7 +143,7 @@ function add_filters(that) {
             input_group.append(select);
             th.append( input_group.append($('<span class="input-group-btn"></span>').append(clearButton)) );
         };
-        
+
         // Add filter as an input text field
         if (th.hasClass('head_text')) {
             var text = $(`<input class="form-control" type="text" id="text_${table_id}_${id}">`).appendTo(input_group);
@@ -362,7 +163,7 @@ function add_filters(that) {
     } );
 }
 
-function postInit() {  
+function postInit() {
     // Called after a data table was initialized. Executed for each table!
     add_filters(this);  // Add add search filters into the table header.
 };
@@ -389,60 +190,8 @@ $(document).ready( function () {
     $('a[data-toggle="tab"]').on( 'shown.bs.tab', function() {
         columnsAdjust();
     } );
-    $(window).resize(function () { 
+    $(window).resize(function () {
         columnsAdjust();
-    });
-
-    // Create Collections table
-    var collectionOptions = $.extend(true, {}, commonOptions);
-    collectionOptions["columnDefs"] = collection_columnsDefs.concat(all_columns_defs);
-    collectionOptions["columns"] = collection_columns;
-    collectionOptions["ajax"] = { 'url': collection_api_url, 'type': 'GET', 'dataSrc': 'data' };
-    $('#collection').DataTable( collectionOptions ).on('draw', function() {
-        addUpdDelButtonHandlers.call(this, 'collection');
-    });
-    $('#collection').DataTable().on('xhr.dt', set_header);
-
-    // Create Datasets table
-    var datasetOptions = $.extend(true, {}, commonOptions);
-    datasetOptions["columnDefs"] = dataset_columnsDefs.concat(all_columns_defs),
-    datasetOptions["columns"] = dataset_columns;
-    datasetOptions["ajax"] = { 'url': dataset_api_url, 'type': 'GET', 'dataSrc': 'data' };
-    $('#main-tabs a[href="#tab-dataset"]').on('click', function() {
-        if (!$.fn.DataTable.isDataTable('#dataset')) {
-            $('#dataset').DataTable( datasetOptions ).on('draw', function() {
-                addUpdDelButtonHandlers.call(this, 'dataset');
-            });
-            $('#dataset').DataTable().on('xhr.dt', set_header);
-        }
-    });
-
-    // Create Specific parameter table
-    var specparOptions = $.extend(true, {}, commonOptions);
-    specparOptions["columnDefs"] = specpar_columnsDefs.concat(all_columns_defs),
-    specparOptions["columns"] = specpar_columns;
-    specparOptions["ajax"] = { 'url': specpar_api_url, 'type': 'GET', 'dataSrc': 'data' };
-    $('#main-tabs a[href="#tab-specpar"]').on('click', function() {
-        if (!$.fn.DataTable.isDataTable('#specpar')) {
-            $('#specpar').DataTable( specparOptions ).on('draw', function() {
-                addUpdDelButtonHandlers.call(this, 'specpar');
-            });
-            $('#specpar').DataTable().on('xhr.dt', set_header);
-        }
-    });
-
-    // Create Data table
-    var dataOptions = $.extend(true, {}, commonOptions);  
-    dataOptions["columnDefs"] = data_columnsDefs.concat(all_columns_defs),
-    dataOptions["columns"] = data_columns;
-    dataOptions["ajax"] = { 'url': data_api_url, 'type': 'GET', 'dataSrc': 'data' };
-    $('#main-tabs a[href="#tab-data"]').on('click', function() {
-        if (!$.fn.DataTable.isDataTable('#data')) {
-            $('#data').DataTable( dataOptions ).on('draw', function() {
-                addUpdDelButtonHandlers.call(this, 'data');
-            });
-            $('#data').DataTable().on('xhr.dt', set_header);
-        }
     });
 
     // Create Edge table
@@ -482,7 +231,7 @@ $(document).ready( function () {
         language: {
             'loadingRecords': '&nbsp',
             'processing': '<div class="spinner"></div>'
-        } 
+        }
     };
     var other_api_url;
 
