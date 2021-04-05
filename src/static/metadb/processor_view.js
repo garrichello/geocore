@@ -20,7 +20,7 @@ processor_columns = [
     { 'data': 'processori18n.reference' },
     { 'data': 'conveyor.label' },
     { 'data': (data, type, row, meta) => {
-        labels = Array();
+        var labels = Array();
         data.settings.forEach(element => {
             labels.push(element.label);
         });
