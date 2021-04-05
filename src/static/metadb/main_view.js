@@ -4,60 +4,6 @@ var all_columns_defs = [
     { className: ' dt-center', targets: '_all' }
 ];
 
-
-
-
-
-
-/*var edge_api_url = $('#tab-edge').attr('api-data-url')
-
-edge_columns = [
-    { 'render': function() { return null; } },  // For checkboxes
-    { 'render': function (data, type, row, meta) {
-        return '<div><button type="button" class="btn btn-warning btn-sm js-update-edge"'
-               + `data-url="${edge_api_url}${row.id}">`
-               + '<span class="glyphicon glyphicon-pencil"></span></button></div>&nbsp;'
-               + '<div><button type="button" class="btn btn-danger btn-sm js-delete-edge"'
-               + `data-url="${edge_api_url}${row.id}">`
-               + '<span class="glyphicon glyphicon-trash"></span></button></div>';
-    } },  // for buttons
-    { 'data': 'conveyor.id' },
-    { 'data': 'id' },
-    { 'data': 'from_vertex.id' },
-    { 'data': 'from_vertex.computing_module.name' },
-    { 'data': 'from_vertex.condition_combination.option.label'},
-    { 'data': 'from_vertex.condition_combination.option_value.label'},
-    { 'data': 'from_output' },
-    { 'data': 'to_vertex.id' },
-    { 'data': 'to_vertex.computing_module.name' },
-    { 'data': 'to_vertex.condition_combination.option.label'},
-    { 'data': 'to_vertex.condition_combination.option_value.label'},
-    { 'data': 'to_input' },
-    { 'data': 'data_variable.label' },
-    { 'data': 'data_variable.description' },
-    { 'data': 'data_variable.units.unitsi18n.name' },
-]
-
-edge_columnsDefs = [
-    { width: '20px', targets: 0, orderable: false, className: 'select-checkbox' }, // Select checkbox
-    { width: '45px', targets: 1, orderable: false, }, // Buttons
-    { width: '65px', targets: 2, },   // edge id
-    { width: '55px', targets: 3 },    // Edge id
-    { width: '55px', targets: 4 },    // From vertex id
-    { width: '115px', targets: 5 },   // From module
-    { width: '75px', targets: 6 },    // From option
-    { width: '75px', targets: 7 },    // From option value
-    { width: '55px', targets: 8 },    // From output
-    { width: '55px', targets: 9 },    // To vertex id
-    { width: '115px', targets: 10 },  // To module
-    { width: '75px', targets: 11 },   // To option
-    { width: '75px', targets: 12 },   // To option value
-    { width: '55px', targets: 13 },   // To input
-    { width: '135px', targets: 14 },   // Data label
-    { width: '135px', targets: 15 },   // Data description
-    { width: '75px', targets: 16 },   // Units
-]*/
-
 var commonOptions = {
     initComplete: postInit,
     sDom: 'tri',
@@ -186,156 +132,26 @@ function set_header(e, settings, json, xhr) {
     }
 }
 
+function renderButtons(row, url, showInfoBtn=false) {
+    var infoButton = `&nbsp;<div><button type="button" class="btn btn-info btn-sm js-info"
+                      data-url="${url}${row.id}">
+                      <span class="glyphicon glyphicon-chevron-down"></span></button></div>`;
+
+    return `<div><button type="button" class="btn btn-warning btn-sm js-update"
+            data-url="${url}${row.id}/">
+            <span class="glyphicon glyphicon-pencil"></span></button></div>&nbsp;`+
+           `<div><button type="button" class="btn btn-danger btn-sm js-delete"
+            data-url="${url}${row.id}/">
+            <span class="glyphicon glyphicon-trash"></span></button></div>`+ 
+            (showInfoBtn ? infoButton : '');
+}
+
 $(document).ready( function () {
     $('a[data-toggle="tab"]').on( 'shown.bs.tab', function() {
         columnsAdjust();
     } );
     $(window).resize(function () {
         columnsAdjust();
-    });
-
-    // Create Edge table
-/*    var edgeOptions = $.extend(true, {}, commonOptions);
-    edgeOptions["columnDefs"] = edge_columnsDefs.concat(all_columns_defs);
-    edgeOptions["columns"] = edge_columns;
-    edgeOptions["ajax"] = { 'url': edge_api_url, 'type': 'GET', 'dataSrc': 'data' };
-    $('#main-tabs a[href="#tab-edge"]').on('click', function() {
-        if (!$.fn.DataTable.isDataTable('#edge')) {
-            $('#edge').DataTable( edgeOptions ).on('draw', function() {
-                addUpdDelButtonHandlers.call(this, 'edge');
-            });
-            $('#edge').DataTable().on('xhr.dt', set_header);
-        }
-    });
-*/
-    // Create Other tables
-    function prePostInit(table, headers) {
-        instance = table.settings()[0].oInstance;
-        for (var i = 2; i < table.columns().header().length; i++) {
-            $(table.columns(i).header()).addClass(headers[i-2].type);
-        }
-        postInit.call(instance);
-    }
-
-    var otherOptions = {
-        sDom: 'tri',
-        orderCellsTop: true,
-        paginate: false,
-        select: {style: 'multi', selector: 'td:first-child',},
-        scrollY: 400,
-        scrollX: true,
-        scrollCollapse: true,
-        order: [[ 2, 'asc' ]],
-        processing: true,
-        autoWidth: true,
-        language: {
-            'loadingRecords': '&nbsp',
-            'processing': '<div class="spinner"></div>'
-        }
-    };
-    var other_api_url;
-
-    var dwell = function(dict, path) {
-        var val = dict;
-        chunks = path.split('.');
-        $.each(chunks, (i, chunk) => {
-            val = val[chunk];
-        });
-        return val;
-    }
-
-    var delister = function(data, field_idx) {
-        // Here we extract items from an Array of dictionaries came from the server as a JSON.
-        // In rare cases a field contains a LIST of structures (dictionaries) with items.
-        // Items can be borrowed deep in the nested dictionary structure.
-        // subfield field in the JSON helps to reach for these items.
-        $.each(data.data, (i, e) => {  // loop over rows
-            $.each(e, (v, k) => {  // loop over columns
-                if (Array.isArray(k)) {  // if a cell contains an Array
-                    var items = Array();  // here we will store the Array items
-                    $.each(data.data[i][v], (l, m) => {  // loop over items
-                        items.push(dwell(m, data.headers[field_idx[v]].subfield));  // group
-                    });
-                    if (items.length == 0) {  // Empty array replaced with '-'-value
-                        items[0] = '-';
-                    };
-                    data.data[i][v] = items.join(';<br>'); // replace original dict with the array
-                };
-            })
-        });
-    }
-
-    var create_dt = function(data, data_url) {
-        if ($.fn.DataTable.isDataTable('#other')) {
-            $('#other').DataTable().destroy();
-            $('#other').empty();
-            $('#other').off();
-        }
-        var columns = [
-            { 'render': function() { return null; } },  // For checkboxes
-            { 'render': function (data, type, row, meta) {
-                return '<div><button type="button" class="btn btn-warning btn-sm js-update-other"'
-                       + `data-url="${other_api_url}${row.id}">`
-                       + '<span class="glyphicon glyphicon-pencil"></span></button></div>&nbsp;'
-                       + '<div><button type="button" class="btn btn-danger btn-sm js-delete-other"'
-                       + `data-url="${other_api_url}${row.id}">`
-                       + '<span class="glyphicon glyphicon-trash"></span></button></div>';
-            } },  // for buttons
-        ];
-        var field_idx = [];
-        $.each(data.headers, function (i, v) {
-            columns.push({data: v.field, title: v.caption}); // describe columns headers
-            field_idx[v.field] = i;  // map field name to its column position
-        });
-        delister(data, field_idx);
-        otherOptions['data'] = data.data;
-        otherOptions['columns'] = columns;
-        otherOptions['columnDefs'] = [
-            { width: 20, targets: 0, orderable: false, className: 'select-checkbox' }, // Select checkbox
-            { width: 45, targets: 1, orderable: false, }, // Buttons
-        ]
-        var odt = $('#other').DataTable( otherOptions );
-        prePostInit(odt, data.headers);
-        odt.on('draw', function() {
-            addUpdDelButtonHandlers.call(this, 'other');
-        });
-        odt.on('processing', function(e, settings, procesing) {
-            if (typeof processing !== 'undefined') {
-                $('#other_processing').css( 'display', processing ? 'block' : 'none' );
-            };
-        })
-        odt.on('xhr', (e, settings, json, xhr) => {
-            delister(json, field_idx);
-        })
-        addUpdDelButtonHandlers('other');
-        odt.ajax.url(data_url);
-    }
-
-    var get_data = function(data_url) {
-        $.ajax({
-            url: data_url,
-            dataType: 'json',
-            beforeSend: function() {
-                $('#other_processing').show();
-            },
-            success: function(data) {
-                create_dt(data, data_url);
-                $('#other_processing').hide();
-            }
-        });
-    }
-
-    // Add button
-    $('.js-data-choice').click(function() {
-        other_api_url = $(this).attr('api-data-url');
-        get_data.call(this, other_api_url);
-        $('#create-other-btn').attr('disabled', false);
-        $('#create-other-btn').attr('data-url', $(this).attr('create-data-url'));
-    });
-
-    // Other tab
-    $('#main-tabs a[href="#tab-other"]').on('click', function() {
-        $('.js-data-choice[checked=checked]').trigger('click');
     });
 
 } );

@@ -123,8 +123,8 @@ $(function() {
         // Buttons should exist at the moment of execution!
     
         // Update button
-        $(`.js-update-${tab_name}`).off('click');
-        $(`.js-update-${tab_name}`).click(function() {
+        $(`.js-update`).off('click');
+        $(`.js-update`).click(function() {
             var dialog_id = $(this).closest('div.tab-pane').attr('dialog-id');
             var modal_id = loadForm2.call(this, 'update', dialog_id);
             $(modal_id).on('hidden.bs.modal', function() {
@@ -132,8 +132,8 @@ $(function() {
             });  
         });
         // Delete button
-        $(`.js-delete-${tab_name}`).off('click');
-        $(`.js-delete-${tab_name}`).click(function() { 
+        $(`.js-delete`).off('click');
+        $(`.js-delete`).click(function() { 
             var modal_id = loadForm2.call(this, 'delete');
             $(modal_id).on('hidden.bs.modal', function() {
                 $(modal_id).remove();  // Keep DOM clean!
