@@ -81,7 +81,7 @@ $(document).ready( function () {
                 $('#processor_processing').hide();        },
             success: (data) => {
                 var settingsText = '';
-                data.data.settings.forEach(setting => {
+                data.data.settings.forEach(function(setting) {
                     settingsText += '<tr><td>'+setting.label+' = { ';
                     var combinationsText = Array();
                     setting.combinations.forEach(element => {
@@ -98,18 +98,18 @@ $(document).ready( function () {
                 data.data.arguments.sort((a, b) => {
                     return a.argument_position - b.argument_position;
                 })
-                data.data.arguments.forEach(argument => {
+                data.data.arguments.forEach(function(argument) {
                     argumentsText += '<tr><td> Input '+argument.argument_position+': '+argument.arguments_group.name+
                                      ' ('+argument.arguments_group.argument_type.label+') = [ ';
                     var specparsText = Array();
-                    argument.arguments_group.specific_parameter.forEach(specpar => {
-                        var text = specpar.parameter.parameteri18n.name+' every '+
-                                   specpar.time_step.timestepi18n.name+' at '+
+                    argument.arguments_group.specific_parameter.forEach(function(specpar) {
+                        var text = specpar.parameter.parameteri18n.name+' / '+
+                                   specpar.time_step.timestepi18n.name+' @ '+
                                    specpar.levels_group.description;
                         specparsText.push(text);
                     });
                     var processorsText = Array();
-                    argument.arguments_group.processor.forEach(processor => {
+                    argument.arguments_group.processor.forEach(function(processor) {
                         var text = processor.processor.processori18n.name;
                         processorsText.push(text);
                     });

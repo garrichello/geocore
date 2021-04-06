@@ -4,7 +4,7 @@ $(document).ready( function () {
 
     var data_columns = [
         {'render': function() { return null; }}, // For checkboxes
-        {'render': (data, type, row, meta) => {
+        {'render': function(data, type, row, meta) {
             return renderButtons(row, apiURL)
         }},  // for buttons
         {'data': 'id'},
@@ -18,9 +18,7 @@ $(document).ready( function () {
         {'data': 'levels_group.description'},
         {'data': function(data, type, row, meta) {
             var levels = [];
-            data.levels_group.levels.forEach((element) => {
-                levels.push(element.leveli18n.name);
-            });
+            data.levels_group.levels.forEach((element) => levels.push(element.leveli18n.name));
             return levels.join();
         }},
         {'data': 'levels_variable.name'},
@@ -42,19 +40,15 @@ $(document).ready( function () {
         { width: '45px', targets: 1, orderable: false },  // Buttons
         { width: '25px', targets: 2 },    // Id
         { width: '55px', targets: 3,   // Is dataset visible
-          render: (data) => {
-              return data == 0 ? "" : '<span class="glyphicon glyphicon-ok"></span>';
-          }
+          render: (data) => data == 0 ? "" : '<span class="glyphicon glyphicon-ok"></span>'
         },
         { width: '95px', targets: 4 },   // Collection label
         { width: '75px', targets: 5 },    // Resolution
         { width: '95px', targets: 6 },    // Scenario
         { width: '65px', targets: 7,   // Is parameter visible
-          render: (data) => {
-              return data == 0 ? "" : '<span class="glyphicon glyphicon-ok"></span>';
-          }
+          render: (data) => data == 0 ? "" : '<span class="glyphicon glyphicon-ok"></span>'
         },
-        { width: '95px', targets: 8 },    // Parameter
+        { width: '195px', targets: 8 },    // Parameter
         { width: '75px', targets: 9 },    // Time step
         { width: '95px', targets: 10 },   // Levels group
         { width: '175px', targets: 11 },  // Levels names
@@ -78,9 +72,7 @@ $(document).ready( function () {
     dataOptions["ajax"] = { 'url': apiURL, 'type': 'GET', 'dataSrc': 'data' };
     $('#main-tabs a[href="#tab-data"]').on('click', function() {
         if (!$.fn.DataTable.isDataTable('#data')) {
-            $('#data').DataTable( dataOptions ).on('draw', function() {
-                addUpdDelButtonHandlers.call(this, 'data');
-            });
+            $('#data').DataTable( dataOptions ).on('draw', () => addUpdDelButtonHandlers.call(this, 'data'));
             $('#data').DataTable().on('xhr.dt', set_header);
         }
     });

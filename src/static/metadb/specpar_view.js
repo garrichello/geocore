@@ -4,7 +4,7 @@ $(document).ready( function () {
 
     var specpar_columns = [
         {'render': function() { return null; }}, // For checkboxes
-        {'render': (data, type, row, meta) => {
+        {'render': function(data, type, row, meta) {
             return renderButtons(row, apiURL)
         }},  // for buttons
         {'data': 'id'},
@@ -30,15 +30,15 @@ $(document).ready( function () {
         { width: '45px', targets: 1, orderable: false },  // Buttons
         { width: '25px', targets: 2 },  // Id
         { width: '45px', targets: 3,   // Is visible
-          render: (data) => {
+          render: function(data) {
               return data == 0 ? "" : '<span class="glyphicon glyphicon-ok"></span>';
           }
         },
-        { width: '95px', targets: 4 },   // Parameter name
+        { width: '195px', targets: 4 },   // Parameter name
         { width: '95px', targets: 5 },   // Accumulation mode
         { width: '95px', targets: 6 },   // Time step name
-        { width: '95px', targets: 7 },   // Time step label
-        { width: '95px', targets: 8 },   // Time step subpath
+        { width: '55px', targets: 7 },   // Time step label
+        { width: '75px', targets: 8 },   // Time step subpath
         { width: '95px', targets: 9 },   // Levels group
         { width: '95px', targets: 10 },  // Levels group description
         { width: '175px', targets: 11 }  // Levels
