@@ -1342,25 +1342,25 @@ class FileViewSet(BaseViewSet):
     ctx_create = {
         'method': 'POST',
         'form_class': 'js-file-form',
-        'title': _("Create a new file"),
-        'submit_name': _("Create file"),
+        'title': _("Create a new file name pattern"),
+        'submit_name': _("Create file name pattern"),
         'style': {'template_pack': 'rest_framework/vertical/'}
     }
 
     ctx_update = {
         'method': 'PUT',
         'form_class': 'js-file-form',
-        'title': _("Update file"),
-        'submit_name': _("Update file"),
+        'title': _("Update file name pattern"),
+        'submit_name': _("Update file name pattern"),
         'style': {'template_pack': 'rest_framework/vertical/'}
     }
 
     ctx_delete = {
         'method': 'DELETE',
         'form_class': 'js-file-delete-form',
-        'title': _('Confirm file delete'),
-        'text': _('Are you sure you want to delete the file'),
-        'submit_name': _('Delete file'),
+        'title': _('Confirm file name pattern delete'),
+        'text': _('Are you sure you want to delete the file name pattern'),
+        'submit_name': _('Delete file name pattern'),
         'style': {'template_pack': 'rest_framework/vertical/'}
     }
 
