@@ -14,7 +14,7 @@ var commonOptions = {
     scrollY: 400,
     scrollX: true,
     scrollCollapse: true,
-    order: [[ 2, 'asc' ]],
+    order: [[ 2, 'dsc' ]],
     autoWidth: false,
     deferRender: true,
     processing: true,

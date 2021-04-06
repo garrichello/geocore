@@ -54,7 +54,7 @@ $(document).ready( function () {
     conveyorOptions.columnDefs = conveyor_columnsDefs.concat(all_columns_defs);
     conveyorOptions.columns = conveyor_columns;
     conveyorOptions.select = {style: 'single'};
-    conveyorOptions.order = [[ 1, 'asc' ]];
+    conveyorOptions.order = [[ 1, 'dsc' ]];
     conveyorOptions.ajax = { 'url': apiURL, 'type': 'GET', 'dataSrc': 'data' };
     $('#main-tabs a[href="#tab-conveyor"]').on('click', function() {
         if (!$.fn.DataTable.isDataTable('#conveyor')) {
