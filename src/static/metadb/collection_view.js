@@ -1,12 +1,12 @@
 $(document).ready( function () {
     // Create Collections table
     var apiURL = $('#tab-collection').attr('api-data-url');
-    
+
     var collection_columns = [
-        {'render': () => {
+        {'render': function() {
             return null;
         } },  // For checkboxes
-        {'render': (data, type, row, meta) => {
+        {'render': function(data, type, row, meta) {
             return renderButtons(row, apiURL)
         }},  // for buttons
         {'data': 'id'},
@@ -17,7 +17,7 @@ $(document).ready( function () {
         {'data': 'organization.url'},
         {'data': 'url'}
     ];
-    
+
     var collection_columnsDefs = [
         {width: '20px', targets: 0, orderable: false, className: 'select-checkbox'}, // Select checkbox
         {width: '45px', targets: 1, orderable: false}, // Buttons

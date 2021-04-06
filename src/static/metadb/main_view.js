@@ -1,3 +1,4 @@
+/*jslint es6 */
 "use strict";
 
 var all_columns_defs = [
@@ -25,10 +26,9 @@ var commonOptions = {
 
 function make_empty_row(table) {
     // Add an empty row for filters in the table header
-    var n_col = table.columns().header().length; // Number of columns in table
     var empty_row = $('<tr></tr>');
-    for (let i = 0; i < n_col; i+=1) {
-        let classList = $(table.table().header().rows[0].cells[i]).attr('class');
+    for (var cell of table.table().header().rows[0].cells) {
+        let classList = $(cell).attr('class');
         let th = $('<th></th>');
         th.addClass(classList).removeClass('sorting').removeClass('sorting_asc');
         empty_row.append(th);
@@ -142,7 +142,7 @@ function renderButtons(row, url, showInfoBtn=false) {
             <span class="glyphicon glyphicon-pencil"></span></button></div>&nbsp;`+
            `<div><button type="button" class="btn btn-danger btn-sm js-delete"
             data-url="${url}${row.id}/">
-            <span class="glyphicon glyphicon-trash"></span></button></div>`+ 
+            <span class="glyphicon glyphicon-trash"></span></button></div>`+
             (showInfoBtn ? infoButton : '');
 }
 
