@@ -9,7 +9,7 @@ $(document).ready( function () {
         scrollY: 400,
         scrollX: true,
         scrollCollapse: true,
-        order: [[ 2, 'asc' ]],
+        order: [[ 2, 'dsc' ]],
         processing: true,
         autoWidth: true,
         language: {
