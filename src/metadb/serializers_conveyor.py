@@ -202,13 +202,17 @@ class ConditionCombinationSerializer(serializers.HyperlinkedModelSerializer):
     option = OptionRelatedField(queryset=qset)
     qset = OptionValue.objects.order_by('label')
     option_value = OptionValueRelatedField(queryset=qset)
+    string = serializers.SerializerMethodField()
 
     class Meta:
         model = Combination
-        fields = ['id', 'dataurl', 'option', 'option_value']
+        fields = ['id', 'dataurl', 'string', 'option', 'option_value']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+    def get_string(self, obj):
+        return obj.__str__()
 
 
 class ConditionCombinationRelatedField(ModifiedRelatedField):
