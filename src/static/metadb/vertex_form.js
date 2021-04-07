@@ -10,7 +10,6 @@ $(function() {
                 loadOptions.call( this, vertex_form_class_name, 'id_computing_module',
                     'computingmodules-url', form_data['name']
                 );
-                console.log(form_data['name']);
             };
             if ($('.js-combination-form').length) {
                 var form_data = mapFormData('.js-combination-form');  // Get combination fields
