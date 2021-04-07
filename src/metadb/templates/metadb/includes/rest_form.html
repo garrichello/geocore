@@ -16,6 +16,13 @@
 
     <div class="modal-body">
         {% if method != 'DELETE' %}
+            {% if form.initial_data %}
+                {% for error in form.errors.non_field_errors %}
+                    {% if error.code == 'unique'  %}
+                    <text class='error-in-form'>{% trans "Error! Such record already exists!" %}</text>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
             {% for field in form %}
                 {% if field.hidden %}
                     <input type="hidden" name="{{ field.label}}" id="id_{{ field.label}}">
