@@ -14,7 +14,7 @@ $(function() {
         newForm.children('select').attr('name', 'combination_'+idx);
         $('#id_list_of_combinations').append(newForm);
         loadOptions(setting_form_class_name, 'id_combination_'+idx, 
-                    'combinations-url', string, parent=true);
+                    'combinations-url', string);
     };
 
     function setCombinationSelector(settingData) {
@@ -63,5 +63,4 @@ $(function() {
     } else {
         addCombinationSelector();
     };
-    
 });
