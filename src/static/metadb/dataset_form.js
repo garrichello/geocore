@@ -7,7 +7,7 @@ $(function() {
         $(child_modal_id).on('hidden.bs.modal', function() {
             if ($('.js-collection-form').length) {
                 var form_data = mapFormData('.js-collection-form');  // Get collection fields
-                loadOptions.call( this, dataset_form_class_name, 'id_collection_label',
+                loadOptions.call( this, dataset_form_class_name, 'id_collection',
                     'collections-url', form_data['label']
                 );
             };
@@ -25,13 +25,13 @@ $(function() {
             };
             if ($('.js-datakind-form').length) {
                 var form_data = mapFormData('.js-datakind-form');  // Get datakind fields
-                loadOptions.call(this, dataset_form_class_name, 'id_data_kind_name',
+                loadOptions.call(this, dataset_form_class_name, 'id_data_kind',
                     'datakinds-url', form_data['name']
                 );
             };
             if ($('.js-filetype-form').length) {
                 var form_data = mapFormData('.js-filetype-form');  // Get filetype fields
-                loadOptions.call(this, dataset_form_class_name, 'id_file_type_name',
+                loadOptions.call(this, dataset_form_class_name, 'id_file_type',
                     'filetypes-url', form_data['name']
                 );
             };
