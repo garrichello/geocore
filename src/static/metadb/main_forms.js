@@ -29,6 +29,7 @@ $(function() {
     getModalName = function(status) {
         var idx = $('.modal:visible').length;
         if (status == 'parent') idx = idx - 1;
+        idx = idx < 0 ? 0 : idx;  // Negative numbers are not allowed
         return 'modal-dynamic-'+idx;
     };
 
