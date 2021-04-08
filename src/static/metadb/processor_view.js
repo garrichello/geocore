@@ -81,19 +81,24 @@ $(document).ready( function () {
                 $('#processor_processing').hide();        },
             success: (data) => {
                 var settingsText = '';
-                data.data.settings.forEach(function(setting) {
-                    settingsText += '<tr><td>'+setting.label+' = { ';
-                    var combinationsText = Array();
-                    setting.combinations.forEach(element => {
-                        var comb = element.index+': '+element.combination.option.label+'='+element.combination.option_value.label;
-                        var cond = '';
-                        if (element.combination.condition.option.label != '-') {
-                            cond = ' | '+element.combination.condition.option.label+'=='+element.combination.condition.option_value.label;
-                        };
-                        combinationsText.push(comb + cond);
+                console.log(data.data.settings[0].label);
+                if (data.data.settings[0].label == '-') {
+                    settingsText = '<tr><td>-</td></tr>';
+                } else {
+                    data.data.settings.forEach(function(setting) {
+                        settingsText += '<tr><td>'+setting.label+' = { ';
+                        var combinationsText = Array();
+                        setting.combinations.forEach(element => {
+                            var comb = element.index+': '+element.combination.option.label+'='+element.combination.option_value.label;
+                            var cond = '';
+                            if (element.combination.condition.option.label != '-') {
+                                cond = ' | '+element.combination.condition.option.label+'=='+element.combination.condition.option_value.label;
+                            };
+                            combinationsText.push(comb + cond);
+                        });
+                        settingsText = settingsText + combinationsText.join(', ') + ' }</td></tr>';
                     });
-                    settingsText = settingsText + combinationsText.join(', ') + ' }</td></tr>';
-                });
+                };
                 var argumentsText = '';
                 data.data.arguments.sort((a, b) => {
                     return a.argument_position - b.argument_position;
