@@ -500,14 +500,32 @@ class ProcessorRelatedField(ModifiedRelatedField):
 
 
 class ArgumentsGroupHasProcessorSerializer(serializers.HyperlinkedModelSerializer):
-    qset = ArgumentsGroup.objects.all()
+    qset = ArgumentsGroup.objects.filter(argument_type__label='processor')
     arguments_group = ArgumentsGroupRelatedField(queryset=qset)
-    qset = Processor.objects.all()
+    qset = Processor.objects.order_by('processori18n__name')
     processor = ProcessorRelatedField(queryset=qset)
+    qset = Setting.objects.order_by('combination__option__label')
+    override_setting = SettingFullRelatedField(queryset=qset)
 
     class Meta:
         model = ArgumentsGroupHasProcessor
-        fields = ['id', 'arguments_group', 'processor']
+        fields = ['id', 'arguments_group', 'processor', 'override_setting']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Arguments group
+        self.fields['arguments_group'].label = _('Arguments group')
+        self.fields['arguments_group'].style = {'template': 'metadb/custom_select.html'}
+        self.fields['arguments_group'].data_url = reverse('metadb:procargumentsgroup-list')
+        # Processor
+        self.fields['processor'].label = _('Processor')
+        self.fields['processor'].style = {'template': 'metadb/custom_select.html'}
+        self.fields['processor'].data_url = reverse('metadb:processor-list')
+        # Processor
+        self.fields['override_setting'].label = _('Overriding setting')
+        self.fields['override_setting'].style = {'template': 'metadb/custom_select.html'}
+        self.fields['override_setting'].data_url = reverse('metadb:fullsetting-list')
 
 
 class ArgumentsGroupHasProcessorRelatedField(ModifiedRelatedField):
@@ -519,7 +537,7 @@ class ArgumentsGroupHasProcessorFullSerializer(serializers.HyperlinkedModelSeria
     qset = Processor.objects.all()
     processor = ProcessorRelatedField(queryset=qset)
     qset = Setting.objects.all()
-    override_setting = SettingFullRelatedField(queryset=qset, many=True)
+    override_setting = SettingFullRelatedField(queryset=qset)
 
     class Meta:
         model = ArgumentsGroupHasProcessor
@@ -589,59 +607,6 @@ class ProcessorFullSerializer(ProcessorSerializer):
                   'settings', 'time_period_types', 'arguments_selected_by_user', 'arguments']
 
 
-class OptionsOverrideSerializer(serializers.HyperlinkedModelSerializer):
-    dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:optionsoverride-detail',
-                                                   read_only=True)
-
-#    qset = ArgumentsGroupHasProcessor.objects.all()
-#    arguments_group_has_processor = ArgumentsGroupHasProcessorRelatedField(queryset=qset)
-    qset = ArgumentsGroup.objects.filter(argument_type__label='processor')
-    arguments_group = ArgumentsGroupRelatedField(queryset=qset, source='arguments_group_has_processor.arguments_group')
-    qset = Processor.objects.order_by('processori18n__name')
-    processor = ProcessorLightRelatedField(queryset=qset, source='arguments_group_has_processor.processor')
-    qset = Setting.objects.order_by('label')
-    setting = SettingFullRelatedField(queryset=qset)
-
-    class Meta:
-        model = OptionsOverride
-        fields = ['id', 'dataurl', 'arguments_group', 'processor', 'setting']
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        # Arguments group
-        self.fields['arguments_group'].label = _('Arguments group')
-        self.fields['arguments_group'].style = {'template': 'metadb/custom_select.html'}
-        self.fields['arguments_group'].data_url = reverse('metadb:argumentsgroup-list')
-        # Processor
-        self.fields['processor'].label = _('Processor')
-        self.fields['processor'].style = {'template': 'metadb/custom_select.html'}
-        self.fields['processor'].data_url = reverse('metadb:processor-list')
-        # Combination
-        self.fields['setting'].label = _('Overriding setting')
-        self.fields['setting'].style = {'template': 'metadb/custom_select.html'}
-        self.fields['setting'].data_url = reverse('metadb:fullsetting-list')
-
-    def create(self, validated_data):
-        aghp_val = validated_data.pop('arguments_group_has_processor')
-        aghp_instance = ArgumentsGroupHasProcessor.objects.create(
-            arguments_group=aghp_val['arguments_group'],
-            processor=aghp_val['processor'])
-        instance = OptionsOverride.objects.create(
-            arguments_group_has_processor = aghp_instance,
-            **validated_data)
-        return instance
-
-    def update(self, instance, validated_data):
-        specific_parameters = validated_data.pop('specific_parameter')
-        instance.name = validated_data.get('name', instance.name)
-        instance.description = validated_data.get('description', instance.description)
-        instance.argument_type = validated_data.get('argument_type', instance.argument_type)
-        instance.specific_parameter.set(specific_parameters)
-        instance.save()
-        return instance
-
-
 class DataArgumentsGroupSerializer(ArgumentsGroupSerializer):
     dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:dataargumentsgroup-detail',
                                                    read_only=True)
@@ -687,8 +652,8 @@ class ProcArgumentsGroupSerializer(ArgumentsGroupSerializer):
     dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:procargumentsgroup-detail',
                                                    read_only=True)
     argument_type = ArgumentTypeRelatedField(read_only=True)
-    qset = ArgumentsGroupHasProcessor.objects.all() #order_by('processori18n__name')
-    processor = ArgumentsGroupHasProcessorFullRelatedField(queryset=qset, many=True, source='argumentgroup_processors')
+#    qset = ArgumentsGroupHasProcessor.objects.all() #order_by('processori18n__name')
+    processor = ProcessorRelatedField(many=True, read_only=True)
 
     class Meta:
         model = ArgumentsGroup

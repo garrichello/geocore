@@ -11,9 +11,10 @@ $(document).ready( function () {
          {'data': 'arguments_group.name' },
          {'data': 'arguments_group.description' },
          {'data': 'processor.processori18n.name' },
+         {'data': 'override_setting.label' },
          {'data': function(data, type, row, meta) {
             var combinations = Array();
-            data.setting.combinations.forEach(function(element) {
+            data.override_setting.combinations.forEach(function(element) {
                 var index = element.index;
                 var name = element.combination.string;
                 combinations.push(`${index}: ${name}`);
@@ -30,7 +31,8 @@ $(document).ready( function () {
          { width: '105px', targets: 3 },    // name
          { width: '175px', targets: 4 },   // description
          { width: '275px', targets: 5 },   // processor
-         { width: '200px', targets: 6 }   // combination
+         { width: '175px', targets: 6 },   // setting
+         { width: '200px', targets: 7 }   // combination
      ];
 
     var procarggroupOptions = $.extend(true, {}, commonOptions);

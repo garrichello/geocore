@@ -50,7 +50,6 @@ router.register('settings', SettingViewSet)
 router.register('fullsettings', SettingFullViewSet, basename='fullsetting')
 router.register('argumentsgrouphasprocessors', ArgumentsGroupHasProcessorViewSet)
 router.register('settinghascombinations', SettingHasCombinationViewSet)
-router.register('optionsoverrides', OptionsOverrideViewSet)
 
 
 app_name = 'metadb'

@@ -331,48 +331,54 @@ class ArgumentsGroupHasProcessorViewSet(BaseViewSet):
     action_url = 'metadb:argumentsgrouphasprocessor-detail'
 
     table_headers = [
-        {'type': 'head_none', 'caption': _('Id'), 'field': 'id'},
-        {'type': 'head_text', 'caption': _('Name'), 'field': 'name'},
-        {'type': 'head_select', 'caption': _('Processor'), 'field': 'processor'},
-        {'type': 'head_select', 'caption': _('Override combinations'), 'field': 'override_combination'},
+        ('head_none', 'Group Id'),
+        ('head_select', _('Group name')),
+        ('head_text', _('Group description')),
+        ('head_select', _('Processor name')),
+        ('head_text', _('Overriding setting')),
+        ('head_text', _('Overriding combinations')),
     ]
 
     ctx_create = {
         'method': 'POST',
-        'form_class': 'js-arggrouphasproc-form',
-        'title': _("Create a new link arguments group - processor"),
-        'submit_name': _("Create link"),
-        'script': 'metadb/arggrouphasproc_form.js',
+        'form_class': 'js-procarggroup-form',
+        'title': _("Create a new processor-argument"),
+        'submit_name': _("Create processor-argument"),
+        'script': 'metadb/procarggroup_form.js',
         'attributes': [
+            {'name': 'argumentsgroups-url',
+             'value': reverse_lazy('metadb:argumentsgroup-list')},
             {'name': 'processors-url',
              'value': reverse_lazy('metadb:processor-list')},
-            {'name': 'combinations-url',
-             'value': reverse_lazy('metadb:combination-list')}
+            {'name': 'settings-url',
+             'value': reverse_lazy('metadb:setting-list')},
         ],
         'style': {'template_pack': 'rest_framework/vertical/'}
     }
 
     ctx_update = {
         'method': 'PUT',
-        'form_class': 'js-arggrouphasproc-form',
-        'title': _("Update the link arguments group - processor"),
-        'submit_name': _("Update link"),
-        'script': 'metadb/arggrouphasproc_form.js',
+        'form_class': 'js-procarggroup-form',
+        'title': _("Update processor-argument"),
+        'submit_name': _("Update processor-argument"),
+        'script': 'metadb/procarggroup_form.js',
         'attributes': [
+            {'name': 'argumentsgroups-url',
+             'value': reverse_lazy('metadb:argumentsgroup-list')},
             {'name': 'processors-url',
              'value': reverse_lazy('metadb:processor-list')},
-            {'name': 'combinations-url',
-             'value': reverse_lazy('metadb:combination-list')}
+            {'name': 'settings-url',
+             'value': reverse_lazy('metadb:setting-list')},
         ],
         'style': {'template_pack': 'rest_framework/vertical/'}
     }
 
     ctx_delete = {
         'method': 'DELETE',
-        'form_class': 'js-arggrouphasproc-delete-form',
-        'title': _('Confirm arguments group - processor link delete'),
-        'text': _('Are you sure you want to delete the link arguments group - processor'),
-        'submit_name': _('Delete link'),
+        'form_class': 'js-procarggroup-delete-form',
+        'title': _('Confirm processor-argument delete'),
+        'text': _('Are you sure you want to delete the processor-argument'),
+        'submit_name': _('Delete processor-argument'),
         'style': {'template_pack': 'rest_framework/vertical/'}
     }
 
@@ -904,14 +910,6 @@ class DataArgumentsGroupViewSet(BaseViewSet):
     action_url = 'metadb:dataargumentsgroup-detail'
 
     table_headers = [
-#        {'type': 'head_none', 'caption': _('Id'), 'field': 'id'},
-#        {'type': 'head_text', 'caption': _('Name'), 'field': 'name'},
-#        {'type': 'head_text', 'caption': _('Description'), 'field': 'description'},
-#        {'type': 'head_select', 'caption': _('Argument type'), 'field': 'argument_type.label'},
-#        {'type': 'head_select', 'caption': _('Processor'), 'field': 'processor',
-#                                                           'subfield': 'processor.processori18n.name'},
-#        {'type': 'head_select', 'caption': _('Specific parameter'), 'field': 'specific_parameter',
-#                                                                    'subfield': 'string'},
         ('head_none', 'Id'),
         ('head_text', _('Group name')),
         ('head_text', _('Group description')),
@@ -1667,12 +1665,10 @@ class LevelsVariableViewSet(BaseViewSet):
     }
 
 
-class OptionsOverrideViewSet(BaseViewSet):
+class OptionsOverrideViewSet():
     """
     Returns overriding option values for processors in groupds
     """
-    queryset = OptionsOverride.objects.all()
-    serializer_class = OptionsOverrideSerializer
     renderer_classes = [JSONRenderer, BrowsableAPIRenderer, TemplateHTMLRenderer]
     template_name = 'metadb/includes/rest_form.html'
     options_template_name = 'metadb/hr/dropdown_list_options.html'
@@ -1950,14 +1946,6 @@ class ProcArgumentsGroupViewSet(BaseViewSet):
     action_url = 'metadb:procargumentsgroup-detail'
 
     table_headers = [
-#        {'type': 'head_none', 'caption': _('Id'), 'field': 'id'},
-#        {'type': 'head_text', 'caption': _('Name'), 'field': 'name'},
-#        {'type': 'head_text', 'caption': _('Description'), 'field': 'description'},
-#        {'type': 'head_select', 'caption': _('Argument type'), 'field': 'argument_type.label'},
-#        {'type': 'head_select', 'caption': _('Processor'), 'field': 'processor',
-#                                                           'subfield': 'processor.processori18n.name'},
-#        {'type': 'head_select', 'caption': _('Specific parameter'), 'field': 'specific_parameter',
-#                                                                    'subfield': 'string'},
         ('head_none', 'Id'),
         ('head_text', _('Group name')),
         ('head_text', _('Group description')),

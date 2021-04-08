@@ -1,12 +1,12 @@
 $(function() {
-    var simple_form_class_name = '.js-optionsoverride-form';
+    var simple_form_class_name = '.js-procarggroup-form';
 
     // Create property modal
     $(simple_form_class_name).on('click', '.js-add-button', function() { 
         var child_modal_id = loadForm2.call(this, 'create');
         $(child_modal_id).on('hidden.bs.modal', function() {
-            if ($('.js-arggroup-form').length) {
-                var form_data = mapFormData('.js-arggroup-form');  // Get fields of the form as a map
+            if ($('.js-procarggroup-form').length) {
+                var form_data = mapFormData('.js-procarggroup-form');  // Get fields of the form as a map
                 loadOptions.call(this, simple_form_class_name, 'id_arguments_group', 
                     'argumentsgroups-url', form_data['name']
                 );
@@ -17,10 +17,10 @@ $(function() {
                     'processors-url', form_data['processori18n.name']
                 );
             };
-            if ($('.js-combination-form').length) {
-                var form_data = mapFormData('.js-combination-form');  // Get fields of the form as a map
-                loadOptions.call(this, simple_form_class_name, 'id_combination', 
-                    'combinations-url', form_data['string']
+            if ($('.js-settingfull-form').length) {
+                var form_data = mapFormData('.js-settingfull-form');  // Get fields of the form as a map
+                loadOptions.call(this, simple_form_class_name, 'id_override_setting', 
+                    'settings-url', form_data['label']
                 );
             };
             $(child_modal_id).remove();
