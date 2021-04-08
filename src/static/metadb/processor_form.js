@@ -25,9 +25,9 @@ $(function() {
         $('#id_list_of_arguments').append(newForm);
         var argGrpNames = Array();
         if (processor_data.arguments) {
-            processor_data.arguments.filter((el) => {
+            processor_data.arguments.filter(function(el) {
                 return el.argument_position == idx;
-            }).forEach(element => {
+            }).forEach(function(element) {
                 var name = element.arguments_group.name;
                 var type = element.arguments_group.argument_type.label;
                 argGrpNames.push(`${name} (${type})`);
@@ -49,7 +49,7 @@ $(function() {
                 'ACTION': 'json',
             },
             dataType: "json",
-            success: function (data) {
+            success: function(data) {
                 for (var i=0; i<count; i++) {
                     addArgumentsGroupsSelector(data.data);
                 }                        
@@ -68,7 +68,7 @@ $(function() {
                 },
                 url: url,
                 dataType: "json",
-                success: function (data) {
+                success: function(data) {
                     var numberOfInputs = 0;
                     data.data.edges.forEach(edge => {
                         if (edge.from_vertex.computing_module.name == 'START' && edge.from_output > 0) {
