@@ -94,9 +94,8 @@ $(function() {
         return form_data;
     };
 
-    loadOptions = function(form_name, select_name, data_url, option_names=[], parent=true) {
+    loadOptions = function(form_name, select_name, data_url, option_names=[], parent=false) {
         var form = $(form_name);
-        var modal_id = '#'+getModalName(parent ? 'parent' : '');
         var option_names = $.type(option_names) === 'array' ? option_names : Array(option_names);
         if (option_names.length) {
             $.ajax( {
@@ -106,14 +105,14 @@ $(function() {
                 },
                 url: form.attr(data_url),
                 success: function (data) {
-                    $(`${modal_id} #${select_name}`).html(data);
-                    $(`${modal_id} #${select_name} option`).filter(function() {
+                    $(`${form_name} #${select_name}`).html(data);
+                    $(`${form_name} #${select_name} option`).filter(function() {
                         return $.inArray( $(this).text(), option_names ) !== -1;
                     }).attr('selected', true);  // Select given entry in the select
-                    if ($(`${modal_id} #${select_name} option`).length == 2) {
-                        $(`${modal_id} #${select_name}`).prop("selectedIndex", 1);
+                    if ($(`${form_name} #${select_name} option`).length == 2) {
+                        $(`${form_name} #${select_name}`).prop("selectedIndex", 1);
                     }
-                    $(`${modal_id} #${select_name}`).trigger('change');
+                    $(`${form_name} #${select_name}`).trigger('change');
                 }
             } );
         }
