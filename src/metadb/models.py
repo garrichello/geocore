@@ -49,7 +49,7 @@ class ArgumentsGroup(models.Model):
 class ArgumentsGroupHasProcessor(models.Model):
     arguments_group = models.ForeignKey('ArgumentsGroup', models.CASCADE, related_name='argumentgroup_processors')
     processor = models.ForeignKey('Processor', models.CASCADE, related_name='processor_argumentgroups')
-    override_combination = models.ManyToManyField('Combination', through='OptionsOverride')
+    override_setting = models.ManyToManyField('Setting', through='OptionsOverride')
 
     class Meta:
         managed = False
@@ -427,12 +427,12 @@ class OptionValueI18N(models.Model):
 
 class OptionsOverride(models.Model):
     arguments_group_has_processor = models.ForeignKey('ArgumentsGroupHasProcessor', models.CASCADE)
-    combination = models.ForeignKey('Combination', models.CASCADE)
+    setting = models.ForeignKey('Setting', models.CASCADE)
 
     class Meta:
         managed = False
         db_table = 'options_override'
-        unique_together = (('arguments_group_has_processor', 'combination'),)
+        unique_together = (('arguments_group_has_processor', 'setting'),)
 
 
 class Organization(models.Model):

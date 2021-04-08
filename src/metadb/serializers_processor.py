@@ -518,12 +518,12 @@ class ArgumentsGroupHasProcessorRelatedField(ModifiedRelatedField):
 class ArgumentsGroupHasProcessorFullSerializer(serializers.HyperlinkedModelSerializer):
     qset = Processor.objects.all()
     processor = ProcessorRelatedField(queryset=qset)
-    qset = Combination.objects.all()
-    override_combination = CombinationRelatedField(queryset=qset, many=True)
+    qset = Setting.objects.all()
+    override_setting = SettingFullRelatedField(queryset=qset, many=True)
 
     class Meta:
         model = ArgumentsGroupHasProcessor
-        fields = ['id', 'processor', 'override_combination']
+        fields = ['id', 'processor', 'override_setting']
 
 
 class ArgumentsGroupHasProcessorFullRelatedField(ModifiedRelatedField):
@@ -599,12 +599,12 @@ class OptionsOverrideSerializer(serializers.HyperlinkedModelSerializer):
     arguments_group = ArgumentsGroupRelatedField(queryset=qset, source='arguments_group_has_processor.arguments_group')
     qset = Processor.objects.order_by('processori18n__name')
     processor = ProcessorLightRelatedField(queryset=qset, source='arguments_group_has_processor.processor')
-    qset = Combination.objects.order_by('option__label')
-    combination = CombinationRelatedField(queryset=qset)
+    qset = Setting.objects.order_by('label')
+    setting = SettingFullRelatedField(queryset=qset)
 
     class Meta:
         model = OptionsOverride
-        fields = ['id', 'dataurl', 'arguments_group', 'processor', 'combination']
+        fields = ['id', 'dataurl', 'arguments_group', 'processor', 'setting']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -618,9 +618,9 @@ class OptionsOverrideSerializer(serializers.HyperlinkedModelSerializer):
         self.fields['processor'].style = {'template': 'metadb/custom_select.html'}
         self.fields['processor'].data_url = reverse('metadb:processor-list')
         # Combination
-        self.fields['combination'].label = _('Overriding combination')
-        self.fields['combination'].style = {'template': 'metadb/custom_select.html'}
-        self.fields['combination'].data_url = reverse('metadb:combination-list')
+        self.fields['setting'].label = _('Overriding setting')
+        self.fields['setting'].style = {'template': 'metadb/custom_select.html'}
+        self.fields['setting'].data_url = reverse('metadb:fullsetting-list')
 
     def create(self, validated_data):
         aghp_val = validated_data.pop('arguments_group_has_processor')

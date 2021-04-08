@@ -1680,21 +1680,11 @@ class OptionsOverrideViewSet(BaseViewSet):
     action_url = 'metadb:optionsoverride-detail'
 
     table_headers = [
-#        {'type': 'head_none', 'caption': _('Group id'),
-#         'field': 'arguments_group_has_processor.arguments_group.id'},
-#        {'type': 'head_text', 'caption': _('Group name'),
-#         'field': 'arguments_group_has_processor.arguments_group.name'},
-#        {'type': 'head_text', 'caption': _('Group description'),
-#         'field': 'arguments_group_has_processor.arguments_group.description'},
-#        {'type': 'head_text', 'caption': _('Processor'),
-#         'field': 'arguments_group_has_processor.processor.processori18n.name'},
-#        {'type': 'head_text', 'caption': _('Overriding option'),
-#         'field': 'combination.string'},
         ('head_text', _('Group id')),
         ('head_select', _('Group name')),
         ('head_text', _('Group description')),
         ('head_select', _('Processor name')),
-        ('head_text', _('Overriding option')),
+        ('head_text', _('Overriding combinations')),
     ]
 
     ctx_create = {

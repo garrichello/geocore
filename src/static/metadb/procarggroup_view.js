@@ -3,15 +3,24 @@ $(document).ready( function () {
      var apiURL = $('#tab-procarggroup').attr('api-data-url')
 
      var procarggroup_columns = [
-         { 'render': function() { return null; } },  // For checkboxes
-         {'render': (data, type, row, meta) => {
+         {'render': function() { return null; }},  // For checkboxes
+         {'render': function(data, type, row, meta) {
              return renderButtons(row, apiURL)
          }},  // for buttons
-         { 'data': 'arguments_group.id' },
-         { 'data': 'arguments_group.name' },
-         { 'data': 'arguments_group.description' },
-         { 'data': 'processor.processori18n.name' },
-         { 'data': 'combination.string' }
+         {'data': 'arguments_group.id' },
+         {'data': 'arguments_group.name' },
+         {'data': 'arguments_group.description' },
+         {'data': 'processor.processori18n.name' },
+         {'data': function(data, type, row, meta) {
+            var combinations = Array();
+            data.setting.combinations.forEach(function(element) {
+                var index = element.index;
+                var name = element.combination.string;
+                combinations.push(`${index}: ${name}`);
+            });
+            combinations.sort();
+            return combinations.join(';<br>');
+        }}
      ];
      
      var procarggroup_columnsDefs = [
