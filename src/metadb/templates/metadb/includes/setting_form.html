@@ -1,0 +1,11 @@
+{% extends 'metadb/includes/rest_form.html' %}
+{% load i18n rest_framework %}
+
+{% block addinclude %}
+
+<div class="form-group" id="id_list_of_combinations">
+    <label>{% trans "Combinations" %}</label>
+</div>
+<button type="button" class="btn btn-primary js-add-line-button">{% trans "Add combination" %}</button>
+
+{% endblock addinclude %}

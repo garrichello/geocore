@@ -2450,17 +2450,21 @@ class SettingFullViewSet(BaseViewSet):
     queryset = Setting.objects.order_by('label')
     serializer_class = SettingFullSerializer
     renderer_classes = [JSONRenderer, BrowsableAPIRenderer, TemplateHTMLRenderer]
-    template_name = 'metadb/includes/rest_form.html'
+    template_name = 'metadb/includes/setting_form.html'
     options_template_name = 'metadb/hr/dropdown_list_options.html'
     list_url = 'metadb:fullsetting-list'
     action_url = 'metadb:fullsetting-detail'
 
     table_headers = [
-        {'type': 'head_none', 'caption': _('Id'), 'field': 'id'},
-        {'type': 'head_text', 'caption': _('Label'), 'field': 'label'},
-        {'type': 'head_text', 'caption': _('GUI Element'), 'field': 'gui_element.name'},
-        {'type': 'head_text', 'caption': _('Option label'), 'field': 'combinations',
-                                                            'subfield': 'combination.string'},
+#        {'type': 'head_none', 'caption': _('Id'), 'field': 'id'},
+#        {'type': 'head_text', 'caption': _('Label'), 'field': 'label'},
+#        {'type': 'head_text', 'caption': _('GUI Element'), 'field': 'gui_element.name'},
+#        {'type': 'head_text', 'caption': _('Option label'), 'field': 'combinations',
+#                                                            'subfield': 'combination.string'},
+        ('head_none', _('Id')),
+        ('head_select', _('Label')),
+        ('head_select', _('GUI element')),
+        ('head_text', _('Combinations')),
     ]
 
     ctx_create = {

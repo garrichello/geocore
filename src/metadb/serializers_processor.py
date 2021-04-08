@@ -244,8 +244,8 @@ class SettingHasCombinationRelatedField(ModifiedRelatedField):
 class SettingFullSerializer(SettingSerializer):
     dataurl = serializers.HyperlinkedIdentityField(view_name='metadb:fullsetting-detail',
                                                    read_only=True)
-    qset = SettingHasCombination.objects.all()
-    combinations = SettingHasCombinationRelatedField(queryset=qset, source='setting_combinations', many=True)
+    combinations = SettingHasCombinationRelatedField(source='setting_combinations', many=True,
+                                                     read_only=True)
 
     class Meta:
         model = Setting
@@ -259,24 +259,34 @@ class SettingFullSerializer(SettingSerializer):
         self.fields['combinations'].label = _('Option-value combinations')
         self.fields['combinations'].style = {'template': 'metadb/custom_select_multiple.html'}
 
+    def to_internal_value(self, data):
+        result = super().to_internal_value(data)
+        # Add arguments groups to the result since these data are generated client-side
+        result['combinations'] = {}
+        for key in data.keys():
+            if 'combination' in key:
+                idx = key.split('_')[-1]  # Get index of the group
+                result['combinations'][idx] = Combination.objects.filter(pk=data.get(key)).get()
+        return result
+
     def create(self, validated_data):
-        combinations = validated_data.pop('setting_combinations')
+        combinations = validated_data.pop('combinations')
         instance = Setting.objects.create(**validated_data)
-        for i, val in enumerate(combinations):
+        for i, val in combinations.items():
             shc = SettingHasCombination.objects.create(setting=instance,
-                                                       combination=val.combination,
+                                                       combination=val,
                                                        index=i)
             shc.save()
         return instance
 
     def update(self, instance, validated_data):
-        combinations = validated_data.pop('setting_combinations')
+        combinations = validated_data.pop('combinations')
         instance.label = validated_data.get('label', instance.label)
         instance.gui_element = validated_data.get('gui_element', instance.gui_element)
         SettingHasCombination.objects.filter(setting=instance).delete()
-        for i, val in enumerate(combinations):
+        for i, val in combinations.items():
             shc = SettingHasCombination.objects.create(setting=instance,
-                                                       combination=val.combination,
+                                                       combination=val,
                                                        index=i)
             shc.save()
         instance.save()
