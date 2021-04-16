@@ -38,8 +38,8 @@ class BaseViewSet(viewsets.ModelViewSet):
     ctx_create = {
         'form_class': '',
         'method': 'POST',
-        'title': _(''),
-        'submit_name': _(''),
+        'title': '',
+        'submit_name': '',
         'script': '',
         'attributes': [],
         'style': {'template_pack': 'rest_framework/vertical/'}
@@ -48,8 +48,8 @@ class BaseViewSet(viewsets.ModelViewSet):
     ctx_update = {
         'form_class': '',
         'method': 'PUT',
-        'title': _(''),
-        'submit_name': _(''),
+        'title': '',
+        'submit_name': '',
         'script': '',
         'attributes': [],
         'style': {'template_pack': 'rest_framework/vertical/'}
@@ -58,9 +58,9 @@ class BaseViewSet(viewsets.ModelViewSet):
     ctx_delete = {
         'form_class': '',
         'method': 'DELETE',
-        'title': _(''),
-        'text': _(''),
-        'submit_name': _(''),
+        'title': '',
+        'text': '',
+        'submit_name': '',
         'style': {'template_pack': 'rest_framework/vertical/'}
     }
 
@@ -1580,7 +1580,7 @@ class LevelsGroupViewSet(BaseViewSet):
     ctx_update = {
         'method': 'PUT',
         'form_class': 'js-levels-group-form',
-        'title': _("Update levels_group"),
+        'title': _("Update levels group"),
         'submit_name': _("Update levels group"),
         'script': 'metadb/levelsgroup_form.js',
         'attributes': [

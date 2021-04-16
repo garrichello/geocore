@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-02 16:35+0700\n"
+"POT-Creation-Date: 2021-04-16 16:58+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,400 +20,1954 @@ msgstr ""
 "%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
 "%100>=11 && n%100<=14)? 2 : 3);\n"
 
-#: collection_forms.py:18 data_forms.py:48 dataset_forms.py:17 views.py:12
-#: views.py:24 views.py:38
-msgid "Collection label"
-msgstr "Метка коллекции"
+#: apiviews.py:163 apiviews.py:206 apiviews.py:399 apiviews.py:500
+#: apiviews.py:564 apiviews.py:610 apiviews.py:968 apiviews.py:1088
+#: apiviews.py:1336 apiviews.py:1380 apiviews.py:1423 apiviews.py:1467
+#: apiviews.py:1511 apiviews.py:1559 apiviews.py:1638 apiviews.py:1743
+#: apiviews.py:1798 apiviews.py:1842 apiviews.py:1890 apiviews.py:2154
+#: apiviews.py:2209 apiviews.py:2252 apiviews.py:2296 apiviews.py:2339
+#: apiviews.py:2383 apiviews.py:2442 apiviews.py:2501 apiviews.py:2634
+#: apiviews.py:2682 apiviews.py:2750 apiviews.py:2797
+msgid "Id"
+msgstr "Id"
 
-#: collection_forms.py:19 views.py:17
-msgid "Collection URL"
-msgstr "URL коллекции"
+#: apiviews.py:164 apiviews.py:207 apiviews.py:270 apiviews.py:565
+#: apiviews.py:969 apiviews.py:1381 apiviews.py:1424 apiviews.py:1468
+#: apiviews.py:1513 apiviews.py:1639 apiviews.py:1800 apiviews.py:1843
+#: apiviews.py:1893 apiviews.py:2253 apiviews.py:2297 apiviews.py:2340
+#: apiviews.py:2502 apiviews.py:2685 apiviews.py:2751 apiviews.py:2798
+#: serializers_processor.py:70
+msgid "Name"
+msgstr "Название"
 
-#: collection_forms.py:28 views.py:15
-msgid "Organization"
-msgstr "Организация"
+#: apiviews.py:170
+msgid "Create a new accumulation mode"
+msgstr "Создать новый режим накопления"
 
-#: collection_forms.py:39 views.py:13
-msgid "Collection name"
-msgstr "Название коллекции"
+#: apiviews.py:171
+msgid "Create accumulation mode"
+msgstr "Создать режим накопления"
 
-#: collection_forms.py:40 views.py:14
-msgid "Collection description"
-msgstr "Описание коллекции"
+#: apiviews.py:178 apiviews.py:179
+msgid "Update accumulation mode"
+msgstr "Изменить режим накопления"
 
-#: collection_views.py:65
-msgid "Create a new collection"
-msgstr "Создать новую коллекцию"
+#: apiviews.py:186
+msgid "Confirm accumulation mode delete"
+msgstr "Подтвердите удаление режима накопления"
 
-#: collection_views.py:66
-msgid "Create collection"
-msgstr "Создать коллекцию"
+#: apiviews.py:187
+msgid "Are you sure you want to delete the accumulation mode"
+msgstr "Вы уверены, что хотите удалить режим накопления"
 
-#: collection_views.py:88 collection_views.py:89
-msgid "Update collection"
-msgstr "Изменить коллекцию"
+#: apiviews.py:188
+msgid "Delete accumulation mode"
+msgstr "Удалить режим накопления"
 
-#: collection_views.py:114
-msgid "Confirm collection delete"
-msgstr "Подтвердите удаление коллекции"
-
-#: collection_views.py:115
-msgid "Are you sure you want to delete the collection"
-msgstr "Вы уверены, что хотите удалить коллекцию"
-
-#: collection_views.py:116
-msgid "Delete collection"
-msgstr "Удалить коллекцию"
-
-#: data_forms.py:52 dataset_forms.py:22
-msgid "Horizontal resolution"
-msgstr "Горизонтальное разрешение"
-
-#: data_forms.py:56 dataset_forms.py:27 views.py:26 views.py:40
-msgid "Scenario"
-msgstr "Сценарий"
-
-#: data_forms.py:61 views.py:41
-msgid "Parameter"
-msgstr "Имя метеопараметра"
-
-#: data_forms.py:65 views.py:42
-msgid "Time step"
-msgstr "Шаг по времени"
-
-#: data_forms.py:69 views.py:43
-msgid "Levels group"
-msgstr "Группа вертикальных уровней"
-
-#: data_forms.py:72 views.py:44
-msgid "Levels names"
-msgstr "Имена вертткальных уровней"
-
-#: data_forms.py:75
-msgid "Use levels variable"
-msgstr "Использовать переменную вертикального уровня"
-
-#: data_forms.py:80 views.py:45
-msgid "Levels variable"
-msgstr "Переменная вертикального уровня"
-
-#: data_forms.py:83
-msgid "Variable"
-msgstr "Переменная"
-
-#: data_forms.py:88 views.py:47
-msgid "Units"
-msgstr "Единица измерения"
-
-#: data_forms.py:91
-msgid "Use property"
-msgstr "Использовать свойство"
-
-#: data_forms.py:96
-msgid "Property"
-msgstr "Свойство"
-
-#: data_forms.py:101 views.py:49
-msgid "Property value"
-msgstr "Значение свойства"
-
-#: data_forms.py:104
-msgid "Root diriectory"
-msgstr "Корневой каталог"
-
-#: data_forms.py:107 views.py:51
-msgid "File name pattern"
-msgstr "Шаблон имени файла"
-
-#: data_forms.py:110 views.py:52
-msgid "Scale"
-msgstr "Масштаб"
-
-#: data_forms.py:113 views.py:53
-msgid "Offset"
-msgstr "Смещение"
-
-#: data_views.py:55
-msgid "Create a new data"
-msgstr "Создать новую запись данных"
-
-#: data_views.py:56
-msgid "Create data"
-msgstr "Создать запись данных"
-
-#: data_views.py:75 data_views.py:76
-msgid "Update data"
-msgstr "Обновить запись данных"
-
-#: data_views.py:99
-msgid "Confirm data delete"
-msgstr "Подтвердите удаление записи данных"
-
-#: data_views.py:100
-msgid "Are you sure you want to delete the data record"
-msgstr "Вы уверены, что хотите удалить запись данных"
-
-#: data_views.py:101
-msgid "Delete data"
-msgstr "Удалить запись данных"
-
-#: datakind_views.py:15
-msgid "Create a new datakind"
-msgstr "Создать новый тип данных"
-
-#: datakind_views.py:16
-msgid "Create datakind"
-msgstr "Создать тип данных"
-
-#: datakind_views.py:27 datakind_views.py:28
-msgid "Update datakind"
-msgstr "Обновить тип данных"
-
-#: datakind_views.py:38
-msgid "Confirm data kind delete"
-msgstr "Подтвердите удаление типа данных"
-
-#: datakind_views.py:39
-msgid "Are you sure you want to delete the data kind"
-msgstr "Вы уверены, что хотите удалить тип данных"
-
-#: datakind_views.py:40
-msgid "Delete data kind"
-msgstr "Удалить тип данных"
-
-#: dataset_forms.py:32 views.py:27
-msgid "Data kind"
-msgstr "Тип данных"
-
-#: dataset_forms.py:35
+#: apiviews.py:208 apiviews.py:271 apiviews.py:568 apiviews.py:1560
+#: serializers_conveyor.py:72 serializers_conveyor.py:353
+#: serializers_dataset.py:222 serializers_processor.py:73
+#: serializers_specparam.py:263
 msgid "Description"
 msgstr "Описание"
 
-#: dataset_forms.py:37 views.py:23 views.py:37
-msgid "Visible"
-msgstr "Видимость"
+#: apiviews.py:209 apiviews.py:272 serializers_processor.py:76 views.py:13
+msgid "Argument type"
+msgstr "Тип аргумента"
 
-#: dataset_forms.py:39
-msgid "Start date"
-msgstr "Начальная дата"
+#: apiviews.py:215 apiviews.py:280
+msgid "Create a new arguments group"
+msgstr "Создать новую группу аргументов"
 
-#: dataset_forms.py:41
-msgid "End date"
-msgstr "Конечная дата"
+#: apiviews.py:216 apiviews.py:281 apiviews.py:1959
+msgid "Create arguments group"
+msgstr "Создать группу аргументов"
 
-#: dataset_forms.py:46 views.py:28
-msgid "File type"
-msgstr "Тип файлов"
+#: apiviews.py:228 apiviews.py:229 apiviews.py:297 apiviews.py:298
+#: apiviews.py:1972
+msgid "Update arguments group"
+msgstr "Изменить группу аргументов"
 
-#: dataset_views.py:15
-msgid "Create a new dataset"
-msgstr "Создать новый набор данных"
+#: apiviews.py:241 apiviews.py:314
+msgid "Confirm arguments group delete"
+msgstr "Подтвердите удаление группы аргументов"
 
-#: dataset_views.py:16
-msgid "Create dataset"
-msgstr "Создать набор данных"
+#: apiviews.py:242 apiviews.py:315
+msgid "Are you sure you want to delete the arguments group"
+msgstr "Вы уверены, что хотите удалить группу аргументов"
 
-#: dataset_views.py:27 dataset_views.py:28
-msgid "Update dataset"
-msgstr "Обновить набор данных"
+#: apiviews.py:243 apiviews.py:316 apiviews.py:1986
+msgid "Delete arguments group"
+msgstr "Удалить группу аргументов"
 
-#: dataset_views.py:38
-msgid "Confirm dataset delete"
-msgstr "Подтвердите удаление набора данных"
+#: apiviews.py:273 serializers_processor.py:522 serializers_processor.py:568
+#: serializers_processor.py:666 templates/metadb/main_view.html:66
+msgid "Processor"
+msgstr "Обработчик"
 
-#: dataset_views.py:39
-msgid "Are you sure you want to delete the dataset"
-msgstr "Вы уверены, что хотите удалить набор данных"
+#: apiviews.py:274 apiviews.py:916 serializers_processor.py:572
+#: serializers_processor.py:625
+msgid "Specific parameter"
+msgstr "Конкретный метеопараметр"
 
-#: dataset_views.py:40
-msgid "Delete dataset"
-msgstr "Удалить набор данных"
+#: apiviews.py:335 apiviews.py:914 apiviews.py:1680 apiviews.py:1950
+msgid "Group name"
+msgstr "Название группы"
 
-#: filetype_views.py:15
-msgid "Create a new filetype"
-msgstr "Создать новый тип файлов"
+#: apiviews.py:336 apiviews.py:915 apiviews.py:1681 apiviews.py:1951
+msgid "Group description"
+msgstr "Описание группы"
 
-#: filetype_views.py:16
-msgid "Create filetype"
-msgstr "Создать тип файлов"
+#: apiviews.py:337 apiviews.py:1682 apiviews.py:1952 apiviews.py:2006
+#: apiviews.py:2091 serializers_processor.py:328
+msgid "Processor name"
+msgstr "Название обработчика"
 
-#: filetype_views.py:27 filetype_views.py:28
-msgid "Update filetype"
-msgstr "Изменить тип файлов"
+#: apiviews.py:338 serializers_processor.py:526
+msgid "Overriding setting"
+msgstr "Перекрывающие настройки"
 
-#: filetype_views.py:38
-msgid "Confirm file type delete"
-msgstr "Подтвердите удаление типа файлов"
+#: apiviews.py:339 apiviews.py:1683
+msgid "Overriding combinations"
+msgstr "Перекрывающие комбинации"
 
-#: filetype_views.py:39
-msgid "Are you sure you want to delete the file type"
-msgstr "Вы уверены, что хотите удалить тип файлов"
+#: apiviews.py:345
+msgid "Create a new processor-argument"
+msgstr "Создать новый агрумент-обработчик"
 
-#: filetype_views.py:40
-msgid "Delete file type"
-msgstr "Удалить тип файлов"
+#: apiviews.py:346
+msgid "Create processor-argument"
+msgstr "Создать агрумент-обработчик"
 
-#: organization_views.py:59
-msgid "Create a new organization"
-msgstr "Создать новую организацию"
+#: apiviews.py:362 apiviews.py:363
+msgid "Update processor-argument"
+msgstr "Изменить агрумент-обработчик"
 
-#: organization_views.py:60
-msgid "Create organization"
-msgstr "Создать организацию"
+#: apiviews.py:379
+msgid "Confirm processor-argument delete"
+msgstr "Подтвердите удаление агрумента-обработчика"
 
-#: organization_views.py:82 organization_views.py:83
-msgid "Update organization"
-msgstr "Изменить организацию"
+#: apiviews.py:380
+msgid "Are you sure you want to delete the processor-argument"
+msgstr "Вы уверены, что хотите удалить агрумент-обработчик"
 
-#: organization_views.py:108
-msgid "Confirm organization delete"
-msgstr "Подтвердите удаление организации"
+#: apiviews.py:381
+msgid "Delete processor-argument"
+msgstr "Удалить агрумент-обработчик"
 
-#: organization_views.py:109
-msgid "Are you sure you want to delete the organization"
-msgstr "Вы уверены, что хотите удалить организацию"
+#: apiviews.py:400 apiviews.py:611 apiviews.py:1512 apiviews.py:1744
+#: apiviews.py:1799 apiviews.py:2155 apiviews.py:2210 apiviews.py:2384
+#: apiviews.py:2443 apiviews.py:2683 serializers_conveyor.py:26
+#: serializers_conveyor.py:350 serializers_processor.py:28
+#: serializers_processor.py:189
+msgid "Label"
+msgstr "Метка"
 
-#: organization_views.py:110
-msgid "Delete organization"
-msgstr "Удалить организацию"
+#: apiviews.py:406
+msgid "Create a new argument type"
+msgstr "Создать новый тип аргументов"
 
-#: resolution_views.py:15
-msgid "Create a new resolution"
-msgstr "Создать новое горизонтальное разрешение."
+#: apiviews.py:407
+msgid "Create argument type"
+msgstr "Создать тип аргументов"
 
-#: resolution_views.py:16
-msgid "Create resolution"
-msgstr "Создать горизонтальное разрешение"
+#: apiviews.py:414 apiviews.py:415
+msgid "Update argument type"
+msgstr "Изменить тип аргументов"
 
-#: resolution_views.py:27 resolution_views.py:28
-msgid "Update resolution"
-msgstr "Изменить горизонтальное разрешение"
+#: apiviews.py:422
+msgid "Confirm argument type delete"
+msgstr "Подтвердите удаление типа аргументов"
 
-#: resolution_views.py:38
-msgid "Confirm resolution delete"
-msgstr "Подтвердите удаление горизонтального разрешения"
+#: apiviews.py:423
+msgid "Are you sure you want to delete the argument type"
+msgstr "Вы уверены, что хотите удалить тип аргументов"
 
-#: resolution_views.py:39
-msgid "Are you sure you want to delete the resolution"
-msgstr "Вы уверены, что хотите удалить горизонтальное разрешение"
+#: apiviews.py:424
+msgid "Delete argument type"
+msgstr "Удалить тип аргументов"
 
-#: resolution_views.py:40
-msgid "Delete resolution"
-msgstr "Удалить горизонтальное разрешение"
+#: apiviews.py:443 apiviews.py:1013 apiviews.py:1147
+#: serializers_collection.py:108 serializers_dataset.py:192
+msgid "Collection label"
+msgstr "Метка коллекции"
 
-#: scenario_views.py:15
-msgid "Create a new scenario"
-msgstr "Создать новый сценарий"
+#: apiviews.py:444 serializers_collection.py:89
+msgid "Collection name"
+msgstr "Название коллекции"
 
-#: scenario_views.py:16
-msgid "Create scenario"
-msgstr "Создать сценарий"
+#: apiviews.py:445 serializers_collection.py:91
+msgid "Collection description"
+msgstr "Описание коллекции"
 
-#: scenario_views.py:27 scenario_views.py:28
-msgid "Update scenario"
-msgstr "Изменить сценарий"
+#: apiviews.py:446 serializers_collection.py:112 views.py:41
+msgid "Organization"
+msgstr "Организация"
 
-#: scenario_views.py:38
-msgid "Confirm scenario delete"
-msgstr "Подтвердите удаление сценария"
-
-#: scenario_views.py:39
-msgid "Are you sure you want to delete the scenario"
-msgstr "Вы уверены, что хотите удалить сценарий"
-
-#: scenario_views.py:40
-msgid "Delete scenario"
-msgstr "Удалить сценарий"
-
-#: simple_forms.py:14
-msgid "Data kind name"
-msgstr "Название типа данных"
-
-#: simple_forms.py:24
-msgid "File type name"
-msgstr "Название типа файлов"
-
-#: simple_forms.py:34 views.py:16
+#: apiviews.py:447 serializers_collection.py:39
 msgid "Organization URL"
 msgstr "URL организации"
 
-#: simple_forms.py:44
-msgid "Organization name"
-msgstr "Название организации"
+#: apiviews.py:448 serializers_collection.py:110
+msgid "Collection URL"
+msgstr "URL коллекции"
 
-#: simple_forms.py:54
-msgid "Resolution name"
-msgstr "Название горизонтального разрешения"
+#: apiviews.py:454
+msgid "Create a new collection"
+msgstr "Создать новую коллекцию"
 
-#: simple_forms.py:55
-msgid "Resolution subpath"
-msgstr "Подпуть горизонтального разрешения"
+#: apiviews.py:455
+msgid "Create collection"
+msgstr "Создать коллекцию"
 
-#: simple_forms.py:65
-msgid "Scenario name"
-msgstr "Название сценария"
+#: apiviews.py:467 apiviews.py:468
+msgid "Update collection"
+msgstr "Изменить коллекцию"
 
-#: simple_forms.py:66
-msgid "Scenario subpath"
-msgstr "Подпуть сценария"
+#: apiviews.py:480
+msgid "Confirm collection delete"
+msgstr "Подтвердите удаление коллекции"
 
-#: templates/metadb/includes/collection_form.html:18
-#: templates/metadb/includes/data_form.html:22
-#: templates/metadb/includes/dataset_form.html:22
-#: templates/metadb/includes/simple_delete_form.html:17
-#: templates/metadb/includes/simple_form.html:17
-msgid "Close"
-msgstr "Закрыть"
+#: apiviews.py:481
+msgid "Are you sure you want to delete the collection"
+msgstr "Вы уверены, что хотите удалить коллекцию"
 
-#: templates/metadb/main_view.html:22
-msgid "MetaDB administrative console"
-msgstr "Административная консоль базы метаданных"
+#: apiviews.py:482
+msgid "Delete collection"
+msgstr "Удалить коллекцию"
 
-#: templates/metadb/main_view.html:26
-msgid "Collection"
-msgstr "Коллекция"
+#: apiviews.py:501 serializers_conveyor.py:109
+msgid "Option label"
+msgstr "Метка параметра"
 
-#: templates/metadb/main_view.html:29
-msgid "Dataset"
-msgstr "Набор данных"
+#: apiviews.py:502 serializers_conveyor.py:163
+msgid "Option value label"
+msgstr "Метка значения параметра"
 
-#: templates/metadb/main_view.html:32
-msgid "Data"
-msgstr "Данные"
+#: apiviews.py:503
+msgid "Condition option"
+msgstr "Параметр-условие"
 
-#: templates/metadb/main_view.html:35
-msgid "Other"
-msgstr "Прочее"
+#: apiviews.py:504
+msgid "Condition value"
+msgstr "Значение-условие"
 
-#: templates/metadb/main_view.html:45 templates/metadb/main_view.html:65
-#: templates/metadb/main_view.html:85
-msgid "Create"
-msgstr "Создать"
+#: apiviews.py:510
+msgid "Create a new option-value combination"
+msgstr "Создать новую комбинацию параметр-значение"
 
-#: views.py:25 views.py:39
+#: apiviews.py:511
+msgid "Create combination"
+msgstr "Создать комбинацию"
+
+#: apiviews.py:527
+msgid "Update option-value combination"
+msgstr "Изменить комбинацию параметр-значение"
+
+#: apiviews.py:528
+msgid "Update combination"
+msgstr "Изменить комбинацию"
+
+#: apiviews.py:544
+msgid "Confirm option-value combination delete"
+msgstr "Подтвердите удаление комбинации параметр-значение"
+
+#: apiviews.py:545
+msgid "Are you sure you want to delete the option-value combination"
+msgstr "Вы уверены, что хотите удалить комбинацию параметр-значение"
+
+#: apiviews.py:546
+msgid "Delete combination"
+msgstr "Удалить комбинацию"
+
+#: apiviews.py:566 apiviews.py:567 serializers_conveyor.py:66
+msgid "Number of inputs"
+msgstr "Количество входных аргументов"
+
+#: apiviews.py:574
+msgid "Create a new computing module"
+msgstr "Создать новый вычислительный модуль"
+
+#: apiviews.py:575
+msgid "Create computing module"
+msgstr "Создать вычислительный модуль"
+
+#: apiviews.py:582 apiviews.py:583
+msgid "Update computing module"
+msgstr "Изменить вычислительный модуль"
+
+#: apiviews.py:590
+msgid "Confirm computing module delete"
+msgstr "Подтвердите удаление вычислительного модуля"
+
+#: apiviews.py:591
+msgid "Are you sure you want to delete the computing module"
+msgstr "Вы уверены, что хотите удалить вычислительный модуль"
+
+#: apiviews.py:592
+msgid "Delete computing module"
+msgstr "Удалить вычислительный модуль"
+
+#: apiviews.py:617
+msgid "Create a new conveyor"
+msgstr "Создать новый конвейер"
+
+#: apiviews.py:618
+msgid "Create conveyor"
+msgstr "Создать конвейер"
+
+#: apiviews.py:632 apiviews.py:633
+msgid "Update conveyor"
+msgstr "Изменить конвейер"
+
+#: apiviews.py:647
+msgid "Confirm conveyor delete"
+msgstr "Подтвердите удаление конвейера"
+
+#: apiviews.py:648
+msgid "Are you sure you want to delete the conveyor"
+msgstr "Вы уверены, что хотите удалить конвейер"
+
+#: apiviews.py:649
+msgid "Delete conveyor"
+msgstr "Удалить конвейер"
+
+#: apiviews.py:754 apiviews.py:808
+msgid "Graph may not be empty"
+msgstr "Граф не может быть пустым"
+
+#: apiviews.py:756 apiviews.py:810
+msgid "Graph must be connected"
+msgstr "Граф должен быть связным"
+
+#: apiviews.py:758 apiviews.py:812
+msgid "All links must be assigned to data variables"
+msgstr "Всем дугам должны быть назначены данные"
+
+#: apiviews.py:782
+msgid "Conveyor label may not be blank!"
+msgstr "Метка конвейера не может быть пустой"
+
+#: apiviews.py:880
+msgid "Conveyor label may not be blank! (Or DB is damaged)"
+msgstr "Метка конвейера не может быть пустой (или БД повреждена)"
+
+#: apiviews.py:922
+msgid "Create a new data arguments group"
+msgstr "Создать новую группу аргументов-данных"
+
+#: apiviews.py:923
+msgid "Create data arguments group"
+msgstr "Создать группу аргументов-данных"
+
+#: apiviews.py:935 apiviews.py:936
+msgid "Update data arguments group"
+msgstr "Обновить группу аргументов-данных"
+
+#: apiviews.py:948
+msgid "Confirm data arguments group delete"
+msgstr "Подтвердите удаление группы аргументов-данных"
+
+#: apiviews.py:949
+msgid "Are you sure you want to delete the data arguments group"
+msgstr "Вы уверены, что хотите удалить группу аргументов-данных"
+
+#: apiviews.py:950
+msgid "Delete data arguments group"
+msgstr "Удалить группу аргументов-данных"
+
+#: apiviews.py:975
+msgid "Create a new datakind"
+msgstr "Создать новый тип данных"
+
+#: apiviews.py:976
+msgid "Create datakind"
+msgstr "Создать тип данных"
+
+#: apiviews.py:983 apiviews.py:984
+msgid "Update datakind"
+msgstr "Обновить тип данных"
+
+#: apiviews.py:991
+msgid "Confirm data kind delete"
+msgstr "Подтвердите удаление типа данных"
+
+#: apiviews.py:992
+msgid "Are you sure you want to delete the data kind"
+msgstr "Вы уверены, что хотите удалить тип данных"
+
+#: apiviews.py:993
+msgid "Delete data kind"
+msgstr "Удалить тип данных"
+
+#: apiviews.py:1012 apiviews.py:2562 serializers_dataset.py:187
+#: serializers_processor.py:402 serializers_specparam.py:78
+msgid "Visible"
+msgstr "Видимость"
+
+#: apiviews.py:1014 apiviews.py:1148 views.py:49
 msgid "Resolution"
 msgstr "Гориз. разреш."
 
-#: views.py:29
+#: apiviews.py:1015 apiviews.py:1149 serializers_dataset.py:202 views.py:53
+msgid "Scenario"
+msgstr "Сценарий"
+
+#: apiviews.py:1016 serializers_dataset.py:207 views.py:19
+msgid "Data kind"
+msgstr "Тип данных"
+
+#: apiviews.py:1017 serializers_dataset.py:212 views.py:25
+msgid "File type"
+msgstr "Тип файлов"
+
+#: apiviews.py:1018
 msgid "Time start"
 msgstr "Первый день"
 
-#: views.py:30
+#: apiviews.py:1019
 msgid "Time end"
 msgstr "Последний день"
 
-#: views.py:31
+#: apiviews.py:1020
 msgid "Dataset description"
 msgstr "Описание набора данных"
 
-#: views.py:46
+#: apiviews.py:1026
+msgid "Create a new dataset"
+msgstr "Создать новый набор данных"
+
+#: apiviews.py:1027
+msgid "Create dataset"
+msgstr "Создать набор данных"
+
+#: apiviews.py:1047 apiviews.py:1048
+msgid "Update dataset"
+msgstr "Обновить набор данных"
+
+#: apiviews.py:1068
+msgid "Confirm dataset delete"
+msgstr "Подтвердите удаление набора данных"
+
+#: apiviews.py:1069
+msgid "Are you sure you want to delete the dataset"
+msgstr "Вы уверены, что хотите удалить набор данных"
+
+#: apiviews.py:1070
+msgid "Delete dataset"
+msgstr "Удалить набор данных"
+
+#: apiviews.py:1089
+msgid "Data variable label"
+msgstr "Метка переменной данных"
+
+#: apiviews.py:1090 apiviews.py:1157 serializers_data.py:387
+msgid "Units"
+msgstr "Единица измерения"
+
+#: apiviews.py:1091
+msgid "Data variable description"
+msgstr "Описание переменной данных"
+
+#: apiviews.py:1097
+msgid "Create a new data variable"
+msgstr "Создать новую переменную данных"
+
+#: apiviews.py:1098
+msgid "Create data variable"
+msgstr "Создать переменную данных"
+
+#: apiviews.py:1110 apiviews.py:1111
+msgid "Update data variable"
+msgstr "Обновить переменную данных"
+
+#: apiviews.py:1123
+msgid "Confirm data variable delete"
+msgstr "Подтвердите удаление переменной данных"
+
+#: apiviews.py:1124
+msgid "Are you sure you want to delete the data variable"
+msgstr "Вы уверены, что хотите удалить переменную данных"
+
+#: apiviews.py:1125
+msgid "Delete data variable"
+msgstr "Удалить переменную данных"
+
+#: apiviews.py:1146
+msgid "Dataset visibility"
+msgstr "Видимость набора данных"
+
+#: apiviews.py:1150
+msgid "Parameter visibility"
+msgstr "Видимость метеопараметра"
+
+#: apiviews.py:1151 apiviews.py:2563 templates/metadb/main_view.html:48
+msgid "Parameter"
+msgstr "Имя метеопараметра"
+
+#: apiviews.py:1152 apiviews.py:2565 serializers_data.py:371
+#: serializers_specparam.py:400 views.py:57
+msgid "Time step"
+msgstr "Шаг по времени"
+
+#: apiviews.py:1153 serializers_data.py:365 serializers_specparam.py:395
+#: views.py:33
+msgid "Levels group"
+msgstr "Группа вертикальных уровней"
+
+#: apiviews.py:1154 apiviews.py:2570
+msgid "Levels names"
+msgstr "Имена вертткальных уровней"
+
+#: apiviews.py:1155 serializers_data.py:402 views.py:35
+msgid "Levels variable"
+msgstr "Переменная вертикального уровня"
+
+#: apiviews.py:1156 serializers_data.py:173
 msgid "Variable name"
 msgstr "Имя переменной"
 
-#: views.py:48
+#: apiviews.py:1158
 msgid "Propery label"
 msgstr "Имя свойства"
 
-#: views.py:50
+#: apiviews.py:1159 serializers_data.py:382 views.py:47
+msgid "Property value"
+msgstr "Значение свойства"
+
+#: apiviews.py:1160 serializers_data.py:407 views.py:51
 msgid "Root directory"
 msgstr "Корневой каталог"
+
+#: apiviews.py:1161 serializers_dataset.py:24
+msgid "Scenario subpath"
+msgstr "Подпуть сценария"
+
+#: apiviews.py:1162 serializers_dataset.py:63
+msgid "Resolution subpath"
+msgstr "Подпуть горизонтального разрешения"
+
+#: apiviews.py:1163 apiviews.py:2567 serializers_specparam.py:335
+msgid "Time step subpath"
+msgstr "Подпуть шага по времени"
+
+#: apiviews.py:1164 apiviews.py:1337 serializers_data.py:247
+#: serializers_data.py:397
+msgid "File name pattern"
+msgstr "Шаблон имени файла"
+
+#: apiviews.py:1165
+msgid "Scale"
+msgstr "Масштаб"
+
+#: apiviews.py:1166
+msgid "Offset"
+msgstr "Смещение"
+
+#: apiviews.py:1172
+msgid "Create a new data"
+msgstr "Создать новую запись данных"
+
+#: apiviews.py:1173
+msgid "Create data"
+msgstr "Создать запись данных"
+
+#: apiviews.py:1205 apiviews.py:1206
+msgid "Update data"
+msgstr "Обновить запись данных"
+
+#: apiviews.py:1238
+msgid "Confirm data delete"
+msgstr "Подтвердите удаление записи данных"
+
+#: apiviews.py:1239
+msgid "Are you sure you want to delete the data record"
+msgstr "Вы уверены, что хотите удалить запись данных"
+
+#: apiviews.py:1240
+msgid "Delete data"
+msgstr "Удалить запись данных"
+
+#: apiviews.py:1258
+msgid "Conveyor id"
+msgstr "Id конвейера"
+
+#: apiviews.py:1259
+msgid "Edge id"
+msgstr "Id дуги"
+
+#: apiviews.py:1260
+msgid "Source vertex id"
+msgstr "Id исходной вершины"
+
+#: apiviews.py:1261
+msgid "Source module"
+msgstr "Модуль исходной вершины"
+
+#: apiviews.py:1262
+msgid "Source condition option"
+msgstr "Условный параметр исходной вершины"
+
+#: apiviews.py:1263
+msgid "Source condition value"
+msgstr "Значение условного параметра исходной вершины"
+
+#: apiviews.py:1264
+msgid "Source module output"
+msgstr "Выход модуля исходной вершины"
+
+#: apiviews.py:1265
+msgid "Target vertex id"
+msgstr "Id целевой вершины"
+
+#: apiviews.py:1266
+msgid "Target module"
+msgstr "Модуль целевой вершины"
+
+#: apiviews.py:1267
+msgid "Target condition option"
+msgstr "Условный параметр целевой вершины"
+
+#: apiviews.py:1268
+msgid "Target condition value"
+msgstr "Значение условного параметра целевой вершины"
+
+#: apiviews.py:1269
+msgid "Target module input"
+msgstr "Вход модуля целевой вершины"
+
+#: apiviews.py:1270
+msgid "Data label"
+msgstr "Метка данных"
+
+#: apiviews.py:1271
+msgid "Data description"
+msgstr "Описание данных"
+
+#: apiviews.py:1272
+msgid "Data units"
+msgstr "Единицы измерения данных"
+
+#: apiviews.py:1278
+msgid "Create a new edge"
+msgstr "Создать новую дугу"
+
+#: apiviews.py:1279
+msgid "Create edge"
+msgstr "Создать дугу"
+
+#: apiviews.py:1297 apiviews.py:1298
+msgid "Update edge"
+msgstr "Обновить дугу"
+
+#: apiviews.py:1316
+msgid "Confirm edge delete"
+msgstr "Подтвердите удаление дуги"
+
+#: apiviews.py:1317
+msgid "Are you sure you want to delete the edge"
+msgstr "Вы уверены, что хотите удалить дугу"
+
+#: apiviews.py:1318
+msgid "Delete edge"
+msgstr "Удалить дугу"
+
+#: apiviews.py:1343
+msgid "Create a new file name pattern"
+msgstr "Создать новый шаблон имени файлов"
+
+#: apiviews.py:1344
+msgid "Create file name pattern"
+msgstr "Создать шаблон имени файла"
+
+#: apiviews.py:1351 apiviews.py:1352
+msgid "Update file name pattern"
+msgstr "Изменить шаблон имени файла"
+
+#: apiviews.py:1359
+msgid "Confirm file name pattern delete"
+msgstr "Подтвердите удаление шаблоны имени файлов"
+
+#: apiviews.py:1360
+msgid "Are you sure you want to delete the file name pattern"
+msgstr "Вы уверены, что хотите удалить шаблон имени файлов"
+
+#: apiviews.py:1361
+msgid "Delete file name pattern"
+msgstr "Удалить шаблон имени файла"
+
+#: apiviews.py:1387
+msgid "Create a new file type"
+msgstr "Создать новый тип файлов"
+
+#: apiviews.py:1388
+msgid "Create file type"
+msgstr "Создать тип файлов"
+
+#: apiviews.py:1395 apiviews.py:1396
+msgid "Update file type"
+msgstr "Изменить тип файлов"
+
+#: apiviews.py:1403
+msgid "Confirm file type delete"
+msgstr "Подтвердите удаление типа файлов"
+
+#: apiviews.py:1404
+msgid "Are you sure you want to delete the file type"
+msgstr "Вы уверены, что хотите удалить тип файлов"
+
+#: apiviews.py:1405
+msgid "Delete file type"
+msgstr "Удалить тип файлов"
+
+#: apiviews.py:1425
+msgid "Caption"
+msgstr "Подпись"
+
+#: apiviews.py:1431
+msgid "Create a new GUI element"
+msgstr "Создать новый элемент GUI"
+
+#: apiviews.py:1432
+msgid "Create GUI element"
+msgstr "Создать элемент GUI"
+
+#: apiviews.py:1439 apiviews.py:1440
+msgid "Update GUI element"
+msgstr "Изменить элемент GUI"
+
+#: apiviews.py:1447
+msgid "Confirm GUI element delete"
+msgstr "Подтвердите удаление элемента GUI"
+
+#: apiviews.py:1448
+msgid "Are you sure you want to delete the GUI element"
+msgstr "Вы уверены, что хотите удалить элемент GUI"
+
+#: apiviews.py:1449
+msgid "Delete GUI element"
+msgstr "Удалить элемент GUI"
+
+#: apiviews.py:1469
+msgid "Code"
+msgstr "Код"
+
+#: apiviews.py:1475
+msgid "Create a new language"
+msgstr "Добавить новый язык"
+
+#: apiviews.py:1476
+msgid "Create language"
+msgstr "Добавить язык"
+
+#: apiviews.py:1483 apiviews.py:1484
+msgid "Update language"
+msgstr "Изменить язык"
+
+#: apiviews.py:1491
+msgid "Confirm language delete"
+msgstr "Подтвердите удаление языка"
+
+#: apiviews.py:1492
+msgid "Are you sure you want to delete the language"
+msgstr "Вы уверены, что хотите удалить язык"
+
+#: apiviews.py:1493
+msgid "Delete language"
+msgstr "Удалить язык"
+
+#: apiviews.py:1519
+msgid "Create a new level"
+msgstr "Создать новый вертикальный уровень"
+
+#: apiviews.py:1520
+msgid "Create level"
+msgstr "Создать вертикальный уровень"
+
+#: apiviews.py:1527 apiviews.py:1528
+msgid "Update level"
+msgstr "Изменить вертикальный уровень"
+
+#: apiviews.py:1535
+msgid "Confirm level delete"
+msgstr "Подтвердите удаление вертикального уровня"
+
+#: apiviews.py:1536
+msgid "Are you sure you want to delete the level"
+msgstr "Вы уверены, что хотите удалить вертикальный уровень"
+
+#: apiviews.py:1537
+msgid "Delete level"
+msgstr "Удалить вертикальный уровень"
+
+#: apiviews.py:1561 serializers_conveyor.py:357 views.py:59
+msgid "Measurement unit"
+msgstr "Единица измерения"
+
+#: apiviews.py:1562 serializers_specparam.py:272
+msgid "Levels"
+msgstr "Уровни"
+
+#: apiviews.py:1568
+msgid "Create a new levels group"
+msgstr "Создать новую группу вертикальных уровней"
+
+#: apiviews.py:1569
+msgid "Create levels group"
+msgstr "Создать группу вертикальных уровней"
+
+#: apiviews.py:1583 apiviews.py:1584
+msgid "Update levels group"
+msgstr "Изменить группу вертикальных уровней"
+
+#: apiviews.py:1598
+msgid "Confirm levels group delete"
+msgstr "Подтвердите удаление группы вертикальных уровней"
+
+#: apiviews.py:1599
+msgid "Are you sure you want to delete the levels group"
+msgstr "Вы уверены, что хотите удалить группу вертикальных уровней"
+
+#: apiviews.py:1600
+msgid "Delete levels group"
+msgstr "Удалить группу вертикальных уровней"
+
+#: apiviews.py:1645
+msgid "Create a new levels variable"
+msgstr "Создать новую переменную вертикальных уровней"
+
+#: apiviews.py:1646
+msgid "Create levels variable"
+msgstr "Создать переменную вертикальных уровней"
+
+#: apiviews.py:1653 apiviews.py:1654
+msgid "Update levels variable"
+msgstr "Изменить переменную вертикальных уровней"
+
+#: apiviews.py:1661
+msgid "Confirm levels variable delete"
+msgstr "Подтвердите удаление переменной"
+
+#: apiviews.py:1662
+msgid "Are you sure you want to delete the levels variable"
+msgstr "Вы уверены, что хотите удалить переменную вертикальных уровней"
+
+#: apiviews.py:1663
+msgid "Delete levels variable"
+msgstr "Удалить переменную вертикальных уровней"
+
+#: apiviews.py:1679
+msgid "Group id"
+msgstr "Id группы"
+
+#: apiviews.py:1689
+#, fuzzy
+#| msgid "Create a new organization"
+msgid "Create a new overriding option"
+msgstr "Создать новую организацию"
+
+#: apiviews.py:1690
+#, fuzzy
+#| msgid "Create organization"
+msgid "Create overriding option"
+msgstr "Создать организацию"
+
+#: apiviews.py:1706 apiviews.py:1707
+#, fuzzy
+#| msgid "Update organization"
+msgid "Update overriding option"
+msgstr "Изменить организацию"
+
+#: apiviews.py:1723
+#, fuzzy
+#| msgid "Confirm collection delete"
+msgid "Confirm options override delete"
+msgstr "Подтвердите удаление коллекции"
+
+#: apiviews.py:1724
+#, fuzzy
+#| msgid "Are you sure you want to delete the collection"
+msgid "Are you sure you want to delete the options override"
+msgstr "Вы уверены, что хотите удалить коллекцию"
+
+#: apiviews.py:1725
+#, fuzzy
+#| msgid "Delete collection"
+msgid "Delete options override"
+msgstr "Удалить коллекцию"
+
+#: apiviews.py:1752
+#, fuzzy
+#| msgid "Create a new collection"
+msgid "Create a new option"
+msgstr "Создать новую коллекцию"
+
+#: apiviews.py:1753
+#, fuzzy
+#| msgid "Create collection"
+msgid "Create option"
+msgstr "Создать коллекцию"
+
+#: apiviews.py:1765 apiviews.py:1766
+#, fuzzy
+#| msgid "Update collection"
+msgid "Update option"
+msgstr "Изменить коллекцию"
+
+#: apiviews.py:1778
+#, fuzzy
+#| msgid "Confirm collection delete"
+msgid "Confirm option delete"
+msgstr "Подтвердите удаление коллекции"
+
+#: apiviews.py:1779
+#, fuzzy
+#| msgid "Are you sure you want to delete the collection"
+msgid "Are you sure you want to delete the option"
+msgstr "Вы уверены, что хотите удалить коллекцию"
+
+#: apiviews.py:1780
+#, fuzzy
+#| msgid "Delete collection"
+msgid "Delete option"
+msgstr "Удалить коллекцию"
+
+#: apiviews.py:1806
+#, fuzzy
+#| msgid "Create a new collection"
+msgid "Create a new option value"
+msgstr "Создать новую коллекцию"
+
+#: apiviews.py:1807
+#, fuzzy
+#| msgid "Create collection"
+msgid "Create option value"
+msgstr "Создать коллекцию"
+
+#: apiviews.py:1814 apiviews.py:1815
+#, fuzzy
+#| msgid "Update collection"
+msgid "Update option value"
+msgstr "Изменить коллекцию"
+
+#: apiviews.py:1822
+#, fuzzy
+#| msgid "Confirm collection delete"
+msgid "Confirm level option value"
+msgstr "Подтвердите удаление коллекции"
+
+#: apiviews.py:1823
+#, fuzzy
+#| msgid "Are you sure you want to delete the collection"
+msgid "Are you sure you want to delete the option value"
+msgstr "Вы уверены, что хотите удалить коллекцию"
+
+#: apiviews.py:1824
+#, fuzzy
+#| msgid "Delete collection"
+msgid "Delete option value"
+msgstr "Удалить коллекцию"
+
+#: apiviews.py:1844
+msgid "URL"
+msgstr ""
+
+#: apiviews.py:1850
+msgid "Create a new organization"
+msgstr "Создать новую организацию"
+
+#: apiviews.py:1851
+msgid "Create organization"
+msgstr "Создать организацию"
+
+#: apiviews.py:1858 apiviews.py:1859
+msgid "Update organization"
+msgstr "Изменить организацию"
+
+#: apiviews.py:1866
+msgid "Confirm organization delete"
+msgstr "Подтвердите удаление организации"
+
+#: apiviews.py:1867
+msgid "Are you sure you want to delete the organization"
+msgstr "Вы уверены, что хотите удалить организацию"
+
+#: apiviews.py:1868
+msgid "Delete organization"
+msgstr "Удалить организацию"
+
+#: apiviews.py:1891 apiviews.py:2005 apiviews.py:2090
+#, fuzzy
+#| msgid "Visible"
+msgid "Is visible"
+msgstr "Видимость"
+
+#: apiviews.py:1892 apiviews.py:2564 serializers_specparam.py:20
+#: serializers_specparam.py:83 views.py:11
+msgid "Accumulation mode"
+msgstr ""
+
+#: apiviews.py:1899
+#, fuzzy
+#| msgid "Create a new filetype"
+msgid "Create a new meteorological parameter"
+msgstr "Создать новый тип файлов"
+
+#: apiviews.py:1900
+#, fuzzy
+#| msgid "Create dataset"
+msgid "Create parameter"
+msgstr "Создать набор данных"
+
+#: apiviews.py:1912
+msgid "Update meteorological parameter"
+msgstr ""
+
+#: apiviews.py:1913
+#, fuzzy
+#| msgid "Update dataset"
+msgid "Update parameter"
+msgstr "Обновить набор данных"
+
+#: apiviews.py:1925
+#, fuzzy
+#| msgid "Confirm organization delete"
+msgid "Confirm meteorological parameter delete"
+msgstr "Подтвердите удаление организации"
+
+#: apiviews.py:1926
+#, fuzzy
+#| msgid "Are you sure you want to delete the dataset"
+msgid "Are you sure you want to delete the parameter"
+msgstr "Вы уверены, что хотите удалить набор данных"
+
+#: apiviews.py:1927
+#, fuzzy
+#| msgid "Delete dataset"
+msgid "Delete parameter"
+msgstr "Удалить набор данных"
+
+#: apiviews.py:1958
+#, fuzzy
+#| msgid "Create a new resolution"
+msgid "Create a new processors arguments group"
+msgstr "Создать новое горизонтальное разрешение."
+
+#: apiviews.py:1971
+msgid "Update processors arguments group"
+msgstr ""
+
+#: apiviews.py:1984
+#, fuzzy
+#| msgid "Confirm resolution delete"
+msgid "Confirm processors arguments group delete"
+msgstr "Подтвердите удаление горизонтального разрешения"
+
+#: apiviews.py:1985
+#, fuzzy
+#| msgid "Are you sure you want to delete the resolution"
+msgid "Are you sure you want to delete the processors arguments group"
+msgstr "Вы уверены, что хотите удалить горизонтальное разрешение"
+
+#: apiviews.py:2004 apiviews.py:2089
+msgid "Processor id"
+msgstr ""
+
+#: apiviews.py:2007 apiviews.py:2092
+#, fuzzy
+#| msgid "Collection description"
+msgid "Processor description"
+msgstr "Описание коллекции"
+
+#: apiviews.py:2008 apiviews.py:2093
+msgid "Processor reference"
+msgstr ""
+
+#: apiviews.py:2009 apiviews.py:2094 serializers_processor.py:407
+#, fuzzy
+#| msgid "Collection label"
+msgid "Conveyor label"
+msgstr "Метка коллекции"
+
+#: apiviews.py:2010 apiviews.py:2095 apiviews.py:2503
+#: serializers_processor.py:412
+msgid "Settings"
+msgstr ""
+
+#: apiviews.py:2011 apiviews.py:2096
+msgid "Time period types"
+msgstr ""
+
+#: apiviews.py:2012 apiviews.py:2097
+msgid "Arguments selected by user"
+msgstr ""
+
+#: apiviews.py:2013 apiviews.py:2098 serializers_processor.py:423
+msgid "Arguments"
+msgstr ""
+
+#: apiviews.py:2019 apiviews.py:2104
+#, fuzzy
+#| msgid "Create a new resolution"
+msgid "Create a new processor"
+msgstr "Создать новое горизонтальное разрешение."
+
+#: apiviews.py:2020 apiviews.py:2105
+#, fuzzy
+#| msgid "Create resolution"
+msgid "Create processor"
+msgstr "Создать горизонтальное разрешение"
+
+#: apiviews.py:2042 apiviews.py:2043 apiviews.py:2117 apiviews.py:2118
+#, fuzzy
+#| msgid "Update resolution"
+msgid "Update processor"
+msgstr "Изменить горизонтальное разрешение"
+
+#: apiviews.py:2065 apiviews.py:2130
+#, fuzzy
+#| msgid "Confirm resolution delete"
+msgid "Confirm processor delete"
+msgstr "Подтвердите удаление горизонтального разрешения"
+
+#: apiviews.py:2066 apiviews.py:2131
+#, fuzzy
+#| msgid "Are you sure you want to delete the resolution"
+msgid "Are you sure you want to delete the processor"
+msgstr "Вы уверены, что хотите удалить горизонтальное разрешение"
+
+#: apiviews.py:2067 apiviews.py:2132
+#, fuzzy
+#| msgid "Delete resolution"
+msgid "Delete processor"
+msgstr "Удалить горизонтальное разрешение"
+
+#: apiviews.py:2156 serializers_data.py:43 serializers_data.py:97
+#: serializers_processor.py:193
+msgid "GUI element name"
+msgstr ""
+
+#: apiviews.py:2157 serializers_data.py:27
+msgid "GUI element caption"
+msgstr ""
+
+#: apiviews.py:2163
+#, fuzzy
+#| msgid "Create a new filetype"
+msgid "Create a new property"
+msgstr "Создать новый тип файлов"
+
+#: apiviews.py:2164
+#, fuzzy
+#| msgid "Use property"
+msgid "Create property"
+msgstr "Использовать свойство"
+
+#: apiviews.py:2176 apiviews.py:2177
+#, fuzzy
+#| msgid "Use property"
+msgid "Update property"
+msgstr "Использовать свойство"
+
+#: apiviews.py:2189
+#, fuzzy
+#| msgid "Confirm file type delete"
+msgid "Confirm property delete"
+msgstr "Подтвердите удаление типа файлов"
+
+#: apiviews.py:2190
+#, fuzzy
+#| msgid "Are you sure you want to delete the file type"
+msgid "Are you sure you want to delete the property"
+msgstr "Вы уверены, что хотите удалить тип файлов"
+
+#: apiviews.py:2191
+#, fuzzy
+#| msgid "Use property"
+msgid "Delete property"
+msgstr "Использовать свойство"
+
+#: apiviews.py:2216
+#, fuzzy
+#| msgid "Create a new filetype"
+msgid "Create a new property value"
+msgstr "Создать новый тип файлов"
+
+#: apiviews.py:2217
+#, fuzzy
+#| msgid "Property value"
+msgid "Create property value"
+msgstr "Значение свойства"
+
+#: apiviews.py:2224 apiviews.py:2225
+#, fuzzy
+#| msgid "Property value"
+msgid "Update property value"
+msgstr "Значение свойства"
+
+#: apiviews.py:2232
+#, fuzzy
+#| msgid "Confirm file type delete"
+msgid "Confirm property value delete"
+msgstr "Подтвердите удаление типа файлов"
+
+#: apiviews.py:2233
+#, fuzzy
+#| msgid "Are you sure you want to delete the file type"
+msgid "Are you sure you want to delete the property value"
+msgstr "Вы уверены, что хотите удалить тип файлов"
+
+#: apiviews.py:2234
+#, fuzzy
+#| msgid "Property value"
+msgid "Delete property value"
+msgstr "Значение свойства"
+
+#: apiviews.py:2254 apiviews.py:2341 apiviews.py:2684
+#, fuzzy
+#| msgid "Scenario subpath"
+msgid "Subpath"
+msgstr "Подпуть сценария"
+
+#: apiviews.py:2260
+msgid "Create a new resolution"
+msgstr "Создать новое горизонтальное разрешение."
+
+#: apiviews.py:2261
+msgid "Create resolution"
+msgstr "Создать горизонтальное разрешение"
+
+#: apiviews.py:2268 apiviews.py:2269
+msgid "Update resolution"
+msgstr "Изменить горизонтальное разрешение"
+
+#: apiviews.py:2276
+msgid "Confirm resolution delete"
+msgstr "Подтвердите удаление горизонтального разрешения"
+
+#: apiviews.py:2277
+msgid "Are you sure you want to delete the resolution"
+msgstr "Вы уверены, что хотите удалить горизонтальное разрешение"
+
+#: apiviews.py:2278
+msgid "Delete resolution"
+msgstr "Удалить горизонтальное разрешение"
+
+#: apiviews.py:2303
+#, fuzzy
+#| msgid "Create a new resolution"
+msgid "Create a new root directory"
+msgstr "Создать новое горизонтальное разрешение."
+
+#: apiviews.py:2304
+#, fuzzy
+#| msgid "Root directory"
+msgid "Create root directory"
+msgstr "Корневой каталог"
+
+#: apiviews.py:2311 apiviews.py:2312
+#, fuzzy
+#| msgid "Root directory"
+msgid "Update root directory"
+msgstr "Корневой каталог"
+
+#: apiviews.py:2319
+#, fuzzy
+#| msgid "Confirm resolution delete"
+msgid "Confirm root directory delete"
+msgstr "Подтвердите удаление горизонтального разрешения"
+
+#: apiviews.py:2320
+#, fuzzy
+#| msgid "Are you sure you want to delete the data record"
+msgid "Are you sure you want to delete the root directory"
+msgstr "Вы уверены, что хотите удалить запись данных"
+
+#: apiviews.py:2321
+#, fuzzy
+#| msgid "Root directory"
+msgid "Delete root directory"
+msgstr "Корневой каталог"
+
+#: apiviews.py:2347
+msgid "Create a new scenario"
+msgstr "Создать новый сценарий"
+
+#: apiviews.py:2348
+msgid "Create scenario"
+msgstr "Создать сценарий"
+
+#: apiviews.py:2355 apiviews.py:2356
+msgid "Update scenario"
+msgstr "Изменить сценарий"
+
+#: apiviews.py:2363
+msgid "Confirm scenario delete"
+msgstr "Подтвердите удаление сценария"
+
+#: apiviews.py:2364
+msgid "Are you sure you want to delete the scenario"
+msgstr "Вы уверены, что хотите удалить сценарий"
+
+#: apiviews.py:2365
+msgid "Delete scenario"
+msgstr "Удалить сценарий"
+
+#: apiviews.py:2385
+msgid "GUI Element"
+msgstr ""
+
+#: apiviews.py:2391 apiviews.py:2451
+#, fuzzy
+#| msgid "Create a new dataset"
+msgid "Create a new setting"
+msgstr "Создать новый набор данных"
+
+#: apiviews.py:2392 apiviews.py:2452
+#, fuzzy
+#| msgid "Create dataset"
+msgid "Create setting"
+msgstr "Создать набор данных"
+
+#: apiviews.py:2404 apiviews.py:2405 apiviews.py:2466 apiviews.py:2467
+#, fuzzy
+#| msgid "Update dataset"
+msgid "Update setting"
+msgstr "Обновить набор данных"
+
+#: apiviews.py:2417 apiviews.py:2481
+#, fuzzy
+#| msgid "Confirm dataset delete"
+msgid "Confirm setting delete"
+msgstr "Подтвердите удаление набора данных"
+
+#: apiviews.py:2418 apiviews.py:2482
+#, fuzzy
+#| msgid "Are you sure you want to delete the dataset"
+msgid "Are you sure you want to delete the setting"
+msgstr "Вы уверены, что хотите удалить набор данных"
+
+#: apiviews.py:2419 apiviews.py:2483
+#, fuzzy
+#| msgid "Delete dataset"
+msgid "Delete setting"
+msgstr "Удалить набор данных"
+
+#: apiviews.py:2444 views.py:27
+msgid "GUI element"
+msgstr ""
+
+#: apiviews.py:2445 templates/metadb/includes/setting_form.html:7
+msgid "Combinations"
+msgstr ""
+
+#: apiviews.py:2504 serializers_processor.py:235 serializers_processor.py:259
+msgid "Option-value combinations"
+msgstr ""
+
+#: apiviews.py:2505 serializers_processor.py:231
+msgid "Index"
+msgstr ""
+
+#: apiviews.py:2511
+#, fuzzy
+#| msgid "Create a new collection"
+msgid "Create a new link setting - combination"
+msgstr "Создать новую коллекцию"
+
+#: apiviews.py:2512
+#, fuzzy
+#| msgid "Create collection"
+msgid "Create link"
+msgstr "Создать коллекцию"
+
+#: apiviews.py:2526
+msgid "Update the linksetting - combination"
+msgstr ""
+
+#: apiviews.py:2527
+#, fuzzy
+#| msgid "Update collection"
+msgid "Update link"
+msgstr "Изменить коллекцию"
+
+#: apiviews.py:2541
+#, fuzzy
+#| msgid "Confirm scenario delete"
+msgid "Confirm setting - combination link delete"
+msgstr "Подтвердите удаление сценария"
+
+#: apiviews.py:2542
+#, fuzzy
+#| msgid "Are you sure you want to delete the collection"
+msgid "Are you sure you want to delete the link setting - combination"
+msgstr "Вы уверены, что хотите удалить коллекцию"
+
+#: apiviews.py:2543
+#, fuzzy
+#| msgid "Delete collection"
+msgid "Delete link"
+msgstr "Удалить коллекцию"
+
+#: apiviews.py:2566 serializers_specparam.py:333
+#, fuzzy
+#| msgid "Time step"
+msgid "Time step label"
+msgstr "Шаг по времени"
+
+#: apiviews.py:2568
+msgid "Levels group measurement unit"
+msgstr ""
+
+#: apiviews.py:2569
+#, fuzzy
+#| msgid "Levels group"
+msgid "Levels group description"
+msgstr "Группа вертикальных уровней"
+
+#: apiviews.py:2576
+#, fuzzy
+#| msgid "Create a new filetype"
+msgid "Create a new specific parameter"
+msgstr "Создать новый тип файлов"
+
+#: apiviews.py:2577
+#, fuzzy
+#| msgid "Create filetype"
+msgid "Create specific parameter"
+msgstr "Создать тип файлов"
+
+#: apiviews.py:2595 apiviews.py:2596
+#, fuzzy
+#| msgid "Update filetype"
+msgid "Update specific parameter"
+msgstr "Изменить тип файлов"
+
+#: apiviews.py:2614
+#, fuzzy
+#| msgid "Confirm file type delete"
+msgid "Confirm specific parameter delete"
+msgstr "Подтвердите удаление типа файлов"
+
+#: apiviews.py:2615
+#, fuzzy
+#| msgid "Are you sure you want to delete the file type"
+msgid "Are you sure you want to delete the specific parameter"
+msgstr "Вы уверены, что хотите удалить тип файлов"
+
+#: apiviews.py:2616
+msgid "Delete specific parameter"
+msgstr ""
+
+#: apiviews.py:2635
+msgid "Name of constant"
+msgstr ""
+
+#: apiviews.py:2636 serializers_processor.py:127
+#, fuzzy
+#| msgid "File type name"
+msgid "Time period type name"
+msgstr "Название типа файлов"
+
+#: apiviews.py:2642
+#, fuzzy
+#| msgid "Create a new filetype"
+msgid "Create a new time period type"
+msgstr "Создать новый тип файлов"
+
+#: apiviews.py:2643
+#, fuzzy
+#| msgid "Create filetype"
+msgid "Create time period type"
+msgstr "Создать тип файлов"
+
+#: apiviews.py:2650 apiviews.py:2651
+#, fuzzy
+#| msgid "Update filetype"
+msgid "Update time period type"
+msgstr "Изменить тип файлов"
+
+#: apiviews.py:2658
+#, fuzzy
+#| msgid "Confirm file type delete"
+msgid "Confirm time period type"
+msgstr "Подтвердите удаление типа файлов"
+
+#: apiviews.py:2659
+#, fuzzy
+#| msgid "Are you sure you want to delete the file type"
+msgid "Are you sure you want to delete the time period type"
+msgstr "Вы уверены, что хотите удалить тип файлов"
+
+#: apiviews.py:2660
+#, fuzzy
+#| msgid "Delete file type"
+msgid "Delete time period type"
+msgstr "Удалить тип файлов"
+
+#: apiviews.py:2691
+#, fuzzy
+#| msgid "Create a new filetype"
+msgid "Create a new time step"
+msgstr "Создать новый тип файлов"
+
+#: apiviews.py:2692
+#, fuzzy
+#| msgid "Create filetype"
+msgid "Create time step"
+msgstr "Создать тип файлов"
+
+#: apiviews.py:2699 apiviews.py:2765
+#, fuzzy
+#| msgid "Update resolution"
+msgid "Update measurement unit"
+msgstr "Изменить горизонтальное разрешение"
+
+#: apiviews.py:2700
+#, fuzzy
+#| msgid "Update data"
+msgid "Update units"
+msgstr "Обновить запись данных"
+
+#: apiviews.py:2707
+#, fuzzy
+#| msgid "Confirm file type delete"
+msgid "Confirm time step delete"
+msgstr "Подтвердите удаление типа файлов"
+
+#: apiviews.py:2708
+#, fuzzy
+#| msgid "Are you sure you want to delete the file type"
+msgid "Are you sure you want to delete the time step"
+msgstr "Вы уверены, что хотите удалить тип файлов"
+
+#: apiviews.py:2709
+#, fuzzy
+#| msgid "Delete file type"
+msgid "Delete time step"
+msgstr "Удалить тип файлов"
+
+#: apiviews.py:2757
+#, fuzzy
+#| msgid "Create a new dataset"
+msgid "Create a new measurement unit"
+msgstr "Создать новый набор данных"
+
+#: apiviews.py:2758
+#, fuzzy
+#| msgid "Create data"
+msgid "Create unit"
+msgstr "Создать запись данных"
+
+#: apiviews.py:2766
+#, fuzzy
+#| msgid "Update data"
+msgid "Update unit"
+msgstr "Обновить запись данных"
+
+#: apiviews.py:2773
+#, fuzzy
+#| msgid "Confirm dataset delete"
+msgid "Confirm measurement unit delete"
+msgstr "Подтвердите удаление набора данных"
+
+#: apiviews.py:2774
+#, fuzzy
+#| msgid "Are you sure you want to delete the scenario"
+msgid "Are you sure you want to delete the unit"
+msgstr "Вы уверены, что хотите удалить сценарий"
+
+#: apiviews.py:2775
+#, fuzzy
+#| msgid "Delete data"
+msgid "Delete unit"
+msgstr "Удалить запись данных"
+
+#: apiviews.py:2804
+#, fuzzy
+#| msgid "Create a new data"
+msgid "Create a new variable"
+msgstr "Создать новую запись данных"
+
+#: apiviews.py:2805
+#, fuzzy
+#| msgid "Levels variable"
+msgid "Create variable"
+msgstr "Переменная вертикального уровня"
+
+#: apiviews.py:2812 apiviews.py:2813
+#, fuzzy
+#| msgid "Update data"
+msgid "Update variable"
+msgstr "Обновить запись данных"
+
+#: apiviews.py:2820
+#, fuzzy
+#| msgid "Confirm data delete"
+msgid "Confirm variable delete"
+msgstr "Подтвердите удаление записи данных"
+
+#: apiviews.py:2821
+#, fuzzy
+#| msgid "Are you sure you want to delete the dataset"
+msgid "Are you sure you want to delete the variable"
+msgstr "Вы уверены, что хотите удалить набор данных"
+
+#: apiviews.py:2822
+#, fuzzy
+#| msgid "Use levels variable"
+msgid "Delete variable"
+msgstr "Использовать переменную вертикального уровня"
+
+#: apiviews.py:2841 serializers_conveyor.py:302 views.py:17
+msgid "Computing module"
+msgstr ""
+
+#: apiviews.py:2842
+msgid "Condition option-value combination"
+msgstr ""
+
+#: apiviews.py:2848
+#, fuzzy
+#| msgid "Create a new filetype"
+msgid "Create a new vertex"
+msgstr "Создать новый тип файлов"
+
+#: apiviews.py:2849
+#, fuzzy
+#| msgid "Create filetype"
+msgid "Create vertex"
+msgstr "Создать тип файлов"
+
+#: apiviews.py:2863 apiviews.py:2864
+#, fuzzy
+#| msgid "Update filetype"
+msgid "Update vertex"
+msgstr "Изменить тип файлов"
+
+#: apiviews.py:2878
+#, fuzzy
+#| msgid "Confirm data delete"
+msgid "Confirm vertex delete"
+msgstr "Подтвердите удаление записи данных"
+
+#: apiviews.py:2879
+#, fuzzy
+#| msgid "Are you sure you want to delete the file type"
+msgid "Are you sure you want to delete the vertex"
+msgstr "Вы уверены, что хотите удалить тип файлов"
+
+#: apiviews.py:2880
+#, fuzzy
+#| msgid "Delete file type"
+msgid "Delete vertex"
+msgstr "Удалить тип файлов"
+
+#: serializers.py:65
+#, fuzzy
+#| msgid "Variable name"
+msgid "Language name"
+msgstr "Имя переменной"
+
+#: serializers.py:68
+msgid "Language code"
+msgstr ""
+
+#: serializers_collection.py:24
+msgid "Organization name"
+msgstr "Название организации"
+
+#: serializers_conveyor.py:63
+msgid "Computing module name"
+msgstr ""
+
+#: serializers_conveyor.py:69
+msgid "Number of outputs"
+msgstr ""
+
+#: serializers_conveyor.py:147
+#, fuzzy
+#| msgid "Variable name"
+msgid "Option value name"
+msgstr "Имя переменной"
+
+#: serializers_conveyor.py:243 views.py:37
+msgid "Option"
+msgstr ""
+
+#: serializers_conveyor.py:247
+msgid "Value"
+msgstr ""
+
+#: serializers_conveyor.py:251 serializers_conveyor.py:307
+#, fuzzy
+#| msgid "Collection description"
+msgid "Condition combination"
+msgstr "Описание коллекции"
+
+#: serializers_conveyor.py:407 templates/metadb/main_view.html:54
+msgid "Conveyor"
+msgstr ""
+
+#: serializers_conveyor.py:413
+msgid "Source vertex"
+msgstr ""
+
+#: serializers_conveyor.py:417
+msgid "Source output"
+msgstr ""
+
+#: serializers_conveyor.py:421
+msgid "Target vertex"
+msgstr ""
+
+#: serializers_conveyor.py:425
+msgid "Target input"
+msgstr ""
+
+#: serializers_conveyor.py:429 views.py:21
+#, fuzzy
+#| msgid "Variable"
+msgid "Data variable"
+msgstr "Переменная"
+
+#: serializers_data.py:93
+#, fuzzy
+#| msgid "Propery label"
+msgid "Property label"
+msgstr "Имя свойства"
+
+#: serializers_data.py:136
+#, fuzzy
+#| msgid "Property value"
+msgid "Property value label"
+msgstr "Значение свойства"
+
+#: serializers_data.py:210
+#, fuzzy
+#| msgid "Levels variable"
+msgid "Levels variable name"
+msgstr "Переменная вертикального уровня"
+
+#: serializers_data.py:284
+#, fuzzy
+#| msgid "Root directory"
+msgid "Root directory name"
+msgstr "Корневой каталог"
+
+#: serializers_data.py:349 templates/metadb/main_view.html:45
+msgid "Dataset"
+msgstr "Набор данных"
+
+#: serializers_data.py:359 serializers_specparam.py:390 views.py:43
+msgid "Meteorological parameter"
+msgstr ""
+
+#: serializers_data.py:377 views.py:45
+msgid "Property"
+msgstr "Свойство"
+
+#: serializers_data.py:392 views.py:63
+msgid "Variable"
+msgstr "Переменная"
+
+#: serializers_data.py:411
+msgid "Scale coefficient"
+msgstr ""
+
+#: serializers_data.py:415
+msgid "Offset coefficient"
+msgstr ""
+
+#: serializers_dataset.py:22
+msgid "Scenario name"
+msgstr "Название сценария"
+
+#: serializers_dataset.py:61
+msgid "Resolution name"
+msgstr "Название горизонтального разрешения"
+
+#: serializers_dataset.py:100
+msgid "Data kind name"
+msgstr "Название типа данных"
+
+#: serializers_dataset.py:137
+msgid "File type name"
+msgstr "Название типа файлов"
+
+#: serializers_dataset.py:197
+msgid "Horizontal resolution"
+msgstr "Горизонтальное разрешение"
+
+#: serializers_dataset.py:216
+msgid "Start date"
+msgstr "Начальная дата"
+
+#: serializers_dataset.py:219
+msgid "End date"
+msgstr "Конечная дата"
+
+#: serializers_processor.py:144
+msgid "Name on constant"
+msgstr ""
+
+#: serializers_processor.py:330
+#, fuzzy
+#| msgid "Collection description"
+msgid "Processor short description"
+msgstr "Описание коллекции"
+
+#: serializers_processor.py:332
+msgid "Reference / URL"
+msgstr ""
+
+#: serializers_processor.py:416 views.py:61
+msgid "Time period type"
+msgstr ""
+
+#: serializers_processor.py:419
+msgid "Number of arguments given by user"
+msgstr ""
+
+#: serializers_processor.py:518 templates/metadb/includes/processor_form.html:8
+msgid "Arguments group"
+msgstr ""
+
+#: serializers_specparam.py:59
+#, fuzzy
+#| msgid "Parameter"
+msgid "Parameter name"
+msgstr "Имя метеопараметра"
+
+#: serializers_specparam.py:134
+msgid "Measurement unit name"
+msgstr ""
+
+#: serializers_specparam.py:195
+#, fuzzy
+#| msgid "Levels names"
+msgid "Level name"
+msgstr "Имена вертткальных уровней"
+
+#: serializers_specparam.py:211
+#, fuzzy
+#| msgid "Levels names"
+msgid "Level label"
+msgstr "Имена вертткальных уровней"
+
+#: serializers_specparam.py:267
+msgid "Measurement units"
+msgstr ""
+
+#: serializers_specparam.py:317
+#, fuzzy
+#| msgid "Time step"
+msgid "Time step name"
+msgstr "Шаг по времени"
+
+#: templates/metadb/custom_select_multiple.html:3
+msgid "No items to select."
+msgstr ""
+
+#: templates/metadb/includes/conveyor_form.html:35
+msgid "Vertices"
+msgstr ""
+
+#: templates/metadb/includes/conveyor_form.html:42
+#: templates/metadb/includes/conveyor_form.html:57
+msgid " Add new"
+msgstr ""
+
+#: templates/metadb/includes/conveyor_form.html:45
+msgid "Remove vertex"
+msgstr ""
+
+#: templates/metadb/includes/conveyor_form.html:50
+msgid "Links"
+msgstr ""
+
+#: templates/metadb/includes/conveyor_form.html:60
+msgid "Remove link"
+msgstr ""
+
+#: templates/metadb/includes/processor_form.html:7
+msgid "Select a conveyor first..."
+msgstr ""
+
+#: templates/metadb/includes/rest_form.html:22
+msgid "Error! Such record already exists!"
+msgstr ""
+
+#: templates/metadb/includes/rest_form.html:41
+msgid "Close"
+msgstr "Закрыть"
+
+#: templates/metadb/includes/setting_form.html:9
+msgid "Add combination"
+msgstr ""
+
+#: templates/metadb/main_view.html:38
+msgid "MetaDB administrative console"
+msgstr "Административная консоль базы метаданных"
+
+#: templates/metadb/main_view.html:42
+msgid "Collection"
+msgstr "Коллекция"
+
+#: templates/metadb/main_view.html:51
+msgid "Data"
+msgstr "Данные"
+
+#: templates/metadb/main_view.html:57
+msgid "Data-arguments"
+msgstr ""
+
+#: templates/metadb/main_view.html:60
+msgid "Processors-arguments"
+msgstr ""
+
+#: templates/metadb/main_view.html:63
+msgid "Setting"
+msgstr ""
+
+#: templates/metadb/main_view.html:69
+msgid "Other"
+msgstr "Прочее"
+
+#: templates/metadb/main_view.html:77 templates/metadb/main_view.html:90
+#: templates/metadb/main_view.html:103 templates/metadb/main_view.html:116
+#: templates/metadb/main_view.html:129 templates/metadb/main_view.html:148
+#: templates/metadb/main_view.html:161 templates/metadb/main_view.html:174
+#: templates/metadb/main_view.html:187 templates/metadb/main_view.html:218
+msgid "Create"
+msgstr "Создать"
+
+#: views.py:15
+msgid "Combination"
+msgstr ""
+
+#: views.py:23
+#, fuzzy
+#| msgid "File type"
+msgid "File"
+msgstr "Тип файлов"
+
+#: views.py:29
+msgid "Language"
+msgstr ""
+
+#: views.py:31
+msgid "Level"
+msgstr ""
+
+#: views.py:39
+#, fuzzy
+#| msgid "Property value"
+msgid "Option value"
+msgstr "Значение свойства"
+
+#~ msgid "Update levels_group"
+#~ msgstr "Измнеить группу вертикальных уровней"
+
+#~ msgid "Root diriectory"
+#~ msgstr "Корневой каталог"
