@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-05-12 17:08+0700\n"
+"POT-Creation-Date: 2021-05-13 15:36+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -101,7 +101,7 @@ msgid "Delete arguments group"
 msgstr "Удалить группу аргументов"
 
 #: apiviews.py:273 serializers_processor.py:522 serializers_processor.py:568
-#: serializers_processor.py:666 templates/metadb/main_view.html:66
+#: serializers_processor.py:666 templates/metadb/main_view.html:92
 msgid "Processor"
 msgstr "Обработчик"
 
@@ -501,7 +501,7 @@ msgstr "Видимость набора данных"
 msgid "Parameter visibility"
 msgstr "Видимость метеопараметра"
 
-#: apiviews.py:1151 apiviews.py:2563 templates/metadb/main_view.html:48
+#: apiviews.py:1151 apiviews.py:2563 templates/metadb/main_view.html:74
 msgid "Parameter"
 msgstr "Имя метеопараметра"
 
@@ -1483,7 +1483,7 @@ msgstr "Значение"
 msgid "Condition combination"
 msgstr "Условная комбинация"
 
-#: serializers_conveyor.py:407 templates/metadb/main_view.html:54
+#: serializers_conveyor.py:407 templates/metadb/main_view.html:80
 msgid "Conveyor"
 msgstr "Конвейер"
 
@@ -1523,7 +1523,7 @@ msgstr "Переменная вертикальных уровней"
 msgid "Root directory name"
 msgstr "Корневой каталог"
 
-#: serializers_data.py:349 templates/metadb/main_view.html:45
+#: serializers_data.py:349 templates/metadb/main_view.html:71
 msgid "Dataset"
 msgstr "Набор данных"
 
@@ -1664,39 +1664,47 @@ msgstr "Закрыть"
 msgid "Add combination"
 msgstr "Добавить комбинацию"
 
-#: templates/metadb/main_view.html:38
+#: templates/metadb/main_view.html:48
 msgid "MetaDB administrative console"
 msgstr "Административная консоль базы метаданных"
 
-#: templates/metadb/main_view.html:42
+#: templates/metadb/main_view.html:52
+msgid "Sign in"
+msgstr "Войти"
+
+#: templates/metadb/main_view.html:55 views.py:29
+msgid "Language"
+msgstr "Язык"
+
+#: templates/metadb/main_view.html:68
 msgid "Collection"
 msgstr "Коллекция"
 
-#: templates/metadb/main_view.html:51
+#: templates/metadb/main_view.html:77
 msgid "Data"
 msgstr "Данные"
 
-#: templates/metadb/main_view.html:57
+#: templates/metadb/main_view.html:83
 msgid "Data-arguments"
 msgstr "Аргументы-данные"
 
-#: templates/metadb/main_view.html:60
+#: templates/metadb/main_view.html:86
 msgid "Processors-arguments"
 msgstr "Аргументы-обработчики"
 
-#: templates/metadb/main_view.html:63
+#: templates/metadb/main_view.html:89
 msgid "Setting"
 msgstr "Настройки"
 
-#: templates/metadb/main_view.html:69
+#: templates/metadb/main_view.html:95
 msgid "Other"
 msgstr "Прочее"
 
-#: templates/metadb/main_view.html:77 templates/metadb/main_view.html:90
 #: templates/metadb/main_view.html:103 templates/metadb/main_view.html:116
-#: templates/metadb/main_view.html:129 templates/metadb/main_view.html:148
-#: templates/metadb/main_view.html:161 templates/metadb/main_view.html:174
-#: templates/metadb/main_view.html:187 templates/metadb/main_view.html:218
+#: templates/metadb/main_view.html:129 templates/metadb/main_view.html:142
+#: templates/metadb/main_view.html:155 templates/metadb/main_view.html:174
+#: templates/metadb/main_view.html:187 templates/metadb/main_view.html:200
+#: templates/metadb/main_view.html:213 templates/metadb/main_view.html:244
 msgid "Create"
 msgstr "Создать"
 
@@ -1707,10 +1715,6 @@ msgstr "Комбинация"
 #: views.py:23
 msgid "File"
 msgstr "Файл"
-
-#: views.py:29
-msgid "Language"
-msgstr "Язык"
 
 #: views.py:31
 msgid "Level"
