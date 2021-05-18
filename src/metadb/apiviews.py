@@ -38,8 +38,8 @@ class BaseViewSet(viewsets.ModelViewSet):
     ctx_create = {
         'form_class': '',
         'method': 'POST',
-        'title': _(''),
-        'submit_name': _(''),
+        'title': '',
+        'submit_name': '',
         'script': '',
         'attributes': [],
         'style': {'template_pack': 'rest_framework/vertical/'}
@@ -48,8 +48,8 @@ class BaseViewSet(viewsets.ModelViewSet):
     ctx_update = {
         'form_class': '',
         'method': 'PUT',
-        'title': _(''),
-        'submit_name': _(''),
+        'title': '',
+        'submit_name': '',
         'script': '',
         'attributes': [],
         'style': {'template_pack': 'rest_framework/vertical/'}
@@ -58,9 +58,9 @@ class BaseViewSet(viewsets.ModelViewSet):
     ctx_delete = {
         'form_class': '',
         'method': 'DELETE',
-        'title': _(''),
-        'text': _(''),
-        'submit_name': _(''),
+        'title': '',
+        'text': '',
+        'submit_name': '',
         'style': {'template_pack': 'rest_framework/vertical/'}
     }
 
@@ -1580,7 +1580,7 @@ class LevelsGroupViewSet(BaseViewSet):
     ctx_update = {
         'method': 'PUT',
         'form_class': 'js-levels-group-form',
-        'title': _("Update levels_group"),
+        'title': _("Update levels group"),
         'submit_name': _("Update levels group"),
         'script': 'metadb/levelsgroup_form.js',
         'attributes': [
@@ -2382,7 +2382,7 @@ class SettingViewSet(BaseViewSet):
     table_headers = [
         {'type': 'head_none', 'caption': _('Id'), 'field': 'id'},
         {'type': 'head_text', 'caption': _('Label'), 'field': 'label'},
-        {'type': 'head_text', 'caption': _('GUI Element'), 'field': 'gui_element.name'},
+        {'type': 'head_text', 'caption': _('GUI element'), 'field': 'gui_element.name'},
     ]
 
     ctx_create = {
@@ -2508,7 +2508,7 @@ class SettingHasCombinationViewSet(BaseViewSet):
     ctx_create = {
         'method': 'POST',
         'form_class': 'js-settinghascombination-form',
-        'title': _("Create a new link setting - combination"),
+        'title': _("Create a new link setting-combination"),
         'submit_name': _("Create link"),
         'script': 'metadb/settinghascombination_form.js',
         'attributes': [
@@ -2523,7 +2523,7 @@ class SettingHasCombinationViewSet(BaseViewSet):
     ctx_update = {
         'method': 'PUT',
         'form_class': 'js-settinghascombination-form',
-        'title': _("Update the linksetting - combination"),
+        'title': _("Update the link setting-combination"),
         'submit_name': _("Update link"),
         'script': 'metadb/settinghascombination_form.js',
         'attributes': [
@@ -2538,8 +2538,8 @@ class SettingHasCombinationViewSet(BaseViewSet):
     ctx_delete = {
         'method': 'DELETE',
         'form_class': 'js-settinghascombination-delete-form',
-        'title': _('Confirm setting - combination link delete'),
-        'text': _('Are you sure you want to delete the link setting - combination'),
+        'title': _('Confirm setting-combination link delete'),
+        'text': _('Are you sure you want to delete the link setting-combination'),
         'submit_name': _('Delete link'),
         'style': {'template_pack': 'rest_framework/vertical/'}
     }

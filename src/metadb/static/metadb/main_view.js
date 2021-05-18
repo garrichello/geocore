@@ -130,7 +130,29 @@ function set_header(e, settings, json, xhr) {
             $(table.columns().header()[i+2]).addClass(v[0]);
         })
     }
+};
+
+function setLanguage(code) {
+    var curLang = (window.location.pathname.split('/')[1]);
+    window.location.href = window.location.href.replace(curLang, code);
 }
+
+function getLanguages() {
+    var langs = $('#navbar-languages');
+    $.ajax({
+        type: "get",
+        url: langs.attr('api-data-url'),
+        dataType: "json",
+        success: function(data) {
+            data.data.forEach(element => {
+                langs.append($(`<li><a href="#" class="select-lang" code="${element.code}">${element.name}</a></li>`));
+            });
+            $('.select-lang').on('click', function() {
+                setLanguage($(this).attr('code'));
+            })
+        }
+    });
+};
 
 function renderButtons(row, url, showInfoBtn=false) {
     var infoButton = `&nbsp;<div><button type="button" class="btn btn-info btn-sm js-info"
@@ -153,5 +175,5 @@ $(document).ready( function () {
     $(window).resize(function () {
         columnsAdjust();
     });
-
+    getLanguages();
 } );
