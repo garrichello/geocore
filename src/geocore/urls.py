@@ -16,8 +16,10 @@ Including another URLconf
 from django.conf.urls.i18n import i18n_patterns
 from django.contrib import admin
 from django.urls import path, include
+from home.views import HomeView
 
 urlpatterns = i18n_patterns(
+    path('', HomeView.as_view(), name='home'),
     path('admin/', admin.site.urls),
     path('metadb/', include('metadb.urls')),
 )
