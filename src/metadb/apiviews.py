@@ -2591,7 +2591,7 @@ class SpecificParameterViewSet(BaseViewSet):
 
     ctx_update = {
         'method': 'PUT',
-        'form_class': 'js-specpar-update-form',
+        'form_class': 'js-specpar-form',
         'title': _("Update specific parameter"),
         'submit_name': _("Update specific parameter"),
         'script': 'metadb/specpar_form.js',
