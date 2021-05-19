@@ -154,4 +154,26 @@ $(function() {
     $('.js-reload').click(function() { 
         $.fn.dataTable.tables( {visible: true, api: true} ).ajax.reload();
     });
+
+    // Sign in
+    $('#js-signin').click(function() {
+        var modal_name = getModalName();
+        var modal_id = '#'+modal_name;
+        addModal(modal_name, 'id_login_dialog');
+        $.ajax({
+            type: "get",
+            url: $(this).attr("data-url"),
+            dataType: 'html',
+            success: function(data) {
+                $(modal_id+' .modal-content').html(data);
+                $(modal_id).modal('show');
+            },
+            error: function(xhr, errmsg, err) {
+                console.error('Error occured when loading form data');
+            }
+        });
+        $(modal_id).on('hidden.bs.modal', function() {
+            $(modal_id).remove();  // Keep DOM clean!
+        });  
+    });
 });

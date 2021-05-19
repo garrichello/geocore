@@ -56,4 +56,5 @@ app_name = 'metadb'
 urlpatterns = [
     path('', MainView.as_view(), name='main_view'),
     path('', include(router.urls)),
+    path('accounts/', include('django.contrib.auth.urls')),
 ]
