@@ -1,7 +1,8 @@
-{% load widget_tweaks %}
+{% load i18n widget_tweaks %}
 
 {% if form.errors %}
 <p>Your username and password didn't match. Please try again.</p>
+<input type="hidden" name="error" value="True">
 {% endif %}
 
 {% if next %}
@@ -13,15 +14,28 @@
     {% endif %}
 {% endif %}
 
-<form method="post" action="{% url 'metadb:login' %}">
+<form class="login-form" method="post" action="{% url 'metadb:login' %}">
     {% csrf_token %}
 
-    <div class="forn-group">
-    {{ form.username.label_tag }}
-    {{ form.username }}
-    {{ form.password.label_tag }}
-    {{ form.password }}
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <h3 class="modal-title">{% trans 'Log in' %}</h3>
+    </div>
 
-    <input type="submit" value="login">
-    <input type="hidden" name="next" value="{{ next }}">
+    <div class="modal-body">
+        <div class="form-group">
+            <label for="id_username"> {{ form.username.label_tag }} </label>
+            {{ form.username | add_class:'form-control' }}
+            <label for="id_password"> {{ form.password.label_tag }} </label>
+            {{ form.password | add_class:'form-control' }}
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Close" %}</button>
+        <button type="submit" class="btn btn-primary">{% trans "Log in" %}</button>
+        <input type="hidden" name="next" value="{{ next }}">
+    </div>
 </form>
