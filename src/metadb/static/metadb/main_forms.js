@@ -155,8 +155,8 @@ $(function() {
         $.fn.dataTable.tables( {visible: true, api: true} ).ajax.reload();
     });
 
-    // Sign in
-    $('#js-signin').click(function() {
+    // Login
+    $('.js-login').click(function() {
         var modal_name = getModalName();
         var modal_id = '#'+modal_name;
         addModal(modal_name, 'id_login_dialog');
