@@ -11,6 +11,7 @@ from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.urls import reverse, reverse_lazy
 from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
 
 from .models import *
 from .serializers import LanguageSerializer
@@ -79,6 +80,11 @@ class BaseViewSet(viewsets.ModelViewSet):
         return result
 
     def retrieve(self, request, pk=None):
+        if not request.user.is_authenticated:
+            html_form = render_to_string('registration/please_login.html', {}, request)
+            response = JsonResponse({'html_form': html_form})
+            return response
+
         http_action = request.META.get('HTTP_ACTION')
         if http_action == 'create':
             instance = None
@@ -104,6 +110,7 @@ class BaseViewSet(viewsets.ModelViewSet):
             else:
                 ctx = {'style': {'template_pack': 'rest_framework/vertical/'}}
             ctx['form'] = serializer
+
             html_form = render_to_string(self.template_name, ctx, request)
             response = JsonResponse({'html_form': html_form})
 
