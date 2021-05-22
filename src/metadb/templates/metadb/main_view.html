@@ -50,14 +50,14 @@
                                <span class="caret"></span></a>
                             <ul class="dropdown-menu">
                                 <li><a href="{% url 'metadb:logout' %}" 
-                                       role="button">{% trans "Sign out" %}</a>
+                                       role="button">{% trans "Logout" %}</a>
                                 </li>
                             </ul>
                         </li>
                         {% else %}
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" id="js-signin" data-url={% url 'metadb:login' %}
-                               role="button" aria-haspopup="true" aria-expanded="false">{% trans "Sign in" %}</a>
+                            <a href="#" class="dropdown-toggle js-login" data-url={% url 'metadb:login' %}
+                               role="button" aria-haspopup="true" aria-expanded="false">{% trans "Login" %}</a>
                         </li>
                         {% endif %}
                         <li class="dropdown">
@@ -73,42 +73,20 @@
             </div>
         </nav>
         <ul class="nav nav-tabs" role="tablist" id="main-tabs">
-            <li class="active">
-                <a href="#tab-collection" data-toggle="tab">{% trans "Collection" %}</a>
+            {% for tab in tabs %}
+            <li {% if forloop.counter0 == 0 %}class="active"{% endif %}>
+                <a href="#tab-{{ tab.name }}" data-toggle="tab">{{ tab.label }}</a>
             </li>
-            <li>
-                <a href="#tab-dataset" data-toggle="tab">{% trans "Dataset"%}</a>
-            </li>
-            <li>
-                <a href="#tab-specpar" data-toggle="tab">{% trans "Parameter"%}</a>
-            </li>
-            <li>
-                <a href="#tab-data" data-toggle="tab">{% trans "Data" %}</a>
-            </li>
-            <li>
-                <a href="#tab-conveyor" data-toggle="tab">{% trans "Conveyor" %}</a>
-            </li>
-            <li>
-                <a href="#tab-dataarggroup" data-toggle="tab">{% trans "Data-arguments" %}</a>
-            </li>
-            <li>
-                <a href="#tab-procarggroup" data-toggle="tab">{% trans "Processors-arguments" %}</a>
-            </li>
-            <li>
-                <a href="#tab-setting" data-toggle="tab">{% trans "Setting" %}</a>
-            </li>
-            <li>
-                <a href="#tab-processor" data-toggle="tab">{% trans "Processor" %}</a>
-            </li>
-            <li>
-                <a href="#tab-other" data-toggle="tab">{% trans "Other" %}</a>
-            </li>
+            {% endfor %}
         </ul>
         <div class="tab-content">
-            <div class="tab-pane active" id="tab-collection" api-data-url="{% url 'metadb:collection-list' %}">
+            {% for tab in tabs %}
+            <div class="tab-pane {% if forloop.counter0 == 0 %}active{% endif %}" 
+                 id="tab-{{ tab.name }}" 
+                 api-data-url="{% if tab.name != 'other' %}{% url tab.list_url %}{% endif %}" >
                 <button type="button" 
                         class="btn btn-primary js-create"
-                        data-url="{% url 'metadb:collection-detail' -1 %}">
+                        data-url="{% if tab.name != 'other' %}{% url tab.detail_url -1 %}{% endif %}">
                     <span class="glyphicon glyphicon-plus"></span> {% trans "Create" %}
                 </button>
                 <span>
@@ -116,53 +94,7 @@
                         <span class="glyphicon glyphicon-refresh"></span> Reload
                     </button>
                 </span>
-                <table id='collection' class="table table-hover table-bordered" width="100%"></table>
-            </div>
-            <div class="tab-pane" id="tab-dataset" api-data-url="{% url 'metadb:dataset-list' %}">
-                <button type="button"
-                        class="btn btn-primary js-create"
-                        data-url="{% url 'metadb:dataset-detail' -1 %}">
-                    <span class="glyphicon glyphicon-plus"></span> {% trans "Create" %}
-                </button>
-                <span>
-                    <button type="button" class="btn btn-light js-reload" style="position:absolute; right:20px">
-                        <span class="glyphicon glyphicon-refresh"></span> Reload
-                    </button>
-                </span>
-                <table id='dataset' class="table table-hover table-bordered" width="100%"></table>
-            </div>
-            <div class="tab-pane" id="tab-specpar" api-data-url="{% url 'metadb:specificparameter-list' %}">
-                <button type="button"
-                        class="btn btn-primary js-create"
-                        data-url="{% url 'metadb:specificparameter-detail' -1 %}">
-                    <span class="glyphicon glyphicon-plus"></span> {% trans "Create" %}
-                </button>
-                <span>
-                    <button type="button" class="btn btn-light js-reload" style="position:absolute; right:20px">
-                        <span class="glyphicon glyphicon-refresh"></span> Reload
-                    </button>
-                </span>
-                <table id='specpar' class="table table-hover table-bordered" width="200%"></table>
-            </div>
-            <div class="tab-pane" id="tab-data" api-data-url="{% url 'metadb:data-list' %}">
-                <button type="button"
-                        class="btn btn-primary js-create"
-                        data-url="{% url 'metadb:data-detail' -1 %}">
-                    <span class="glyphicon glyphicon-plus"></span> {% trans "Create" %}
-                </button>
-                <span>
-                    <button type="button" class="btn btn-light js-reload" style="position:absolute; right:20px">
-                        <span class="glyphicon glyphicon-refresh"></span> Reload
-                    </button>
-                </span>
-                <table id='data' class="table table-hover table-bordered" width="200%"></table>
-            </div>
-            <div class="tab-pane" id="tab-conveyor" dialog-id="id_conveyor_dialog" api-data-url="{% url 'metadb:conveyor-list' %}">
-                <button type="button"
-                        class="btn btn-primary js-create"
-                        data-url="{% url 'metadb:conveyor-detail' -1 %}">
-                    <span class="glyphicon glyphicon-plus"></span> {% trans "Create" %}
-                </button>
+                {% if tab.name == 'conveyor' %}
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-md-3">
@@ -175,90 +107,43 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="tab-pane" id="tab-dataarggroup" api-data-url="{% url 'metadb:dataargumentsgroup-list' %}">
-                <button type="button"
-                        class="btn btn-primary js-create"
-                        data-url="{% url 'metadb:dataargumentsgroup-detail' -1 %}">
-                    <span class="glyphicon glyphicon-plus"></span> {% trans "Create" %}
-                </button>
-                <span>
-                    <button type="button" class="btn btn-light js-reload" style="position:absolute; right:20px">
-                        <span class="glyphicon glyphicon-refresh"></span> Reload
-                    </button>
-                </span>
-                <table id='dataarggroup' class="table table-hover table-bordered" width="100%"></table>
-            </div>
-            <div class="tab-pane" id="tab-procarggroup" api-data-url="{% url 'metadb:argumentsgrouphasprocessor-list' %}">
-                <button type="button"
-                        class="btn btn-primary js-create"
-                        data-url="{% url 'metadb:argumentsgrouphasprocessor-detail' -1 %}">
-                    <span class="glyphicon glyphicon-plus"></span> {% trans "Create" %}
-                </button>
-                <span>
-                    <button type="button" class="btn btn-light js-reload" style="position:absolute; right:20px">
-                        <span class="glyphicon glyphicon-refresh"></span> Reload
-                    </button>
-                </span>
-                <table id='procarggroup' class="table table-bordered" width="200%"></table>
-            </div>
-            <div class="tab-pane" id="tab-setting" api-data-url="{% url 'metadb:fullsetting-list' %}">
-                <button type="button"
-                        class="btn btn-primary js-create"
-                        data-url="{% url 'metadb:fullsetting-detail' -1 %}">
-                    <span class="glyphicon glyphicon-plus"></span> {% trans "Create" %}
-                </button>
-                <span>
-                    <button type="button" class="btn btn-light js-reload" style="position:absolute; right:20px">
-                        <span class="glyphicon glyphicon-refresh"></span> Reload
-                    </button>
-                </span>
-                <table id='setting' class="table table-hover table-bordered" width="100%"></table>
-            </div>
-            <div class="tab-pane" id="tab-processor" api-data-url="{% url 'metadb:processor-list' %}">
-                <button type="button"
-                        class="btn btn-primary js-create"
-                        data-url="{% url 'metadb:processor-detail' -1 %}">
-                    <span class="glyphicon glyphicon-plus"></span> {% trans "Create" %}
-                </button>
-                <span>
-                    <button type="button" class="btn btn-light js-reload" style="position:absolute; right:20px">
-                        <span class="glyphicon glyphicon-refresh"></span> Reload
-                    </button>
-                </span>
-                <table id='processor' class="table table-hover table-bordered" width="200%"></table>
-            </div>
-            <div class="tab-pane" id="tab-other">
-                <div class="container-fluid">
-                <div class="radio">
-                    {% for choice in choices %}
-                    {% if forloop.counter0|divisibleby:4 %}<div class="row">{% endif %}
-                    <div class="col-md-3">
-                    <label>
-                        <input type="radio" name="data-choice" class="js-data-choice" 
-                        api-data-url="{% url choice.api_url %}" 
-                        create-data-url="{% url choice.create_api_url -1 %}"
-                        {% if forloop.counter0 == 0 %}checked="checked"{% endif %}
-                        ></input>
-                        {{ choice.title }}
-                    </label>
+                {% elif tab.name == 'other' %}
+                <div class="tab-pane" id="tab-other">
+                    <div class="container-fluid">
+                    <div class="radio">
+                        {% for choice in choices %}
+                        {% if forloop.counter0|divisibleby:4 %}<div class="row">{% endif %}
+                        <div class="col-md-3">
+                        <label>
+                            <input type="radio" name="data-choice" class="js-data-choice" 
+                            api-data-url="{% url choice.api_url %}" 
+                            create-data-url="{% url choice.create_api_url -1 %}"
+                            {% if forloop.counter0 == 0 %}checked="checked"{% endif %}
+                            ></input>
+                            {{ choice.title }}
+                        </label>
+                        </div>
+                        {% if forloop.counter|divisibleby:4 %}</div>{% endif %}
+                        {% endfor %}
+                        {% if not choices|length|divisibleby:4 %}</div>{% endif %}
                     </div>
-                    {% if forloop.counter|divisibleby:4 %}</div>{% endif %}
-                    {% endfor %}
-                    {% if not choices|length|divisibleby:4 %}</div>{% endif %}
-                </div>
-                </div>
-                <button type="button"
-                        class="btn btn-primary js-create" id="create-other-btn" disabled>
-                    <span class="glyphicon glyphicon-plus"></span> {% trans "Create" %}
-                </button>
-                <span>
-                    <button type="button" class="btn btn-light js-reload" style="position:absolute; right:20px">
-                        <span class="glyphicon glyphicon-refresh"></span> Reload
+                    </div>
+                    <button type="button"
+                            class="btn btn-primary js-create" id="create-other-btn" disabled>
+                        <span class="glyphicon glyphicon-plus"></span> {% trans "Create" %}
                     </button>
-                </span>
-                <table id="other" class="table table-hover table-bordered" width="100%"></table>
+                    <span>
+                        <button type="button" class="btn btn-light js-reload" style="position:absolute; right:20px">
+                            <span class="glyphicon glyphicon-refresh"></span> Reload
+                        </button>
+                    </span>
+                    <table id="other" class="table table-hover table-bordered" width="100%"></table>
+                </div>
+                {% else %}
+                <table id="{{ tab.name }}" class="table table-hover table-bordered" width="100%"></table>
+                {% endif %}
             </div>
+            {% endfor %}
         </div>
     </div>
     <div id="modal-stables"></div>

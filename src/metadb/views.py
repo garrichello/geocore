@@ -64,7 +64,29 @@ class MainView(View):
                 'create_api_url': app_prfx+'variable-detail'},
         ]
 
+        tabs = [
+            { 'name': "collection", 'label': _("Collection"),
+              'list_url': 'metadb:collection-list', 'detail_url': 'metadb:collection-detail' },
+            { 'name': "dataset", 'label': _("Dataset"),
+              'list_url': 'metadb:dataset-list', 'detail_url': 'metadb:dataset-detail' },
+            { 'name': "specpar", 'label': _("Parameter"),
+              'list_url': 'metadb:specificparameter-list', 'detail_url': 'metadb:specificparameter-detail' },
+            { 'name': "data", 'label': _("Data"),
+              'list_url': 'metadb:data-list', 'detail_url': 'metadb:data-detail' },
+            { 'name': "conveyor", 'label': _("Conveyor"),
+              'list_url': 'metadb:conveyor-list', 'detail_url': 'metadb:conveyor-detail' },
+            { 'name': "dataarggroup", 'label': _("Data-arguments"),
+              'list_url': 'metadb:dataargumentsgroup-list', 'detail_url': 'metadb:dataargumentsgroup-detail' },
+            { 'name': "procarggroup", 'label': _("Processors-arguments"),
+              'list_url': 'metadb:argumentsgrouphasprocessor-list', 'detail_url': 'metadb:argumentsgrouphasprocessor-detail' },
+            { 'name': "setting", 'label': _("Setting"),
+              'list_url': 'metadb:fullsetting-list', 'detail_url': 'metadb:fullsetting-detail' },
+            { 'name': "processor", 'label': _("Processor"),
+              'list_url': 'metadb:processor-list', 'detail_url': 'metadb:processor-detail' },
+            { 'name': "other", 'label': _("Other") },
+        ]
+
         ctx = {
-            'choices': choices,
+            'choices': choices, 'tabs': tabs,
         }
         return render(request, 'metadb/main_view.html', context=ctx)
