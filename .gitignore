@@ -2,3 +2,4 @@
 __pycache__
 *.log
 src/geocore/settings/development.py
+.vscode
