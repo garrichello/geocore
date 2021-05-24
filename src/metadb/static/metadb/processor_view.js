@@ -65,14 +65,14 @@ $(document).ready( function () {
     ]
     
     function showDetails(row) {
-        var data = row.data();
+        var rowdata = row.data();
     
         $.ajax({
             type: "get",
             headers: {
                 'ACTION': 'json',
             },
-            url: data.fulldataurl,  // get full info of the selected processor
+            url: rowdata.fulldataurl,  // get full info of the selected processor
             dataType: 'json',
             beforeSend: () => {
                 $('#processor_processing').show();
@@ -81,7 +81,7 @@ $(document).ready( function () {
                 $('#processor_processing').hide();        },
             success: (data) => {
                 var settingsText = '';
-                console.log(data.data.settings[0].label);
+                console.log(rowdata);
                 if (data.data.settings[0].label == '-') {
                     settingsText = '<tr><td>-</td></tr>';
                 } else {
