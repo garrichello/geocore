@@ -62,9 +62,13 @@ $(function() {
         e.stopImmediatePropagation();
         var form = $(this);
         var modal_id = '#'+getModalName('parent');
+        var csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
         $.ajax({
             type: form.attr('method'),
+            headers: {
+                'X-CSRFToken': csrftoken
+            },
             url: form.attr('action'),
             data: form.serialize(),
             dataType: 'json',
