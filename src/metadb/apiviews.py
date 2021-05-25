@@ -80,11 +80,6 @@ class BaseViewSet(viewsets.ModelViewSet):
         return result
 
     def retrieve(self, request, pk=None):
-        if not request.user.is_authenticated:
-            html_form = render_to_string('registration/please_login.html', {}, request)
-            response = JsonResponse({'html_form': html_form})
-            return response
-
         http_action = request.META.get('HTTP_ACTION')
         if http_action == 'create':
             instance = None
@@ -117,6 +112,11 @@ class BaseViewSet(viewsets.ModelViewSet):
         return response
 
     def create(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            html_form = render_to_string('registration/please_login.html', {}, request)
+            response = JsonResponse({'html_form': html_form})
+            return response
+
         serializer = self.get_serializer(data=request.data)
         is_valid = serializer.is_valid()
         if is_valid:
@@ -132,6 +132,11 @@ class BaseViewSet(viewsets.ModelViewSet):
         return response
 
     def update(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            html_form = render_to_string('registration/please_login.html', {}, request)
+            response = JsonResponse({'html_form': html_form})
+            return response
+
         instance = self.get_object()
         serializer = self.get_serializer(data=request.data, instance=instance)
         is_valid = serializer.is_valid()
@@ -147,6 +152,11 @@ class BaseViewSet(viewsets.ModelViewSet):
         return response
 
     def destroy(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            html_form = render_to_string('registration/please_login.html', {}, request)
+            response = JsonResponse({'html_form': html_form})
+            return response
+
         instance = self.get_object()
         instance.delete()
 
