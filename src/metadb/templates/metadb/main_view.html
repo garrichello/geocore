@@ -128,15 +128,6 @@
                         {% if not choices|length|divisibleby:4 %}</div>{% endif %}
                     </div>
                     </div>
-                    <button type="button"
-                            class="btn btn-primary js-create" id="create-other-btn" disabled>
-                        <span class="glyphicon glyphicon-plus"></span> {% trans "Create" %}
-                    </button>
-                    <span>
-                        <button type="button" class="btn btn-light js-reload" style="position:absolute; right:20px">
-                            <span class="glyphicon glyphicon-refresh"></span> Reload
-                        </button>
-                    </span>
                     <table id="other" class="table table-hover table-bordered" width="100%"></table>
                 </div>
                 {% else %}
