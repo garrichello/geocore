@@ -36,7 +36,7 @@
                 "sha256:efa2ab96b33b20c2182db93147a0c3cd7769d418926f9e9f140a60dca7c64ca9"
             ],
             "index": "pypi",
-            "version": "==3.1.5"
+            "version": ">=3.1.8"
         },
         "django-bootstrap-modal-forms": {
             "hashes": [
