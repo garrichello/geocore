@@ -133,8 +133,9 @@ function set_header(e, settings, json, xhr) {
 };
 
 function setLanguage(code) {
-    var curLang = (window.location.pathname.split('/')[1]);
-    window.location.href = window.location.href.replace(curLang, code);
+    var splittedLocation = window.location.href.split('/');
+    splittedLocation[3] = code;
+    window.location.href = splittedLocation.join('/');
 }
 
 function getLanguages() {
