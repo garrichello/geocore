@@ -4,9 +4,7 @@ $(document).ready( function () {
 
     var processor_columns = [
         {'render': function() { return null; } },  // For checkboxes
-        {'render': (data, type, row, meta) => {
-            return renderButtons(row, apiURL, true)
-        }},  // for buttons
+        {'render': (data, type, row, meta) => { return renderButtons(row, apiURL, true); }},  // for buttons
         {'data': 'id' },
         {'data': 'is_visible' },
         {'data': 'processori18n.name' },
@@ -63,10 +61,10 @@ $(document).ready( function () {
         { width: '75px', targets: 10 },  // arguments selected by user
         { width: '185px', targets: 11 }   // arguments
     ]
-    
+
     function showDetails(row) {
         var rowdata = row.data();
-    
+
         $.ajax({
             type: "get",
             headers: {
@@ -81,7 +79,6 @@ $(document).ready( function () {
                 $('#processor_processing').hide();        },
             success: (data) => {
                 var settingsText = '';
-                console.log(rowdata);
                 if (data.data.settings[0].label == '-') {
                     settingsText = '<tr><td>-</td></tr>';
                 } else {
