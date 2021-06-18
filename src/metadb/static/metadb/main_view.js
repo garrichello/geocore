@@ -132,29 +132,6 @@ function set_header(e, settings, json, xhr) {
     }
 };
 
-function setLanguage(code) {
-    var splittedLocation = window.location.href.split('/');
-    splittedLocation[3] = code;
-    window.location.href = splittedLocation.join('/');
-}
-
-function getLanguages() {
-    var langs = $('#navbar-languages');
-    $.ajax({
-        type: "get",
-        url: langs.attr('api-data-url'),
-        dataType: "json",
-        success: function(data) {
-            data.data.forEach(element => {
-                langs.append($(`<li><a href="#" class="select-lang" code="${element.code}">${element.name}</a></li>`));
-            });
-            $('.select-lang').on('click', function() {
-                setLanguage($(this).attr('code'));
-            })
-        }
-    });
-};
-
 function renderButtons(row, url, showInfoBtn=false) {
     var infoButton = `&nbsp;<div><button type="button" class="btn btn-info btn-sm js-info"
                       data-url="${url}${row.id}">
@@ -176,5 +153,4 @@ $(document).ready( function () {
     $(window).resize(function () {
         columnsAdjust();
     });
-    getLanguages();
 } );

@@ -34,7 +34,6 @@
 	</style>
 </head>
 <body>
-    <div id="language" language={{ language }}></div>
     <div id="main-view" style="margin-left: 10px; margin-right: 10px; ">
         <nav class="navbar navbar-default">
             <div class="container-fluid">
@@ -60,13 +59,18 @@
                                role="button" aria-haspopup="true" aria-expanded="false">{% trans "Login" %}</a>
                         </li>
                         {% endif %}
+                        {% get_available_languages as languages %}
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" 
                                role="button" aria-haspopup="true" aria-expanded="false">{% trans "Language" %}
                                <span class="caret"></span></a>
-                            <ul class="dropdown-menu" id="navbar-languages"
-                                api-data-url="{% url 'metadb:language-list' %}">
-                            </ul>
+                            <ul class="dropdown-menu" id="navbar-languages">
+                            {% for lang_code, lang_name in languages %}
+                                {% language lang_code %}
+                                <li><a href="{% url 'metadb:main_view' %}" class="select-lang">{{ lang_name }}</a></li>
+                                {% endlanguage %}
+                            {% endfor %}
+                            </ul>                            
                         </li>
                     </ul>
                 </div>

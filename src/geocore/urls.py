@@ -16,10 +16,11 @@ Including another URLconf
 from django.conf.urls.i18n import i18n_patterns
 from django.contrib import admin
 from django.urls import path, include
+from django.utils.translation import gettext_lazy as _
 from home.views import HomeView
 
 urlpatterns = i18n_patterns(
     path('', HomeView.as_view(), name='home'),
     path('admin/', admin.site.urls),
-    path('metadb/', include('metadb.urls')),
+    path(_('metadb/'), include('metadb.urls')),
 )
