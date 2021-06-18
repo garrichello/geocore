@@ -87,7 +87,8 @@
             {% for tab in tabs %}
             <div class="tab-pane {% if forloop.counter0 == 0 %}active{% endif %}" 
                  id="tab-{{ tab.name }}" 
-                 api-data-url="{% if tab.name != 'other' %}{% url tab.list_url %}{% endif %}" >
+                 api-data-url="{% if tab.name != 'other' %}{% url tab.list_url %}{% endif %}"
+                 dialog-id="{{ tab.dialog_id }}">
                 <button type="button" 
                         class="btn btn-primary js-create"
                         data-url="{% if tab.name != 'other' %}{% url tab.detail_url -1 %}{% endif %}">

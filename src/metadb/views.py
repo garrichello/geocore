@@ -73,7 +73,7 @@ class MainView(View):
               'list_url': 'metadb:specificparameter-list', 'detail_url': 'metadb:specificparameter-detail' },
             { 'name': "data", 'label': _("Data"),
               'list_url': 'metadb:data-list', 'detail_url': 'metadb:data-detail' },
-            { 'name': "conveyor", 'label': _("Conveyor"),
+            { 'name': "conveyor", 'label': _("Conveyor"), 'dialog_id': 'id_conveyor_dialog',
               'list_url': 'metadb:conveyor-list', 'detail_url': 'metadb:conveyor-detail' },
             { 'name': "dataarggroup", 'label': _("Data-arguments"),
               'list_url': 'metadb:dataargumentsgroup-list', 'detail_url': 'metadb:dataargumentsgroup-detail' },
