@@ -115,7 +115,7 @@ $(document).ready( function () {
     $('.js-data-choice').click(function() {
         apiURL = $(this).attr('api-data-url');
         get_data.call(this, apiURL);
-        $('.js-create').attr('data-url', $(this).attr('create-data-url'));
+        $('.js-other-create').attr('data-url', $(this).attr('create-data-url'));
     });
 
     // Other tab

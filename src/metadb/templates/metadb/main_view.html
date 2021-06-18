@@ -90,7 +90,7 @@
                  api-data-url="{% if tab.name != 'other' %}{% url tab.list_url %}{% endif %}"
                  dialog-id="{{ tab.dialog_id }}">
                 <button type="button" 
-                        class="btn btn-primary js-create"
+                        class="btn btn-primary js-create {% if tab.name == 'other' %}js-other-create{% endif %}"
                         data-url="{% if tab.name != 'other' %}{% url tab.detail_url -1 %}{% endif %}">
                     <span class="glyphicon glyphicon-plus"></span> {% trans "Create" %}
                 </button>
