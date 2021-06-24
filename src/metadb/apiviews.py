@@ -1165,7 +1165,7 @@ class DataViewSet(BaseViewSet):
         ('head_select', _('Resolution')),
         ('head_select', _('Scenario')),
         ('head_none', _('Parameter visibility')),
-        ('head_select', _('Parameter')),
+        ('head_select', _('Parameter name')),
         ('head_select', _('Time step')),
         ('head_text', _('Levels group')),
         ('head_text', _('Levels names')),
@@ -2577,7 +2577,7 @@ class SpecificParameterViewSet(BaseViewSet):
     table_headers = [
         ('head_none', 'Id'),
         ('head_none', _('Visible')),
-        ('head_select', _('Parameter')),
+        ('head_select', _('Parameter name')),
         ('head_select', _('Accumulation mode')),
         ('head_select', _('Time step')),
         ('head_none', _('Time step label')),
