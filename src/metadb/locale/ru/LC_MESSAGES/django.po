@@ -1483,7 +1483,7 @@ msgstr "Значение"
 msgid "Condition combination"
 msgstr "Условная комбинация"
 
-#: serializers_conveyor.py:407 views.py:76
+#: serializers_conveyor.py:407
 msgid "Conveyor"
 msgstr "Конвейер"
 
@@ -1523,7 +1523,7 @@ msgstr "Переменная вертикальных уровней"
 msgid "Root directory name"
 msgstr "Корневой каталог"
 
-#: serializers_data.py:349 views.py:70
+#: serializers_data.py:349
 msgid "Dataset"
 msgstr "Набор данных"
 
@@ -1708,8 +1708,16 @@ msgid "Option value"
 msgstr "Значение параметра"
 
 #: views.py:68
-msgid "Collection"
-msgstr "Коллекция"
+msgid "Collections"
+msgstr "Коллекции"
+
+#: views.py:70
+msgid "Datasets"
+msgstr "Наборы данных"
+
+#: views.py:72
+msgid "Parameters"
+msgstr "Метеопараметры"
 
 #: views.py:72
 msgid "Parameter"
@@ -1718,6 +1726,10 @@ msgstr "Метеопараметр"
 #: views.py:74
 msgid "Data"
 msgstr "Данные"
+
+#: views.py:76
+msgid "Conveyors"
+msgstr "Конвейеры"
 
 #: views.py:78
 msgid "Data-arguments"
@@ -1728,12 +1740,19 @@ msgid "Processors-arguments"
 msgstr "Аргументы-обработчики"
 
 #: views.py:82
-msgid "Setting"
-msgstr "Настройки"
+msgid "Processors settings"
+msgstr "Настройки обработчиков"
+
+#: views.py:84
+msgid "Processors"
+msgstr "Обработчики"
 
 #: views.py:86
 msgid "Other"
 msgstr "Прочее"
+
+#~ msgid "Setting"
+#~ msgstr "Настройки"
 
 #~ msgid "GUI Element"
 #~ msgstr "Элемент GUI"
