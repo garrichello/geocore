@@ -123,8 +123,8 @@ class Combination(models.Model):
 
 class ComputingModule(models.Model):
     name = models.CharField(max_length=100, blank=True)
-    number_of_inputs = models.IntegerField()
-    number_of_outputs = models.IntegerField()
+    number_of_inputs = models.IntegerField(blank=True)
+    number_of_outputs = models.IntegerField(blank=True)
     description = models.CharField(max_length=245, blank=True)
 
     class Meta:

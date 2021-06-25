@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-06-25 15:52+0700\n"
+"POT-Creation-Date: 2021-06-24 19:22+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -101,7 +101,7 @@ msgid "Delete arguments group"
 msgstr "Удалить группу аргументов"
 
 #: apiviews.py:290 serializers_processor.py:522 serializers_processor.py:568
-#: serializers_processor.py:666
+#: serializers_processor.py:666 views.py:84
 msgid "Processor"
 msgstr "Обработчик"
 
@@ -501,9 +501,9 @@ msgstr "Видимость набора данных"
 msgid "Parameter visibility"
 msgstr "Видимость метеопараметра"
 
-#: apiviews.py:1168 apiviews.py:2580
-msgid "Parameter"
-msgstr "Имя метеопараметра"
+#: apiviews.py:1168 apiviews.py:2580 serializers_specparam.py:59
+msgid "Parameter name"
+msgstr "Название метеопараметра"
 
 #: apiviews.py:1169 apiviews.py:2582 serializers_data.py:371
 #: serializers_specparam.py:400 views.py:57
@@ -1599,10 +1599,6 @@ msgstr "Количество аргументов, задаваемых поль
 msgid "Arguments group"
 msgstr "Группа аргументов"
 
-#: serializers_specparam.py:59
-msgid "Parameter name"
-msgstr "Название метеопараметра"
-
 #: serializers_specparam.py:134
 msgid "Measurement unit name"
 msgstr "Название единицы измерения"
@@ -1722,6 +1718,10 @@ msgstr "Наборы данных"
 #: views.py:72
 msgid "Parameters"
 msgstr "Метеопараметры"
+
+#: views.py:72
+msgid "Parameter"
+msgstr "Метеопараметр"
 
 #: views.py:74
 msgid "Data"

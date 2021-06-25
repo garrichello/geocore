@@ -85,6 +85,9 @@ class ComputingModuleSerializer(serializers.HyperlinkedModelSerializer):
 
     def update(self, instance, validated_data):
         instance.name = validated_data.get('name', instance.name)
+        instance.number_of_inputs = validated_data.get('number_of_inputs', None)
+        instance.number_of_outputs = validated_data.get('number_of_outputs', None)
+        instance.description = validated_data.get('description', instance.description)
         instance.save()
         return instance
 
