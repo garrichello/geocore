@@ -4,4 +4,3 @@ __pycache__
 src/geocore/settings/development.py
 .vscode
 *.mo
-src/metadb/locale/ru/LC_MESSAGES/django.mo
