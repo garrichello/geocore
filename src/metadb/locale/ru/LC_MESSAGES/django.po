@@ -282,7 +282,7 @@ msgstr "Удалить комбинацию"
 
 #: apiviews.py:583 apiviews.py:584 serializers_conveyor.py:66
 msgid "Number of inputs"
-msgstr "Количество входных аргументов"
+msgstr "Количество входов"
 
 #: apiviews.py:591
 msgid "Create a new computing module"
