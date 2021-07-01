@@ -185,8 +185,13 @@ saveConveyor = function(e) {
     var modal_id = '#'+getModalName('parent');
     var data = $flowchart.flowchart('getData');
     data['conveyorLabel'] = $('#id_label').val();
+    var csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
     $.ajax({
         type: form.attr('method'),
+        headers: {
+            'X-CSRFToken': csrftoken
+        },
         url: form.attr('action'),
         data: {'data': JSON.stringify(data)},
         dataType: 'json',
