@@ -208,7 +208,7 @@ saveConveyor = function(e) {
             }
         },
         error: function(xhr, errmsg, err) {
-            console.error('Error occured when saving conveyor data');
+            alert('Error occured when saving conveyor data');
         },
     });
     return false;

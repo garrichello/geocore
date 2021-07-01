@@ -82,7 +82,7 @@ $(function() {
                 }
             },
             error: function(xhr, errmsg, err) {
-                console.error('Error occured when saving form data');
+                alert('Error occured when saving form data');
 //                $(modal_name+' .modal-content').html(xhr.responseText);
 //                console.log(xhr.status + ": " + xhr.responseText);
             },
