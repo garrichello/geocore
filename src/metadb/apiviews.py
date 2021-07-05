@@ -2570,7 +2570,7 @@ class SpecificParameterViewSet(BaseViewSet):
     serializer_class = SpecificParameterSerializer
     renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
     template_name = 'metadb/includes/rest_form.html'
-    options_template_name = 'metadb/hr/dropdown_list_options.html'
+    options_template_name = 'metadb/hr/dropdown_list_options_noblank.html'
     list_url = 'metadb:specificparameter-list'
     action_url = 'metadb:specificparameter-detail'
 
