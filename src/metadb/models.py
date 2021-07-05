@@ -32,7 +32,7 @@ class ArgumentType(models.Model):
 
 
 class ArgumentsGroup(models.Model):
-    name = models.CharField(max_length=45, blank=True)
+    name = models.CharField(max_length=45, blank=False)
     description = models.CharField(max_length=145, blank=True)
     argument_type = models.ForeignKey('ArgumentType', models.CASCADE)
     processor = models.ManyToManyField('Processor', through='ArgumentsGroupHasProcessor')
